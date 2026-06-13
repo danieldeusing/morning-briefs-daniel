@@ -27,7 +27,7 @@ Daniel, 40, deutscher Staatsbürger, lebt in Ribeirão Claro/PR, Brasilien.
 
 ## CV als Source of Truth
 **Vor jedem Lauf zuerst Daniels CV lesen.** Das CV lebt im **öffentlichen CV-Repo**
-`twiced-technology-gmbh/cv-danieldeusing` (https://github.com/twiced-technology-gmbh/cv-danieldeusing).
+`danieldeusing/cv-danieldeusing` (https://github.com/danieldeusing/cv-danieldeusing).
 Auf dem Routine-Host aus dem lokalen Checkout lesen:
 `/Users/daniel/Work/danieldeusing/cv/TD_Daniel_Deusing_DE.pdf`
 (Fallback, falls kein Checkout: die raw-PDF aus dem Repo holen.)

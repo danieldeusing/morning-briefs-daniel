@@ -38,8 +38,8 @@ morning-briefs/daniel/
 │   ├── CROSS_CUTTING.md         editorial principles (research, ELI5, voice)
 │   └── template.html            canonical HTML scaffold (copied per daily file)
 │
-├── data/                    ← passive inputs (e.g. CV PDF used by the jobs routine)
-│   └── cv/TD_Daniel_Deusing_DE.pdf
+├── data/                    ← passive inputs (the jobs routine reads the CV from the
+│   └── learn-language-ledger.json   public repo danieldeusing/cv-danieldeusing, not from here)
 │
 └── tools/
     └── build_manifest.py        rewrites window.__MANIFESTS in public/index.html
