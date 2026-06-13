@@ -26,8 +26,11 @@ Daniel, 40, deutscher Staatsbürger, lebt in Ribeirão Claro/PR, Brasilien.
 **Output: DE kanonisch, dann EN/PT/ES als Übersetzungen** (siehe `# Output`-Sektion am Ende und `docs/FORMAT.md`).
 
 ## CV als Source of Truth
-**Vor jedem Lauf zuerst Daniels CV lesen:**
-`data/cv/TD_Daniel_Deusing_DE.pdf`
+**Vor jedem Lauf zuerst Daniels CV lesen.** Das CV lebt im **öffentlichen CV-Repo**
+`twiced-technology-gmbh/cv-danieldeusing` (https://github.com/twiced-technology-gmbh/cv-danieldeusing).
+Auf dem Routine-Host aus dem lokalen Checkout lesen:
+`/Users/daniel/Work/danieldeusing/cv/TD_Daniel_Deusing_DE.pdf`
+(Fallback, falls kein Checkout: die raw-PDF aus dem Repo holen.)
 
 Skills, Erfahrungen, Projekte und Domänen daraus sind die **kanonische Quelle** für Stack-Match-Bewertung. Inline-Liste unten ist Convenience-Referenz; bei Konflikt gewinnt das CV.
 
