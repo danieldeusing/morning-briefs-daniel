@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI-Dev · 2026-06-10</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI-Dev</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-10</span>
+  </div>
+  <h1 class="masthead-title">Anthropic pushes a new model tier above Opus — and it's everywhere</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Yesterday, June 9, Anthropic shipped <strong>Claude Fable 5</strong> — the first generally available model in the new "Mythos tier," which Anthropic says sits <em>above</em> Opus. No preview, no waitlist: Fable 5 was available day-one across the Claude API, AWS Bedrock, Vertex, Microsoft Foundry, GitHub Copilot, and Cursor — subscription plans (Pro/Max/Team, Seat-Enterprise) rolling out through 22 June. For Daniel's toolbox, this is the biggest leap since Opus 4.8 on May 28 — with a major asterisk on the benchmarks.</p>
+    <ul>
+      <li><span class="chip hot">Claude</span> <strong>Claude Fable 5 is here (09.06.)</strong>: Mythos tier, 1M context, $10/$50 per million tokens. Anthropic reports <span class="stat">95.0 %</span> SWE-Bench Verified — vendor-reported, not yet on any independent board.</li>
+      <li><span class="chip">Claude</span> <strong>Mythos 5</strong> is the same model without safeguards — only for whitelisted Glasswing customers. Fable 5 is the public, safety-guardrailed version.</li>
+      <li><span class="chip hot">Bench</span> <strong>The asterisk</strong>: on Cyber/Bio/Chem/Distillation tasks, Fable 5 falls back to Opus 4.8. On Terminal-Bench, 20.9 % refusals dragged the effective score from 88.0 down to 84.3 %.</li>
+      <li><span class="chip good">Tool</span> <strong>Claude Code v2.1.170</strong> (09.06.) ships Fable 5 support; v2.1.169 (08.06.) added <code>--safe-mode</code> and <code>/cd</code>. <span class="chip good">try it</span></li>
+      <li><span class="chip">Tool</span> <strong>GitHub Copilot</strong>: Fable 5 GA for Pro+, Max, Business, Enterprise — across all modes. Heads up: enforces 30-day data retention.</li>
+      <li><span class="chip">Tool</span> <strong>Cursor</strong>: Fable 5 leads CursorBench; Thinking variant costs ~2× Opus 4.8.</li>
+      <li><span class="chip">Google</span> <strong>Gemini 3.5 Pro</strong> remains in limited Vertex preview — no GA. Pressure on Google mounts by the day.</li>
+      <li><span class="chip">OSS</span> <strong>Open-weights</strong>: MiniMax M3 (June) leads Open-Weight SWE-Bench Pro per aggregator data at ~59 %. Cline, OpenHands, Continue all quiet but healthy.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Weekly outlook</div>
+      <div class="timeline-sub">What's moved — and what's next</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Thu 04.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Codex GA on Bedrock</span>
+          <span>Gemini 3.5 Flash as coding model</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 05.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Microsoft MAI-Code-1-Flash unveiled</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 06.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Anthropic: "Claude writes 80 % of its code"</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 08.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code v2.1.169 (--safe-mode, /cd)</span>
+          <span>Coding-benchmark audit</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue 09.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Fable 5 + Mythos 5 launch</span>
+          <span>Day-one in Copilot, Cursor, Bedrock, Vertex, Foundry, Databricks</span>
+          <span>Claude Code v2.1.170 (Fable-5 support)</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Wed 10.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Fable-5 analysis: what the numbers are worth</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">~ late June</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Gemini 3.5 Pro GA expected (soft target)</span>
+          <span>Sonnet 4.8 still unannounced</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section>
+        <h2>Claude Fable 5: the Mythos tier goes public</h2>
+        <p>Anthropic announced two models simultaneously yesterday, June 9: <strong>Claude Fable 5</strong> and <strong>Claude Mythos 5</strong>.<sup>[1]</sup> They share the same weights — the same trained model foundation. The difference is the leash: Fable 5 is the guardrailed, publicly available variant; Mythos 5 is the same model with relaxed safeguards, available only to whitelisted customers in "Project Glasswing."</p>
+
+        <div class="eli5">
+          <strong class="eli5-term">"Mythos tier":</strong> Anthropic sorts its models into tiers — Haiku (small/fast), Sonnet (mid-range), Opus (flagship). "Mythos" is a new tier <em>above</em> Opus. Think of the model lineup as engines: Mythos is the race engine that lived only in the lab until now. Fable 5 is that exact engine, but with a rev limiter for the road.<sup>[1]</sup>
+        </div>
+
+        <p>The bare specs from the official model docs:<sup>[2]</sup> API ID <code>claude-fable-5</code>, <span class="stat">1M</span> token context window, up to 128k token output, priced at <span class="stat">$10/$50</span> per million tokens (input/output). Extended Thinking isn't a switch — instead, <em>Adaptive Thinking</em> is always on: the model decides how long to reason. GA as of 9 June across Claude API, AWS Bedrock, Vertex, and Microsoft Foundry.</p>
+
+        <p>The price is the real story for the toolbox: Fable 5 costs twice Opus 4.8 ($5/$25), but Anthropic says it's <em>"less than half"</em> the previous Mythos preview.<sup>[1]</sup> One tier above Opus, at double the Opus price — whether that pays for itself depends entirely on whether you trust the benchmarks. And that's where it gets interesting.</p>
+        <div class="footnotes"><ol>
+          <li id="fn1"><a href="https://www.anthropic.com/news/claude-fable-5-mythos-5">anthropic.com/news</a> — Claude Fable 5 and Claude Mythos 5, 09.06.2026</li>
+          <li id="fn2"><a href="https://platform.claude.com/docs/en/about-claude/models/overview">platform.claude.com</a> — Models overview (specs table), accessed 10.06.2026</li>
+        </ol></div>
+      </section>
+
+      <section>
+        <h2>The numbers — and the asterisk <span class="h2-refs">[3][4]</span></h2>
+        <p>Anthropic reports a leap for Fable 5 that nearly maxes the SWE-Bench-Verified scale: <span class="stat">95.0 %</span>, versus 88.6 % for Opus 4.8. On harder SWE-Bench Pro, 80.0 % (Opus 4.8: 69.2 %; GPT-5.5: 58.6 %; Gemini 3.1 Pro: 54.2 %).<sup>[3]</sup></p>
+
+        <div class="eli5">
+          <strong class="eli5-term">SWE-Bench Verified:</strong> a test of real GitHub bugs — the model has to fix a bug in a live repo such that the project's test suite passes. "Verified" means a human has confirmed each task is solvable. "Pro" is the tougher sibling with gnarly multi-file tasks.
+        </div>
+
+        <p><strong>Why you need to look twice here</strong> — three things:</p>
+        <p><strong>(1) All numbers are vendor-reported.</strong> They come from Anthropic's own announcement and system card, not independent measurement.<sup>[3]</sup> The independent SWE-Bench-Verified board (last updated May 2026) lists neither Fable 5 nor Mythos 5 — and not even Opus 4.8. GPT-5.5 leads there at 88.7 %, followed by Opus 4.7 at 87.6 %.<sup>[4]</sup> Until Fable 5 appears verified on the board, the 95 % is a factory claim, not a measured result.</p>
+
+        <p><strong>(2) Safeguards drag the real score.</strong> This is the critical caveat: requests touching cybersecurity, biology, chemistry, or model distillation automatically fall back to Opus 4.8.<sup>[1]</sup> So the Mythos numbers apply only to the <em>unsafeguarded</em> variant. On Terminal-Bench 2.1, 20.9 % of attempts triggered a refusal and fell back — Fable 5's effective score dropped from 88.0 % (Mythos 5) to 84.3 %.<sup>[3]</sup> If you write security-adjacent code — auth, crypto, pen-test tooling — you don't get the Mythos model for parts of that; you get Opus.</p>
+
+        <p><strong>(3) The new tokenizer.</strong> Fable 5 uses the tokenizer from Opus 4.7 and later — the same text produces ~30 % more tokens than older models.<sup>[2]</sup> At the $10/$50 rate, that means the effective cost per line of code is higher than the per-token price alone suggests. Against Opus 4.8 (same tokenizer) it washes out; against Sonnet or older models, it doesn't.</p>
+
+        <p><strong>Bottom line:</strong> even with skepticism, the leap is real — from 88.6 to somewhere north of 90 % even conservatively. But the "95 %" headline is best-case without safeguard friction. For Daniel's day-to-day (web apps, tooling, no bio/cyber domain), Fable 5 should land close to the reported number; for security work, probably closer to Opus parity.</p>
+        <div class="footnotes"><ol start="3">
+          <li id="fn3"><a href="https://llm-stats.com/blog/research/claude-fable-5-review">llm-stats.com</a> — Fable 5 Review/Benchmarks (vendor-reported scores + safeguard analysis), accessed 10.06.2026</li>
+          <li id="fn4"><a href="https://www.marc0.dev/en/leaderboard">marc0.dev</a> — SWE-Bench Verified Leaderboard, May 2026 snapshot</li>
+        </ol></div>
+      </section>
+
+      <section>
+        <div class="bench-wrap" data-component="benchmark-chart">
+          <div class="bench-head">SWE-Bench Pro — vendor-reported (Anthropic), 09.06.2026</div>
+          <div class="bench-chart-wrap"><canvas></canvas></div>
+        </div>
+        <p class="byline">All values vendor-reported, not independently verified on a leaderboard. SWE-Bench Pro is the harder multi-file variant; the 80.0 % is Fable 5's score (public, guardrailed version); Mythos 5 ~80.3 % (split per vendor).<sup>[3]</sup></p>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>Fable 5 everywhere day-one <span class="h2-refs">[5][6][7]</span></h2>
+        <p>What's remarkable is less the model than the rollout. Unlike earlier frontier releases, there was no preview bottleneck: Fable 5 was available day-one across the harnesses Daniel actually uses — immediate via API and consumption-based Enterprise, while subscription tiers (Pro/Max/Team and seat-based Enterprise) roll out through 22 June.<sup>[1]</sup></p>
+
+        <p><strong>Claude Code v2.1.170</strong> (09.06.) ships Fable 5 support — the changelog puts it plainly: <em>"Fable's capabilities surpass those of any model we've ever made generally available."</em><sup>[5]</sup> A day earlier, in <strong>v2.1.169</strong> (08.06.), two small but useful CLI improvements landed: <code>--safe-mode</code> boots Claude Code with zero customizations (helpful when a hook or skill misbehaves), and <code>/cd</code> switches the working directory mid-session without invalidating the prompt cache.<sup>[5]</sup> <span class="chip good">try it</span> <code>/cd</code> alone saves the tedious restart when jumping between repos.</p>
+
+        <p><strong>GitHub Copilot</strong> released Fable 5 as GA for Pro+, Max, Business, and Enterprise — across <em>all</em> modes (Chat, Ask, Edit, Agent).<sup>[6]</sup> One detail teams need to know: Fable 5 enforces <strong>data retention</strong> — prompts are kept up to 30 days for Anthropic's safety systems. Other Claude models in Copilot don't have this requirement. For client code under NDA, that's a real criterion.</p>
+
+        <div class="callout warn">
+          <span class="callout-label">Heads up</span> 30-day retention on Fable 5 in Copilot applies regardless of Enterprise tier. If you work on highly confidential client code, verify this before switching — or stick with Opus 4.8 for sensitive repos.
+        </div>
+
+        <p><strong>Cursor</strong> reports Fable 5 leads "every other model" on CursorBench (Cursor's own real-world coding benchmark — number not disclosed, so treat with caution).<sup>[7]</sup> There's a <em>Thinking variant</em> for tasks that reward extra reasoning; it costs roughly 2× Opus 4.8. The batch price ($5/$25 per million tokens) is Anthropic's standard 50 % batch discount passed through — no Cursor-specific pricing. AWS Bedrock and Databricks (via Unity AI Gateway) added two more governance-safe paths the same day.</p>
+        <div class="footnotes"><ol start="5">
+          <li id="fn5"><a href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md">github.com/anthropics/claude-code</a> — CHANGELOG v2.1.170 / v2.1.169, accessed 10.06.2026</li>
+          <li id="fn6"><a href="https://github.blog/changelog/2026-06-09-claude-fable-5-is-generally-available-for-github-copilot/">github.blog</a> — Fable 5 GA for GitHub Copilot, 09.06.2026</li>
+          <li id="fn7"><a href="https://cursor.com/docs/models/claude-fable-5">cursor.com/docs</a> — Claude Fable 5 (CursorBench, Thinking variant, pricing), accessed 10.06.2026</li>
+        </ol></div>
+      </section>
+
+      <section>
+        <h2>Fable 5 vs. Opus 4.8 — when to reach for which</h2>
+        <div class="pro-con">
+          <div class="pro">
+            <strong>Choose Fable 5 when …</strong>
+            <ul>
+              <li>… you face a long, async agent task where Opus asks for clarification too often — that's Anthropic's pitch.</li>
+              <li>… the domain is <em>not</em> security/bio/chemistry (else it falls back to Opus).</li>
+              <li>… you truly need large context (1M tokens).</li>
+              <li>… double the cost is offset by fewer iterations.</li>
+            </ul>
+          </div>
+          <div class="con">
+            <strong>Stick with Opus 4.8 when …</strong>
+            <ul>
+              <li>… cost matters (half the price; 88.6 % SWE-Bench often suffices).</li>
+              <li>… security-adjacent code falls back to Opus anyway.</li>
+              <li>… 30-day retention (Copilot) is a dealbreaker.</li>
+              <li>… you want independent board confirmation first.</li>
+            </ul>
+          </div>
+        </div>
+        <p class="byline">My take: for Daniel's typical stack (web, tooling, local experiments), a test run of Fable 5 on a real task is worth it — but Opus 4.8 stays the default workhorse until the 95 % is independently verified.</p>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>Update since last week</h2>
+        <p><span class="update-since">Update since Mon</span> <strong>Gemini 3.5 Pro</strong> remains stuck in limited Vertex preview — no GA. Announced at Google I/O (19.05.), only Flash went live; Pichai punted to "next month." Pro targets 2M context and a "Deep Think" mode.<sup>[8]</sup> With Fable 5 shipping, pressure on Google is palpable: Anthropic launches an entire new tier while Google's frontier coding model languishes in early access.</p>
+
+        <div class="eli5">
+          <strong class="eli5-term">"Limited preview":</strong> the model runs, but only for a handpicked group on one cloud platform (here Google Vertex). "GA" (General Availability) means anyone with an account can call it via API. Often a month or two between.</p>
+        </div>
+
+        <p><span class="update-since">unchanged</span> <strong>Claude Sonnet 4.8</strong> remains unannounced — no announcement, no model card, no API ID. Mid-tier officially stays Sonnet 4.6 ($3/$15, best speed/smarts ratio).<sup>[9]</sup> That Anthropic fires the top tier before bumping mid-market fits the pattern: headline first, volume models later.</p>
+        <div class="footnotes"><ol start="8">
+          <li id="fn8"><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/">blog.google</a> — Gemini 3.5 (Pro still preview), accessed 10.06.2026</li>
+          <li id="fn9"><a href="https://platform.claude.com/docs/en/about-claude/models/overview">platform.claude.com</a> — Sonnet 4.6 as current mid-tier, accessed 10.06.2026</li>
+        </ol></div>
+      </section>
+
+      <section>
+        <h2>Quiet in the shadow — the roll call</h2>
+        <p>Mandatory scan of the tools without major movement this week:</p>
+        <ul>
+          <li><strong>Cursor</strong> — Composer 2.5 running since 18.05.; June SDK updates brought custom tools, auto-review routing, and nested subagents.<sup>[10]</sup> Only new thing today is Fable 5 support (above).</li>
+          <li><strong>Aider</strong> — Polyglot board last updated June 2026 (22 models) per its official leaderboard; GPT-5 leads at roughly 0.88.<sup>[13]</sup> No new tool release; Fable 5 not yet listed.</li>
+          <li><strong>Cline</strong> — ~62k stars, 3.x line with standalone CLI + SDK, Kanban-parallel agents. Model-agnostic (30+ providers, local via Ollama/LM Studio). No new release this week.</li>
+          <li><strong>OpenHands</strong> — ~75k stars, 1.0 on new Software-Agent SDK, strongest headless story. Quiet.</li>
+          <li><strong>Continue</strong> — remains assistant-focused (not full agent), actively maintained. No movement.</li>
+          <li><strong>Microsoft MAI-Code-1-Flash</strong> — unveiled last week, no update.</li>
+        </ul>
+        <p class="byline">Stagnation is itself information: the field is awaiting model drops (Fable 5, soon Gemini Pro), not harness features.</p>
+        <div class="footnotes"><ol start="10">
+          <li id="fn10"><a href="https://cursor.com/changelog/sdk-updates-jun-2026">cursor.com/changelog</a> — SDK updates June 2026, accessed 10.06.2026</li>
+          <li id="fn11"><a href="https://www.opensourcealternatives.to/blog/best-open-source-ai-coding-assistants">opensourcealternatives.to</a> — OSS harness status (Cline/OpenHands/Continue), accessed 10.06.2026</li>
+          <li id="fn13" value="13"><a href="https://aider.chat/docs/leaderboards/">aider.chat/docs/leaderboards</a> — Aider Polyglot Leaderboard, accessed 10.06.2026</li>
+        </ol></div>
+      </section>
+
+      <section>
+        <h2>Open-weights: no quake, but motion</h2>
+        <p><strong>MiniMax M3</strong> (June) is the first open-weight model pairing frontier coding, 1M context, and native multimodality — it leads Open-Weight SWE-Bench Pro per aggregator data at <span class="stat">~59 %</span> (no independent primary board has confirmed the number yet).<sup>[12]</sup> For local runs, <strong>Qwen3-Coder 30B</strong> stays the pragmatic standard (256K context, Apache 2.0), <strong>DeepSeek V4</strong> (24.04., MIT) the cost heavyweight. Against Fable 5 they're different leagues — but for Daniel's Ollama box without token fees, still the right question.</p>
+        <div class="footnotes"><ol start="12">
+          <li id="fn12"><a href="https://www.morphllm.com/best-ollama-models">morphllm.com</a> — Open-weight coding models June 2026, accessed 10.06.2026</li>
+        </ol></div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Wednesday, June tenth. Yesterday Anthropic unveiled an entirely new model tier above Opus — and it was available in nearly every place Daniel works the very same day.</p>
+  <p>The model is called Claude Fable five. Anthropic places it in a new tier called Mythos, which they say sits above Opus. There's a sister model, Mythos five, that's technically identical but runs without safety guardrails and is only accessible to whitelisted customers. Fable five is the public, guardrailed variant. It has a context window of one million tokens and costs ten dollars per million input tokens and fifty dollars per million output tokens — roughly double Opus four point eight.</p>
+  <p>The headlines are the benchmarks. Anthropic reports ninety-five point zero percent on SWE-Bench Verified, compared to eighty-eight point six for Opus four point eight. But there's a major asterisk on that number. First, it's vendor-reported — on the independent board last updated in May, Fable five doesn't appear at all; G-P-T five point five still leads there at eighty-eight point seven.</p>
+  <p>Second, and this is the more important catch: on topics like cybersecurity, biology, or chemistry, Fable five automatically falls back to Opus four point eight. On one of the tests, nearly twenty-one percent of attempts triggered a refusal, which dropped the effective score from eighty-eight to eighty-four point three percent. If you write security-adjacent code, you don't get the new top-tier model for parts of that — you get Opus.</p>
+  <p>What was truly striking was the rollout. Fable five was available day-one across the Claude A-P-I, GitHub Copilot, Cursor, AWS Bedrock, Vertex, Microsoft Foundry, and Databricks. Claude Code version two point one point one hundred seventy shipped with Fable-five support immediately. A day earlier, version two point one point one hundred sixty-nine added two small but practical commands: a safe-mode startup and a directory-change command mid-session.</p>
+  <p>One detail for team work: in GitHub Copilot, Fable five enforces data storage of up to thirty days — unlike the other Claude models there. For confidential client code, that's a real consideration.</p>
+  <p>At Google, things are quiet: Gemini three point five Pro remains in limited preview, with no firm launch date. With Anthropic's new tier, pressure on Google is mounting. And Claude Sonnet four point eight is still unannounced — mid-tier officially stays Sonnet four point six.</p>
+  <p>My advice for Daniel's toolbox: a test run of Fable five on a real task is worth it. But until the ninety-five percent is independently confirmed and for sensitive repos, Opus four point eight remains the sensible default — half the price, no forced data retention.</p>
+  <p>Tomorrow we'll see if the first independent Fable-five results arrive and whether Gemini three point five Pro finally moves.</p>
+</div>
+
+<script type="application/json" id="bench-data">
+{"labels": ["Claude Fable 5","Claude Opus 4.8","GPT-5.5","Gemini 3.1 Pro"],
+ "data":   [80.0, 69.2, 58.6, 54.2],
+ "max":    100,
+ "unit":   " %"}
+</script>
+
+</body>
+</html>

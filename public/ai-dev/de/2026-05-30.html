@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief AI-Dev — 2026-05-30</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI-Dev</span>
+    <span class="dot">·</span>
+    <span>Samstag, 2026-05-30</span>
+    <span class="dot">·</span>
+    <span>Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">Googles Coding-Stack von der I/O — und das Agenten-Rennen drei Wochen danach</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Heute ist Samstag und der News-Tag selbst ist leise — keine großen Releases in den letzten 24 h, nur Sub-Tages-Builds. Was dieser Brief heute nachholt, ist die <strong>Coding-Seite der Google I/O 2026</strong>, die am <strong>19.05.</strong> lief und in der Anthropic-Woche unterging: <strong>Gemini 3.5 Flash</strong> als agentisches Coding-Modell, <strong>Managed Agents in der Gemini-API</strong>, <strong>Antigravity 2.0</strong>. Dazu <strong>xAI Grok Build</strong>, das seit dem 14./15.05. läuft und am 25.05. für alle SuperGrok/X-Premium+-Abos geöffnet hat. Die Klammer um alles: <strong>vier neue agentische Coding-Modelle</strong> in drei Wochen. Das <strong>SWE-Bench-Verified</strong>-Board ist quicklebendig (Stand 28.05.): etablierte Modelle stehen bei ~87–93 % — Claude Mythos Preview <strong>93,9 %</strong>, GPT-5.5 <strong>88,7 %</strong>, Opus 4.8 <strong>88,6 %</strong>, Opus 4.7 <strong>87,6 %</strong>. Aber die <em>I/O-Woche-Neuzugänge</em> — Gemini 3.5 Flash und grok-build-0.1 — stehen <strong>nicht</strong> auf dem offiziellen Verified-Board; ihre Coding-Zahlen sind <strong>Anbieter-gemeldet</strong> und dort nicht unabhängig geführt. Cross-Check-Pointe: Gemini 3.5 Flashs Zahlen sind unabhängig (Artificial Analysis) <em>mit Null-Abweichung</em> bestätigt — aber dasselbe AA-Ranking setzt das Modell auf Platz 8 von 148, hinter GPT-5.5 und Opus 4.7.</p>
+    <ul>
+      <li><span class="chip hot">Google</span> <strong>Gemini 3.5 Flash GA</strong> (I/O, 19.05.): Terminal-Bench 2.1 <strong>76,2 %</strong>, MCP Atlas <strong>83,6 %</strong>, GDPval-AA <strong>1.656 Elo</strong> — alle unabhängig von Artificial Analysis mit <strong>Null-Abweichung</strong> gespiegelt. Aber: AA-Intelligence-Index <strong>Rang 8/148</strong>, und MRCR fällt bei 1 M Tokens auf <strong>26,6 %</strong>. <span class="chip good">Try</span></li>
+      <li><span class="chip hot">Google</span> <strong>Managed Agents in der Gemini-API</strong>: ein API-Call startet einen Agenten in einer isolierten Linux-Sandbox; das Verhalten definierst du in <code>AGENTS.md</code>/<code>SKILL.md</code>. Harness = der <strong>Antigravity-Agent</strong> auf Gemini 3.5 Flash. <span class="chip good">Try</span></li>
+      <li><span class="chip">Google</span> <strong>Antigravity 2.0</strong>: aus der IDE-Erweiterung wird eine eigenständige Agenten-Desktop-App + CLI + SDK — alle auf demselben Harness wie Googles eigene Produkte. Gemini 3.5 Flash als Default</li>
+      <li><span class="chip hot">Tool</span> <strong>xAI Grok Build</strong> (14./15.05., offen seit 25.05.): <code>grok-build-0.1</code>, 256K Kontext, bis <strong>8 parallele Subagenten</strong> in eigenen Git-Worktrees, Plan→Search→Build, Arena-Mode. Selbst-gemeldete SWE-Bench Verified <strong>70,8 %</strong> — Anbieter-Zahl, nicht auf dem offiziellen Board</li>
+      <li><span class="chip">Bench</span> <strong>SWE-Bench Verified</strong> · Board ist <strong>aktiv</strong> (Stand 28.05.): Mythos Preview <strong>93,9 %</strong>, GPT-5.5 <strong>88,7 %</strong>, Opus 4.8 <strong>88,6 %</strong>, Opus 4.7 <strong>87,6 %</strong>. Aber Gemini 3.5 Flash + grok-build-0.1 fehlen — ihre Coding-Zahlen sind Anbieter-gemeldet, dort nicht geführt</li>
+      <li><span class="chip">Claude</span> <strong>Claude Code 2.1.158</strong> (heute 02:42 UTC): Auto-Mode auf Bedrock/Vertex/Foundry für Opus 4.7+4.8. <strong>2.1.157</strong> (29.05.): Plugins aus <code>.claude/skills</code> ohne Marketplace</li>
+      <li><span class="chip">OSS</span> <strong>Cursor 3.6</strong> (29.05.): „Auto-Review"-Modus — längere autonome Läufe, weniger Freigabe-Prompts. <strong>Cline cli-3.0.15</strong> (29.05.) + VS-Code <strong>3.86.0</strong> (28.05.)</li>
+      <li><span class="chip">Local</span> <strong>llama.cpp b9428</strong> (heute 08:51 UTC) — von b9402 = ~26 Builds in 24 h, der Sub-Tagestakt hält</li>
+      <li><span class="chip">Tool</span> <strong>Im Schatten</strong>: Codex weiter 0.135.0 stable (28.05.), Aider <strong>v0.86.2 vom 12.02.</strong> (dormant), Windsurf/OpenHands/Continue/Plandex ohne neuen Build</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick · AI-Dev</div>
+      <div class="timeline-sub">Das Agenten-Rennen seit der Google I/O — vier Modelle in drei Wochen; das Verified-Board läuft, aber die Neuzugänge fehlen noch</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">14./15.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>xAI Grok Build · Early Beta</strong></span>
+          <span>nur SuperGrok Heavy ($300/Mo), grok-build-0.1 (Quellen 14.–15.05)</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Di 19.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Google I/O 2026 Keynote</strong></span>
+          <span>Gemini 3.5 Flash GA, Managed Agents, Antigravity 2.0 — die Coding-Seite, die wir heute nachholen</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mo 25.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Grok Build öffnet</strong></span>
+          <span>für alle SuperGrok ($30) + X Premium+ ($40)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fr 29.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cursor <strong>3.6</strong> (Auto-Review), Cline <strong>cli-3.0.15</strong>, Claude Code <strong>2.1.157</strong></span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Sa 30.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heute</span>
+          <span>Claude Code <strong>2.1.158</strong> (Auto-Mode Bedrock/Vertex/Foundry), llama.cpp <strong>b9428</strong> — sonst ruhig</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mo 01.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Werktags-Takt zurück — erwartbar nächste Codex-/Cursor-/Cline-Builds</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Do 18.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Gemini-CLI-Sunset für Free + AI Pro/Ultra — <code>agy</code> übernimmt</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section>
+        <h2>Gemini 3.5 Flash · der seltene Fall einer Anbieter-Zahl, die hält <span class="h2-refs">[1][2][3]</span></h2>
+
+        <p>Auf der <strong>Google I/O am 19.05.</strong> — also vor elf Tagen, in der Anthropic-Opus-4.8-Woche untergegangen — ist <strong>Gemini 3.5 Flash</strong> in GA gegangen und ist seitdem Googles Default-Modell. Google positioniert es als <em>agentisches Coding-Modell</em>: ein <strong>Flash</strong>-Modell (das günstige, schnelle Tier), das laut Google das vorherige <strong>3.1 Pro</strong> auf den Coding-Benchmarks schlägt — und das, gemessen <em>an Frontier-Modellen allgemein</em>, „viermal schneller" in Output-Tokens pro Sekunde und „oft zu weniger als der halben Kosten" läuft (Googles Vergleich gilt anderen Frontier-Modellen generell, nicht speziell 3.1 Pro).<sup>[1]</sup></p>
+
+        <p>Die Zahlen, die Google zeigt: <strong>Terminal-Bench 2.1 76,2 %</strong>, <strong>MCP Atlas 83,6 %</strong>, <strong>GDPval-AA 1.656 Elo</strong>, CharXiv-Reasoning 84,2 %. Gegen 3.1 Pro sind das spürbare Sprünge (Terminal-Bench 70,3 → 76,2; MCP Atlas 78,2 → 83,6; Finance Agent v2 43,0 → 57,9).<sup>[2]</sup></p>
+
+        <div class="eli5">
+          <strong class="eli5-term">Terminal-Bench / MCP Atlas / GDPval:</strong> Drei Tests, die <em>agentisches</em> Können messen, nicht nur Code-Schnipsel. <strong>Terminal-Bench</strong> setzt das Modell in eine echte Shell und lässt es eine Aufgabe über mehrere Befehle lösen — wie ein Praktikant, der sich allein durch dein Terminal arbeitet. <strong>MCP Atlas</strong> prüft, ob das Modell externe Werkzeuge über das Model-Context-Protocol korrekt anspricht (MCP = ein USB-Standard, über den ein Modell Tools wie GitHub oder eine Datenbank ansteuert). <strong>GDPval-AA</strong> ist ein Elo-Score über realistische Wissensarbeit — wie eine Schach-Wertung, nur für Berufsaufgaben.
+        </div>
+
+        <p>Normalerweise ist hier der Punkt, an dem dieser Brief „Anbieter-Zahl, nicht gespiegelt" schreibt. Diesmal ist es anders: <strong>Artificial Analysis</strong> hat genau diese Werte unabhängig nachgemessen — Terminal-Bench 2.1, MCP Atlas, GDPval-AA, Humanity's Last Exam, MRCR 128k — und kommt auf <strong>Null Abweichung</strong> zur Google-Zahl. Das ist selten und verdient, festgehalten zu werden.<sup>[3]</sup></p>
+
+        <div class="callout warn">
+          <span class="callout-label">Aber</span>
+          Bestätigte Einzel-Benchmarks sind nicht dasselbe wie Spitzenklasse. Derselbe <strong>Artificial-Analysis-Intelligence-Index v4.0</strong> setzt Gemini 3.5 Flash auf <strong>Rang 8 von 148</strong> — hinter GPT-5.5 und Claude Opus 4.7 (jeweils ~3 Punkte). Und auf <strong>SWE-Bench Pro</strong> liegt Flash bei <strong>55,1 %</strong>, 9,2 Punkte hinter Opus 4.7 (64,3 %) — diese Pro-Zahlen sind allerdings <strong>via digitalapplied.com</strong> zusammengetragen, kein eigener Artificial-Analysis-Lauf. Bei Langkontext bricht <strong>MRCR</strong> von 77,3 % (128k) auf <strong>26,6 % bei 1 M Tokens</strong> ein — Nadel-im-Heuhaufen über volle Kontexte ist eine echte Schwäche.<sup>[3]</sup>
+        </div>
+
+        <p>Einordnung für Daniels Toolbox: Gemini 3.5 Flash ist nicht das beste Coding-Modell — es ist das beste <em>Preis-Leistungs-Modell</em> für agentische Schleifen, in denen Latenz und Token-Kosten dominieren (Test-Loops, Refactor-Schwärme, CI-Bots). Schwere Architektur-Aufgaben bleiben Opus/GPT-5.5; für hundert kleine parallele Agenten-Tasks ist Flash der rationalere Default. <span class="chip good">Try</span> Über Google AI Studio / Gemini API, „high"-Thinking-Level (die Benchmark-Variante).</p>
+      </section>
+
+      <div class="footnotes">
+        <ol>
+          <li id="ref-1"><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/">blog.google — Gemini 3.5: GA am 19.05.2026, „4 times faster than other frontier models" (Output-Tokens/s), „often at less than half the cost of other frontier models" — Vergleich gegen Frontier-Modelle allgemein, nicht 3.1 Pro; Default-Modell, verfügbar in Antigravity + Gemini API (AI Studio, Android Studio)</a>, 19.05.2026 (abgerufen 30.05.2026)</li>
+          <li id="ref-2"><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/">blog.google — Terminal-Bench 2.1 76,2 %, MCP Atlas 83,6 %, GDPval-AA 1.656 Elo, CharXiv 84,2 %; Deltas vs 3.1 Pro via neowin/appwrite (TB 70,3; MCP 78,2; Finance 43,0; GDPval 1.314)</a>, 19.05.2026</li>
+          <li id="ref-3"><a href="https://www.digitalapplied.com/blog/gemini-3-5-flash-5-day-benchmarks-independent-eval-roundup">digitalapplied.com — unabhängiger Eval-Roundup: Artificial Analysis spiegelt TB 76,2 / MCP 83,6 / GDPval 1.656 mit Null-Abweichung; AA-Intelligence-Index Rang 8/148 hinter GPT-5.5 + Opus 4.7; SWE-Bench Pro 55,1 % (Opus 4.7: 64,3 %); MRCR 1 M = 26,6 %</a>, 25.05.2026</li>
+        </ol>
+      </div>
+
+      <section>
+        <h2>Managed Agents · der Agent als API-Primitive <span class="h2-refs">[4][5]</span></h2>
+
+        <p>Die für Entwickler interessantere I/O-Ankündigung ist nicht das Modell, sondern wie Google es verpackt: <strong>Managed Agents in der Gemini-API</strong>. Ein einziger API-Call startet einen Agenten, der in einer <strong>isolierten, kurzlebigen Linux-Sandbox</strong> denkt, plant, Werkzeuge ruft, <strong>Code ausführt, Dateien verwaltet und das Web liest</strong> — du musst keine Runtime, keinen Container und keine Tool-Schleife selbst betreiben.<sup>[4]</sup></p>
+
+        <div class="eli5">
+          <strong class="eli5-term">Managed Agent:</strong> Bisher war ein „Agent" etwas, das du selbst zusammenbaust — Modell-Call, Tool-Aufruf, Ergebnis zurück ins Modell, Schleife, dazu eine Sandbox, in der der Code laufen darf. Google nimmt dir die ganze Klempnerei ab: du sagt per API „mach das", und im Hintergrund läuft eine fertige Linux-Maschine, die der Agent steuert. Wie der Unterschied zwischen einem eigenen Server (du wartest Strom, Kühlung, OS) und einer Cloud-Funktion (du lädst nur den Code hoch). Du beschreibst <em>was</em>, nicht <em>wie betrieben</em>.
+        </div>
+
+        <p>Das Verhalten definierst du in Markdown — <code>AGENTS.md</code> und <code>SKILL.md</code> — und registrierst diese Dateien als Managed Agent. Der zugrunde liegende <strong>Harness</strong> (die Steuer-Schleife um das Modell) ist Googles <strong>Antigravity-Agent</strong>, gebaut auf Gemini 3.5 Flash, erreichbar über die <strong>Interactions API</strong>. Jede Interaktion erzeugt oder erbt eine Umgebung, die du im Folge-Call wiederverwendest — Dateien und Zustand bleiben erhalten, du kannst die Session fortsetzen.<sup>[5]</sup></p>
+
+        <div class="callout info">
+          <span class="callout-label">Bekanntes Muster</span>
+          Wer das <code>AGENTS.md</code>/<code>SKILL.md</code>-Schema kennt, sieht sofort: das ist dieselbe Konvention wie bei OpenAI Codex und Claude Code. Drei Anbieter konvergieren auf <em>Markdown-definierte Agenten + gehostete Sandbox</em>. Das ist gut für Daniel — Skills, die er für Claude Code schreibt, sind konzeptionell portierbar. Google nennt allerdings <strong>weder Preise noch Limits</strong> im Ankündigungs-Post; vor einem Produktiv-Einsatz muss man die Kostenseite separat prüfen.
+        </div>
+      </section>
+
+      <div class="footnotes">
+        <ol start="4">
+          <li id="ref-4"><a href="https://blog.google/innovation-and-ai/technology/developers-tools/managed-agents-gemini-api/">blog.google — Managed Agents: „A single API call to the Antigravity agent provisions a remote Linux environment ... Execute code and manage files in an isolated Linux sandbox ... Browse the web"</a>, 19.05.2026</li>
+          <li id="ref-5"><a href="https://blog.google/innovation-and-ai/technology/developers-tools/managed-agents-gemini-api/">blog.google — „define everything in markdown files like AGENTS.md and SKILL.md and register them as a managed agent ... powered by the new Antigravity agent, built on Gemini 3.5 Flash ... via the Interactions API"; keine Preise/Limits genannt</a>, 19.05.2026</li>
+        </ol>
+      </div>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>Antigravity 2.0 · von der IDE-Hilfe zur Agenten-Plattform <span class="h2-refs">[6]</span></h2>
+
+        <p>Antigravity war bisher Googles agentische IDE-Schicht. Mit <strong>Antigravity 2.0</strong> (ebenfalls I/O, 19.05.) wird daraus eine <strong>eigenständige Desktop-App</strong>, die komplett um Agenten-Orchestrierung herum gebaut ist — plus eine <strong>Antigravity CLI</strong> und ein <strong>Antigravity SDK</strong>. Der Clou: CLI, SDK und Desktop-App teilen sich <em>denselben Harness, der auch Googles eigene Produkte antreibt</em>. Default-Modell überall: Gemini 3.5 Flash.<sup>[6]</sup></p>
+
+        <p>Der strategische Punkt ist derselbe wie bei Anthropics Dynamic Workflows letzte Woche und Cognitions „orchestration layer"-These: <strong>die Orchestrierungs-Schicht über dem Modell wird zur eigenen Produktkategorie</strong> — Antigravity, Dynamic Workflows, der Codex-Service, je eine pro Anbieter. Für Daniel: die Frage ist immer weniger „welches Modell" und mehr „welcher Harness orchestriert es, und kann ich meine Skills mitnehmen".</p>
+
+        <article class="news-item">
+          <h3>Ehrliche Einordnung</h3>
+          <p>2.0 ist <strong>Enterprise-orientiert</strong> (geplante/asynchrone Tasks, Cloud-Run-/Firebase-Integration). Für einen Solo-Entwickler ist die <strong>CLI</strong> das relevante Stück — gleicher Harness wie die Desktop-App, ohne GUI-Overhead. Ob sie an Claude Code / Codex CLI / Grok Build heranreicht, ist drei Wochen nach Launch nicht durch unabhängige Reviews belegt — Watchlist, kein heutiges Urteil.</p>
+          <span class="src"><a href="https://www.marktechpost.com/2026/05/19/google-launches-antigravity-2-0-at-i-o-2026-a-standalone-agent-first-platform-with-cli-sdk-managed-execution-and-enterprise-support/">marktechpost.com</a> · <a href="https://blog.google/innovation-and-ai/technology/developers-tools/google-io-2026-developer-highlights/">blog.google</a></span>
+        </article>
+      </section>
+
+      <div class="footnotes">
+        <ol start="6">
+          <li id="ref-6"><a href="https://www.marktechpost.com/2026/05/19/google-launches-antigravity-2-0-at-i-o-2026-a-standalone-agent-first-platform-with-cli-sdk-managed-execution-and-enterprise-support/">marktechpost.com — Antigravity 2.0: standalone Agent-Desktop-App + CLI + SDK, gleicher Harness wie Googles Produkte, Gemini 3.5 Flash als Default, parallele Agenten</a>, 19.05.2026</li>
+        </ol>
+      </div>
+
+      <section>
+        <h2>xAI Grok Build · der vierte Spieler, ehrlich vermessen <span class="h2-refs">[7][8]</span></h2>
+
+        <p>Während Google die Bühne hatte, ist xAI still in dieselbe Kategorie eingestiegen: <strong>Grok Build</strong>, ein terminal-natives Coding-Agent-CLI auf dem eigens dafür gebauten Modell <strong>grok-build-0.1</strong>. Start als Early Beta am <strong>15.05.</strong> (nur SuperGrok Heavy, $300/Mo), seit dem <strong>25.05.</strong> offen für alle SuperGrok ($30) und X Premium+ ($40) — ein steiler Preis-Sturz, der Reichweite kaufen soll.<sup>[7]</sup></p>
+
+        <p>Technisch interessant: <strong>bis zu 8 parallele Subagenten</strong>, jeder in einem <strong>eigenen Git-Worktree</strong> auf einem separaten Branch; ein Orchestrator führt die Ergebnisse danach zusammen. Davor ein <strong>Plan→Search→Build</strong>-Ablauf — bei allem über einen Einzeiler schreibt Grok Build erst einen strukturierten Plan, den du Schritt für Schritt freigibst oder umschreibst. 256K Kontext, MCP nativ (GitHub, Linear, Slack ohne Reconfiguration). Zur API-Preisseite kursieren widersprüchliche Drittquellen-Zahlen — buildfastwithai.com nennt $0,20/1 M Input + $1,50/1 M Output, andere $1,00/$2,00 (der $0,20-Wert dürfte der <em>gecachte</em> Input-Preis sein); die offizielle xAI-Preisseite war nicht erreichbar, daher unbestätigt.<sup>[8]</sup></p>
+
+        <div class="eli5">
+          <strong class="eli5-term">Git-Worktree pro Subagent:</strong> Ein Worktree ist ein zweiter Arbeitsordner aus demselben Repo, auf einem eigenen Branch. Wenn acht Agenten gleichzeitig am selben Code arbeiten, würden sie sich sonst gegenseitig die Dateien überschreiben — wie acht Köche an einem Herd. Mit je einem Worktree bekommt jeder seine eigene Kochnische; erst am Ende wird zusammengeführt. Sauber und konfliktarm — das ist der technisch eleganteste Teil von Grok Build.
+        </div>
+
+        <article class="news-item">
+          <h3>Die Benchmark-Zahl — und ihre Grenze</h3>
+          <p>xAI gibt für grok-build-0.1 <strong>SWE-Bench Verified 70,8 %</strong> an — eine <strong>Anbieter-Zahl</strong>, nicht auf dem offiziellen Verified-Board (siehe Spalte rechts). Zur Einordnung: auf dem realen Board stehen GPT-5.5 bei 88,7 % und Opus 4.7 bei 87,6 % — grok-build-0.1 spielt also, wenn die eigene Zahl überhaupt hält, eine Klasse darunter. Unabhängige Reviews waren gemischt: stark bei Parallelität und Privacy, zurück bei Benchmark-Leistung und Ökosystem-Tiefe. Für Daniel: <strong>nicht heute wechseln</strong> — Grok Build ist hinter X-Premium+ eingesperrt und ökosystem-mager; die parallele-Worktree-Idee ist das, was man im Auge behält.</p>
+          <span class="src"><a href="https://www.engadget.com/2173482/xai-coding-agent-grok-build/">engadget.com</a> · <a href="https://www.buildfastwithai.com/blogs/grok-build-xai-cli-ai-agents-2026">buildfastwithai.com</a> · <a href="https://sdd.sh/2026/05/grok-build-xai-coding-agent-arena-mode/">sdd.sh</a></span>
+        </article>
+      </section>
+
+      <div class="footnotes">
+        <ol start="7">
+          <li id="ref-7"><a href="https://www.engadget.com/2173482/xai-coding-agent-grok-build/">engadget.com — Grok Build eingeführt 15.05.2026, Early Beta nur SuperGrok Heavy ($300/Mo); konkurriert direkt mit Claude Code</a>, 15.05.2026</li>
+          <li id="ref-8"><a href="https://www.buildfastwithai.com/blogs/grok-build-xai-cli-ai-agents-2026">buildfastwithai.com — grok-build-0.1: 8 parallele Subagenten in isolierten Git-Worktrees, 256K Kontext, Plan→Search→Build, SWE-Bench Verified 70,8 % (Anbieter), API $0,20/$1,50 pro 1 M (Drittquelle; widersprüchlich zu $1,00/$2,00 anderswo, $0,20 wohl gecachter Input — offizielle xAI-Seite nicht erreichbar); Wider Beta 25.05.</a>, abgerufen 30.05.2026 (zusätzlich <a href="https://sdd.sh/2026/05/grok-build-xai-coding-agent-arena-mode/">sdd.sh — Arena-Mode, gemischte Reviews</a>)</li>
+        </ol>
+      </div>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>SWE-Bench Verified · das Board lebt — die Neuzugänge fehlen <span class="h2-refs">[9]</span></h2>
+
+        <p>Anders als zwischendurch befürchtet: das <strong>offizielle SWE-Bench-Verified-Board</strong> ist quicklebendig und aktuell (zuletzt aktualisiert <strong>28.05.2026</strong>). Die etablierten Modelle stehen oben fest verankert — <strong>Claude Mythos Preview 93,9 %</strong>, <strong>GPT-5.5 88,7 %</strong>, <strong>Claude Opus 4.8 88,6 %</strong>, <strong>Claude Opus 4.7 87,6 %</strong> (gegengeprüft über llm-stats.com, benchlm.ai, marc0.dev).<sup>[9]</sup></p>
+
+        <div class="eli5">
+          <strong class="eli5-term">SWE-Bench Verified:</strong> Ein Test mit echten GitHub-Issues aus echten Open-Source-Repos: das Modell muss den Bug fixen, und ein menschlich geprüfter Test entscheidet, ob der Fix wirklich funktioniert. „Verified" heißt, dass Menschen die Aufgaben vorab auf Lösbarkeit kontrolliert haben — das ist der Grund, warum dieser Brief sich bei Coding-Können auf genau dieses Board verlässt und nicht auf Anbieter-Folien.
+        </div>
+
+        <p>Die skeptische Pointe liegt woanders: die <strong>I/O-Woche-Neuzugänge</strong> — <strong>Gemini 3.5 Flash</strong> und <strong>grok-build-0.1</strong> — stehen <strong>nicht</strong> auf dem offiziellen Verified-Board. Ihre Coding-Zahlen sind <strong>Anbieter-gemeldet</strong>: Grok Builds „SWE-Bench Verified 70,8 %" ist xAIs eigene Angabe, kein Board-Eintrag, und für Flash existiert dort gar keine Verified-Zahl. „Auf Terminal-Bench bestätigt" ist eben nicht „auf SWE-Bench Verified geführt". Die Bar-Chart unten zeigt deshalb bewusst die <strong>SWE-Bench-Pro-Zahlen</strong> (das einzige unabhängig vergleichbare Code-Maß, das aktuell für Flash existiert, zusammengetragen via digitalapplied.com), nicht Verified.</p>
+
+        <div class="bench-wrap" data-component="benchmark-chart">
+          <div class="bench-head">SWE-Bench Pro — wo Gemini 3.5 Flash steht (via digitalapplied.com, nicht das offizielle Verified-Board), Stand 25.05.2026</div>
+          <div class="bench-chart-wrap"><canvas></canvas></div>
+        </div>
+
+        <p class="byline">Lesart: Auf SWE-Bench Pro schlägt Flash seinen eigenen Vorgänger klar, bleibt aber rund 9 Punkte hinter Opus 4.7 — und das ist die ältere Anthropic-Generation. Genau die Lücke, die ein „bestes Preis-Leistungs-Modell"-Framing erklärt, kein „bestes Modell".</p>
+      </section>
+
+      <div class="footnotes">
+        <ol start="9">
+          <li id="ref-9"><a href="https://benchlm.ai/benchmarks/sweVerified">benchlm.ai — offizielles SWE-Bench-Verified-Board, Stand 28.05.2026: Claude Mythos Preview 93,9 %, Opus 4.8 88,6 %, Opus 4.7 (Adaptive) 87,6 %; GPT-5.5 88,7 % (via <a href="https://www.marc0.dev/en/leaderboard">marc0.dev</a>); Gemini 3.5 Flash + grok-build-0.1 NICHT gelistet. SWE-Bench-<em>Pro</em>-Werte via <a href="https://www.digitalapplied.com/blog/gemini-3-5-flash-5-day-benchmarks-independent-eval-roundup">digitalapplied.com</a> (Flash 55,1 %, Gemini 3 Flash 49,6 %, Opus 4.7 64,3 %)</a>, abgerufen 30.05.2026</li>
+        </ol>
+      </div>
+
+      <section>
+        <h2>Werkzeuge · Silent-Roll-Call <span class="h2-refs">[10][11]</span></h2>
+
+        <p>Samstag, ruhiger Tag. Was sich seit gestern bewegt hat:</p>
+
+        <article class="news-item">
+          <h3>Frisch (letzte 24–48 h)</h3>
+          <ul class="news-item-list">
+            <li><strong>Claude Code 2.1.158</strong> (heute 02:42 UTC) — Auto-Mode jetzt auf <strong>Bedrock, Vertex und Foundry</strong> für Opus 4.7+4.8 (<code>CLAUDE_CODE_ENABLE_AUTO_MODE=1</code>). Vorgängerin <strong>2.1.157</strong> (29.05. 20:20 UTC): Plugins aus <code>.claude/skills</code> werden <strong>ohne Marketplace</strong> automatisch geladen, <code>claude plugin init &lt;name&gt;</code> scaffoldet ein Plugin, <code>claude agents</code> ehrt das <code>agent</code>-Feld aus <code>settings.json</code>.<sup>[10]</sup></li>
+            <li><strong>Cursor 3.6</strong> (29.05.) — <strong>Auto-Review</strong>-Modus: Cursor arbeitet länger autonom mit weniger Freigabe-Prompts und „sichererer Ausführung". Dieselbe Bewegung wie Grok Builds Plan-Mode und Cline-Auto — die ganze Klasse zieht Richtung längerer autonomer Läufe. 3.5 (20.05.) brachte das <code>/loop</code>-Skill.</li>
+            <li><strong>Cline cli-3.0.15</strong> (29.05.) + VS-Code-Extension <strong>3.86.0</strong> (28.05.) — der Standalone-CLI-Zweig taktet jetzt eigenständig neben der VS-Code-Erweiterung.</li>
+            <li><strong>llama.cpp b9428</strong> (heute 08:51 UTC) — von b9402 vor zwei Tagen sind das ~26 Builds, der Sub-Tagestakt am Backend hält durch.</li>
+          </ul>
+        </article>
+
+        <article class="news-item">
+          <h3>Im Schatten</h3>
+          <p><strong>OpenAI Codex</strong> weiter <strong>0.135.0 stable</strong> (28.05.), 0.136.0-alpha.1 als Pre-Release (29.05.) — kein neues Stable seit zwei Tagen. <strong>Aider v0.86.2 vom 12.02.</strong> bleibt eingefroren (3,5 Monate, dormant). <strong>Windsurf, OpenHands, Continue, Plandex, Zed, JetBrains Junie</strong>: kein neuer relevanter Build in den letzten 24 h. <strong>Gemini CLI</strong> läuft auf den 18.06.-Sunset für Free + AI Pro/Ultra zu — <code>agy</code> bleibt der Migrationspfad.<sup>[11]</sup></p>
+        </article>
+      </section>
+
+      <div class="footnotes">
+        <ol start="10">
+          <li id="ref-10"><a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code — v2.1.158 (30.05. 02:42 UTC, Auto-Mode Bedrock/Vertex/Foundry); v2.1.157 (29.05. 20:20 UTC, Plugins ohne Marketplace, claude plugin init); v2.1.156 (29.05., Opus-4.8-Thinking-Block-Hotfix)</a>, 29.–30.05.2026</li>
+          <li id="ref-11"><a href="https://www.cursor.com/changelog">cursor.com/changelog — 3.6 (29.05., Auto-Review), 3.5 (20.05., /loop)</a>, abgerufen 30.05.2026 (zusätzlich <a href="https://github.com/openai/codex/releases">openai/codex 0.135.0 stable + 0.136.0-alpha.1</a>, <a href="https://github.com/cline/cline/releases">cline cli-v3.0.15 + v3.86.0</a>, <a href="https://github.com/ggml-org/llama.cpp/releases">llama.cpp b9428</a>)</li>
+        </ol>
+      </div>
+
+      <section>
+        <h2>Watchlist</h2>
+        <ul class="news-item-list">
+          <li><strong>SWE-Bench Verified</strong>: das Board ist aktiv (Stand 28.05.), aber Gemini 3.5 Flash und grok-build-0.1 fehlen noch — erscheint demnächst ein unabhängig geführter Verified-Eintrag, oder bleiben ihre Coding-Zahlen Anbieter-gemeldet?</li>
+          <li><strong>Antigravity CLI</strong>: das erste unabhängige Head-to-Head gegen Claude Code / Codex CLI / Grok Build — bisher nur Marketing.</li>
+          <li><strong>Managed-Agents-Preise</strong>: Google nennt im Launch-Post keine. Ohne Kostenseite kein Produktiv-Urteil.</li>
+          <li><strong>Konvergenz auf <code>AGENTS.md</code>/<code>SKILL.md</code></strong>: Google, OpenAI und Anthropic teilen jetzt dasselbe Agent-Definitions-Schema — wird daraus ein faktischer Standard für portable Skills?</li>
+        </ul>
+
+        <p class="byline">Heute ist der ruhige Samstag, an dem sich nachholen lässt, was die Anthropic-Woche verdeckt hat: Google hat auf der I/O einen kompletten Agenten-Coding-Stack ausgerollt, und xAI ist mit Grok Build als vierter Spieler dazugekommen. Gemeinsamer Nenner — das Verified-Board läuft und verankert die etablierten Modelle bei ~87–93 %, aber die frischen I/O-Neuzugänge stehen noch nicht drauf, und eine Orchestrierungs-Schicht wird wichtiger als das Modell darunter. Montag schauen wir, ob der Werktags-Takt neue Stable-Builds und vielleicht die ersten unabhängigen Antigravity-CLI-Tests bringt. Bis dahin.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Samstag, der dreißigste Mai. Der News-Tag selbst ist leise — keine großen Releases in den letzten vierundzwanzig Stunden, nur Sub-Tages-Builds. Was dieser Brief heute nachholt, ist die Coding-Seite der Google I/O, die schon am neunzehnten Mai lief und in der lauten Anthropic-Woche untergegangen ist. Drei Geschichten von Google, eine von xAI, und eine rote Linie, die alles zusammenhält.</p>
+  <p>Erste Geschichte. Gemini drei-Punkt-fünf Flash ist auf der I/O in die allgemeine Verfügbarkeit gegangen und ist seitdem Googles Default-Modell. Es ist ein günstiges, schnelles Flash-Modell, das Google als agentisches Coding-Modell positioniert — viermal schneller in Tokens pro Sekunde und oft zu weniger als der halben Kosten, gemessen an Frontier-Modellen allgemein, nicht speziell am alten drei-Punkt-eins Pro. Die Zahlen: Terminal-Bench zwei-Punkt-eins sechsundsiebzig Komma zwei Prozent, MCP Atlas dreiundachtzig Komma sechs, GDPval sechzehnhundertsechsundfünfzig Elo.</p>
+  <p>Und jetzt der seltene Teil. Normalerweise sage ich an dieser Stelle: Anbieter-Zahl, nicht unabhängig gespiegelt. Diesmal nicht. Artificial Analysis hat genau diese Werte nachgemessen und kommt auf null Abweichung zur Google-Zahl. Das ist selten und verdient festgehalten zu werden. Aber — bestätigte Einzel-Benchmarks sind nicht dasselbe wie Spitzenklasse. Derselbe Artificial-Analysis-Index setzt Flash auf Rang acht von hundertachtundvierzig, hinter GPT fünf-Punkt-fünf und Claude Opus vier-Punkt-sieben. Auf SWE-Bench Pro liegt Flash bei fünfundfünfzig Komma eins Prozent, neun Punkte hinter Opus vier-Punkt-sieben. Und bei einer Million Token Kontext bricht die Langkontext-Leistung auf sechsundzwanzig Prozent ein. Die ehrliche Einordnung: Flash ist nicht das beste Coding-Modell, sondern das beste Preis-Leistungs-Modell für viele kleine parallele Agenten-Aufgaben.</p>
+  <p>Zweite Geschichte, die für Entwickler interessantere. Managed Agents in der Gemini-API. Ein einziger API-Call startet einen Agenten, der in einer isolierten Linux-Sandbox denkt, plant, Werkzeuge ruft, Code ausführt und das Web liest. Du betreibst keine Runtime und keinen Container selbst — du sagst der API was, und im Hintergrund läuft eine fertige Maschine. Das Verhalten definierst du in Markdown-Dateien namens AGENTS-Punkt-md und SKILL-Punkt-md und registrierst sie als Managed Agent. Und genau hier wird es spannend: das ist dieselbe Konvention, die OpenAI Codex und Claude Code benutzen. Drei Anbieter konvergieren auf Markdown-definierte Agenten plus gehostete Sandbox. Für Daniel heißt das, seine Claude-Code-Skills sind konzeptionell portierbar. Wichtige Lücke: Google nennt im Ankündigungs-Post weder Preise noch Limits.</p>
+  <p>Dritte Google-Geschichte. Antigravity zwei-Punkt-null. Aus der bisherigen IDE-Schicht wird eine eigenständige Agenten-Desktop-App plus eine Kommandozeile plus ein SDK — alle drei teilen denselben Harness, der auch Googles eigene Produkte antreibt. Default-Modell überall ist Gemini drei-Punkt-fünf Flash. Der strategische Punkt ist derselbe wie bei Anthropics Dynamic Workflows letzte Woche: die Orchestrierungs-Schicht über dem Modell wird zur eigenen Produktkategorie. Für einen Solo-Entwickler ist die Kommandozeile das relevante Stück — gleicher Harness, ohne den Enterprise-Overhead. Ob sie an Claude Code heranreicht, ist drei Wochen nach Launch noch nicht unabhängig belegt.</p>
+  <p>Vierte Geschichte, von xAI. Grok Build, ein terminal-natives Coding-Agent auf dem Modell grok-build-null-Punkt-eins. Start als Early Beta am fünfzehnten Mai für dreihundert Dollar im Monat, seit dem fünfundzwanzigsten Mai offen für alle SuperGrok- und X-Premium-Plus-Abos zu dreißig beziehungsweise vierzig Dollar — ein steiler Preis-Sturz. Technisch elegant: bis zu acht parallele Subagenten, jeder in einem eigenen Git-Worktree auf einem eigenen Branch, sodass sie sich nicht gegenseitig die Dateien überschreiben; am Ende führt ein Orchestrator zusammen. xAI gibt eine SWE-Bench-Verified-Zahl von siebzig Komma acht Prozent an — eine Anbieter-Zahl, nicht auf dem offiziellen Board. Unabhängige Reviews waren gemischt: stark bei Parallelität, schwach bei Ökosystem-Tiefe. Für Daniel: nicht heute wechseln, aber die parallele-Worktree-Idee im Auge behalten.</p>
+  <p>Die rote Linie durch alles. Opus vier-Punkt-acht letzte Woche, Gemini drei-Punkt-fünf Flash, grok-build-null-Punkt-eins — drei frische Spitzenmodelle in drei Wochen. Das offizielle SWE-Bench-Verified-Board ist quicklebendig, Stand achtundzwanzigster Mai: Claude Mythos Preview führt mit dreiundneunzig Komma neun Prozent, GPT fünf-Punkt-fünf mit achtundachtzig Komma sieben, Opus vier-Punkt-acht mit achtundachtzig Komma sechs, Opus vier-Punkt-sieben mit siebenundachtzig Komma sechs. Die skeptische Pointe ist eine andere: die frischen I/O-Neuzugänge, Gemini drei-Punkt-fünf Flash und grok-build-null-Punkt-eins, stehen noch nicht auf diesem Board. Ihre Coding-Zahlen sind Anbieter-gemeldet — Grok Builds siebzig Komma acht Prozent ist xAIs eigene Angabe, kein Board-Eintrag.</p>
+  <p>Zum Schluss der ruhige Silent-Roll-Call. Claude Code ist heute auf zwei-Punkt-eins-Punkt-hundertachtundfünfzig — Auto-Mode jetzt auch auf Bedrock, Vertex und Foundry. Gestern brachte Version hundertsiebenundfünfzig Plugins aus dem Skills-Ordner ohne Marketplace. Cursor ist auf drei-Punkt-sechs mit einem neuen Auto-Review-Modus für längere autonome Läufe. Cline taktet jetzt seine Kommandozeile eigenständig. llama-Punkt-c-p-p ist auf b-neuntausendvierhundertachtundzwanzig. Codex bleibt bei Version null-Punkt-hundertfünfunddreißig stabil, und Aider vom zwölften Februar ist weiter eingefroren.</p>
+  <p>Montag schauen wir, ob der Werktags-Takt neue Stable-Builds bringt und ob die ersten unabhängigen Tests der Antigravity-Kommandozeile auftauchen. Bis dahin.</p>
+</div>
+
+<script type="application/json" id="bench-data">
+{"labels": ["Claude Opus 4.7","Gemini 3.5 Flash","Gemini 3 Flash"],
+ "data":   [64.3, 55.1, 49.6],
+ "max":    80,
+ "unit":   " %"}
+</script>
+
+</body>
+</html>

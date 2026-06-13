@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI-Dev · 2026-06-05</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI-Dev</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-05</span>
+  </div>
+  <h1 class="masthead-title">Microsoft builds its own Copilot model</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Build 2026 was a coding build. Microsoft launched <strong>MAI-Code-1-Flash</strong>, its first in-house trained coding model in GitHub Copilot — small, fast, and with vendor numbers claiming to beat Claude Haiku 4.5 on SWE-Bench. Plus, Copilot becomes agentic: multiple agents (Copilot, Claude, Codex) side-by-side in the editor. And OpenAI's Codex is now regularly available on Amazon Bedrock. Three major labs, one message: the coding model becomes platform infrastructure, not just a chat window.</p>
+    <ul>
+      <li><span class="chip hot">OpenAI</span> <strong>MAI-Code-1-Flash live in Copilot</strong>: Microsoft's first proprietary coding model, in the VS Code model picker, Free through Max — trained without OpenAI data.</li>
+      <li><span class="chip">Bench</span> <strong>71.6% SWE-Bench Verified</strong> (vendor claim) vs. 66.6% for Claude Haiku 4.5 — at ~2.5× fewer tokens. Not yet independently verified.</li>
+      <li><span class="chip hot">Tool</span> <strong>Agent HQ in Copilot</strong>: Copilot, Claude, and Codex now run in parallel as agents in GitHub + VS Code (Pro+/Enterprise).</li>
+      <li><span class="chip">OpenAI</span> <strong>Codex now GA on Amazon Bedrock</strong> (06-01) — App, CLI, IDE; 5M devs/week; inference with AWS IAM/VPC.</li>
+      <li><span class="chip good">Google</span> <strong>Gemini 3.5 Flash</strong> is Google's strongest coding/agent model — 4× faster, tuned for agentic use. Pro coming "next month".</li>
+      <li><span class="chip">Tool</span> <strong>Cursor 3.6</strong> brings "Auto-review": a classifier subagent decides which tool calls proceed without prompting.</li>
+      <li><span class="chip good">Local</span> <strong>MiniMax M3</strong> (June) leads the open-weight SWE-Bench Pro leaderboard with 59.0%; Qwen3-Coder-Next remains the efficiency king on consumer hardware.</li>
+      <li><span class="chip">Local</span> <strong>Cline v3.85</strong> with GPT-5.5 + DeepSeek V4. Aider still without native MCP — languishing in the shadows.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">What's moving in coding tools this week</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Tue 06-02</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Build 2026</span>
+          <span>MAI-Code-1-Flash + 7 MAI models</span>
+          <span>Agent HQ / Multi-agent VS Code</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 06-01</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Codex + GPT-5.5/5.4 GA on Amazon Bedrock</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Fri 06-05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>MAI-Code-1-Flash rollout in progress, plan by plan</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun 06-07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Expected: first independent SWE-Bench replication of MAI numbers</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">from 06-09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Gemini 3.5 Pro: GA window "next month" (June)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">July</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Copilot Enterprise: Autonomous Agent Mode (per reports)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section>
+        <h2>Microsoft trains its own Copilot model</h2>
+        <p>This is the story of the day, and it's more strategic than it sounds. At the Build 2026 keynote on June 2, Microsoft unveiled seven proprietary <strong>MAI</strong> models — image, speech, transcription, a reasoning model (MAI-Thinking-1) — and right in the center, the one that affects us developers directly: <strong>MAI-Code-1-Flash</strong>, Microsoft's first proprietary coding model, rolling out in GitHub Copilot since June 2.<sup>[1]</sup> It appears in the VS Code model picker and comes across all plans — Free, Pro, Pro+, Max.</p>
+
+        <p>The real point: until now, Copilot ran on other companies' models — OpenAI, Anthropic, Google. MAI-Code-1-Flash is the first that Microsoft <em>owns</em> outright, end-to-end. According to Microsoft, it was trained on "clean and properly licensed data," explicitly <strong>without distillation from OpenAI models</strong><sup>[2]</sup> — a jab at the partner from which Microsoft is now distancing itself.</p>
+
+        <div class="eli5">
+          <strong class="eli5-term">Distillation:</strong> A small model learns by imitating the answers of a large, expensive model — like an apprentice watching the master's shoulder. Microsoft says: we didn't let our apprentice watch OpenAI over the shoulder. It matters because distilled models are legally and contractually tied to their "teacher."
+        </div>
+
+        <p>Architecture: a <strong>sparse mixture-of-experts</strong> with 137 billion parameters total, but only 5 billion active per token, 256K context.<sup>[3]</sup> (The official model card cites 137B/5B; Microsoft's family post shorthand calls it a "5B model" — meaning the active parameter count. That's caused confusion.<sup>[4]</sup>)</p>
+
+        <div class="eli5">
+          <strong class="eli5-term">Mixture-of-experts (sparse):</strong> Instead of computing the entire giant model for every query, the model has many "experts" and routes each token to just the relevant few — like a hospital that doesn't examine you with all 137 doctors at once, only the 5 relevant ones. Result: the muscle of a large model at the compute cost of a small one.
+        </div>
+        <div class="src"><a href="https://github.blog/changelog/2026-06-02-mai-code-1-flash-is-now-available-for-github-copilot/">github.blog</a> · <a href="https://microsoft.ai/news/introducingmai-code-1-flash/">microsoft.ai</a> · <a href="https://microsoft.ai/pdf/MAI-Code-1-Flash-Model-Card.PDF">Model Card (PDF)</a> · <a href="https://www.implicator.ai/microsoft-starts-mai-code-1-flash-copilot-rollout-with-137b-moe-card-2/">implicator.ai</a></div>
+      </section>
+
+      <section>
+        <h2>The benchmarks — skeptically read</h2>
+        <p>Microsoft's model card pits MAI-Code-1-Flash directly against Claude Haiku 4.5, the obvious comparison class (small, fast model). The numbers are, and this is crucial, <strong>vendor's own measurements</strong> — MAI-Code-1-Flash is not yet (as of 06-05) in the independent coding index from Artificial Analysis.<sup>[5]</sup> Until replication comes, the verdict is: interesting, but not confirmed.</p>
+
+        <div class="bench-wrap" data-component="benchmark-chart">
+          <div class="bench-head">SWE-Bench Verified — vendor numbers, mixed sources, as of 06-02-2026</div>
+          <div class="bench-chart-wrap"><canvas></canvas></div>
+        </div>
+
+        <p>On <strong>SWE-Bench Verified</strong>, the card reports 71.6% for MAI-Code-1-Flash vs. 66.6% for Haiku 4.5 — and, almost more interesting than the score: across roughly <strong>10.8K instead of 27.3K tokens</strong> per task.<sup>[3]</sup> On the harder <strong>SWE-Bench Pro</strong>, the gap is larger (51.2% vs. 35.2%), on <strong>SWE-Bench Multilingual</strong> tighter (65.5% vs. 62.7%). Microsoft claims up to 60% fewer tokens across hard tasks.<sup>[4]</sup></p>
+
+        <div class="eli5">
+          <strong class="eli5-term">SWE-Bench Verified:</strong> A collection of real GitHub bugs with real test suites. The model must find the bug in the repo itself and write a patch that makes the tests pass — like a mechanic who has to fix a stranger's car and by the end pass a real test drive. "Verified" means: a human checked that the tasks are solvable and the tests are fair.
+        </div>
+
+        <div class="callout warn">
+          <span class="callout-label">Skepticism filter</span> Two caveats. First: <strong>vendor measures itself</strong> — Microsoft trained MAI-Code-1-Flash specifically on the Copilot harness against which it's benched here; that's a home-field advantage that's real and may distribute differently in the wild. Second: token efficiency is the most credible part of the story. Fewer tokens = lower cost and latency for Copilot's millions of users — and that (not the last SWE-Bench percentage point) is Microsoft's real motive.
+        </div>
+        <div class="src"><a href="https://microsoft.ai/pdf/MAI-Code-1-Flash-Model-Card.PDF">Model Card (PDF)</a> · <a href="https://www.implicator.ai/microsoft-starts-mai-code-1-flash-copilot-rollout-with-137b-moe-card-2/">implicator.ai</a> · <a href="https://artificialanalysis.ai/models/capabilities/coding">artificialanalysis.ai</a></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>Copilot becomes agentic: Agent HQ <span class="chip hot">try</span></h2>
+        <p>The second major Build theme for coding: <strong>Agent HQ</strong>. GitHub now lets you run multiple coding agents in parallel — directly in GitHub, GitHub Mobile, and VS Code — and not just Copilot itself, but also <strong>Claude from Anthropic and OpenAI Codex</strong> (both in Public Preview) side by side.<sup>[6]</sup> For Pro+ and Enterprise users.</p>
+
+        <p>This is more than marketing. An orchestrator agent can dispatch subagents to separate workstreams — linting, test generation, documentation, security review run <em>simultaneously</em> instead of sequentially. If you work with Claude Code or your own harness, you know that pattern; what's new is that GitHub is building it as a first-party feature and cross-vendor, with context, history, and review in one place.</p>
+
+        <p><span class="chip good">Why try it</span> If you already have Copilot Pro+: Agent HQ is the first place you can pit Claude and Codex <em>in the same workflow</em> against each other without three tools open. According to reports (techtimes.com), Enterprise is expected to get an <strong>Autonomous Agent Mode</strong> that writes, tests, and commits entire feature branches — merge still requires human approval; GitHub has neither named nor scheduled this feature in the official Agent HQ blog.<sup>[7]</sup></p>
+        <div class="src"><a href="https://github.blog/news-insights/company-news/pick-your-agent-use-claude-and-codex-on-agent-hq/">github.blog</a> · <a href="https://www.techtimes.com/articles/317596/20260602/github-copilot-replaces-gpt-4-project-polaris-ships-multi-agent-vs-code-build.htm">techtimes.com</a></div>
+      </section>
+
+      <section>
+        <h2>Codex now regularly on Amazon Bedrock</h2>
+        <p>Parallel, one day before Build: OpenAI's coding agent <strong>Codex</strong> is, along with GPT-5.5 and GPT-5.4, <strong>generally available on Amazon Bedrock</strong> as of June 1.<sup>[8]</sup> Access via Codex App, CLI, and IDE integrations (VS Code, JetBrains, Xcode). OpenAI cites over <strong>5 million developers per week</strong> using Codex.</p>
+
+        <p>The appeal for AWS shops: all inference runs through Bedrock and thus under AWS governance levers you already have — IAM, VPC/PrivateLink isolation, KMS encryption, CloudTrail audit. Prompts are not used for training. Pricing "matches OpenAI's first-party rates," pay-per-token, no seat licenses.</p>
+
+        <div class="callout info">
+          <span class="callout-label">Context</span> Three days, three labs, one pattern: Microsoft now owns its Copilot model, OpenAI distributes Codex through the cloud arm of its rival, GitHub makes all three interchangeable in Agent HQ. The coding model is no longer a product in 2026 — it's a component you plug in depending on platform, price, and compliance.
+        </div>
+        <div class="src"><a href="https://aws.amazon.com/blogs/machine-learning/openai-models-and-codex-on-amazon-bedrock-are-now-generally-available/">aws.amazon.com</a> · <a href="https://openai.com/index/openai-on-aws/">openai.com</a></div>
+      </section>
+
+      <section>
+        <h2>Gemini 3.5 Flash as a coding model</h2>
+        <p>Slightly older (Google I/O, May 19), but in a coding context it belongs here: <strong>Gemini 3.5 Flash</strong> is, according to Google, its strongest model <em>for programming and autonomous agents</em> — not for chat. Google sells it openly as an agent model: plan, build, iterate with minimal human intervention, roughly 4× faster than comparable frontier models.<sup>[9]</sup></p>
+
+        <p>The (again, vendor) numbers: Terminal-Bench 2.1 76.2%, MCP Atlas 83.6%, GDPval-AA 1656 Elo — each an improvement over Gemini 3.1 Pro. Available via Antigravity, Gemini API, and Enterprise. <strong>Gemini 3.5 Pro</strong> is expected "next month" (June), already in internal use. A 2M-token context circulates only in secondary reports and has not yet been officially confirmed by Google.<sup>[10]</sup> For us, Flash is interesting mainly as cheap, fast agent backend in harnesses that make models pluggable — see Agent HQ above.</p>
+        <div class="src"><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/">blog.google</a> · <a href="https://wavespeed.ai/blog/posts/gemini-3-5-pro-coming-next-month/">wavespeed.ai</a></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>Open-Weights: MiniMax M3 ahead, Qwen efficient <span class="chip good">Local</span></h2>
+        <p>For Daniel's local Ollama/Qwen stack, things are moving too. Two notable releases:</p>
+        <p><strong>MiniMax M3</strong> (June) leads the open-weight leaderboard on SWE-Bench Pro with <strong>59.0%</strong> and according to kilo.ai is the first open-weight model to combine frontier coding, 1M context, and native multimodality.<sup>[11]</sup></p>
+        <p><strong>Qwen3-Coder-Next</strong> remains the efficiency king: 80B MoE / only 3B active, 256K context, runs on a 64GB MacBook or RTX 5090. Vendor numbers: SWE-Bench Verified 70.6 / Pro 44.3.<sup>[12]</sup> Striking: that's Sonnet-4.5-class coding performance locally — with no token bill.</p>
+        <p><strong>DeepSeek V4</strong> (April 24) rounds out the field — V4-Pro (1.6T/49B) and V4-Flash (284B/13B), both 1M context, MIT license. Too large for most local setups, but as a self-hostable frontier model, relevant.</p>
+        <div class="src"><a href="https://kilo.ai/open-source-models">kilo.ai</a> · <a href="https://qwen.ai/blog?id=qwen3-coder-next">qwen.ai</a></div>
+      </section>
+
+      <section>
+        <h2>Tool roll call</h2>
+        <p><strong>Cursor 3.6</strong> (May 29) brings <strong>Auto-review</strong>: a run mode that lets Cursor work longer without prompting. Shell, MCP, and fetch calls either go straight through (allowlist), run sandboxed — or a <em>classifier subagent</em> decides whether to permit the call, solve it differently, or still ask.<sup>[13]</sup> This is the same "less approval friction" trend driving the reported Copilot autonomous-agent plans — agents are allowed to run longer alone, humans control only the perimeter.</p>
+        <p><strong>Cline v3.85</strong> (May 25) has caught up with GPT-5.5 and DeepSeek V4 Flash/Pro; 61k+ stars.<sup>[14]</sup></p>
+        <div class="callout info">
+          <span class="callout-label">Languishing in the shadows</span> <strong>Aider</strong> still has <em>no</em> native MCP — only community bridges, as of May 2026; that's itself a signal (stagnation). <strong>Continue</strong> and <strong>OpenHands</strong> with no meaningful motion this week. <strong>JetBrains AI</strong> and <strong>Plandex</strong> quiet.
+        </div>
+        <div class="src"><a href="https://releasebot.io/updates/cursor">releasebot.io</a> · <a href="https://tech-insider.org/cline-vs-cursor-2026/">tech-insider.org</a> · <a href="https://codersera.com/blog/ai-coding-agents-complete-guide-2026/">codersera.com</a></div>
+      </section>
+
+      <section>
+        <h2>What this means for Daniel's toolbox</h2>
+        <p>My reading: the day confirms a trend that's good for us — <strong>model lock-in is dissolving</strong>. Agent HQ makes Claude, Codex, and Copilot interchangeable in the same editor; MAI-Code-1-Flash pushes costs down at the bottom end; Codex on Bedrock decouples OpenAI from a single cloud. If you, like Daniel, already work with pluggable harnesses and local LLMs, you win: more choice, less dependence on one vendor.</p>
+        <p>Concretely this week, worth trying: <strong>MAI-Code-1-Flash</strong> in the VS Code picker for cheap, fast routine edits (if the rollout reaches you), and <strong>Cursor 3.6 Auto-review</strong> if approval prompts annoy you during long agent runs. I'd wait for independent SWE-Bench replication of Microsoft's numbers before I believe the 71.6%.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Friday, June the fifth. Three days after Microsoft's Build conference, nearly everything in coding tools revolves around the same idea: the AI model you code with is becoming a pluggable component.</p>
+  <p>The main story comes from Microsoft. For the first time, Microsoft has embedded its own coding model in GitHub Copilot, called MAI-Code-1-Flash. Until now, Copilot ran on other companies' models from OpenAI, Anthropic, and Google. This one Microsoft trained itself, using, by its account, cleanly licensed data and explicitly without looking over OpenAI's shoulder. It's small and fast, a so-called mixture-of-experts model that computes only a fraction of its size for each request.</p>
+  <p>I read the benchmark numbers with caution. Microsoft's own model card reports on the test SWE-Bench Verified a figure of seventy-one point six percent versus sixty-six point six for Claude Haiku, and that's using significantly fewer tokens. But that's a vendor measurement. An independent body like Artificial Analysis hasn't re-measured the model yet. More credible than the last percentage point, in my view, is the token efficiency, because fewer tokens means lower costs, and that's exactly Microsoft's real motivation.</p>
+  <p>The second Build topic is Agent HQ. GitHub now lets you run multiple coding agents simultaneously, not just Copilot, but also Claude and Codex side by side, in the same editor. An orchestrator distributes tasks like testing, documentation, and security review in parallel to sub-agents. For enterprise customers, according to reports, there's supposed to be a mode that writes and commits entire feature branches itself; merge only with human approval; GitHub itself hasn't officially announced that yet.</p>
+  <p>That fits with OpenAI. One day before Build, the coding agent Codex became regularly available on Amazon Bedrock, together with the new GPT models. Over five million developers use Codex each week, and on Bedrock everything runs under the familiar AWS security controls. Three days, three labs, one pattern: the model becomes infrastructure, something you plug in depending on platform and price.</p>
+  <p>At Google, Gemini 3.5 Flash is now Google's strongest model for programming and autonomous agents, roughly four times faster than the competition. The larger version, Gemini 3.5 Pro, is expected to follow still in June.</p>
+  <p>For Daniel's local stack, two notes: the open-weight model MiniMax M3 now leads the open leaderboard, and Qwen3-Coder-Next remains the efficiency king, delivering quality close to expensive models and still running on a MacBook. Among tools, Cursor in version three point six added a mode that asks less often, and Cline has caught up with the new models. Aider remains without native MCP, which is itself a statement.</p>
+  <p>My conclusion: model lock-in is dissolving, and that's good for anyone working with pluggable tools. Next week I'm watching mainly two things: whether an independent body confirms Microsoft's SWE-Bench numbers, and whether Google really delivers Gemini 3.5 Pro still in June.</p>
+</div>
+
+<script type="application/json" id="bench-data">
+{"labels": ["MAI-Code-1-Flash","Qwen3-Coder-Next","Claude Haiku 4.5"],
+ "data":   [71.6, 70.6, 66.6],
+ "max":    80,
+ "unit":   " %"}
+</script>
+
+</body>
+</html>

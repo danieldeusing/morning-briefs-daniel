@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 24/05/2026</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Edición 24/05/2026</span>
+  </div>
+  <h1 class="masthead-title">El ataque a la cadena de suministro se muda: del npm a Composer y hacia la CI</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Domingo, y los feeds oficiales están quietos — el CISA KEV sigue en 2026.05.22. Pero el tema de la semana cambió de territorio de la noche a la mañana: el ataque a la cadena de suministro <strong>ya no es un problema de npm</strong>. En dos días, la misma lógica golpeó a <strong>Composer/Packagist</strong> (cuatro paquetes de Laravel-Lang, cada etiqueta Git reescrita) y a <strong>GitHub directamente</strong> (la campaña "Megalodon" secuestró 5.561 repositorios mediante workflows de CI inyectados). Denominador común: no una nueva versión maliciosa, sino la <em>plomería de confianza</em> de abajo — etiquetas Git e identidades de bots de CI en las que confiamos a ciegas. Junto a eso, la falla de PostgreSQL en Drupal escala de forma medible (Imperva: más de 15.000 intentos de ataque), y el lado de los releases está tan quieto que la noticia del día es una <strong>corrección de nuestro propio brief</strong>: Firefox 151 stable salió ya el 19/05, y Chrome está en 148, no en 149.</p>
+    <ul>
+      <li><span class="chip hot">Cadena</span> <strong>Laravel-Lang</strong> (22/05): el atacante reescribió <em>cada</em> etiqueta Git de cuatro paquetes Composer (solo laravel-lang/lang tiene 502 etiquetas) → Packagist ingirió commits de un fork como releases legítimos. El payload corre en cada <code>vendor/autoload.php</code> y roba credenciales de nube/CI.</li>
+      <li><span class="chip hot">Cadena</span> <strong>Megalodon</strong> (18/05): 5.718 commits maliciosos en 5.561 repositorios de GitHub en ~6 h, mediante identidades de bots de CI falsificadas que inyectaron workflows de GitHub Actions. Exfiltra secretos a un C2. Impacto real: el paquete npm <code>@tiledesk/tiledesk-server</code>.</li>
+      <li><span class="chip hot">Sec</span> <strong>Drupal CVE-2026-9082</strong>: Imperva reporta <span class="stat">&gt;15.000</span> intentos de ataque contra ~6.000 sitios en 65 países (EE. UU. 61,8%). Solo PostgreSQL. Plazo KEV <strong>27/05</strong>. Todavía mayormente reconocimiento.</li>
+      <li><span class="chip good">Sec</span> <strong>Defensa de la cadena</strong>: el npm Staged Publishing (GA 22/05) separa la publicación de CI de una aprobación humana con 2FA; los cooldowns de pip (desde la 26.1, abril) habrían frenado 8 de 10 ataques. Las herramientas se endurecen — la mecánica sigue igual.</li>
+      <li><span class="chip good">Infra</span> <strong>Tanda de kernels Linux</strong> (23/05): siete releases stable/longterm (7.0.10 + seis ramas LTS). De fondo, la LPE <strong>Fragnesia</strong> (CVE-2026-46300, 7,8) de la familia "Dirty Frag" — parches de las distros desde mediados de mayo.</li>
+      <li><span class="chip">Sec</span> <strong>Dos 10.0</strong>: plugin LiteSpeed cPanel <strong>CVE-2026-48172</strong> (explotado activamente, root vía toggle de Redis) y Cisco Secure Workload <strong>CVE-2026-20223</strong> (REST sin autenticación, aún no explotado). Ambos puntuados por el CNA, evaluación NVD pendiente.</li>
+      <li><span class="chip">Release</span> <strong>Calma + corrección</strong>: Node, Angular, Spring, Quarkus, Deno, Postgres sin cambios. <strong>Firefox 151 stable</strong> está fuera desde el 19/05 (152 en beta), <strong>Chrome stable = 148</strong> (149 ~02/06) — el brief de ayer se equivocó en ambos.</li>
+      <li><span class="chip good">Cloud-native</span> <strong>OpenTelemetry</strong> es proyecto graduado de la CNCF desde el 21/05 — el estándar de facto de observabilidad, 12.000+ contribuidores. OpenTofu 1.12 entregó la función que Terraform nunca entregó.</li>
+      <li><span class="chip">UE</span> <strong>CADA</strong>: la adopción por la Comisión sigue prevista para el <strong>lun 27/05</strong> (paquete de soberanía tecnológica: CADA + Chips Act 2 + estrategia de código abierto). El texto real — incluida la cláusula de la nube de EE. UU. — llega mañana.</li>
+      <li><span class="chip">BR</span> <strong>Decretos de Lula</strong>: la oposición presentó varios PDL en la Câmara para suspender los dos decretos de plataformas (12.975/12.976) — disputa por el nuevo poder de fiscalización de la ANPD. El CGI.br respalda a la autoridad.</li>
+      <li><span class="chip">Quieto</span> <strong>Shai-Hulud</strong>: ninguna nueva ola en la ventana. <strong>NGINX "Rift"</strong> (CVE-2026-42945) sigue explotado, sigue fuera del KEV. Las notas del <strong>TC39 #114</strong> siguen inéditas. El <strong>Quarkus 3.36 Final</strong> sigue sin salir.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Próximos días</div>
+      <div class="timeline-sub">Lo que traen los próximos días</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Dom 24/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Hoy</span>
+          <span>Feeds tranquilos; la historia de la cadena se muda a <strong>Composer + CI</strong></span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Lun 27/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>UE CADA</strong> · adopción por la Comisión (CADA + Chips Act 2 + estrategia OSS)</span>
+          <span><strong>Plazo KEV de Drupal</strong> (FCEB)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Dom 31/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Plazo de la ANPD</strong> (BR): autorizar el concurso para 200 plazas permanentes</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Lun 01/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Plazo de interop. del DMA p/ Apple</strong></span>
+          <span><strong>Release train de Spring</strong> 01–05/06 (Boot 4.1)</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Jue 04/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>JDK 27 RDP1</strong> · el feature freeze se ramifica</span>
+          <span>Plazo CISA KEV: Langflow / Apex One</span>
+          <span>Chrome 149 stable (esperado ~02/06)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Laravel-Lang — quien es dueño de la etiqueta Git es dueño del paquete</h2>
+        <p>La historia principal del fin de semana no está en npm, sino en <strong>Composer</strong>, el gestor de paquetes del mundo PHP/Laravel. El <strong>22/05</strong>, un solo atacante secuestró cuatro paquetes muy usados de la organización Laravel-Lang — <code>laravel-lang/lang</code>, <code>/http-statuses</code>, <code>/attributes</code> y <code>/actions</code>. El truco: no publicó una nueva versión maliciosa que un mantenedor pudiera notar. Reescribió <strong>cada etiqueta Git ya existente</strong> (solo el buque insignia <code>laravel-lang/lang</code> tiene 502 etiquetas), de modo que las etiquetas apuntaran a un commit en un <em>fork fuera</em> de la organización. Las reescrituras comenzaron a las 22:32 UTC y terminaron cerca de la medianoche — unas 700 versiones históricas en los cuatro paquetes <a href="https://www.stepsecurity.io/blog/laravel-lang-supply-chain-attack">[1]</a><a href="https://thehackernews.com/2026/05/laravel-lang-php-packages-compromised.html">[2]</a>.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Reescritura de etiqueta Git + Packagist:</strong> una etiqueta Git es un papelito con un nombre (por ejemplo "v3.0") pegado a un cierto estado del código. Packagist (la registry de Composer) revisa a qué código está pegada una etiqueta y lo publica como release. El atacante movió los papelitos — el nombre quedó, el contenido se cambió. Como la etiqueta de "orgánico" que alguien despega y pega en otro frasco: el rótulo está bien, el contenido no.
+        </div>
+        <p>El daño real está en el payload: los commits agregan un <code>src/helpers.php</code> al <code>autoload.files</code> de Composer — la lista de archivos que se cargan automáticamente en cada <code>vendor/autoload.php</code>, es decir, en cada arranque de una app Laravel/Symfony. El ladrón de credenciales toma metadatos de EC2 (<code>169.254.169.254</code>), tokens de Kubernetes, HashiCorp Vault, secretos de Jenkins y contraseñas del navegador. Quien haya jalado alguno de estos paquetes en o después del 22/05 22:32 UTC con <code>composer install</code> debe tratar como comprometido todo secreto alcanzable y rotarlo <a href="https://www.bleepingcomputer.com/news/security/laravel-lang-packages-hijacked-to-deploy-credential-stealing-malware/">[3]</a><a href="https://snyk.io/blog/laravel-lang-supply-chain-advisory/">[4]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.stepsecurity.io/blog/laravel-lang-supply-chain-attack">stepsecurity.io</a> · <a href="https://www.mend.io/blog/laravel-lang-composer-tag-rewrite-supply-chain-attack/">mend.io</a></li>
+          <li><a href="https://thehackernews.com/2026/05/laravel-lang-php-packages-compromised.html">thehackernews.com (22/05)</a></li>
+          <li><a href="https://www.bleepingcomputer.com/news/security/laravel-lang-packages-hijacked-to-deploy-credential-stealing-malware/">bleepingcomputer.com</a></li>
+          <li><a href="https://snyk.io/blog/laravel-lang-supply-chain-advisory/">snyk.io (advisory)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Megalodon — 5.561 repositorios en seis horas, directo por la CI</h2>
+        <p>Si Laravel-Lang muestra que Composer también es atacable, <strong>Megalodon</strong> va un paso más allá: la campaña atacó al propio GitHub, en la capa de los pipelines de CI/CD. El <strong>18/05</strong>, en una ventana de seis horas (11:36–17:48 UTC), un atacante automatizado envió <strong>5.718 commits maliciosos a 5.561 repositorios</strong>. Todo disfrazado con identidades de bot falsificadas como <code>build-bot</code>, <code>ci-bot</code> o <code>pipeline-bot</code> — nombres que nadie mira dos veces en un historial de commits <a href="https://www.theregister.com/security/2026/05/22/megalodon-chums-the-waters-in-55k-github-repo-poisonings/5245342">[1]</a><a href="https://safedep.io/megalodon-mass-github-repo-backdooring-ci-workflows/">[2]</a>.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Inyección de workflow de CI/CD:</strong> un pipeline de CI es el robot que, en cada push, compila, prueba y despliega automáticamente — con acceso a todos los secretos del proyecto. Quien cuela un archivo de workflow malicioso hace que ese robot suelte las llaves en el próximo push. Es como pasarle a escondidas una segunda tarea al conserje que tiene la llave maestra del edificio.
+        </div>
+        <p>Los workflows contienen bash en base64 que exfiltra secretos de CI, credenciales de nube, llaves SSH y tokens OIDC a un servidor C2. Dos variantes: la masiva agrega un workflow que se dispara en <em>cada</em> push; la dirigida reemplaza workflows existentes por disparadores <code>workflow_dispatch</code> — backdoors dormidas, activadas después vía API. Impacto real: el paquete npm <code>@tiledesk/tiledesk-server</code> (2.18.6–2.18.12) propagó la variante dirigida porque el mantenedor publicó desde un entorno comprometido <a href="https://thehackernews.com/2026/05/megalodon-github-attack-targets-5561.html">[3]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.theregister.com/security/2026/05/22/megalodon-chums-the-waters-in-55k-github-repo-poisonings/5245342">theregister.com (22/05)</a></li>
+          <li><a href="https://safedep.io/megalodon-mass-github-repo-backdooring-ci-workflows/">safedep.io</a> · <a href="https://www.stepsecurity.io/blog/megalodon-mass-github-actions-secret-exfiltration-across-5-500-public-repositories">stepsecurity.io</a></li>
+          <li><a href="https://thehackernews.com/2026/05/megalodon-github-attack-targets-5561.html">thehackernews.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>SQLi de Drupal — de "explotación confirmada" a medible</h2>
+        <p>La inyección de SQL solo-PostgreSQL del inicio de semana (<strong>CVE-2026-9082</strong>, SA-CORE-2026-004) ya tiene números. Desde la divulgación el 20/05, Imperva reporta <strong>más de 15.000 intentos de ataque</strong> contra casi 6.000 sitios distintos en 65 países; a la cabeza EE. UU. con 61,8%, luego Singapur (6,6%) y Australia (6,3%), con cerca de la mitad de los ataques apuntando a sitios de videojuegos y financieros. Encuadre importante de la propia Imperva: esto todavía es <em>mayormente reconocimiento</em> — escáneres que mapean instalaciones Postgres-Drupal vulnerables y prueban exploits, no tomas masivas <a href="https://www.imperva.com/blog/imperva-customers-protected-against-cve-2026-9082-in-drupal-core/">[1]</a><a href="https://securityaffairs.com/192557/security/cve-2026-9082-drupals-highly-critical-sql-injection-flaw-is-already-under-active-attack.html">[2]</a>.</p>
+        <p>La diferencia de puntuación persiste: Drupal lo califica "highly critical", la NVD solo <span class="stat">6,5</span> MEDIUM — la entrada en el KEV (desde el 22/05) es la señal, no la pelea por el número. Los organismos FCEB deben parchar para el <strong>27/05</strong>; buena regla general para todos los demás. Quien corre Postgres-Drupal no tiene nada que decidir aquí — solo que hacer <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-9082">[3]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.imperva.com/blog/imperva-customers-protected-against-cve-2026-9082-in-drupal-core/">imperva.com</a></li>
+          <li><a href="https://securityaffairs.com/192557/security/cve-2026-9082-drupals-highly-critical-sql-injection-flaw-is-already-under-active-attack.html">securityaffairs.com</a> · <a href="https://www.securityweek.com/drupal-vulnerability-in-hacker-crosshairs-shortly-after-disclosure/">securityweek.com</a></li>
+          <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-9082">nvd.nist.gov/CVE-2026-9082</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>La cadena de suministro contraataca — npm, pip, proveniencia</h2>
+        <h3>El Staged Publishing de npm sigue la mayor palanca</h3>
+        <p>El <strong>Staged Publishing</strong> de npm (GA desde el 22/05) separa la publicación de CI de una aprobación humana con 2FA — un tarball publicado por pipeline cae primero en una cola, antes de quedar instalable. Justo la brecha que Megalodon y Shai-Hulud explotan (pipeline secuestrado → paquete al aire al instante) gana un punto de control humano. Además, los cuatro interruptores <code>--allow-*</code> (npm 11.15.0) contra fuentes fuera de la registry <a href="https://github.blog/changelog/2026-05-22-staged-publishing-and-new-install-time-controls-for-npm/">[1]</a>.</p>
+        <h3>Cooldowns de pip — simple, gran efecto</h3>
+        <p>Encaja con esto, del campo Python y disponible desde <strong>pip 26.1</strong> (fines de abril): los <strong>cooldowns de dependencias</strong>. El parámetro <code>--uploaded-prior-to</code> (por ejemplo <code>P5D</code>) impide que versiones recién publicadas — y por tanto potencialmente recién secuestradas — entren directo al build. Según el análisis citado, un cooldown de 7 días habría frenado 8 de 10 ataques analizados antes de llegar al usuario final. No es bala de plata, pero es barato <a href="https://www.infoq.com/news/2026/05/pip-261-dependency-cooldowns/">[2]</a><a href="https://simonwillison.net/2026/Apr/28/pip-261/">[3]</a>.</p>
+        <h3>Shai-Hulud — sin nueva ola</h3>
+        <p>El gusano npm autorreplicante no agregó una nueva ola en la ventana; la última confirmada sigue siendo el brote de AntV del 19/05. Solo vale anotar: la familia ahora falsifica proveniencia Sigstore en tiempo de ejecución — la capa de firma dejó de ser un pase libre <a href="https://socket.dev/blog/npm-invalidates-tokens-mini-shai-hulud">[4]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://github.blog/changelog/2026-05-22-staged-publishing-and-new-install-time-controls-for-npm/">github.blog/changelog (22/05)</a></li>
+          <li><a href="https://www.infoq.com/news/2026/05/pip-261-dependency-cooldowns/">infoq.com (pip 26.1)</a></li>
+          <li><a href="https://simonwillison.net/2026/Apr/28/pip-261/">simonwillison.net (28/04)</a></li>
+          <li><a href="https://socket.dev/blog/npm-invalidates-tokens-mini-shai-hulud">socket.dev</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Kernel Linux — tanda stable nueva, y Fragnesia detrás</h2>
+        <p>Del lado de infraestructura, la noticia que toca el stack del propio Daniel: el <strong>23/05</strong> salió todo un conjunto de kernels stable y longterm — <strong>7.0.10</strong> como stable actual, más las ramas longterm 6.18.33, 6.12.91, 6.6.141, 6.1.174, 5.15.208 y 5.10.257. Es mantenimiento acumulativo de rutina, no un release de emergencia; quien corre ramas stable actualiza al ritmo normal <a href="https://www.kernel.org/">[1]</a>.</p>
+        <p>De fondo, sin embargo, corre la historia más seria: <strong>Fragnesia</strong> (<strong>CVE-2026-46300</strong>, CVSS <span class="stat">7,8</span>), una escalada local de privilegios de la familia "Dirty Frag", descubierta por William Bowling (Zellic). Está en el subsistema XFRM / ESP-in-TCP y permite a un usuario local sin privilegios alterar archivos de solo lectura — incluidos binarios setuid — mediante manipulación del page cache, volviéndose root. Las distribuciones parchan desde mediados de mayo (AlmaLinux, Ubuntu/Canonical, CloudLinux); la mitigación rápida sin reiniciar es descargar o poner en denylist los módulos <code>esp4</code>, <code>esp6</code> y <code>rxrpc</code> donde no se necesiten <a href="https://www.tenable.com/blog/fragnesia-cve-2026-46300-faq-about-new-linux-kernel-xfrm-esp-in-tcp-priv-esc">[2]</a><a href="https://thehackernews.com/2026/05/new-fragnesia-linux-kernel-lpe-grants.html">[3]</a>.</p>
+        <div class="eli5">
+          <strong class="eli5-term">LPE de page cache:</strong> el kernel mantiene en RAM los archivos muy leídos (page cache) para que no todo acceso vaya al disco. La "Dirty Frag" y parientes engañan al kernel para alterar esa copia en caché de un archivo de sistema que debería ser <em>solo lectura</em> — por ejemplo, un programa que corre con permisos de root. No se falsifica el original en la bóveda, sino la copia de trabajo en el escritorio que todos usan.
+        </div>
+        <div class="callout warn">
+          <span class="callout-label">Nota de investigación</span>
+          La tanda stable del 23/05 (kernel.org) y Fragnesia tienen fuentes separadas; que estos releases específicos nombren la CVE-2026-46300 explícitamente en el changelog no se verificó individualmente aquí — las correcciones de Fragnesia vienen saliendo por los kernels de las distros desde mediados de mayo.
+        </div>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.kernel.org/">kernel.org (23/05)</a></li>
+          <li><a href="https://www.tenable.com/blog/fragnesia-cve-2026-46300-faq-about-new-linux-kernel-xfrm-esp-in-tcp-priv-esc">tenable.com (FAQ Fragnesia)</a></li>
+          <li><a href="https://thehackernews.com/2026/05/new-fragnesia-linux-kernel-lpe-grants.html">thehackernews.com</a> · <a href="https://ubuntu.com/blog/fragnesia-linux-vulnerability-fixes-available">ubuntu.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Dos 10.0 y un caso terco de NGINX</h2>
+        <h3>Plugin LiteSpeed cPanel CVE-2026-48172 — explotado activamente</h3>
+        <p>Puntuación máxima, y ya en la práctica: un usuario cPanel con sesión iniciada puede ejecutar scripts como root vía la función de habilitar/deshabilitar Redis del <strong>LiteSpeed User-End cPanel Plugin</strong> — <strong>CVE-2026-48172</strong>, puntuado en CVSS 4.0 <span class="stat">10.0</span> por el CNA (MITRE) (evaluación NVD aún pendiente), publicado el 20/05. Las versiones anteriores a la 2.4.5 están afectadas; corrección en 2.4.5/2.4.7. Para Daniel es puro valor de alerta (sin cPanel/LiteSpeed en el stack), pero un patrón instructivo: una supuesta función de conveniencia se vuelve el camino a root <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-48172">[1]</a><a href="https://thehackernews.com/">[2]</a>.</p>
+        <h3>Cisco Secure Workload CVE-2026-20223 — 10.0, pero (aún) no explotado</h3>
+        <p>También 10.0, perfil distinto: una falla de API REST sin autenticación en <strong>Cisco Secure Workload</strong> permite a un atacante leer y configurar entre fronteras de tenant como Site Admin. Corrección en 3.10.8.3/4.0.3.17, SaaS ya parchado, sin workaround; Cisco no reporta explotación. Aquí lo que cuenta es la clase, no la alarma <a href="https://www.theregister.com/">[3]</a>.</p>
+        <h3>NGINX "Rift" — sigue explotado, sigue fuera del KEV</h3>
+        <p>La <strong>CVE-2026-42945</strong> (heap overflow en el módulo <code>rewrite</code>, F5/CNA CVSS 4.0 <span class="stat">9,2</span> CRITICAL, 3.1: 8,1; evaluación NVD pendiente) se explota activamente desde ~16/05 según VulnCheck, pero sigue ausente del catálogo hasta la versión KEV 2026.05.22. Corregida desde el 13/05 en 1.30.1/1.31.0. Para Daniel, aún solo valor de analogía — corre Caddy, no NGINX <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42945">[4]</a>.</p>
+        <div class="callout warn">
+          <span class="callout-label">Estado del KEV</span>
+          El CISA KEV sigue sin cambios en la versión 2026.05.22 — sin nueva entrada el 23 y 24/05. Las adiciones del 21/05 (Langflow CVE-2025-34291, CVSS 9,4; Trend Micro Apex One) permanecen con plazo FCEB del 04/06. cisa.gov sigue devolviendo 403 al crawler; estado verificado por el feed JSON.
+        </div>
+        <div class="footnotes"><ol>
+          <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-48172">nvd.nist.gov/CVE-2026-48172</a></li>
+          <li><a href="https://thehackernews.com/">thehackernews.com</a> (403 al crawler; vía búsqueda)</li>
+          <li><a href="https://www.theregister.com/">theregister.com</a> · Advisory de Cisco cisco-sa-csw-pnbsa-g8WEnuy</li>
+          <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42945">nvd.nist.gov/CVE-2026-42945</a> · <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov/kev</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Estado de los releases — y una corrección en causa propia</h2>
+        <p>Porque es domingo, y porque la precisión importa: dos cifras de navegador en el brief de ayer estaban mal. <strong>Firefox 151 stable</strong> no está "aún por venir" — salió ya el <strong>19/05</strong> (parche más reciente 151.0.1); el 152 está ahora en beta público (stable ~16/06). Y <strong>Chrome stable está en 148</strong> (desde el 05/05), no en 149 — el 149 no llega a stable hasta ~02/06. Ambos corregidos aquí <a href="https://www.mozilla.org/firefox/releases/">[1]</a><a href="https://developer.chrome.com/release-notes/148">[2]</a>.</p>
+        <p>Por lo demás, calma, todo sin cambios desde el viernes: <strong>Node.js</strong> 26.2.0 (Current) / 24.16.0 "Krypton" (LTS), <strong>Angular</strong> 22.0.0-rc.1 + parche 21.2.14 (sin rc.2, sin stable 22), <strong>React</strong> 19.2.6, <strong>Deno</strong> 2.8.0, núcleo de <strong>PostgreSQL</strong> en 18.4/17.10/… (14/05), <strong>SQLite</strong> 3.53.1, <strong>Python</strong> 3.14.5. <strong>Spring</strong>: Boot 4.0.6 / 4.1.0-RC1, release train aún en 01–05/06 (los puntos de Spring AI lanzados el 23/05 pertenecen a la pauta de ai-dev). De la infra de Daniel: <strong>Caddy</strong> 2.11.3, cliente <strong>Tailscale</strong> 1.98.3, <strong>Docker</strong> CLI 29.5.2 — nada nuevo <a href="https://github.com/nodejs/node/releases">[3]</a>.</p>
+        <p><span class="update-since">Chiste recurrente</span> El <strong>Quarkus 3.36 Final</strong> <em>sigue</em> sin lanzarse — el stable más reciente sigue siendo 3.35.4 (20/05), y el artefacto 3.36 más nuevo es el CR1 del 13/05. "Anunciado ≠ lanzado", tercer día <a href="https://github.com/quarkusio/quarkus/releases">[4]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.mozilla.org/firefox/releases/">mozilla.org/firefox/releases</a></li>
+          <li><a href="https://developer.chrome.com/release-notes/148">developer.chrome.com/release-notes/148</a></li>
+          <li><a href="https://github.com/nodejs/node/releases">nodejs/releases</a> · <a href="https://github.com/angular/angular/releases">angular/releases</a></li>
+          <li><a href="https://github.com/quarkusio/quarkus/releases">quarkus/releases</a> · <a href="https://spring.io/blog">spring.io/blog</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Cloud-native — OpenTelemetry se gradúa, OpenTofu entrega</h2>
+        <p>El <strong>21/05</strong>, en el Observability Summit en Minneapolis, la CNCF anunció la <strong>graduación de OpenTelemetry</strong> — el nivel máximo de madurez de la Cloud Native Computing Foundation, tras una auditoría de seguridad independiente y una revisión de gobernanza. OTel es ahora oficialmente el estándar de facto para telemetría (trazas, métricas, logs); la fundación cita 12.000+ contribuidores de 2.800+ empresas y la segunda mayor velocidad de proyecto después de Kubernetes. Para quien quiere unificar observabilidad entre varios lenguajes, la señal es "listo para producción, neutral de proveedor, llegó para quedarse" <a href="https://www.cncf.io/announcements/2026/05/21/cloud-native-computing-foundation-announces-opentelemetrys-graduation-solidifying-status-as-the-de-facto-observability-standard/">[1]</a>.</p>
+        <p>Junto a eso, del lado de IaC: <strong>OpenTofu 1.12</strong> (14/05), el fork de Terraform, trajo el <strong><code>prevent_destroy</code> dinámico</strong> — por fin acoplable a una variable, de modo que prod protege y dev no (una petición en el tracker de Terraform desde 2016), además de checksums de provider más completos en una sola pasada de <code>init</code>. Y <strong>containerd</strong> parchó en cuatro ramas el 20/05 (2.3.1/2.2.4/2.0.9/1.7.32) <a href="https://opentofu.org/blog/opentofu-1-12-0/">[2]</a><a href="https://github.com/containerd/containerd/releases">[3]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.cncf.io/announcements/2026/05/21/cloud-native-computing-foundation-announces-opentelemetrys-graduation-solidifying-status-as-the-de-facto-observability-standard/">cncf.io (21/05)</a> · <a href="https://opentelemetry.io/blog/2026/otel-graduates/">opentelemetry.io</a></li>
+          <li><a href="https://opentofu.org/blog/opentofu-1-12-0/">opentofu.org/blog/1-12-0</a></li>
+          <li><a href="https://github.com/containerd/containerd/releases">containerd/releases</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>JVM y estándares — JDK 27 apunta, TC39 calla</h2>
+        <p>Seguido en pocas líneas, porque sin cambios: en la línea del JDK 27 el build EA sigue en <strong>22</strong>, el RDP1 (feature freeze) se ramifica el <strong>04/06</strong>, GA en septiembre; la JEP 537 (Vector API, 12º incubador) sigue <em>Targeted</em> según InfoQ. La página primaria openjdk.org sigue devolviendo 403 al crawler — la clasificación de la Vector API tiene fuente única. Y las <strong>notas de reunión del TC39 del plenario #114</strong> (Ámsterdam) siguen <em>aún</em> inéditas; la carpeta más reciente en el repo <code>tc39/notes</code> sigue siendo enero de 2026 <a href="https://www.infoq.com/news/2026/05/java-news-roundup-may11-2026/">[1]</a><a href="https://github.com/tc39/notes/tree/main/meetings">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.infoq.com/news/2026/05/java-news-roundup-may11-2026/">infoq.com (Java roundup)</a></li>
+          <li><a href="https://github.com/tc39/notes/tree/main/meetings">github.com/tc39/notes/meetings</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>CADA — el lunes Bruselas va en serio</h2>
+        <p>El <strong>Cloud and AI Development Act</strong> sigue en la agenda de la reunión de la Comisión para el <strong>lunes 27/05</strong>, como parte del paquete de soberanía tecnológica — agrupado con el <strong>Chips Act 2</strong>, una <strong>estrategia de código abierto</strong> y una hoja de ruta de "IA en energía". El objetivo es el mismo: triplicar la capacidad de centros de datos de la UE, reglas de elegibilidad en toda la UE para proveedores de nube, una política unificada de adquisición de nube para la administración pública <a href="https://www.europarl.europa.eu/legislative-train/theme-a-new-plan-for-europe-s-sustainable-prosperity-and-competitiveness/file-cloud-and-ai-development-act">[1]</a>.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Soberanía digital:</strong> la cuestión de quién puede jalar el enchufe en una emergencia. Si datos de gobierno están en una nube de EE. UU., el proveedor está sujeto a la ley estadounidense — un gobierno extranjero podría exigir acceso o cortar el servicio. "Soberanía" significa mantener datos críticos bajo la propia jurisdicción. Como una caja de seguridad en tu propio banco en vez de una en un país cuyas leyes no ayudas a definir.
+        </div>
+        <p>La cuestión sensible sigue en el borrador filtrado (CNBC, 07/05): se contempla <strong>restringir el uso de nube de EE. UU. para datos sensibles de gobierno</strong> (salud, finanzas, justicia) — explícitamente <em>no</em> una prohibición, <em>no</em> para el sector privado. Lo nuevo es el viento en contra diplomático: un cable del Departamento de Estado de EE. UU. de febrero instruye a los diplomáticos a combatir las iniciativas extranjeras de soberanía de datos — así que la adopción del lunes cae en un ambiente caldeado. Quien atiende contratos del sector público en la UE lee el texto real el lunes <a href="https://www.cnbc.com/2026/05/07/eu-commission-cloud-sensitive-data.html">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.europarl.europa.eu/legislative-train/theme-a-new-plan-for-europe-s-sustainable-prosperity-and-competitiveness/file-cloud-and-ai-development-act">europarl.europa.eu/legislative-train</a></li>
+          <li><a href="https://www.cnbc.com/2026/05/07/eu-commission-cloud-sensitive-data.html">cnbc.com (07/05)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Reloj regulatorio de la UE — DMA, CRA, los próximos plazos</h2>
+        <p>Dos fechas lo bastante cercanas como para conocerlas. <strong>DMA</strong>: la revisión estatutaria (COM(2026) 178, 28/04) mantiene su conclusión de que es "prematuro" extender la interoperabilidad de mensajería a las redes sociales — sin nuevo mandato de construcción. Sin afectar: el <strong>plazo de interoperabilidad de Apple el 01/06</strong> (notificaciones, emparejamiento por proximidad, cambio de audio). <strong>CRA</strong> (Cyber Resilience Act): las próximas fechas duras son la notificación de los organismos de evaluación de la conformidad el <strong>11/06/2026</strong> y — la que más importa a los fabricantes de software — el inicio de las obligaciones de notificación vía la plataforma de ENISA el <strong>11/09/2026</strong> (alerta temprana en 24 h / notificación en 72 h / informe final en 14 días). Esta última está a semanas de distancia, así que va en el radar, no en la pista de 7 días <a href="https://digital-markets-act.ec.europa.eu/about-dma/dma-review-qa_en">[1]</a><a href="https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://digital-markets-act.ec.europa.eu/about-dma/dma-review-qa_en">digital-markets-act.ec.europa.eu</a></li>
+          <li><a href="https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act">digital-strategy.ec.europa.eu (CRA)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Brasil — escala la disputa por la fiscalización de la ANPD</h2>
+        <p>Seguimiento de los decretos de plataformas de Lula, del 20/05: la oposición presentó varios <strong>PDL</strong> (Proyectos de Decreto Legislativo) en la Câmara para suspender los dos decretos <strong>12.975</strong> y <strong>12.976</strong>. La acusación: imponen a las plataformas deberes "inéditos" de monitoreo, remoción y mitigación de riesgo y amplían los poderes de la autoridad de protección de datos <strong>ANPD</strong> sin base legal suficiente. Una voz de peso en sentido contrario: Renata Mielli, coordinadora del CGI.br, llama "coherente" el papel de fiscalización de la ANPD. Los decretos entran en vigor 60 días después de la publicación — o sea, la pelea política corre en paralelo con un plazo que avanza <a href="https://convergenciadigital.com.br/governo/oposicao-reage-contesta-poder-dado-a-anpd-no-controle-as-big-techs-pelo-governo-lula/">[1]</a>.</p>
+        <div class="eli5">
+          <strong class="eli5-term">PDL (Projeto de Decreto Legislativo):</strong> un instrumento del Congreso brasileño que permite al Parlamento revocar un acto del Ejecutivo (aquí: un decreto presidencial). No es una ley nueva, sino una herramienta de veto contra normas del gobierno. Como un consejo de administración que revierte, por mayoría, una decisión de la dirección.
+        </div>
+        <p>En paralelo, el propio plazo de personal de la ANPD sigue corriendo: hasta el <strong>31/05</strong> debe autorizarse el concurso para 200 plazas permanentes (Lei 15.352/2026), con convocatoria proyectada para ~24/09 y exámenes para inicios de 2027. No se obtiene fiscalización solo con un decreto — también hace falta la gente para hacerla <a href="https://www.teletime.com.br/21/05/2026/oposicao-camara-big-techs/">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://convergenciadigital.com.br/governo/oposicao-reage-contesta-poder-dado-a-anpd-no-controle-as-big-techs-pelo-governo-lula/">convergenciadigital.com.br (21/05)</a></li>
+          <li><a href="https://www.teletime.com.br/21/05/2026/oposicao-camara-big-techs/">teletime.com.br</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Irish Rail da de baja € 50 millones — el viejo cementerio de proyectos de TI</h2>
+        <p>Del archivo "grandes proyectos de TI públicos": Irish Rail, la operadora ferroviaria estatal irlandesa, abandonó un proyecto de TI de gestión de tráfico atrasado y dio de baja <strong>cerca de € 50 millones</strong>. Sin CVE, sin hackeo — la forma menos espectacular pero más común en que falla el software: por retraso, alcance y confianza perdida. Lección con valor de reconocimiento <a href="https://www.theregister.com/">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.theregister.com/">theregister.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Comentario — nunca fue un problema de npm</h2>
+        <p>Quien leyó las últimas semanas como "npm tiene un problema de seguridad" lo corrige esta semana. Laravel-Lang golpeó a Composer, Megalodon golpeó a GitHub Actions — ninguno necesitó una <em>nueva versión</em> maliciosa. Secuestraron la capa de <em>abajo</em>: la etiqueta Git en la que Packagist confía a ciegas, y la identidad de bot de CI que nadie verifica en un historial de commits. El patrón no es el ecosistema, sino la <strong>premisa implícita de confianza</strong> — "esta etiqueta apunta al código que el mantenedor quiso", "este commit vino del pipeline".</p>
+        <p>Ahí es justo donde entran las buenas noticias: el Staged Publishing pone a un humano entre el pipeline y el paquete al aire; los cooldowns compran tiempo hasta que un secuestro se note; y que Shai-Hulud ahora falsifique proveniencia solo significa que la firma también es una medida, no una prueba. Para el stack de Daniel: parchar Postgres-Drupal hoy (plazo KEV 27/05). Revisar si los pipelines de CI verifican la proveniencia de etiqueta/commit — y si un cooldown cabe en la política de build. Actualizar el Linux stable, descargar <code>esp4</code>/<code>esp6</code> si no se usan. El lunes Bruselas entrega el próximo bloque de soberanía con el CADA, y veremos si la cláusula filtrada de la nube de EE. UU. se vuelve texto de ley de verdad <a href="https://www.europarl.europa.eu/legislative-train/theme-a-new-plan-for-europe-s-sustainable-prosperity-and-competitiveness/file-cloud-and-ai-development-act">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.europarl.europa.eu/legislative-train/theme-a-new-plan-for-europe-s-sustainable-prosperity-and-competitiveness/file-cloud-and-ai-development-act">europarl.europa.eu/legislative-train</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es domingo, veinticuatro de mayo. Los feeds oficiales de seguridad están quietos — el catálogo de fallas explotadas activamente no tiene entrada nueva desde el viernes. Pero el gran tema de la semana cambió de territorio de la noche a la mañana.</p>
+  <p>Por semanas la frase era: npm tiene un problema de cadena de suministro. Esta semana muestra que eso era demasiado estrecho. En dos días, la misma lógica golpeó dos lugares completamente distintos. Primero Composer, el gestor de paquetes del mundo PHP: un atacante secuestró cuatro paquetes Laravel-Lang muy usados — no publicando una nueva versión, sino reescribiendo cada etiqueta Git ya existente. Solo el paquete principal tiene más de quinientas de esas etiquetas. La registry Packagist entonces ingirió código de un fork ajeno como releases legítimos. El malware inyectado se carga en cada arranque de una aplicación Laravel o Symfony y toma credenciales de nube y de CI.</p>
+  <p>Segundo, aún más directo: una campaña llamada Megalodon secuestró más de cinco mil quinientos repositorios de GitHub en un solo día — en una ventana de seis horas. Inyectó workflows de CI maliciosos disfrazados con identidades de bot falsificadas, con nombres como ci-bot o pipeline-bot, del tipo que nadie mira dos veces en un historial de commits. En el próximo build, esos workflows entregan todos los secretos del proyecto a un servidor ajeno. El denominador común de ambos ataques no es el ecosistema, sino la capa de confianza de abajo: la etiqueta en la que la registry cree a ciegas, y la identidad de bot que nadie verifica.</p>
+  <p>Además, la falla de Drupal del inicio de la semana ya tiene números medibles. La firma de seguridad Imperva reporta más de quince mil intentos de ataque contra casi seis mil sitios en sesenta y cinco países, la mayor parte en Estados Unidos — pero todavía mayormente reconocimiento, no toma masiva. Quien corre Drupal sobre PostgreSQL, que parche: el plazo federal vence el veintisiete de mayo.</p>
+  <p>La buena contracorriente continúa. Con el Staged Publishing, npm separa el camino de publicación automática de una aprobación humana. Del mundo Python viene la idea certera de los cooldowns de dependencias, disponible desde pip veintiséis punto uno: instalar paquetes recién publicados solo después de unos días — un análisis muestra que eso habría frenado ocho de diez ataques.</p>
+  <p>Del lado de los releases está tan quieto que la noticia del día es una corrección en causa propia: Firefox ciento cincuenta y uno stable salió ya el diecinueve de mayo, y Chrome stable está en ciento cuarenta y ocho, no en ciento cuarenta y nueve — nos equivocamos en ambos ayer. En el resto, todo sin cambios, y el Quarkus tres punto treinta y seis final sigue sin salir. En la infraestructura, una tanda nueva de kernels Linux el veintitrés de mayo, y detrás de ella la falla Fragnesia, que deja a un usuario local volverse root por el page cache. Y OpenTelemetry ahora es oficialmente un proyecto graduado de la CNCF — el estándar de facto de observabilidad.</p>
+  <p>El lunes Bruselas va en serio: la Comisión Europea debe adoptar el Cloud and AI Development Act, incluida la cláusula delicada sobre el uso de nube de EE. UU. para datos sensibles de gobierno. En Brasil, la oposición pelea contra el nuevo papel de fiscalización de la autoridad de protección de datos mediante un proyecto de decreto legislativo. Mañana sabremos si el borrador filtrado se vuelve texto de ley de verdad. Hasta entonces.</p>
+</div>
+
+</body>
+</html>

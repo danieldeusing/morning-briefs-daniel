@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-06-08</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-08</span>
+  </div>
+  <h1 class="masthead-title">A worm spreads through Red Hat's npm packages</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">The supply-chain saga continues: On June 1st, the "Miasma" worm re-published itself across 32 npm packages in the <code>@redhat-cloud-services</code> namespace — and did it precisely via the mechanism (OIDC/Trusted Publishing) that was supposed to make token theft obsolete. Otherwise, a quiet, solid news day: CISA adds two old bugs to the exploited list, Postgres 19 enters beta, and the CRA reporting clock ticks louder.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>Miasma worm</strong>: 32 Red Hat npm packages (96 versions, ~80–117k downloads/week) re-published with a credential stealer — via compromised GitHub account + Trusted Publishing.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">USA</span> <strong>CISA KEV</strong>: Linux cgroups bug <code>CVE-2022-0492</code> (container escape) and Android Framework overflow <code>CVE-2025-48595</code> actively exploited — deadlines already passed.</li>
+      <li><span class="chip good">Release</span> <span class="chip">OSS</span> <strong>PostgreSQL 19 Beta 1</strong> (06-04): SQL/PGQ property graphs, <code>REPACK</code>, parallel autovacuum, <code>ON CONFLICT DO SELECT</code>. GA in fall.</li>
+      <li><span class="chip">Sec</span> <span class="chip">OSS</span> <strong>Postgres patch round</strong> (.4/.10/.14 …): 11 CVEs, two with CVSS 8.8 (<code>libpq</code> overflow, integer wraparound). If you run Postgres: plan accordingly.</li>
+      <li><span class="chip">Regulation</span> <span class="chip">EU</span> <strong>CRA reporting mandate</strong> from 09-11-2026: 24h early warning, 72h full report, 14-day closure for actively exploited flaws — via the EU Single Reporting Platform.</li>
+      <li><span class="chip good">Infra</span> <span class="chip">OSS</span> <strong>Tailscale K8s operator</strong>: DNSConfig placement, names >63 chars, IPv4 for egress on dual-stack.</li>
+      <li><span class="chip">Sec</span> <span class="chip">DE</span> <strong>BSI advisories</strong> early June: Rsync, ImageMagick, Apache Airflow/ActiveMQ — the usual weekly maintenance list.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">What releases, deadlines, and security follow-ups are due this week</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Mon 06-08</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Miasma follow-up: npm/security firms publish IOCs &amp; affected version lists</span>
+          <span>CISA KEV remediation deadline (06-05) already passed — cleanup work</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 06-09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Patch Tuesday (MS) — follow-up week lead time, BSI WID updates expected</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 06-10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Postgres 19 beta testing: community feedback window open</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu 06-11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet day — no major release announced</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 06-12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Weekend reading: supply-chain postmortems (JFrog/Wiz/Unit42)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 06-13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>—</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun 06-14</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>Miasma: a worm in Red Hat's npm packages — and why "Trusted Publishing" didn't stop it <span class="h2-refs">[1][2][3]</span></h2>
+        <p>On <strong>June 1st, 2026</strong>, multiple security teams independently reported a fresh supply-chain incident in the npm namespace <code>@redhat-cloud-services</code>: <strong>32 packages</strong> were re-published in <strong>96 versions</strong> with a credential stealer.<sup>[1]</sup> These packages together pull roughly <strong>80,000–117,000 downloads per week</strong> — they sit inside Red Hat's Hybrid Cloud Console frontend libraries.<sup>[2]</sup></p>
+
+        <div class="eli5">
+          <strong class="eli5-term">Supply chain attack:</strong> Instead of attacking your app directly, someone poisons an ingredient you were going to use anyway — here an npm package that thousands of projects auto-pull. Like someone tampering with flour at the mill: every baker who buys it bakes poisoned bread without knowing.
+        </div>
+
+        <p>The really interesting part is the <em>how</em>. The attacker didn't get in via a stolen npm token, but through a <strong>compromised GitHub account</strong> of a Red Hat employee — and then used <strong>OIDC / Trusted Publishing via GitHub Actions</strong> to pose as a legitimate publisher.<sup>[3]</sup> This very token-less model was celebrated as <em>the</em> hardening after the Shai-Hulud waves in 2025. It eliminates long-lived tokens — but if the identity anchor (the GitHub account) falls, so does the trust hanging on it.</p>
+
+        <div class="eli5">
+          <strong class="eli5-term">OIDC / Trusted Publishing:</strong> Instead of a permanent password ("npm token"), your CI pipeline proves its identity anew per release — like a day pass instead of a permanent key. If someone steals the day-pass issuer (the GitHub account), they still get valid passes.
+        </div>
+
+        <p>Miasma is a direct descendant of the <em>Mini-Shai-Hulud</em> worm from spring (which previously hit SAP and TanStack packages). What's new and striking: <strong>each infection encrypts its payload individually</strong> instead of copying itself byte-for-byte — that severely complicates signature-based detection.<sup>[4]</sup> The malicious code runs in the <code>preinstall</code> phase, scans the machine and reachable cloud for credentials, and re-publishes itself via every package that can reach the stolen tokens.</p>
+
+        <p><strong>Red Hat's line:</strong> The compromised versions have been removed from npm; the publishing pipeline for <code>console.redhat.com</code> strips install scripts before deployment anyway; customers face "no action needed".<sup>[5]</sup> That's credible for the hosted console — but anyone pulling the packages directly from npm should check lockfiles and rotate CI secrets.</p>
+
+        <div class="callout warn">
+          <span class="callout-label">Heads up</span> Not a "patch tonight" alarm — but a good reason to audit <code>preinstall</code>/<code>postinstall</code> scripts from dependencies in your own repos and make <code>--ignore-scripts</code> and pinned lockfiles a habit. The attack surface is the tooling layer, not a single CVE.
+        </div>
+
+        <p><strong>The uncomfortable punchline:</strong> GitHub itself concedes that Trusted Publishing in its current form does <em>not</em> prevent Shai-Hulud-like attacks — the token-less model is "an important step," not a final answer.<sup>[6]</sup> As of late 2025, the stricter regime was already in place anyway: 7-day max lifetime for write tokens, FIDO 2FA instead of TOTP, deprecation of classic tokens.<sup>[7]</sup> Since May 20, 2026, new Trusted Publisher configs must also explicitly name at least one allowed action.<sup>[8]</sup> All that helps — but doesn't close the "compromised developer account" hole.</p>
+
+        <div class="footnotes"><ol>
+          <li><a href="https://www.wiz.io/blog/miasma-supply-chain-attack-targeting-redhat-npm-packages">wiz.io — Miasma supply chain attack</a></li>
+          <li><a href="https://www.aikido.dev/blog/red-hat-npm-packages-compromised-credential-stealing-worm">aikido.dev — Red Hat npm packages compromised</a></li>
+          <li><a href="https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attacks/">unit42.paloaltonetworks.com — npm threat landscape</a></li>
+          <li><a href="https://research.jfrog.com/post/shai-hulud-miasma-redhat-cloud-services/">research.jfrog.com — Miasma technical analysis</a></li>
+          <li><a href="https://access.redhat.com/security/vulnerabilities/RHSB-2026-006">access.redhat.com — RHSB-2026-006</a></li>
+          <li><a href="https://www.reversinglabs.com/blog/npm-security-shai-hulud">reversinglabs.com — Will new npm measures stop Shai-Hulud?</a></li>
+          <li><a href="https://github.com/orgs/community/discussions/174507">github.com — Plan for a more secure npm supply chain</a></li>
+          <li><a href="https://docs.npmjs.com/trusted-publishers/">docs.npmjs.com — Trusted publishing</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>BSI maintenance list of the week <span class="h2-refs">[15]</span></h2>
+        <p>Nothing spectacular, but the usual German required reading: early June, the BSI published technical security advisories for <strong>Rsync</strong> and <strong>ImageMagick</strong> (06-01) plus new notes on <strong>Apache Airflow</strong> and <strong>Apache ActiveMQ</strong>.<sup>[15]</sup> Anyone running ActiveMQ or Airflow as an orchestration/messaging layer should briefly check their versions against the WID list — these are the components that like to run unpatched in German midmarket stacks.</p>
+        <div class="footnotes"><ol start="15">
+          <li><a href="https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Cyber-Sicherheitslage/Technische-Sicherheitshinweise-und-Warnungen/technische-sicherheitshinweise-und-warnungen_node.html">bsi.bund.de — Technical security advisories</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>CISA adds two actively exploited bugs to KEV list — container escape included <span class="h2-refs">[9][10][11]</span></h2>
+        <p>On <strong>June 2nd</strong>, CISA added two vulnerabilities to the Known-Exploited-Vulnerabilities catalog, both confirmed actively exploited in the wild.<sup>[9]</sup></p>
+
+        <div class="eli5">
+          <strong class="eli5-term">CISA KEV catalog:</strong> A list from the US cyber agency of flaws that are <em>demonstrably actively</em> attacked — not "could theoretically," but "is happening right now." US agencies must close them within a deadline; for everyone else, the list is the best prioritization signal for what's actually burning.
+        </div>
+
+        <p><strong><code>CVE-2022-0492</code></strong> (Linux kernel, CVSS 7.0) sits in <code>cgroup_release_agent_write()</code> in the cgroups v1 subsystem: due to insufficient authentication, a local attacker can bypass namespace isolation, escalate privileges, and in the worst case <strong>break out of a container onto the host</strong> — root included.<sup>[10]</sup> For Daniel's Docker/containerd world the more relevant of the two: an old bug (2022), but container escapes on the KEV list are the signal to check kernel and runtime versions.</p>
+
+        <p><strong><code>CVE-2025-48595</code></strong> (Android Framework, integer overflow, CVSS 8.4) affects Android 14–16, enables code execution plus privilege escalation, and per Google is under "limited, targeted exploitation".<sup>[11]</sup> The BOD-22-01 deadline for agencies already passed on <strong>June 5th</strong> — anyone managing mobile fleets should enforce the June patch level.</p>
+
+        <p>Days later (06-03), <code>CVE-2026-45247</code> was added — a <strong>CVSS 9.8, unauthenticated RCE</strong> via PHP object deserialization in "Mirasvit Full Page Cache Warmer" from the Magento/Adobe Commerce ecosystem (affects versions < 1.11.12).<sup>[12]</sup> Agency deadline was 06-06 — Magento operators should treat this urgently, not defer.</p>
+
+        <div class="footnotes"><ol start="9">
+          <li><a href="https://www.cisa.gov/news-events/alerts/2026/06/02/cisa-adds-two-known-exploited-vulnerabilities-catalog">cisa.gov — KEV add 06-02-2026</a></li>
+          <li><a href="https://www.securityweek.com/organizations-warned-of-exploited-linux-kernel-vulnerability/">securityweek.com — Linux kernel flaw</a></li>
+          <li><a href="https://www.scworld.com/brief/cisa-adds-android-and-linux-kernel-flaws-to-exploited-vulnerabilities-catalog">scworld.com — Android &amp; Linux flaws</a></li>
+          <li><a href="https://www.cisa.gov/news-events/alerts/2026/06/03/cisa-adds-one-known-exploited-vulnerability-catalog">cisa.gov — KEV add 06-03-2026</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>EU CRA: the reporting clock is ticking louder <span class="h2-refs">[13]</span></h2>
+        <p>Standing thread, but increasingly relevant: From <strong>September 11th, 2026</strong> onwards, the reporting obligations of the EU Cyber Resilience Act (CRA) go into effect — the rest of the law follows only at end of 2027.<sup>[13]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Cyber Resilience Act (CRA):</strong> An EU law that requires software vendors (including small ones!) to secure their products over their lifetime and report incidents. Like product liability for code: whoever brings "products with digital elements" to the EU market must answer for their security.
+        </div>
+        <p>Concretely from September: if there's an <strong>actively exploited</strong> flaw or serious incident, the vendor must give a <strong>24-hour</strong> early warning, a <strong>72-hour</strong> full report, and no later than <strong>14 days</strong> after a fix is available a closure report — all via the central <strong>Single Reporting Platform</strong>, addressed to the responsible CSIRT and in parallel to ENISA. For organizations of twiceD's size, that means: a lean, documented incident process must be in place by summer. The platform itself is supposed to be operational by the deadline.</p>
+        <div class="footnotes"><ol start="13">
+          <li><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">digital-strategy.ec.europa.eu — CRA reporting obligations</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>PostgreSQL 19 Beta 1: property graphs, REPACK, and finally parallel autovacuum <span class="h2-refs">[14]</span></h2>
+        <p>For anyone running Postgres as default database (that's Daniel): On <strong>June 4th</strong>, <strong>PostgreSQL 19 Beta 1</strong> shipped.<sup>[14]</sup> GA is expected for September/October 2026 — beta means: test, don't run in production.</p>
+        <p>The highlights that actually change things in practice:</p>
+        <ul>
+          <li><strong>SQL/PGQ property graph queries</strong> — graph queries directly in SQL, no separate graph DB needed.</li>
+          <li><strong><code>REPACK</code></strong> — a new command to reorganize bloated/inflated tables without <code>VACUUM FULL</code> lock pain.</li>
+          <li><strong>Parallel autovacuum</strong> — cleanup now runs across multiple workers; noticeable on large tables.</li>
+          <li><strong><code>ON CONFLICT DO SELECT</code></strong> — on upsert get the colliding row back instead of a second roundtrip.</li>
+          <li><strong>Native JSON for <code>COPY TO</code></strong> and a <code>WAIT FOR LSN</code> guard against stale reads on replicas.</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">Autovacuum:</strong> Postgres marks deleted/changed rows as "dead" first and cleans them up later in the background — like a restaurant clearing tables after guests leave. Where it used to run single-threaded, it would block on large tables; now multiple workers clean up at once in parallel.
+        </div>
+        <div class="footnotes"><ol start="14">
+          <li><a href="https://www.postgresql.org/about/news/postgresql-19-beta-1-released-3313/">postgresql.org — PostgreSQL 19 Beta 1</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Postgres patch round: 11 CVEs, two of them serious <span class="h2-refs">[16]</span></h2>
+        <p>From the patch round on <strong>May 14th, 2026</strong>: the stable branches <strong>18.4 / 17.10 / 16.14 / 15.18 / 14.23</strong> brought <strong>11 security fixes</strong> and over 60 bugfixes.<sup>[16]</sup> Two stand out — both with <strong>CVSS 8.8</strong>: an integer wraparound with out-of-bounds write (<code>CVE-2026-6473</code>) and a <code>libpq</code> buffer overflow in the <code>lo_*</code> large-object functions (<code>CVE-2026-6477</code>). Both require an authenticated path, but for any multi-tenant or externally reachable cluster it's a scheduling item. Not an emergency, but the next maintenance window should include the minor bump.</p>
+        <div class="footnotes"><ol start="16">
+          <li><a href="https://www.postgresql.org/about/news/postgresql-184-1710-1614-1518-and-1423-released-3297/">postgresql.org — Security release 18.4/17.10/…</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Tailscale: K8s operator update for homelab infra <span class="h2-refs">[17]</span></h2>
+        <p>Small but handy for Daniel's Tailscale setup: The new <strong>Kubernetes operator</strong> brings placement control for <code>DNSConfig</code> (node affinity/selectors), Helm support for priority classes, correct handling of service/ingress names <strong>over 63 characters</strong>, and IPv4 addresses for egress services on dual-stack clusters.<sup>[17]</sup> If you use the operator, you can pick it up at the next Helm upgrade — pure quality-of-life improvements, no breaking changes.</p>
+        <div class="footnotes"><ol start="17">
+          <li><a href="https://releasebot.io/updates/tailscale">releasebot.io — Tailscale June 2026 updates</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>BR note: Nubank vs. Mercado Livre — the card war <span class="h2-refs">[18]</span></h2>
+        <p>More economics than software engineering, but worth a sentence as a BR scene pulse: Nubank and Mercado Livre together account for <strong>36% of credit card portfolio growth</strong> in Brazil over the last twelve months — Nubank leads in volume and is profitable, ML still burns cash in the card business.<sup>[18]</sup> For tech substance from BR this week there's otherwise little new; the interesting tech battle between the two is the platform integration underneath.</p>
+        <div class="footnotes"><ol start="18">
+          <li><a href="https://finsidersbrasil.com.br/bancos-digitais/nubank-domina-credito-no-brasil-mas-mercado-livre-deve-virar-o-jogo/">finsidersbrasil.com.br — Nubank vs. Mercado Livre</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Monday, June eighth. The news day itself is quiet — but the supply-chain saga in the npm ecosystem has a new chapter, and that's the story of the day.</p>
+  <p>On June first, a worm called Miasma re-published itself across thirty-two npm packages in the Red Hat Cloud Services namespace — ninety-six versions, together between eighty and one hundred seventeen thousand downloads per week. The worm steals credentials, runs right at install time, and encrypts itself differently with each infection so antivirus scanners have a harder time spotting it. The real gut-punch: the attacker came in through a hijacked GitHub account and leveraged exactly Trusted Publishing — the very mechanism supposed to make stolen tokens unnecessary. Red Hat has removed the affected versions and says customers face no action needed. GitHub itself admits that the new protections still don't prevent Shai-Hulud-style attacks.</p>
+  <p>If you have your own projects, don't read this as panic — read it as a prompt: audit install scripts from your dependencies, pin your lockfiles, rotate CI secrets. The attack surface is the tooling layer, not a single vulnerability.</p>
+  <p>Meanwhile, the American cyber agency CISA on June second added two actively exploited flaws to their list. The more important one for the container world is an old Linux kernel bug from twenty twenty-two that lets you break out of a container onto the host. The other hits the Android Framework in versions fourteen through sixteen. The government deadline already passed on June fifth.</p>
+  <p>On the bright side: PostgreSQL nineteen went into its first beta on June fourth. It brings graph queries directly in SQL, a new REPACK command against bloated tables, and finally parallel autovacuum — cleanup now runs across multiple workers instead of single-threaded. The finished version comes in the fall. If you run Postgres in production, you should also plan for the latest patch round: eleven security fixes, two of them high-severity.</p>
+  <p>And the regulation clock is ticking louder: starting September eleventh, the reporting obligations of the EU Cyber Resilience Act take effect. Actively exploited flaws then have to be reported within twenty-four hours — even by small software vendors. By summer a lean incident process should be in place.</p>
+  <p>For tomorrow, nothing big is announced — Microsoft's Patch Tuesday lead-in and more BSI advisories. Talk to you then.</p>
+</div>
+
+</body>
+</html>

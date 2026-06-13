@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief AI-Dev — 2026-05-19</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+
+<!-- Chart.js für den Benchmark-Bar-Chart. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI-Dev</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-05-19</span>
+  </div>
+  <h1 class="masthead-title">I/O-Tag: Cursor wirft Composer 2.5 rein, Codex verlässt das Alpha, GitHub schießt fünf auf einmal</h1>
+</header>
+
+<main class="shell">
+
+  <!-- BAND 1: TL;DR -->
+  <section class="tldr">
+    <p class="lead">Heute ist der Tag. Um 14:00 BRT (19:00 MEZ) öffnet Sundar Pichai die I/O-Keynote im Shoreline; bis dahin haben Anbieter noch acht Stunden, um ihre Drops zu platzieren — und ein paar haben das gestern schon getan. Bemerkenswert: das Pre-Keynote-Fenster war diesmal <em>nicht</em> still. Cursor hat ein eigenes Frontier-Modell aus dem Hut gezogen, OpenAI führt Codex CLI aus dem Alpha-Status, GitHub klatscht fünf Copilot-Changes an einem Tag raus, und das vLLM-Mysterium von gestern ist offiziell geklärt (Tag ist geyankt, bleibe auf 0.20.2). Anthropic dropt einen Wartungsrelease und liefert dafür den meatigen Teil im Hintergrund: die Agent-SDK-Abo-Abrechnung mit Stichtag 15.06. konkretisiert sich. Tagesplan: heute die neuen Tools anschauen, heute Abend das Google-Theater.</p>
+    <ul>
+      <li><span class="chip hot">Google</span> <strong>I/O 2026 heute</strong>: Keynote 10:00 PT / 14:00 BRT / 19:00 MEZ; Developer-Keynote direkt im Anschluss bis 14:45 PT; agentic-coding-Session 16:30 PT</li>
+      <li><span class="chip hot">Tool</span> <strong>Cursor Composer 2.5</strong> (18.05.): erstes Cursor-eigenes Frontier-Coding-Modell; Anbieter-Claim Opus-4.7-Niveau bei ~1/10 Kosten — skeptisch lesen, aber try-worthy</li>
+      <li><span class="chip hot">OpenAI</span> <strong>Codex CLI rust-v0.131.0</strong> (18.05.): aus dem Alpha; Plugin-Marketplace-CLI, vereinheitlichter <code>@</code>-Picker, <code>codex doctor</code>, daemon-managed Remote-Control</li>
+      <li><span class="chip hot">Tool</span> <strong>GitHub Copilot — Fünf-Pack am 18.05.</strong>: Cloud-Agent mit Haiku 4.5 + GPT-5.4-mini, „Fix-with-Copilot"-Button auf failing Actions, REST-API-Audit für MCP/Tools, Copilot-CLI-Remote-Control GA</li>
+      <li><span class="chip">Anthropic</span> <strong>Claude Code v2.1.144</strong> (19.05.): inkrementell — <code>/resume</code> für Background-Sessions, „Extra Usage" heißt jetzt „Usage Credits"</li>
+      <li><span class="chip hot">Local</span> <strong>vLLM 0.21.0 — Yank bestätigt</strong>: Tensor-Parallelism-Bug, kein 0.21.1 in Sicht; bleibe auf 0.20.2 (das war gestern noch „unklar")</li>
+      <li><span class="chip good">OSS</span> <strong>Cline CLI v3.0.6/0.7</strong> (17.–18.05.): neues <code>--worktree</code>-Flag erzeugt frisches git-worktree pro Task — ergonomischer Gewinn für Parallel-Loops</li>
+      <li><span class="chip">Local</span> <strong>Qwen 3.7-Preview-Sichtung</strong> in Qwen-Chat (18.05.) — kein offizielles Release, vermutlich Teaser für Alibaba-Cloud-Summit am 20.05.</li>
+      <li><span class="chip">Bench</span> <strong>LiveCodeBench Pro</strong>: Gemini 3.1 Pro, 3 Pro, 3 Flash auf Plätzen 1–3 am Vorabend von I/O — Google trainiert sichtbar auf die Bühne hin</li>
+      <li><span class="chip">Quiet</span> Aider, Continue, OpenHands, Plandex, JetBrains, Devin und Bolt diese Woche ohne nennenswerten Tag — Pre-I/O-Atempause</li>
+    </ul>
+  </section>
+
+  <!-- BAND 2: Wochenausblick -->
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick · AI-Dev</div>
+      <div class="timeline-sub">Heute Google-Bühne, ab Mittwoch Recap-Welle, Freitag Open-Weights-Reaktionen</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col hot">
+        <div class="tl-date">Di 19.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Heute · Google I/O Keynote</strong></span>
+          <span>14:00 BRT / 19:00 MEZ Hauptkeynote (Pichai)</span>
+          <span>17:30 BRT / 22:30 MEZ Developer-Keynote</span>
+          <span>20:30 BRT / 01:30 MEZ „Agent-first workflows from prompt to production"</span>
+          <span>Erwartet: neues Gemini (3.5? 4?), Spark-Agent, Jules V2 „Jitro", evtl. „Omni"</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 20.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>I/O Tag 2 · Codelab-Sessions, Gemini-Code-Assist-Live-Demos</span>
+          <span><strong>Alibaba Cloud Summit</strong> — Qwen-3.7-Reveal erwartet</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Do 21.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>I/O On-Demand-Sessions verfügbar</span>
+          <span>Erste Recap-Welle in Newslettern</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fr 22.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cursor-Freitags-Build-Slot (Composer 2.5 frisch, evtl. 2.5.1)</span>
+          <span>Open-Weights-Reaktionen historisch häufig Fr</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">So 31.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>OpenAI Codex-Pro-2×-Usage-Promo läuft aus</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mo 15.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Anthropic Agent-SDK-Credit-Pool-Switch</strong></span>
+          <span>Drittanbieter-Harnesses (Zed, OpenClaw, Conductor, Jean) wechseln aus dem Abo-Pool — 12×–175× Preisaufschlag je nach Workload</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <!-- COLUMN 1: Frontier Labs -->
+    <div class="col">
+
+      <section>
+        <h2>Cursor · Composer 2.5 — das erste eigene Frontier-Coding-Modell <span class="h2-refs">[1]</span></h2>
+
+        <p>Cursors gestriger Drop (Mo 18.05.) ist die meist-diskutierte Tool-Bewegung dieser Woche — und zwar nicht, weil ein Feature kam, sondern weil <strong>das Modell selbst aus dem Haus kommt</strong>. Composer 2 (Oktober) war der erste Versuch; Composer 2.5 positioniert Anysphere offen als Frontier-Anbieter, nicht nur als IDE-Layer auf fremden Modellen.</p>
+
+        <article class="news-item">
+          <h3>Was Anysphere claimt</h3>
+          <p>Composer 2.5 erreiche laut <a href="https://cursor.com/changelog/composer-2-5">Cursor-Changelog</a> Opus-4.7- und GPT-5.5-Niveau bei „etwa 1/10 der Kosten" — SWE-Bench-Multilingual 79,8 %, CursorBench v3.1 63,2 %. Preise: Standard $0,50/M In, $2,50/M Out; Fast (Default) $3,00/M In, $15,00/M Out. Erste Woche doppelte Usage-Limits.</p>
+          <p>Skeptische Lesart: <strong>CursorBench v3.1 ist Cursors eigener Benchmark</strong>. SWE-Bench-Multilingual ist eine kontaminations-anfällige Variante des Verified-Sets — die Pro-Suite wäre der ehrliche Vergleich, dort liegen die wirklichen Frontier-Modelle 15–25 Punkte tiefer. Der „1/10 Kosten"-Claim ist plausibel auf Anysphere-eigener Infrastruktur, aber bedingt: Standard-Tier ist günstig, Fast-Tier ist auf Augenhöhe mit Opus-Preisen.</p>
+          <span class="src"><a href="https://cursor.com/changelog/composer-2-5">cursor.com/changelog</a></span>
+        </article>
+
+        <div class="callout info">
+          <span class="callout-label">Try-this</span>
+          Composer 2.5 im Standard-Tier auf einem überschaubaren Feature-Task ausprobieren — zwei Stunden mit dem Tool, das du sonst nimmst, gegen zwei Stunden mit Composer 2.5. Die ehrliche Frage ist nicht „schlägt es Opus auf Bench X", sondern „wo bricht es in <em>deinem</em> Code mit <em>deinen</em> Patterns weg". Erste Woche doppelte Limits — kostet dich praktisch nichts außer Zeit.
+        </div>
+      </section>
+
+      <section>
+        <h2>OpenAI · Codex CLI rust-v0.131.0 verlässt das Alpha <span class="h2-refs">[2]</span></h2>
+
+        <article class="news-item">
+          <h3>Was substantiell ist</h3>
+          <p>Im Schatten der Mobile-Story von letzter Woche bringt rust-v0.131.0 (18.05.) das Plumbing-Update: Plugin-Marketplace-CLI mit Version-aware Sharing und Share-Checkout, Default-Enabled-Plugin-Hooks, daemon-managed <code>codex remote-control</code> mit Enable/Disable/Status-APIs, registry-backed Remote-Environments. Im TUI: <strong><code>@</code>-Mentions suchen jetzt Files, Directories, Plugins und Skills in einem vereinheitlichten Picker</strong>; data-driven Service-Tier-Slash-Commands; blended Token-Usage-Anzeige; Permissions/Approval-Mode in der Status-Line; responsive Markdown-Tabellen. Python-SDK ist auf <code>openai-codex</code> (Paket-Name) umgezogen.</p>
+          <p>Neu für den Alltag: <strong><code>codex doctor</code></strong> — ein Diagnose-Command, der Auth, MCP-Server, Plugin-State, Sandbox-Permissions in einem Schwung checkt. Klingt unspektakulär, ist aber genau das, was bei kaputten Sessions bisher 20 Minuten manuelles Debugging gekostet hat. Gleichzeitiger Tag: 0.132.0-alpha.1.</p>
+          <span class="src"><a href="https://github.com/openai/codex/releases/tag/rust-v0.131.0">github.com/openai/codex</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>GPT-5.3-Codex wird Copilot-Default für Business/Enterprise (17.05.)</h3>
+          <p>Geräuschlos, aber strukturell wichtig: GitHub hat am Sa 17.05. den Default-Model für alle Copilot-Business- und -Enterprise-Orgs auf <strong>GPT-5.3-Codex</strong> umgestellt (vorher GPT-4.1). Das ist GitHubs erstes „LTS"-Modell — Verfügbarkeit garantiert bis 04.02.2027, Premium-Request-Multiplier 1×. Wer in einer Enterprise-Org sitzt und nichts an der Modell-Auswahl ändert, bekommt damit ein deutlich anderes Backend ohne jede Migration.</p>
+          <span class="src"><a href="https://github.blog/changelog/2026-05-17-gpt-5-3-codex-is-now-the-base-model-for-copilot-business-and-enterprise/">github.blog/changelog</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Anthropic · Wartungsrelease, dafür im Hintergrund laut <span class="h2-refs">[3][4][5]</span></h2>
+
+        <article class="news-item">
+          <h3>Claude Code v2.1.144 — inkrementell (19.05.)</h3>
+          <p>Heute morgen gedroppt: <code>/resume</code> unterstützt jetzt Background-Sessions (die mit <code>claude --bg</code> oder über Agent-View gestartet wurden, im Listing mit <code>bg</code> markiert); Elapsed-Time-Anzeige in Background-Subagent-Completion-Notifications (etwa „Agent completed · 3h 2m 5s"); <code>/plugin browse</code> und Discover-Panes zeigen Last-Updated-Time; <strong><code>/model</code> ist standardmäßig session-only</strong> (<code>d</code> im Picker setzt den globalen Default). „Extra Usage" heißt umbenannt „Usage Credits", <code>/extra-usage</code> bleibt als Alias.</p>
+          <p>Lesart: kein Major-Feature. Anthropic hat alles, was Bühne gebraucht hätte, schon vor I/O abgeladen (<code>/goal</code> in v2.1.139, Agent-View). Heute geht's um Polierarbeit am Rand.</p>
+          <span class="src"><a href="https://code.claude.com/docs/en/changelog">code.claude.com/docs/changelog</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Agent-SDK-Billing-Split, Update zum 15.06.-Stichtag</h3>
+          <p>Die Ankündigung vom Mi 14.05. konkretisiert sich. Ab Mo 15.06. wandern <strong>Claude Agent SDK</strong>, <strong><code>claude -p</code> Headless-Modus</strong>, <strong>Claude-Code-GitHub-Actions</strong> und <em>alle</em> Drittanbieter-Harnesses (Zed, OpenClaw, Conductor, Jean, Cline, OpenHands, jeder eigenbau-Wrapper) aus dem regulären Abo-Pool in einen <strong>separaten „Agent-SDK-Credit-Pool"</strong>. Anthropic hat die effektive Preisspanne nicht offiziell quantifiziert; in den Community-Auswertungen rangiert sie zwischen <strong>12× und 175× Aufschlag je Workload</strong>.</p>
+          <p>Was das für Daniels Stack bedeutet, wenn Claude Code nativ benutzt wird: nichts — die interaktive CLI bleibt im Abo-Pool. Was das bedeutet, wenn dein Agent über die SDK läuft (Zed-Integration, Cline mit Claude-Backend, GitHub-Actions-Bot): ab 15.06. zahlst du pro Token statt Flat-Abo. Skeptische Note: Anthropic kann auf den Druck der OPEX-Realität reagieren, oder die Konkurrenz reagiert mit eigenen Abo-Modellen — diese Bewegung ist noch nicht zu Ende erzählt.</p>
+          <span class="src"><a href="https://help.apiyi.com/en/anthropic-claude-subscription-agent-sdk-billing-split-june-2026-en.html">help.apiyi.com</a> · <a href="https://gigazine.net/gsc_news/en/20260514-anthropic-claude-agent-sdk-credits">gigazine.net</a></span>
+        </article>
+
+        <div class="callout warn">
+          <span class="callout-label">Achtung</span>
+          Wer eine eigene GitHub-Actions-Pipeline mit Claude-Code als Reviewer fährt, sollte vor dem 15.06. die <em>typische Run-Kosten</em> in Tokens auf der API-Preisliste hochrechnen. Bei mehreren Runs/Tag und großen Diffs landest du schnell bei zweistelligen Dollar-Beträgen — das passt in ein Team-Budget, aber nicht in einen Hobby-Side-Stack.
+        </div>
+
+        <article class="news-item">
+          <h3>Anthropic Mythos im FSB-Briefing</h3>
+          <p>Anthropic hat am So 18.05. zugesagt, das <strong>Financial Stability Board</strong> (BoE-Governor Andrew Bailey, Vorsitz) zu Cyber-Defence-Schwächen zu briefen, die Claude Mythos Preview aufgespürt hat — laut Anthropic „tausende High-Severity-Schwachstellen, einschließlich in jedem großen Betriebssystem und Web-Browser". Mythos hat ~40 Org-Zugriffe (Amazon, Microsoft, JPMorgan), Weiterverteilung nach White-House-Request pausiert.</p>
+          <p>Was das praktisch heißt: Mythos ist der erste Coding-/Security-Agent, dessen Vulnerability-Findings ein <em>Regulator</em>-Briefing wert sind. Das hebt den Standard, was ein Tool für Coding-Audit gerade können kann — und macht den klassischen „CVE-Sweep" zur Pflichtleistung.</p>
+          <span class="src"><a href="https://www.irishtimes.com/business/2026/05/18/anthropic-to-brief-global-financial-watchdog-on-cyber-flaws-exposed-by-mythos/">irishtimes.com</a></span>
+        </article>
+
+        <div class="footnotes">
+          <ol>
+            <li id="ref-1"><a href="https://cursor.com/changelog/composer-2-5">Cursor Changelog — Composer 2.5</a>, 18.05.2026</li>
+            <li id="ref-2"><a href="https://github.com/openai/codex/releases/tag/rust-v0.131.0">openai/codex — rust-v0.131.0</a>, 18.05.2026</li>
+            <li id="ref-3"><a href="https://code.claude.com/docs/en/changelog">code.claude.com/docs/changelog</a>, 19.05.2026</li>
+            <li id="ref-4"><a href="https://help.apiyi.com/en/anthropic-claude-subscription-agent-sdk-billing-split-june-2026-en.html">apiyi — Agent SDK billing split</a>, 14.05.2026</li>
+            <li id="ref-5"><a href="https://www.irishtimes.com/business/2026/05/18/anthropic-to-brief-global-financial-watchdog-on-cyber-flaws-exposed-by-mythos/">Irish Times — Mythos FSB briefing</a>, 18.05.2026</li>
+          </ol>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- COLUMN 2: Tooling -->
+    <div class="col">
+
+      <section>
+        <h2>GitHub Copilot · Fünf-Pack am 18. Mai <span class="h2-refs">[6][7][8][9]</span></h2>
+
+        <p>GitHub hat gestern <strong>fünf Changelog-Einträge an einem Tag</strong> abgesetzt — die dichteste Copilot-Bewegung seit dem Desktop-App-Reveal letzte Woche. Pattern: Microsoft positioniert Copilot zunehmend als Plattform-Ebene, nicht nur als IDE-Extension.</p>
+
+        <article class="news-item">
+          <h3>Cloud-Agent bekommt günstige Modelle</h3>
+          <p><strong>Claude Haiku 4.5</strong> und <strong>GPT-5.4-mini</strong> sind jetzt im Modell-Picker des Copilot-Cloud-Agent — beide mit 0,33×-Premium-Multiplier. Für „simple tasks" (Tests fixen, Refactor-Sweeps, Dokumentations-Updates) macht das die Cloud-Bots um Faktor 3 günstiger. Praktisch: kombiniert mit der „Fix-with-Copilot"-Action (siehe nächster Punkt) sind das die ersten Background-Bots, die in einem Hobby-Budget skalieren.</p>
+          <span class="src"><a href="https://github.blog/changelog/2026-05-18-copilot-cloud-agent-fast-cost-efficient-models-for-simple-tasks/">github.blog/changelog</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>„Fix with Copilot"-Button auf failing Actions</h3>
+          <p>Auf einer fehlgeschlagenen Workflow-Run-Logs-Seite gibt's jetzt einen <strong>„Fix with Copilot"-Button</strong>. Cloud-Agent zieht den Failure-Context, untersucht, pusht eine Fix auf einen neuen Branch, taggt dich für Review. Nur Copilot Business/Enterprise. Das ist konzeptuell exakt die Bewegung, die Codex Mobile und Claude <code>/goal</code> einleiten: <em>One-Click-Handoffs aus dem Review-/Approval-Loop</em>. Drei Lab-Frontends, gleicher Mechanik-Slope.</p>
+          <span class="src"><a href="https://github.blog/changelog/2026-05-18-one-click-fixes-for-failing-actions-with-copilot-cloud-agent/">github.blog/changelog</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Audit-REST-API + CLI-Remote-Control GA</h3>
+          <p>Ein neuer <code>GET /repos/.../copilot/cloud-agent/config</code>-Endpoint (Public Preview) liefert MCP-Server-Config, enabled Tools, Actions-Workflow-Policy, Firewall-Config eines Repos. Plattform-/Audit-Bewegung für Enterprise-Verantwortliche. Parallel: <strong>Copilot-CLI-Remote-Control GA</strong> auf Mobile, Web, VS Code — Sessions in Terminal, JetBrains oder VS Code starten, von GitHub Mobile oder github.com weitersteuern. Spiegelt OpenAIs Codex-Mobile-Story von letzter Woche.</p>
+          <span class="src"><a href="https://github.blog/changelog/2026-05-18-remote-control-for-copilot-cli-sessions-now-generally-available-on-mobile-web-and-vs-code/">github.blog/changelog</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Copilot CLI v1.0.49</h3>
+          <p>Im Schatten der Plattform-Drops: CLI v1.0.49 bringt <code>postToolUse</code>-Hook-additionalContext-Injection als System-Message, MCP-Server-OAuth-Persistence, Alpine-Linux-Support, <code>/exit print</code>, und einen neuen <strong><code>/rubber-duck</code></strong>-Command für unabhängige Critique-Loops. Plus: Mouse-Click-Cursor-Positioning-Fix für wide characters (CJK).</p>
+          <span class="src"><a href="https://github.blog/changelog">github.blog/changelog</a></span>
+        </article>
+
+        <div class="footnotes">
+          <ol start="6">
+            <li id="ref-6"><a href="https://github.blog/changelog/2026-05-18-copilot-cloud-agent-fast-cost-efficient-models-for-simple-tasks/">GitHub — cheap models for cloud agent</a>, 18.05.2026</li>
+            <li id="ref-7"><a href="https://github.blog/changelog/2026-05-18-one-click-fixes-for-failing-actions-with-copilot-cloud-agent/">GitHub — one-click Actions fix</a>, 18.05.2026</li>
+            <li id="ref-8"><a href="https://github.blog/changelog/2026-05-18-audit-repository-copilot-cloud-agent-configuration-via-the-rest-api/">GitHub — Copilot config audit REST</a>, 18.05.2026</li>
+            <li id="ref-9"><a href="https://github.blog/changelog/2026-05-18-remote-control-for-copilot-cli-sessions-now-generally-available-on-mobile-web-and-vs-code/">GitHub — CLI Remote-Control GA</a>, 18.05.2026</li>
+          </ol>
+        </div>
+      </section>
+
+      <section>
+        <h2>Cline · <code>--worktree</code> in der CLI</h2>
+
+        <article class="news-item">
+          <h3>v3.0.6 (17.05.) / v3.0.7 (18.05.)</h3>
+          <p>Zwei kleine, aber praktische Releases. <strong>v3.0.6</strong> bringt das <code>--worktree</code>-Flag: pro Task wird automatisch ein frisches <code>git worktree</code> unter <code>~/.cline/worktrees/</code> angelegt, sauber isoliert vom Haupt-Working-Tree, komponierbar mit <code>--taskId</code> und <code>--continue</code>. Wer parallel an drei Bugs arbeitet ohne sich die Stashes zu zerschießen, hat damit endlich die saubere Lösung statt drei Repo-Klone. <strong>v3.0.7</strong> ist Plumbing — ChatGPT-OAuth-Model-List ist mit dem Codex-Provider-Katalog synchronisiert, der Startup-Roundtrip übersprungen. VS-Code-Extension bleibt auf v3.83.0 (13.05.).</p>
+          <p>Anthropic SDK hat <code>--worktree</code> seit September, Codex CLI seit der Mobile-Welle letzte Woche — Cline schließt damit auf. Drittes von vier Major-Harnesses, das diese Workflow-Konvention adoptiert.</p>
+          <span class="src"><a href="https://github.com/cline/cline/releases/tag/cli-v3.0.6">github.com/cline/cline — v3.0.6</a></span>
+        </article>
+
+        <div class="eli5">
+          <strong class="eli5-term">git worktree:</strong> Stell dir vor, du hast einen Schrank (das Repo) mit Anziehsachen (Branches). Normalerweise räumst du eine Sache raus, ziehst sie an, räumst zurück, ziehst die nächste an. Mit <code>worktree</code> machst du Kopien — dasselbe Repo in mehreren Ordnern, jeder auf einem anderen Branch. Drei Tasks parallel, ohne dich auszuziehen.
+        </div>
+      </section>
+
+      <section>
+        <h2>Windsurf, Devin, Zed, JetBrains, Bolt — diese Woche eher leise</h2>
+
+        <ul class="news-item-list">
+          <li><strong>Windsurf 2.3.9</strong> (18.05.) ist ein Bug-Fix-Release; am gleichen Tag eine Auth-Slowness-Incident (13:35 UTC investigating, 14:40 UTC monitoring). Marquee-Feature der Woche bleibt die Devin-Review-/Quick-Review-Bundling vom 06.05. <a href="https://windsurf.com/changelog">windsurf.com/changelog</a></li>
+          <li><strong>Devin / Cognition</strong>: keine Release-Note nach dem 08.05.-Eintrag (Devin-Review-API, PR-Review-Merge-Bar, Datadog-MCP, Granola-MCP GA). Cognition hat I/O-Woche bewusst leise gehalten. <a href="https://docs.devin.ai/release-notes/overview">docs.devin.ai</a></li>
+          <li><strong>Zed</strong>: keine neue Stable nach 1.2.6 (15.05.). Preview-Channel auf 1.3.3.</li>
+          <li><strong>JetBrains Junie / AI Assistant</strong>: keine 18.–19.05.-Bewegung. Stand seit ACP-via-ReSharper vom 13.05.</li>
+          <li><strong>Aider</strong>: weiterhin v0.86.2 vom 12.02.2026 — drei Monate keine Bewegung. Wer Aider in seinem Tool-Rotations-Mix hat: aktuell läuft das gegen viel jüngere Konkurrenz an. <a href="https://github.com/Aider-AI/aider/releases">github.com/Aider-AI</a></li>
+          <li><strong>Continue</strong>: v1.3.38-vscode vom 27.03. — knapp 8 Wochen kein neuer Tag. <a href="https://github.com/continuedev/continue/releases">github.com/continuedev</a></li>
+          <li><strong>OpenHands</strong>: v1.7.0 vom 01.05. — drei Wochen keine Bewegung. <a href="https://github.com/All-Hands-AI/OpenHands/releases">github.com/All-Hands-AI</a></li>
+          <li><strong>Plandex</strong>: cli/v2.2.1 vom 16.07.2025 — 10 Monate dormant. Wenn du Plandex noch in deinem Stack hast, plane mit der Annahme „project drift".</li>
+          <li><strong>Bolt.new</strong>: keine 18.–19.05.-Bewegung. Aktueller Stand: Sonnet 4.6 als Default (Sonnet 4.5/Opus 4.5 entfernt); v1-Agent-Legacy für neue Projekte ausgemustert.</li>
+        </ul>
+
+        <p class="byline">Bemerkenswert ist die <em>Form</em>: vier der größten OSS-Harnesses (Aider, Continue, OpenHands, Plandex) und drei kommerzielle Player (Devin, Zed-Stable, JetBrains, Bolt) haben Pre-I/O bewusst still gehalten. Cursor, OpenAI und GitHub haben dagegen genau jetzt gedroppt. Lesart: wer mit Google um die Aufmerksamkeit kämpfen will, macht es am Vortag; wer entspannt auf den Recap-Cycle wartet, hält still.</p>
+      </section>
+
+    </div>
+
+    <!-- COLUMN 3: Open-Stack + Bench + I/O Preview -->
+    <div class="col">
+
+      <section>
+        <h2>vLLM · der Yank ist offiziell <span class="h2-refs">[10]</span></h2>
+
+        <article class="news-item">
+          <h3>0.21.0 ist auf PyPI geyankt</h3>
+          <p>Was gestern noch „widersprüchlich, beide Lesarten in Newsletter-Quellen" war, ist heute eindeutig. Auf <a href="https://pypi.org/project/vllm/">pypi.org/project/vllm</a> ist <strong>0.21.0 geyankt</strong>, Begründung: Tensor-Parallelism-Bug. <strong>Kein 0.21.1 oder 0.20.3-Hotfix</strong> in Sicht. Auf GitHub bleibt der letzte Tag <code>v0.21.0rc1</code> (12.05.).</p>
+          <p>Praktische Empfehlung: in Production auf <strong>0.20.2</strong> bleiben (enthält Model-Runner-V2 mit dem +56 %-Throughput-Claim auf GB200). Wer 0.21.0 schon installiert hat, sollte rollback testen — der Bug betrifft Multi-GPU-Setups asymmetrisch und ist nicht in jedem Run reproduzierbar.</p>
+          <span class="src"><a href="https://pypi.org/project/vllm/">pypi.org/project/vllm</a> · <a href="https://github.com/vllm-project/vllm/releases">github.com/vllm-project/vllm</a></span>
+        </article>
+
+        <div class="eli5">
+          <strong class="eli5-term">Yank auf PyPI:</strong> Wenn du ein Paket „yankst", ist es noch installierbar, aber es taucht in keinem normalen <code>pip install</code> mehr auf — gleichsam ein <em>„kauft das nicht mehr"</em>-Schild vom Hersteller. Anders als Delete (verschwindet komplett), bricht Yank keine bestehenden Lockfiles, signalisiert aber klar „kaputt".
+        </div>
+      </section>
+
+      <section>
+        <h2>llama.cpp, Ollama, LM Studio · Status</h2>
+
+        <article class="news-item">
+          <h3>llama.cpp — neuer Tag am 18.05.</h3>
+          <p>Auf <a href="https://github.com/ggml-org/llama.cpp/releases">github.com/ggml-org/llama.cpp</a> ist gestern ~21:04 UTC ein neuer Tag erschienen, Build-Nummer noch nicht auf den Aggregatoren. <strong>DeepSeek-V4-Mainline-Support bleibt WIP</strong> (Discussion #22376) — die zirkulierenden V4-GGUFs sind Community-Builds, der antirez-Fork ist der experimentelle V4-Flash-Pfad. Wer V4 ernsthaft lokal serviert, sollte die Community-GGUFs noch als Spielzeug behandeln, bis ggml-org merged.</p>
+          <span class="src"><a href="https://github.com/ggml-org/llama.cpp/releases">github.com/ggml-org/llama.cpp</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Ollama 0.24.0 — die Codex-/Claude-Desktop-Integration ist meaty</h3>
+          <p>0.24.0 vom 14.05. (gestern erwähnt) hatte mehr Substanz als auf den ersten Blick: <code>ollama launch codex-app</code> integriert mit der Codex-Desktop-App inkl. eingebautem git-worktree-Support und parallelen Codex-Threads. <strong>Claude Desktop ist neues Launch-Target</strong> — Claude Cowork und Claude Code laufen in der Claude-Desktop-App über Ollama. Plus: <code>/api/show</code>-Responses gecached (~6,7× Median-Latency-Improvement, hilft VS-Code-Integrationen), Gemma-4-MTP-Speculative-Decoding auf Mac mit Claim &gt;2× Speedup auf 31B-Coding-Tasks. Kein 0.24.1 in Sicht.</p>
+          <span class="src"><a href="https://github.com/ollama/ollama/releases">github.com/ollama/ollama</a></span>
+        </article>
+
+        <div class="eli5">
+          <strong class="eli5-term">Speculative Decoding:</strong> Statt das große Modell jedes Token einzeln erzeugen zu lassen, lässt ein kleines „Draft"-Modell mehrere Token vorraten — das große Modell prüft sie en bloc und akzeptiert oder verwirft. Praktisch wie wenn ein Praktikant Sätze vorschreibt und der Chef nur noch durchhakt. 2× schneller, wenn die Drafts oft stimmen.
+        </div>
+
+        <article class="news-item">
+          <h3>LM Studio — still</h3>
+          <p>Stand 0.4.13 Build 1 vom 13.05. Kein neuer Build durch 19.05.</p>
+        </article>
+      </section>
+
+      <section>
+        <h2>Open-Weights · Qwen-3.7-Sichtung, kein Release</h2>
+
+        <article class="news-item">
+          <h3>Qwen 3.7-Max/Plus Preview in Qwen-Chat (18.05.)</h3>
+          <p>Community-Reports sichten seit gestern <code>Qwen3.7-Max-Preview</code> und <code>Qwen3.7-Plus-Preview</code> in Qwen-Chat — <strong>kein offizielles Alibaba-Release</strong>, keine HuggingFace-Gewichte, kein ModelScope-Listing. Hosted-Chat-Auftritt allein. Verbindet sich mit dem <strong>Alibaba-Cloud-Summit am Mi 20.05.</strong> auf dem Qwen einen „heavyweight new friend" geteasert hat. Lesart: Alibaba positioniert sich exakt einen Tag hinter Google.</p>
+          <p>Skeptische Note: Qwen3.6-27B war gut, Qwen-3.7 als Major-Bump muss erst geliefert werden. Frame bis zum Release als „Preview-Sighting", nicht „Release".</p>
+          <span class="src"><a href="https://startupfortune.com/alibabas-qwen-37-push-shows-open-ai-is-still-moving-fast/">startupfortune.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Sonst still</h3>
+          <p>DeepSeek nach V4 (24.04.) ohne Bewegung. Mistral/Codestral seit Medium-3.5 (29.04.) still. IBM Granite seit 4.1 (29.04.) still. GLM-5/5.1 als open-weight seit 07.04. — keine neuen Tags. Kimi K2.6 (20.04.) bleibt der ernstzunehmende open-weight Agent-Class-Vertreter. <a href="https://huggingface.co/moonshotai/Kimi-K2.6">huggingface.co/moonshotai</a></p>
+        </article>
+      </section>
+
+      <section>
+        <h2>Benchmarks · LiveCodeBench Pro mit Google-Sweep am Vorabend <span class="h2-refs">[11][12][13]</span></h2>
+
+        <p>Stand 18.–19.05.2026. Drei Sets, drei Lesarten — und ein interessanter Puls am I/O-Vorabend.</p>
+
+        <div class="bench-wrap" data-component="benchmark-chart">
+          <div class="bench-head">
+            <div class="bench-title">LiveCodeBench Pro · Top 3 Gemini, Stand 18.05.2026</div>
+            <div class="bench-sub">Pro-Suite — Trainings-Kontamination minimiert; ELO-style Rating, höher = besser. Non-Gemini-Werte im 24h-Fenster nicht verifiziert.</div>
+          </div>
+          <div class="bench-chart-wrap">
+            <canvas id="bench-chart"></canvas>
+          </div>
+        </div>
+
+        <article class="news-item">
+          <h3>LiveCodeBench Pro: Google sweept</h3>
+          <p>Am Vorabend von I/O führen <strong>Gemini 3.1 Pro (2887)</strong>, <strong>Gemini 3 Pro (2439)</strong> und <strong>Gemini 3 Flash (2316)</strong> die Top-3 auf <a href="https://livecodebench.github.io/">LiveCodeBench Pro</a>. Das ist die einzige große Leaderboard-Bewegung im 24h-Fenster — und ein deutlicher Pre-Stage-Signal. Wenn Google heute Abend ein neues Modell zeigt, wird die Bench-Story drumherum „wir führen schon, und das hier ist nochmal drauf" sein.</p>
+        </article>
+
+        <article class="news-item">
+          <h3>SWE-Bench Verified + Aider Polyglot — keine Bewegung</h3>
+          <p>SWE-Bench Verified-Top bleibt bei Claude Mythos Preview 93,9 % / GPT-5.5 88,7 % / Opus 4.7 87,6 % (Anbieter-reported). SWE-Bench Pro-Top bei ~46 % — der ehrliche Abstand zur Verified-Variante: ~40 Punkte. Aider Polyglot: Opus 4.5 89,4 %, GPT-5-high 88,0 %, DeepSeek V3.2-Exp 74,2 % bei ~22× geringeren Kosten. Keine neuen Submissions im 18.–19.05.-Fenster.</p>
+          <span class="src"><a href="https://www.swebench.com/">swebench.com</a> · <a href="https://aider.chat/docs/leaderboards/">aider.chat/docs/leaderboards</a></span>
+        </article>
+
+        <div class="callout info">
+          <span class="callout-label">Lesart</span>
+          Pre-I/O ist die Bench-Lage stabil — Closed-Frontier (Claude, Gemini) führt auf agentic SWE-Bench, Open-Weights (DeepSeek V4 Pro, Kimi K2.6) sind auf LiveCodeBench tatsächlich konkurrenzfähig, zu einem Bruchteil der Kosten. Die Google-Pro-Bench-Sweep ist Bühnen-Setup — heute Abend zählt, ob das neue Modell hier nochmal oben drauflegt oder ob die 3.1-Pro-Linie bleibt.
+        </div>
+
+        <div class="footnotes">
+          <ol start="10">
+            <li id="ref-10"><a href="https://pypi.org/project/vllm/">pypi.org/project/vllm — release history</a>, abgerufen 19.05.2026</li>
+            <li id="ref-11"><a href="https://livecodebench.github.io/leaderboard.html">LiveCodeBench Pro Leaderboard</a>, 18.05.2026</li>
+            <li id="ref-12"><a href="https://www.swebench.com/">swebench.com — Verified + Pro</a>, abgerufen 19.05.2026</li>
+            <li id="ref-13"><a href="https://aider.chat/docs/leaderboards/">aider.chat/docs/leaderboards — Polyglot</a>, abgerufen 19.05.2026</li>
+          </ol>
+        </div>
+      </section>
+
+      <section>
+        <h2>I/O-Watchlist · was heute Abend zählt</h2>
+
+        <p>Acht Stunden zur Keynote. Was die Bühne wahrscheinlich liefert, nach den vorliegenden Leaks und Signalen:</p>
+
+        <ul class="news-item-list">
+          <li><strong>Neues Gemini-Modell</strong>. Name unbestätigt — Speku schwankt zwischen Gemini 3.5 und Gemini 4. Im Code-Assist-Tool ist seit 13.05. nur 3.1-Pro-Preview sichtbar, also <em>mindestens</em> ein Bump kommt. Watch: bench-Sweep auf SWE-Bench Verified/Pro.</li>
+          <li><strong>Gemini Spark</strong> — autonomer Always-On-Agent in einer redesignten Gemini-App, kann Bildschirm-Context lesen, Gmail/Drive/Docs managen, „Skills" für wiederkehrende Workflows. APK-Teardown-Leaks vom 14.05., weitere bis gestern. Schwer einzuordnen, wie viel Coding-Relevanz das hat — Spark ist Productivity-Agent, nicht Code-Agent.</li>
+          <li><strong>Jules V2 „Jitro"</strong> — goal-driven autonomer Coding-Agent (Outcome statt Task, persistenter Workspace). Erwartet: Waitlist-Launch heute, früher Zugang AI Pro/Ultra. Konzeptuell dieselbe Mechanik wie Claude Code <code>/goal</code>.</li>
+          <li><strong>„Omni"-Video-Modell</strong> — UI-String-Leak seit 02.05., Model-Card-Label seit 11.05. in der Gemini-App. Tangential zu Coding, aber wenn's mit Code-Assist verbunden kommt (Storyboard → Komponenten), wird's relevant.</li>
+          <li><strong>Antigravity-Update</strong> — Antigravity ist seit 18.11.2025 draußen (keine I/O-2026-Premiere), aber Updates zu AgentKit-2.0-Integration, A2A-Protocol-Support, Gemma-4 sind erwartbar.</li>
+        </ul>
+
+        <p>Watch im Brief von morgen: Recap mit Bench-Stand-vergleichen-zu-heute, Pricing der neuen Modelle, ob „Jitro" wirklich goal-driven mit Judge-Modell läuft (Anthropic-Pattern), oder ob Google den Loop anders baut.</p>
+
+        <p class="byline">Damit endet der Vortags-Brief. Heute lohnt sich: Composer 2.5 für eine Stunde durchprobieren, Codex CLI auf 0.131.0 ziehen (<code>codex doctor</code> mitnehmen), vLLM-Setups auf 0.20.2 verifizieren. Wer eine Agent-SDK-basierte Pipeline pflegt: den Token-Verbrauch eines typischen Runs hochrechnen — der 15.06.-Stichtag rückt schnell. Bis morgen.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<!-- VOICE SUMMARY -->
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Dienstag, der neunzehnte Mai, der Tag der Google-I/O-Keynote. In acht Stunden öffnet Sundar Pichai im Shoreline-Amphitheater die Konferenz; bis dahin hat sich das Pre-Keynote-Fenster nicht — wie sonst üblich — in Funkstille gelegt, sondern war ungewöhnlich laut. Drei Anbieter haben am Montag ihre Drops bewusst auf den Vorabend gelegt: Cursor mit einem eigenen Frontier-Coding-Modell, OpenAI mit dem Versions-Sprung der Codex-CLI aus dem Alpha-Stadium, und GitHub mit gleich fünf Copilot-Changelog-Einträgen an einem einzigen Tag.</p>
+  <p>Cursor hat Composer zwei-Punkt-fünf rausgeschoben — das erste Cursor-eigene Frontier-Coding-Modell. Anysphere claimt Opus-vier-Punkt-sieben- und GPT-fünf-Punkt-fünf-Niveau zu etwa einem Zehntel der Kosten, mit Standard-Tier bei null-Komma-fünf-Dollar pro Million Input-Tokens. Skeptische Lesart: die genannten Benchmarks sind Cursors eigener CursorBench und die kontaminations-anfällige SWE-Bench-Multilingual-Variante. Das ist try-worthy, aber kein „schlägt Opus auf jedem Bench"-Statement. Erste Woche doppelte Limits, kostet praktisch nichts ausser eine Stunde Zeit.</p>
+  <p>OpenAIs Codex-CLI verlässt mit rust-null-Komma-eindreissig das Alpha. Substantiell sind drei Dinge: ein Plugin-Marketplace-CLI mit Version-aware-Sharing, ein vereinheitlichter @-Picker für Files, Directories, Plugins und Skills im TUI, und ein neuer <code>codex doctor</code>-Diagnose-Command, der Auth, MCP-Server, Plugin-State und Sandbox-Permissions in einem Schwung checkt. Geräuschloser, aber strukturell wichtig: GitHub hat am Sonnabend GPT-fünf-Punkt-drei-Codex als neuen Default-Modell für alle Copilot-Business- und -Enterprise-Orgs gesetzt, garantiert verfügbar bis Februar zweitausendsiebenundzwanzig.</p>
+  <p>GitHubs eigenes Fünf-Pack am Montag: der Copilot-Cloud-Agent bekommt Claude Haiku vier-Punkt-fünf und GPT-fünf-Punkt-vier-mini als günstige Modelle mit Null-Komma-drei-drei-Multiplier — Faktor drei billiger für einfache Tasks. Ein „Fix-with-Copilot"-Button erscheint jetzt auf failing GitHub Actions, der Cloud-Agent untersucht den Fehler, pusht eine Fix auf einen Branch, tagged dich für Review. Eine neue REST-API auditiert die Copilot-Konfiguration eines Repos. Und die Copilot-CLI-Remote-Control ist GA auf Mobile, Web und VS Code — exakt dieselbe Bewegung wie OpenAIs Codex-Mobile letzte Woche.</p>
+  <p>Anthropic hat heute morgen einen Wartungs-Release abgeladen: Claude Code zwei-Punkt-eins-Punkt-einhundertvierundvierzig. Schrägstrich-resume unterstützt jetzt Background-Sessions, Schrägstrich-Modell ist standardmässig session-only, „Extra Usage" heisst umbenannt „Usage Credits". Kein Major-Feature — alles, was Bühne gebraucht hätte, hatte Anthropic schon mit dem Schrägstrich-goal-Loop in zwei-Punkt-eins-Punkt-einhundertneununddreissig ausgespielt. Wichtiger im Hintergrund: der Agent-SDK-Abo-Split-Stichtag am fünfzehnten Juni rückt näher. Ab dann zahlen Drittanbieter-Harnesses wie Zed, OpenClaw, Conductor, Jean oder Eigenbau-Wrapper pro Token statt Flat-Abo — Community-Auswertungen rangieren bei zwölf- bis hundertfünfundsiebzig-fach Aufschlag je Workload. Native Claude-Code-CLI bleibt im Abo-Pool.</p>
+  <p>Das vLLM-Mysterium von gestern ist offiziell geklärt: Version null-Komma-einundzwanzig ist auf PyPI geyankt, Tensor-Parallelism-Bug. Kein null-Komma-einundzwanzig-Punkt-eins-Hotfix in Sicht. Praktische Empfehlung: in Production auf null-Komma-zwanzig-Punkt-zwei bleiben. Wer einen Yank nicht kennt — das ist wie ein „Kauft das nicht mehr"-Schild vom Hersteller; das Paket ist noch installierbar, taucht aber in normalen Installationen nicht mehr auf, und bestehende Lockfiles brechen nicht. Anders als Delete, das wäre destruktiv.</p>
+  <p>Bei den Open-Weights ist ein Detail interessant: Qwen-drei-Komma-sieben-Max- und -Plus-Preview wurden seit gestern in Qwen-Chat gesichtet — kein offizielles Alibaba-Release, keine HuggingFace-Gewichte. Hosted-Chat-Auftritt allein. Alibaba hat am Mittwoch, dem zwanzigsten Mai, einen Cloud-Summit, auf dem Qwen einen „heavyweight new friend" geteasert hat. Lesart: Alibaba positioniert sich exakt einen Tag hinter Google. Ansonsten still im OSS-Lager — DeepSeek seit V4 im April, Mistral seit Medium drei-Punkt-fünf, IBM Granite seit vier-Punkt-eins.</p>
+  <p>Vier Open-Source-Harnesses zeigen seit Wochen keine Bewegung, das ist als Honest-Signal erwähnenswert: Aider seit zwölftem Februar drei Monate still. Continue acht Wochen still. OpenHands drei Wochen still. Plandex zehn Monate dormant. Bei den kommerziellen Anbietern ist Devin, Zed-Stable und JetBrains in der I/O-Woche bewusst leise — wer mit Google um die Aufmerksamkeit kämpfen will, dropt am Vortag; wer entspannt auf den Recap-Cycle wartet, hält still.</p>
+  <p>Bench-Lage am I/O-Vorabend: auf LiveCodeBench Pro sweept Gemini die Top-drei — Gemini drei-Punkt-eins Pro auf Platz eins mit Rating zweitausendachthundertsiebenundachtzig, Gemini drei Pro auf zwei, Gemini drei Flash auf drei. Das ist das einzige grosse Leaderboard-Move im Vierundzwanzig-Stunden-Fenster und ein klares Pre-Stage-Signal. Wenn Google heute Abend ein neues Modell zeigt, wird die Bench-Story drumherum „wir führen schon, und das hier ist nochmal drauf" sein.</p>
+  <p>Heute Abend Bühne — Hauptkeynote vierzehn Uhr brasilianischer Zeit, neunzehn Uhr deutscher Zeit, Developer-Keynote direkt im Anschluss bis ein-Uhr-dreissig deutscher Zeit. Erwartet: neues Gemini-Modell, Gemini Spark als Productivity-Agent, Jules V2 unter dem Codenamen Jitro als goal-driven Coding-Agent, eventuell „Omni" als Video-Modell. Heute lohnen sich drei kleine Sachen: Composer zwei-Punkt-fünf für eine Stunde testen, Codex-CLI auf null-Komma-eindreissig ziehen mit dem neuen <code>codex doctor</code>-Diagnose-Check, und vLLM-Setups auf null-Komma-zwanzig-Punkt-zwei verifizieren. Morgen früh dann der Recap mit Bench-Vergleichen-zu-heute. Bis dahin.</p>
+</div>
+
+<!-- Benchmark-Chart-Daten — nur verifizierte Gemini-Werte vom 18.05.,
+     non-Gemini-Rating-Werte nicht im 24h-Fenster verifiziert, deshalb weggelassen. -->
+<script type="application/json" id="bench-data">
+{
+  "labels": ["Gemini 3.1 Pro", "Gemini 3 Pro", "Gemini 3 Flash"],
+  "data":   [2887, 2439, 2316],
+  "max":    3000,
+  "unit":   ""
+}
+</script>
+
+</body>
+</html>

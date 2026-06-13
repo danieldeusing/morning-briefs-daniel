@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief AI-Dev — 2026-05-14</title>
+
+<link rel="stylesheet" href="../../lib/styles.css">
+
+<!-- Chart.js für die Benchmark-Bar — gebraucht. Mermaid heute nicht. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI-Dev</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-05-14</span>
+  </div>
+  <h1 class="masthead-title">Fleet-of-Agents-Woche — und SWE-Bench wird zur Streitfrage</h1>
+</header>
+
+<main class="shell">
+
+  <div class="timeline">
+      <div class="timeline-head">
+        <div class="timeline-title">Wochenausblick · AI-Dev</div>
+        <div class="timeline-sub">Was bewegen kann — Konferenzen, Releases, Bench-Refresh</div>
+      </div>
+      <div class="tl-track">
+        <div class="tl-col today"><div class="tl-date">Do 14.05</div><div class="tl-dot"></div><div class="tl-events"><span><strong>Heute</strong></span><span>Gemini CLI 0.43-preview Tag 2 (Surgical Edits)</span><span>Anthropic +50 % Quota Tag 2 von 60</span></div></div>
+        <div class="tl-col"><div class="tl-date">Fr 15.05</div><div class="tl-dot"></div><div class="tl-events"><span>Wochenend-PR-Bot-Bench-Refresh erwartet (LiveCodeBench)</span></div></div>
+        <div class="tl-col"><div class="tl-date">Sa 16.05</div><div class="tl-dot"></div><div class="tl-events"><span>—</span></div></div>
+        <div class="tl-col"><div class="tl-date">So 17.05</div><div class="tl-dot"></div><div class="tl-events"><span>I/O-Vorabend: Reviewer-Embargo-Drop möglich</span></div></div>
+        <div class="tl-col"><div class="tl-date">Mo 18.05</div><div class="tl-dot"></div><div class="tl-events"><span>I/O-Pre-Briefings · Cursor-wkly-Drop-Slot</span></div></div>
+        <div class="tl-col hot"><div class="tl-date">Di 19.05</div><div class="tl-dot"></div><div class="tl-events"><span><strong>Google I/O 2026 Tag 1</strong></span><span>Gemini 3.2 Flash erwartet (Leak)</span><span>Antigravity-Updates</span></div></div>
+        <div class="tl-col"><div class="tl-date">Mi 20.05</div><div class="tl-dot"></div><div class="tl-events"><span>I/O Tag 2 · Jules / Gemini-Code-Assist-Roadmap</span></div></div>
+      </div>
+    </div>
+
+  <div class="body-grid">
+
+    <!-- COLUMN 1 -->
+    <div class="col">
+
+      <section class="tldr">
+    <p class="lead">5 Tage bis Google I/O. Heute bewegen sich die Tools, nächste Woche bewegen sich die Modelle.</p>
+        <ul>
+          <li><span class="chip hot">Cursor</span> 3.3 + Cloud-Dev-Envs + Teams: paralleles Sub-Agent-Routing ist die wahre Story der Woche</li>
+          <li><span class="chip hot">Claude</span> Wochen-Quota +50 % bis 13.07., Agent-SDK ab 15.06. eigener Credit-Pool</li>
+          <li><span class="chip hot">Bench</span> OpenAI verzichtet auf SWE-Bench Verified — Mythos-Lücke Verified/Pro: 16 Pkt., Opus 4.7: 23 Pkt.</li>
+          <li><span class="chip">Tool</span> GitHub Copilot Cloud-Agent REST-API (Preview) — Tasks programmatisch starten</li>
+          <li><span class="chip">OpenAI</span> Codex-Chrome-Extension live: 4 Mio. WAU, +1 Mio. in zwei Wochen, 8× seit Jahresanfang</li>
+          <li><span class="chip">Google</span> Gemini CLI 0.42 stable + 0.43-preview (Surgical Edits, Session-Export)</li>
+          <li><span class="chip good">Local</span> Qwen3.6-27B dense: bestes „passt auf den Mac"-Coding-Modell gerade</li>
+          <li><span class="chip">MCP</span> SEP-1865 (MCP Apps) standardisiert React-UIs aus MCP-Servern — aber: AgentSeal-Scan findet bei 66 % der populären Server Sicherheitsprobleme</li>
+          <li><span class="chip">Tool</span> JetBrains Junie zieht in Visual Studio ein (ReSharper EAP, 11.05.)</li>
+          <li><span class="chip">Tool</span> Bolt.new bekommt Microsoft-Azure-Deploy + Teams-Integration</li>
+          <li><span class="chip">Local</span> llama.cpp PR #22727 (13.05.): „continue generation on reasoning models" gemerged</li>
+          <li><span class="chip">Tool</span> GitHub Copilot BYOK GA — inkl. lokales Ollama als Provider</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Lokale LLMs · light coverage</h2>
+
+        <article class="news-item">
+          <h3>Qwen3.6-27B dense: das aktuell beste „passt auf 32–48 GB RAM"-Coding-Modell <span class="chip good">try-worthy</span></h3>
+          <p>Alibaba hat am <strong>22.04.</strong> einen dichten 27B-Coder geliefert, der laut eigener Messung den 397B-A17B-Vorgänger im Agentic-Coding schlägt. Vendor-reported: SWE-Bench Verified 77,2 / SWE-Bench Pro 53,5 / Terminal-Bench 2.0 59,3. Q4_K_M-GGUFs gibt's bei <code>bartowski</code> und <code>unsloth</code>, FP8 direkt von Qwen — Q4 landet bei ~17–18 GB, Daniels Mac kann das mit Kontext-Headroom fahren.</p>
+          <div class="eli5"><strong class="eli5-term">Quantisierung:</strong> Wie ein Foto auf JPG komprimieren — die Modell-Gewichte werden von 16 Bit pro Zahl auf 4 Bit eingedampft. Bisschen Qualität verloren, aber das Modell passt in viel weniger RAM und läuft deutlich schneller.</div>
+          <p><strong>Warum probieren:</strong> Für lokale Refactor-Loops ohne API-Latenz und ohne Token-Budget-Stress. Dichte Architektur heißt: keine MoE-Surprises bei Tool-Calls. Es gibt auch eine MTP-Variante (Multi-Token-Prediction-Tensoren erhalten) für Speculative Decoding — wer Inferenz beschleunigen will, lädt die.</p>
+          <span class="src"><a href="https://qwen.ai/blog?id=qwen3.6-27b">qwen.ai/blog</a> · <a href="https://huggingface.co/Qwen/Qwen3.6-27B">huggingface.co/Qwen</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Kimi K2.6, DeepSeek V4: zu groß für den Mac, wichtig für die Industrie</h3>
+          <p>Kimi K2.6 (Moonshot AI, <strong>20.04.</strong>) ist 1T-MoE mit 32B aktiv pro Token, Agent-Swarm-Skalierung auf 300 Sub-Agents und 4.000 koordinierte Schritte (vorher 100/1.500). DeepSeek V4 (<strong>24.04.</strong>) kommt in zwei Varianten: V4-Pro 1,6T-MoE mit 49B aktiv, 1M-Kontext, Vendor-reported 80,6 % SWE-Bench Verified / 93,5 % LiveCodeBench. V4-Flash: 284B / 13B aktiv, 1M-Kontext. Beide brauchen 80GB-H100s aufwärts — Daniels Hardware schlägt da nicht durch, aber sie ziehen die Latte für jeden Provider hoch, der „GPT-5-Class für Schweine-billig" anbietet.</p>
+          <span class="src"><a href="https://www.kimi.com/blog/kimi-k2-6">kimi.com</a> · <a href="https://api-docs.deepseek.com/news/news260424">deepseek.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>llama.cpp PR #22727, TurboQuant in Integration, MLX-optiq</h3>
+          <p>llama.cpp hat am <strong>13.05.</strong> „continue generation on reasoning models" gemerged (PR #22727) — Reasoning-Pausen können sauber fortgesetzt werden statt mittendrin abzubrechen. Prefix-Wrap am `thinking_start_tag`. TurboQuant (ICLR-2026, DeepMind) ist in der llama.cpp-Pipeline: TQ3 ≈ 4,9× Kompression vs FP16 mit MSE 0,034 — Integration läuft in Forks, noch nicht in main. Auf Apple-Silicon: <code>mlx-optiq</code> ist Mixed-Precision-Quant pro Layer; OptiQ-4bit-Modelle bei mlx-community (Qwen3.6-27B, Gemma-4-31B-it) berichten +15–32 Prozentpunkte auf GSM8K vs uniformes 4-Bit. Klingt wie freier Headroom.</p>
+          <span class="src"><a href="https://github.com/ggml-org/llama.cpp/releases">github.com/llama.cpp</a> · <a href="https://github.com/ggml-org/llama.cpp/discussions/20969">TurboQuant Discussion</a> · <a href="https://mlx-optiq.com/">mlx-optiq.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>IBM Granite 4.1 — der unter dem Radar fliegende Allrounder</h3>
+          <p>IBM hat am <strong>29.04.</strong> Granite 4.1 in 3B/8B/30B veröffentlicht, Apache-2.0, ~15T Training-Token, bis 512K Kontext. Das 8B-Instruct matched laut eigener Messung das 4.0-H-Small (32B-A9B-MoE) — bemerkenswerte Effizienz für eine dichte Architektur. FIM-Support für Tab-Completion.</p>
+          <span class="src"><a href="https://huggingface.co/blog/ibm-granite/granite-4-1">huggingface.co/ibm-granite</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Ollama-Library bei ~4.500 Modellen — Kimi K2.6, Qwen3.6-27B, GLM-5.1 neu im Mai</h3>
+          <p>Ollama hat am <strong>13.05.</strong> ein Library-Refresh gefahren. Notable Adds: Kimi K2.6, Qwen3.6-27B, GLM-5.1. Community-Image für Qwen3.6-27B bei <code>batiai/qwen3.6-27b</code>. Für lokale Setups, die einfach <code>ollama pull</code> wollen, ist das die Default-Eintrittsschwelle.</p>
+          <span class="src"><a href="https://github.com/ollama/ollama/releases">ollama/releases</a></span>
+        </article>
+      </section>
+    </div>
+
+    <!-- COLUMN 2: Tools cluster -->
+    <div class="col">
+
+      <section>
+        <h2>Tools — was sich diese Woche bewegt hat</h2>
+
+        <article class="news-item">
+          <h3>Cursor: drei Drops in sieben Tagen — paralleles Routing wird zur Default-Mechanik <span class="chip good">try-worthy</span></h3>
+          <p>Cursor war diese Woche das aktivste Tool im Markt. Die einzelnen Stücke wirken klein, zusammen sind sie eine Architektur-Aussage: Cursor verwandelt sich von „IDE mit AI-Pane" in eine Orchestrierungs-Schicht für viele parallele Agents.</p>
+          <p>Stück eins (<strong>07.05., Cursor 3.3</strong>): neuer <code>/multitask</code>-Command spawnt asynchrone Sub-Agents pro Slice; der Explore-Sub-Agent ist über Settings konfigurierbar (<code>model: opus</code> etc.). Plus „Split PRs"-Quick-Action, der ein zu großes Working-Tree per Chat-Kontext in mehrere PRs schneidet (mit Backup-Snapshot vor dem Cut). Plus PR-Review-Tab.</p>
+          <p>Stück zwei (<strong>11.05., Cursor-in-Teams</strong>): <code>@Cursor</code> in jedem Teams-Channel delegiert an einen Cloud-Agent, der einen PR öffnet — Repo + Modell werden automatisch gepickt.</p>
+          <p>Stück drei (<strong>13.05., Cloud-Dev-Environments</strong>): Dockerfile-als-Code mit Build-Secrets, Layer-Caching, Multi-Repo-Envs, Audit-Log.</p>
+          <p>Plus die <strong>Bugbot-Effort-Levels</strong> (Default / High / Custom) — und ein Umstieg auf Usage-Based-Billing für Bugbot. High findet mehr Bugs, kostet mehr; der Trade-off ist jetzt explizit, vorher war's ein Pauschal-Seat-Preis.</p>
+          <p><strong>Warum probieren:</strong> Wenn dein Plan länger als drei Schritte ist und die Schritte unabhängig sind, ist das die erste echte Workflow-Veränderung seit Async-Chat. Caveat: der parallele Modus brennt sichtbar Quota — die Forum-Klage „endlich schnell, aber der Bill" ist berechtigt.</p>
+          <p><strong>So machen es andere:</strong> Claude Code hat Agent View + <code>/goal</code> seit 12.05. — dasselbe Bild von der anderen Seite (ein Dashboard für viele Sessions). Devin bewegt sich mit „Agents"-Tab in dieselbe Richtung. Wer hier noch nichts hat: Aider, Plandex, Continue. Spürbares Catch-up-Druck.</p>
+          <span class="src"><a href="https://cursor.com/changelog/05-07-26">cursor.com/changelog 3.3</a> · <a href="https://cursor.com/blog/cloud-agent-development-environments">Cloud Dev Envs</a> · <a href="https://cursor.com/blog/may-2026-bugbot-changes">Bugbot</a> · <a href="https://cursor.com/changelog/microsoft-teams">Teams</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>GitHub Copilot: Cloud-Agent REST-API jetzt programmierbar</h3>
+          <p>Am <strong>13.05.</strong> hat GitHub die <strong>Copilot Cloud-Agent REST-API</strong> in Public Preview gehoben (Business / Enterprise). Tasks lassen sich jetzt aus CI, Jira, Webhooks heraus anstoßen — der Agent arbeitet in einer eigenen Sandbox-Umgebung, öffnet einen PR. PAT (classic + fine-grained) und OAuth-Tokens werden unterstützt; GitHub-App-Tokens und Pro/Pro+-Zugang „coming soon". Das ist die Primitive, die viele orchestrierte Setups brauchen.</p>
+          <p>Begleitend: Code-Review bekommt am <strong>12.05.</strong> Severity-Labels (High/Medium/Low) und gruppiert wiederkehrende Findings. <strong>BYOK ist Business/Enterprise GA</strong>: OpenRouter, MS Foundry, Google, Anthropic, OpenAI, Azure — plus <strong>lokales Ollama und Foundry Local</strong>. Letzteres ist die interessante Sache: Copilot löst sich von OpenAI-only. Daniel kann theoretisch Qwen3.6-27B hinter Copilot hängen.</p>
+          <p>Plan-Hygiene (Ankündigung 20.04., rollend): Opus 4.5/4.6 sind aus Pro+ raus, nur noch <strong>Opus 4.7 in Pro+</strong>. Individuelle Sign-ups für Pro/Pro+/Student sind pausiert. Usage-Limits jetzt in VS Code und CLI sichtbar (Session + 7-Tage-Window). Prorata-Refund bis 20.05., harte Limit-Verschärfung ab 01.06.</p>
+          <span class="src"><a href="https://github.blog/changelog/2026-05-13-start-copilot-cloud-agent-tasks-via-the-rest-api/">github.blog (13.05.)</a> · <a href="https://github.blog/changelog/2026-05-12-copilot-code-review-comment-experience-improvements/">Code Review</a> · <a href="https://github.blog/news-insights/company-news/changes-to-github-copilot-individual-plans/">Plan-Änderungen</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>OpenAI Codex: Chrome-Extension live, CLI 0.130 mit Bedrock-Auth</h3>
+          <p>Die Codex-Chrome-Extension (<strong>07.05.</strong>) gibt Codex Zugriff auf eingeloggte Browser-Sessions — LinkedIn, Salesforce, Gmail, interne Web-Apps. Verschiebt Codex Richtung Computer-Use für Devs. Plus die Adoption-Zahl: <strong>4 Mio. WAU, +1 Mio. in zwei Wochen, 8× seit Januar</strong>.</p>
+          <p>Codex CLI 0.130.0 (<strong>08.05.</strong>) ist die unsexy aber wichtige Lieferung: <code>codex remote-control</code> als einfacher Entrypoint für Headless-App-Server, Plugin-Sharing mit Link-Discovery, Thread-Pagination (unloaded/summary/full), <strong>AWS-Bedrock-Auth via Console-Login-Profile</strong>, Live-Config-Reload.</p>
+          <p><span class="callout warn"><span class="callout-label">Achtung</span> Ein Dritt-Bericht (codexworkshop.com, 09.05.) beschreibt 0.130-„repo loops" — endlose Wiederholungen. Kein offizielles OpenAI-Issue zu diesem Bild; ähnlich klingende Loops (#3216 hyper_util, #19803 auth-refresh) existieren in unrelated Issues. Vor Production-Pinning lieber abwarten.</span></p>
+          <span class="src"><a href="https://developers.openai.com/codex/app/chrome-extension">developers.openai.com</a> · <a href="https://github.com/openai/codex/releases/tag/rust-v0.130.0">Codex CLI 0.130.0</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Gemini CLI 0.42 stable + 0.43-preview: Surgical Code Edits</h3>
+          <p>0.42.0 ist Politur: <code>/bug-memory</code>-Heap-Snapshots, <code>/exit --delete</code>, Voice-Mode-Wave-Animations (mit Privacy-Warnings für Gemini Live), Auto-Memory-Inbox mit Canonical-Patch-Contract, <strong>Gemma 4 als Default</strong> via Gemini API, 60s-Default-Timeout mit Retry auf undici-Errors.</p>
+          <p>0.43.0-preview ist die interessantere Lieferung — <strong>Surgical Code Edits</strong> steuert das Modell härter zum Edit-Tool für präzise Modifikationen: weniger Kontext-Burn, weniger Halluzination. Plus Session-Portability (Export / Import).</p>
+          <p>Nebenbei (<strong>13.05.</strong>): Gemini Code Assist hat sein API-Endpoint auf <code>cloudcode-pa.googleapis.com</code> gewechselt. Wer hinter VPC-SC oder Corporate-Firewall arbeitet: Konfig prüfen, sonst gibt's stille Failures.</p>
+          <span class="src"><a href="https://geminicli.com/docs/changelogs/latest/">0.42 stable</a> · <a href="https://geminicli.com/docs/changelogs/preview/">0.43 preview</a> · <a href="https://docs.cloud.google.com/gemini/docs/codeassist/release-notes">Code-Assist-Notes</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Devin Review API · JetBrains Junie in Visual Studio · Bolt.new auf Azure</h3>
+          <p>Cognition hat die <strong>Devin v3 REST-API</strong> aus dem Beta gehoben — externe Trigger für Sessions (Crash-Logs, Bug-Repros, Reviews). Plus eine „Agents"-Tab für Child-Sessions, Focus-Mode (Cmd+Shift+F), Status-Dot-Favicon. JetBrains hat (<strong>11.05.</strong>) Junie via ReSharper-2026.2-EAP1 in Visual Studio gebracht — erstes Stück Richtung ACP-Support („Agent Client Protocol"), aktuell conversational-only, ReSharper-Engine-Integration kommt als nächstes. Bolt.new ist auf Microsoft Azure und in Teams / 365-Copilot eingestiegen. Der v1-Agent (legacy) wird zum 03.08. abgeschaltet — bestehende v1-Projekte migrieren auto auf den Claude-Agent.</p>
+          <span class="src"><a href="https://docs.devin.ai/release-notes/2026">docs.devin.ai</a> · <a href="https://blog.jetbrains.com/dotnet/2026/05/11/the-resharper-2026-2-eap-any-ai-agent-in-visual-studio/">blog.jetbrains.com</a> · <a href="https://bolt.new/blog/news-press-release-bolt.new-on-microsoft-azure">bolt.new</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Quiet diese Woche: Aider, Plandex, Cline, OpenHands</h3>
+          <p>Aider steht bei <strong>0.86.2</strong> (Mai-Routine: Claude-Sonnet-4 / Opus-4 Aliase, Clojure-Repomap, Kebab-Case-Identifiers, History-Summarization-Perf). Plandex steht bei v2.2.1 vom Juli 2025 — und hat immer noch kein MCP (Issue #241 offen). Continue arbeitet sichtbar an Shell-Mode, Pause/Resume-Sessions und MCP-via-JSON (Claude-Format-Kompatibilität) — kein Headline-Drop, aber kontinuierliche Bewegung. OpenHands ist bei v1.4.0 (17.02.) — keine Mai-Tag, nur Commits.</p>
+          <p><strong>Cline ist diese Woche definitiv ruhig</strong>: GitHub-Releases-Page zeigt <strong>v3.70.0 vom 04.03.</strong> als Latest. Die VsixHub-Einträge zu 3.81/3.82 mit OOM-Fix und GPT-5.5-Support stimmen mit dem Releases-Tab nicht überein — bevor man dort upgraded, verifizieren.</p>
+          <span class="src"><a href="https://aider.chat/HISTORY.html">aider.chat</a> · <a href="https://github.com/cline/cline/releases">cline/releases</a> · <a href="https://changelog.continue.dev/">continue changelog</a></span>
+        </article>
+
+      </section>
+
+      <section>
+        <h2>Querschnitts-Muster der Woche</h2>
+        <p>Wenn man alle Tool-Drops dieser Woche übereinanderlegt, sieht man dasselbe Bild aus drei Winkeln. Erstens, <strong>Fleet-of-Agents ist das Thema</strong>: Cursor <code>/multitask</code> + Dev-Envs, Copilot Cloud-Agent-API + Secret-Scoping, Devins Child-Session-Tab, Junie-in-VS, Bolts Enterprise-Push, Claude Code Agent View. Alle bauen dieselbe Geschichte: Orchestrierung vor Single-Agent-Chat. Zweitens, <strong>Agents ziehen aus der IDE in Chat-Surfaces</strong>: Cursor-in-Teams, Copilot-Cloud-Agents bald aus Slack-Bots triggerbar, Bolt in Teams / 365. Drittens, <strong>PR-Review wird zum Killer-„Second-Agent"</strong>: Cursor 3.3 PR-Review-Tab, Bugbot Effort-Levels, Copilot Code-Review mit Severity, Devin Review als REST-Primitive. Niemand baut „besseren Chat" — alle bauen besseren PR-Mate.</p>
+      </section>
+
+    </div>
+
+    <!-- COLUMN 3: Anthropic + Benchmarks + MCP -->
+    <div class="col">
+
+      <section>
+        <h2>Claude / Anthropic</h2>
+
+        <article class="news-item">
+          <h3>+50 % Wochen-Quota bis 13.07. — und ab 15.06. eigener Topf für Agent-SDK</h3>
+          <p>Die Stoßrichtung ist klar: <strong>retention</strong>. Pro/Max/Team und seat-based Enterprise bekommen für zwei Monate 50 % mehr Wochen-Limit (Ankündigung 13.05.). Free bleibt außen vor. Das ist Anthropics Antwort auf die Codex-Wachstumsrate (4M WAU, +1M in zwei Wochen).</p>
+          <p>Aber: ab <strong>15.06.</strong> werden programmatische Aufrufe gegen die Subscription (Agent-SDK, <code>claude -p</code>, GitHub Actions, Cline, opencode, eigene Harnesses) in einen <em>separaten</em> Credit-Pool gesplittet. Pro = $20, Max 5× = $100, Max 20× = $200 — non-rollover, Overage zum vollen API-Preis. Interaktive Claude-Code-Nutzung im Terminal zählt weiterhin gegen den regulären Pool.</p>
+          <p>Wer hybrid arbeitet — interaktiv im Claude-Code-Terminal plus Cline-Sessions oder Custom-Agents — sollte jetzt den Monats-Verbrauch tracken, um nicht im Juni Mai-Logik in einer Juni-Welt zu fahren.</p>
+          <span class="src"><a href="https://siliconangle.com/2026/05/14/anthropic-announces-programmatic-credit-pool-agentic-tool-use-rises/">siliconangle (14.05.)</a> · <a href="https://thenewstack.io/anthropic-agent-sdk-credits/">thenewstack</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Claude Code 2.1.139 (12.05.): Agent View, /goal, MCP-Memory-Leak gefixt</h3>
+          <p>Zwei substantielle neue Surfaces: <strong>Agent View</strong> (<code>claude agents</code> öffnet ein Dashboard mit allen laufenden / blockierten / fertigen Sessions) und <strong><code>/goal</code></strong> (man setzt eine Abschluss-Bedingung, ein kleines schnelles Modell prüft nach jedem Turn, ob das Ziel hält — funktioniert in interactive, <code>-p</code>, Remote-Control). Plus eine Live-Overlay mit Elapsed / Turns / Tokens.</p>
+          <p>MCP-Hardening, dasselbe Release: 16-MB-SSE-Frame-Cap (behebt einen Memory-Leak), OAuth-Refresh-Token-Race bei mehreren Servern raus (war der Grund für tägliches Re-Auth), Wildcard-<code>Skill(name *)</code>-Permissions verhalten sich jetzt wie <code>Bash(ls *)</code>. Direkter QoL-Win, wenn man — wie Daniel — 10+ MCP-Server fährt.</p>
+          <span class="src"><a href="https://www.lukerenton.com/matins/2026-05-12">2.1.139 Notes</a> · <a href="https://releasebot.io/updates/anthropic/claude-code">releasebot.io</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Claude Platform auf AWS GA — São Paulo inklusive</h3>
+          <p>Die Claude Platform ist nativ über AWS-Accounts verfügbar, 18 Regionen inklusive <strong>South America (São Paulo)</strong>. Bundle: Messages API, Managed Agents (Beta), MCP Connector (Beta), Agent Skills (Beta), Code Execution, Files API (Beta), Web-Search/Fetch. Relevant falls Daniels DE→BR-Setup je auf eine AWS-Route umziehen sollte — der lokale Endpoint reduziert Latenz und macht regulatorisch das Argument einfacher.</p>
+          <span class="src"><a href="https://aws.amazon.com/about-aws/whats-new/2026/05/claude-platform-aws/">aws.amazon.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Lesefutter: „The Unreasonable Effectiveness of HTML" (Simon Willison, 08.05.)</h3>
+          <p>Simon hat ein Stück von Thariq Shihipar (Claude Code Team) verlinkt + kommentiert: Anthropic-interner Take, dass Claude-Output in HTML-Form besser ankommt als in Markdown — SVG-Embeds, interaktive Widgets, In-Page-Nav. Artifacts hat „zig Millionen" HTML-Outputs gefahren. Für die Prompt-Engineering-Toolbox eine kleine, ernstzunehmende Verschiebung — der Morning-Brief-Stack hier ist ja genau das Muster.</p>
+          <span class="src"><a href="https://simonwillison.net/2026/May/8/unreasonable-effectiveness-of-html/">simonwillison.net</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Benchmarks — mit Skepsis</h2>
+
+        <div class="eli5">
+          <strong class="eli5-term">Training-Kontamination:</strong> Wenn ein Benchmark im Internet steht und ein Modell auf dem halben Internet trainiert wurde, hat das Modell den Test schon gesehen. Es kann den richtigen Patch nicht <em>lösen</em>, sondern <em>erinnern</em>. Stell dir vor, du gibst einer Klasse den Mathe-Test als Hausaufgabe — am Prüfungstag haben alle eine Eins, aber niemand kann Mathe.
+        </div>
+
+        <p>Die wichtigste Bewegung im Benchmark-Land ist diese Woche keine Score-Bewegung, sondern eine <strong>Vertrauens-Bewegung</strong>: OpenAI hat schon im Februar erklärt, keine SWE-Bench-Verified-Scores mehr zu publizieren. Begründung: in jedem auditierten Frontier-Modell findet sich wortwörtliche Reproduktion des Gold-Patches. Empfehlung von OpenAI selbst: SWE-Bench Pro. OpenAIs eigenes Audit von 138 ungelösten Verified-Problemen: 59 % haben fehlerhafte Tests (zu eng oder zu weit). Anthropic reportet weiter — und nutzt das taktisch.</p>
+
+        <p>Die Top-6 auf SWE-Bench Verified, Stand 13.05.2026 (alle vendor-reported, mit Vorbehalt zu lesen):</p>
+
+        <div class="bench-wrap" data-component="benchmark-chart">
+          <div class="bench-head">SWE-Bench Verified — Top 6, Stand 2026-05-13 (vendor-reported)</div>
+          <div class="bench-chart-wrap"><canvas></canvas></div>
+        </div>
+
+        <p>Die spannendere Zahl steht <em>nicht</em> im Chart, sondern in der <strong>Verified/Pro-Lücke</strong>. Anthropics „Mythos Preview" macht 93,9 % auf Verified — und <strong>77,8 % auf SWE-Bench Pro</strong>. 16 Punkte Lücke. Opus 4.7 macht 87,6 % Verified / 64,3 % Pro — 23 Punkte. Die Lücke ist die Geschichte: sie misst, wie viel der Verified-Score Scaffold-Tuning, Retry-Strategie und Trainings-Daten-Überlappung ist, und wie viel echte Generalisierung. Wer einem einzigen Coding-Benchmark heute trauen will, sollte LiveCodeBench nehmen — die Aufgaben rotieren kontinuierlich aus frischen LeetCode-/AtCoder-/CodeForces-Drops. Aktuell: <strong>Gemini 3 Pro Preview 91,7 %</strong>, Gemini 3.1 Pro Preview ≈ 88,5 %, GPT-5.2 Codex ≈ 88,0 %, DeepSeek V4 ≈ 87,5 %.</p>
+
+        <p>Aider Polyglot hat keine neuen Top-Entries seit Mai 2025 — Opus 4.5 (Anthropic-reported) bei 89,4 %, GPT-5 high bei 88,0 %. Noch keine 4.7- oder 5.3-Codex-Polyglot-Zahlen public.</p>
+
+        <span class="src"><a href="https://www.swebench.com/">swebench.com</a> · <a href="https://livecodebench.github.io/leaderboard.html">livecodebench.github.io</a> · <a href="https://aider.chat/docs/leaderboards/">aider leaderboard</a> · <a href="https://labs.scale.com/leaderboard/swe_bench_pro_public">SWE-Bench Pro (Scale)</a> · <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">OpenAI-Begründung</a></span>
+      </section>
+
+      <section>
+        <h2>MCP-Ökosystem</h2>
+
+        <div class="eli5">
+          <strong class="eli5-term">MCP (Model Context Protocol):</strong> Ein offener Standard, mit dem ein KI-Agent Tools von externen Anbietern andocken kann — DB-Connector, Browser, Git, Kalender. Stell dir vor, USB für KI: jeder Anbieter baut den eigenen Stecker einmal, jedes Agent-Tool unterstützt USB.
+        </div>
+
+        <p>Die Server-Zahl liegt bei Smithery aktuell um ~7.000, über alle Registries (Glama, mcp.so) sind es >20.000 (mit Duplikaten). Seit 09.12.2025 sitzt die Governance bei der Agentic AI Foundation (Linux-Foundation-Fund, von Anthropic, Block, OpenAI mitfinanziert) — MCP behält technische Autonomie über den SEP-Prozess.</p>
+
+        <p>Diese Woche im Dev-Korridor relevant: <strong>GitHubs offizieller MCP-Server</strong> hat am <strong>05.05.</strong> Secret-Scanning-Support in GA gehoben — Agent-Workflows können jetzt automatisch Credentials im Code finden, mit Org-Level-Push-Protection-Customization. Die <strong>Spec-Bewegung</strong> ist <a href="https://github.com/modelcontextprotocol/ext-apps/">SEP-1865 (MCP Apps)</a> seit Januar: standardisiert React/Vue/Svelte-basierte interaktive UIs über <code>ui://</code>-URI mit bidirektionalem JSON-RPC. Erste Adopter: Claude, ChatGPT, VS Code Copilot, Cursor, Goose, Shopify, HuggingFace, ElevenLabs. Plus: das Anniversary-Update (Spec 2025-11-25) bringt Async-Tasks mit States (working/input_required/completed/failed/cancelled) für Long-Running-Operations und ersetzt DCR über URL-basierte Client-Registrierung (SEP-991, Client ID Metadata Documents).</p>
+
+        <p><span class="callout warn"><span class="callout-label">Sicherheit</span> Der AgentSeal-Scan über <strong>1.808 MCP-Server</strong> fand bei <strong>66 % Findings</strong>: 43 % Exec/Shell-Injection, 20 % Tooling-Infra-Bugs, 13 % Auth-Bypass, 10 % Path-Traversal. Über 30 CVEs seit Januar (u. a. CVE-2026-25536 cross-client leak im MCP SDK, CVE-2026-7811 code-mcp Path-Traversal, CVE-2026-33980 Azure Data Explorer MCP SQLi). 82 % von 2.614 Implementierungen haben pfad-anfällige File-Ops. Bevor man Smithery-Entries blind installiert: Server-Provenienz prüfen, Permissions scopen.</span></p>
+
+        <span class="src"><a href="https://github.blog/changelog/2026-05-05-secret-scanning-with-github-mcp-server-is-now-generally-available/">github.blog</a> · <a href="https://agentseal.org/blog/mcp-server-security-findings">AgentSeal</a> · <a href="https://blog.modelcontextprotocol.io/posts/2025-11-25-first-mcp-anniversary/">MCP Anniversary</a></span>
+      </section>
+
+      <section>
+        <h2>Eigene Sicht</h2>
+        <p>Diese Woche ist eine, die Erwartungs-Management lohnt. Drei Spuren stechen heraus, jede mit Implikation für die nächsten 30 Tage. Eine: <strong>Cursor und Copilot bauen die Workflow-Schicht, nicht das Modell</strong>. Wer 2025 noch dachte, Anthropic / OpenAI / Google würden die ganze Wertschöpfung intern halten, sieht jetzt: die Tooling-Schicht hat ihre eigene Innovation-Rate und wird nicht von Modell-Drops gefangen genommen. Zwei: <strong>Benchmark-Disziplin verschiebt sich von Score-Watching zu Score-Misstrauen</strong>. Die spannenden Zahlen sind nicht „X macht 93 %", sondern „X macht 93 % auf A, 77 % auf B" — die Lücke ist das Signal. Drei: <strong>Google I/O ist in fünf Tagen</strong>. Gemini 3.2 Flash ist im AI Studio schon gesichtet (Leak, nicht offiziell), Antigravity- und Jules-Updates werden erwartet. Die Frage ist nicht <em>ob</em> Coding-Announcements kommen, sondern wie aggressiv das Pricing wird. Wenn Google Coding-Tier kanten will, dann jetzt.</p>
+        <p>Praktischer Take für Daniel diese Woche: nichts Strukturelles umstellen. Zwei kleine Bewegungen wären sinnvoll. Erstens, Cursor 3.3 mit <code>/multitask</code> in einem realen Refactor-Branch ausprobieren, der natürlich in unabhängige Slices fällt — der erste Eindruck entscheidet, ob das Werkzeug für unseren Code-Stil taugt. Zweitens, einmal manuell tracken, wie viele Claude-Code-Sessions interaktiv sind und wie viele aus dem Agent-SDK kommen. Wenn der Split sportlich Richtung SDK kippt, wird der 15. Juni teuer ohne Vorwarnung.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<!-- Benchmark-Daten für #bench-data — wird von lib/newsletter.js gepickt -->
+<script type="application/json" id="bench-data">
+{
+  "labels": ["Claude Mythos Preview","Claude Opus 4.7","GPT-5.3 Codex","Claude Opus 4.5","Claude Opus 4.6","DeepSeek V4-Pro"],
+  "data":   [93.9, 87.6, 85.0, 80.9, 80.8, 80.6],
+  "max":    100,
+  "unit":   " %"
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,303 @@
+/* Morning Brief — shared design tokens (light + dark).
+ *
+ * Single source of truth for fonts, scales, colours, and effects.
+ * Loaded by:
+ *   - index.html (dashboard chrome)        → <link rel="stylesheet" href="lib/tokens.css">
+ *   - lib/styles.css (newsletter content)  → @import "tokens.css";
+ *
+ * Newsletters pick their accent via <body class="cat-X">. The body.cat-X rules
+ * at the bottom alias --accent (chrome) and --accent-text (AA-safe prose links)
+ * to the matching --c-X / --c-X-text tokens.
+ */
+
+/* ──────────────────────────────────────────────────────────────────────
+   Self-hosted fonts (woff2 from gstatic mirror, SIL OFL licensed).
+   Subsets: latin + latin-ext (covers DE + PT-BR + EN content).
+   ────────────────────────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url("fonts/Fraunces-300-900-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url("fonts/Fraunces-300-900-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Source Serif";
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("fonts/SourceSerif4-200-900-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Source Serif";
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("fonts/SourceSerif4-200-900-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/IBMPlexMono-400-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/IBMPlexMono-400-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Plex Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/IBMPlexMono-600-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Plex Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/IBMPlexMono-600-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  /* Typography families */
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-body:    "Source Serif", "Charter", "Iowan Old Style", Georgia, serif;
+  --font-mono:    "Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --headline-font: var(--font-display);    /* legacy alias */
+
+  /* Type scale — six tones, modular ratio ~1.18 */
+  --text-2xs: 0.70rem;
+  --text-xs:  0.82rem;
+  --text-sm:  0.95rem;
+  --text-md:  1.12rem;
+  --text-lg:  1.32rem;
+  --text-xl:  1.85rem;
+  --text-2xl: 3.0rem;
+
+  /* Spacing scale — 0.25rem baseline */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  /* Radius scale — three tiers */
+  --radius-pill:   999px;
+  --radius-panel:  8px;
+  --radius-inline: 3px;
+
+  /* Warm-paper surfaces & ink */
+  --bg:        #f8f4e9;
+  --bg-edge:   #f1ead7;
+  --panel:     #fffbef;
+  --fg:        #1c1813;
+  --muted:     #5b5347;
+  --soft:      #6e6759;
+
+  /* Rules, quote backgrounds */
+  --rule:      #d4ccba;
+  --rule-soft: #e7e0cc;
+  --code-bg:   #f1ead7;
+  --quote:     #f7f0db;
+  --chip:      #ece1c4;
+  --chip-fg:   #2a2520;
+
+  /* Semantic accents */
+  --warn: #b6402f;
+  --good: #3f7a4f;
+
+  /* Single shadow token */
+  --shadow-panel: 0 1px 2px rgb(0 0 0 / .04), 0 6px 18px rgb(0 0 0 / .05);
+  --shadow-lift:  0 2px 4px rgb(0 0 0 / .06), 0 10px 28px rgb(0 0 0 / .08);
+  --shadow: var(--shadow-panel);   /* legacy alias */
+
+  /* Per-category chrome accent (decorative) */
+  --c-economy:        #b9462a;
+  --c-software:       #3a6ea5;
+  --c-ai-dev:         #6a4ea0;
+  --c-ai-usecases:    #2d8a87;
+  --c-football:       #2e7a3f;
+  --c-family:         #c08735;
+  --c-jobs:           #4a6680;
+  --c-learn-language: #9c3858;
+  --c-motorsport:     #d4451a;
+  --c-stocks-crypto:  #8b7355;
+
+  /* Per-category AA-safe text accent (for prose links on cream).
+     Darker derivative of the chrome accent, hits 4.5:1 against --bg. */
+  --c-economy-text:        #963822;
+  --c-software-text:       #2c5b8e;
+  --c-ai-dev-text:         #553f86;
+  --c-ai-usecases-text:    #1f6b69;
+  --c-football-text:       #245f31;
+  --c-family-text:         #8b5e1f;
+  --c-jobs-text:           #3a5469;
+  --c-learn-language-text: #7a2a44;
+  --c-motorsport-text:     #ab3818;
+  --c-stocks-crypto-text:  #6b5643;
+
+  /* Active accent — set per newsletter by body.cat-X below */
+  --accent:      var(--c-economy);
+  --accent-text: var(--c-economy-text);
+  --accent-2:    #5b8a72;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   Dark-mode token overrides. Active when EITHER:
+     (a) the system prefers dark AND the user hasn't manually forced light,
+         via the @media rule below; OR
+     (b) the user has explicitly chosen dark via the toggle, which sets
+         data-theme="dark" on <html>, matched by the duplicated block.
+   The two blocks must stay in sync — when changing a colour, update both.
+   A third selector at the bottom re-states the LIGHT palette under
+   data-theme="light" so explicit light beats the @media auto-dark.
+   ────────────────────────────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* Warm dark — espresso/walnut, not black. Hue ~25°, low saturation,
+       low lightness. The whole UI reads as "lights down" rather than
+       "lights off", which preserves the printed-broadsheet feeling. */
+    --bg:        #221a13;
+    --bg-edge:   #2a2018;
+    --panel:     #2e2218;
+    --fg:        #f1e7d3;
+    --muted:     #bbac93;
+    --soft:      #94866f;
+
+    --rule:      #3d3325;
+    --rule-soft: #2c2218;
+    --code-bg:   #2c2218;
+    --quote:     #261d14;
+    --chip:      #33271c;
+    --chip-fg:   #dccdb4;
+
+    --warn: #ef7160;
+    --good: #7ac38c;
+
+    --shadow-panel: 0 1px 2px rgb(0 0 0 / .4), 0 6px 18px rgb(0 0 0 / .25);
+    --shadow-lift:  0 2px 4px rgb(0 0 0 / .5), 0 10px 28px rgb(0 0 0 / .35);
+    --shadow: var(--shadow-panel);
+
+    --c-economy:        #e08260;
+    --c-software:       #6fa1d8;
+    --c-ai-dev:         #9d83cf;
+    --c-ai-usecases:    #6ec0bc;
+    --c-football:       #6ab97e;
+    --c-family:         #e0a85a;
+    --c-jobs:           #87a6c4;
+    --c-learn-language: #d18299;
+    --c-motorsport:     #f07d4d;
+    --c-stocks-crypto:  #c9a57a;
+
+    /* In dark mode the chrome accent is already light enough to clear AA on
+       the deep walnut background — text alias points to the same value. */
+    --c-economy-text:        var(--c-economy);
+    --c-software-text:       var(--c-software);
+    --c-ai-dev-text:         var(--c-ai-dev);
+    --c-ai-usecases-text:    var(--c-ai-usecases);
+    --c-football-text:       var(--c-football);
+    --c-family-text:         var(--c-family);
+    --c-jobs-text:           var(--c-jobs);
+    --c-learn-language-text: var(--c-learn-language);
+    --c-motorsport-text:     var(--c-motorsport);
+    --c-stocks-crypto-text:  var(--c-stocks-crypto);
+
+    --accent:      var(--c-economy);
+    --accent-text: var(--c-economy-text);
+    --accent-2:    #82b89a;
+  }
+}
+
+/* Manual dark override — same warm-dark palette as the @media block. */
+:root[data-theme="dark"] {
+  --bg:        #221a13;
+  --bg-edge:   #2a2018;
+  --panel:     #2e2218;
+  --fg:        #f1e7d3;
+  --muted:     #bbac93;
+  --soft:      #94866f;
+
+  --rule:      #3d3325;
+  --rule-soft: #2c2218;
+  --code-bg:   #2c2218;
+  --quote:     #261d14;
+  --chip:      #33271c;
+  --chip-fg:   #dccdb4;
+
+  --warn: #ef7160;
+  --good: #7ac38c;
+
+  --shadow-panel: 0 1px 2px rgb(0 0 0 / .4), 0 6px 18px rgb(0 0 0 / .25);
+  --shadow-lift:  0 2px 4px rgb(0 0 0 / .5), 0 10px 28px rgb(0 0 0 / .35);
+  --shadow: var(--shadow-panel);
+
+  --c-economy:        #e08260;
+  --c-software:       #6fa1d8;
+  --c-ai-dev:         #9d83cf;
+  --c-ai-usecases:    #6ec0bc;
+  --c-football:       #6ab97e;
+  --c-family:         #e0a85a;
+  --c-jobs:           #87a6c4;
+  --c-learn-language: #d18299;
+  --c-motorsport:     #f07d4d;
+  --c-stocks-crypto:  #c9a57a;
+
+  --c-economy-text:        var(--c-economy);
+  --c-software-text:       var(--c-software);
+  --c-ai-dev-text:         var(--c-ai-dev);
+  --c-ai-usecases-text:    var(--c-ai-usecases);
+  --c-football-text:       var(--c-football);
+  --c-family-text:         var(--c-family);
+  --c-jobs-text:           var(--c-jobs);
+  --c-learn-language-text: var(--c-learn-language);
+  --c-motorsport-text:     var(--c-motorsport);
+  --c-stocks-crypto-text:  var(--c-stocks-crypto);
+
+  --accent:      var(--c-economy);
+  --accent-text: var(--c-economy-text);
+  --accent-2:    #82b89a;
+}
+
+/* data-theme="light" — no token overrides are needed because :root above
+   already declares the light palette as the default; the :not() guard on
+   the @media block prevents auto-dark from clobbering it. The selector
+   exists purely as a hook for components that want to know the user
+   forced light (e.g., to choose a different image). */
+
+/* Per-newsletter accent alias — set the active --accent based on body class. */
+body.cat-economy        { --accent: var(--c-economy);        --accent-text: var(--c-economy-text); }
+body.cat-software       { --accent: var(--c-software);       --accent-text: var(--c-software-text); }
+body.cat-ai-dev         { --accent: var(--c-ai-dev);         --accent-text: var(--c-ai-dev-text); }
+body.cat-ai-usecases    { --accent: var(--c-ai-usecases);    --accent-text: var(--c-ai-usecases-text); }
+body.cat-football       { --accent: var(--c-football);       --accent-text: var(--c-football-text); }
+body.cat-family         { --accent: var(--c-family);         --accent-text: var(--c-family-text); }
+body.cat-jobs           { --accent: var(--c-jobs);           --accent-text: var(--c-jobs-text); }
+body.cat-learn-language { --accent: var(--c-learn-language); --accent-text: var(--c-learn-language-text); }
+body.cat-motorsport     { --accent: var(--c-motorsport);     --accent-text: var(--c-motorsport-text); }
+body.cat-stocks-crypto  { --accent: var(--c-stocks-crypto);  --accent-text: var(--c-stocks-crypto-text); }

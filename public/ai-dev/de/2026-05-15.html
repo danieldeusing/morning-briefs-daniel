@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief AI-Dev — 2026-05-15</title>
+
+<link rel="stylesheet" href="../../lib/styles.css">
+
+<!-- Chart.js für die SWE-Bench-Pro-Bar. Mermaid heute nicht. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI-Dev</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-05-15</span>
+  </div>
+  <h1 class="masthead-title">Credit-Pool-Schock, Codex aufs Handy, MCP-Server brennen — vier Tage vor I/O</h1>
+</header>
+
+<main class="shell">
+
+  <!-- BAND 1: TL;DR -->
+  <section class="tldr">
+    <p class="lead">Anthropic stellt die Subscription-Rechnung um, OpenAI macht Druck mobil, Google hält die großen Karten für Dienstag zurück.</p>
+    <ul>
+      <li><span class="chip hot">Claude</span> Credit-Pool ab 15.06. für alle programmatischen Nutzungen — Cline/opencode/Zed/Agent-SDK auf eigenem Topf</li>
+      <li><span class="chip hot">Claude</span> Agent View Research-Preview live: <code>claude agents</code> zeigt alle Sessions (running, blocked, done) in einer Übersicht</li>
+      <li><span class="chip hot">OpenAI</span> Codex-Mobile-Preview live (iOS/iPadOS/Android), Pairing nur mit Codex-für-Mac am Start</li>
+      <li><span class="chip hot">OpenAI</span> Codex-CLI 0.130.0 stable: Plugin-Sharing, Bedrock-Auth, headless <code>codex remote-control</code>; 0.131.0-alphas churnen</li>
+      <li><span class="chip hot">MCP</span> AgentSeal-Folgestudie: 96,4 % der Critical/High-Findings real ausnutzbar — RCE, AWS-IMDS-Exfil, Sandbox-Escape</li>
+      <li><span class="chip">Tool</span> GitHub Copilot App in Technical Preview (eigene Desktop-App, eigene Branches, Pro/Pro+)</li>
+      <li><span class="chip">Tool</span> Devin 2.0: parallele Devins mit eigener Cloud-IDE, Devin Search, Auto-Indexing, ab $20</li>
+      <li><span class="chip">Tool</span> Cursor 3.4: Cloud-Dev-Environments mit Dockerfile-Config + Bugbot-Effort-Levels</li>
+      <li><span class="chip good">Local</span> Ollama 0.23.4, llama.cpp b9159, vLLM 0.21 alle am 14.–15.05. — DeepSeek-V4-Pro-Rabatt läuft am 31.05. aus</li>
+      <li><span class="chip">Bench</span> SWE-Bench Pro neue Zahlen: Mythos Preview 77,8 %, Opus 4.7 64,3 %, GPT-5.5 58,6 % — Scaffold-Varianz größer als Modell-Delta</li>
+      <li><span class="chip">Google</span> Gemini 3.2 Flash + „Gemini Omni"-Video weiter geleakt, offizieller Drop am Di erwartet</li>
+      <li><span class="chip">Tool</span> Bolt.new × Microsoft (Azure-Deploy, Teams-Hook), Windsurf bringt Code-Review-Feature, v0 darf jetzt Shell</li>
+    </ul>
+  </section>
+
+  <!-- BAND 2: Wochenausblick -->
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick · AI-Dev</div>
+      <div class="timeline-sub">Was bewegen kann — I/O-Lead-up, Bench-Refresh, Cursor-Slot</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today"><div class="tl-date">Fr 15.05</div><div class="tl-dot"></div><div class="tl-events"><span><strong>Heute</strong></span><span>vLLM 0.21 (CUDA 13, TurboQuant-Kontext)</span><span>Credit-Pool-Backlash Tag 2</span><span>DeepSeek-V4-Pro-Rabatt läuft am 31.05. aus</span></div></div>
+      <div class="tl-col"><div class="tl-date">Sa 16.05</div><div class="tl-dot"></div><div class="tl-events"><span>Wochenend-LiveCodeBench-Refresh möglich</span></div></div>
+      <div class="tl-col"><div class="tl-date">So 17.05</div><div class="tl-dot"></div><div class="tl-events"><span>I/O-Vorabend · Embargo-Reviewer-Drops möglich</span></div></div>
+      <div class="tl-col"><div class="tl-date">Mo 18.05</div><div class="tl-dot"></div><div class="tl-events"><span>I/O-Pre-Briefings · Cursor-Wkly-Drop-Slot</span></div></div>
+      <div class="tl-col hot"><div class="tl-date">Di 19.05</div><div class="tl-dot"></div><div class="tl-events"><span><strong>Google I/O 2026 Tag 1</strong></span><span>Gemini 3.2 Flash erwartet ($0,25/1M-Input geleakt)</span><span>Jules V2 / Project Jitro Waitlist?</span><span>Antigravity-Drop wahrscheinlich</span></div></div>
+      <div class="tl-col"><div class="tl-date">Mi 20.05</div><div class="tl-dot"></div><div class="tl-events"><span>I/O Tag 2 · AI-Studio + Antigravity Session</span><span>Gemini Code Assist Updates</span></div></div>
+      <div class="tl-col"><div class="tl-date">Do 21.05</div><div class="tl-dot"></div><div class="tl-events"><span>I/O Tag 3 · Recap-Welle</span></div></div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <!-- COLUMN 1: Lokale LLMs + Bench-Update -->
+    <div class="col">
+
+      <section>
+        <h2>Lokale LLMs · light coverage</h2>
+
+        <article class="news-item">
+          <h3>Ollama 0.23.4 (14.05.) — Vision-Image-Inputs für <code>ollama launch opencode</code></h3>
+          <p>Der MLX-Backend-Pfad auf Apple Silicon ist seit März stabil und bypasst llama.cpp komplett auf Macs mit ≥32 GB Unified RAM. Heute steht das Tool-Result-Format-Fix für Claude-Tool-Calls mit lokalen Image-Pfaden im Changelog — kleines Ding, aber wer mit dem opencode-Harness lokal arbeitet, kennt den Bug.</p>
+          <span class="src"><a href="https://github.com/ollama/ollama/releases">github.com/ollama/ollama</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>llama.cpp b9159 (14.05.) — IME2 für RISC-V</h3>
+          <p>Die spannendste Zeile in den b9159-Notes ist nicht die Release selbst, sondern PR #22727 „continue generation on reasoning models" — bei DeepSeek-V3.2 und ähnlichen Reasoning-Modellen kann llama.cpp jetzt unterbrechen und nachträglich fortführen, ohne das Reasoning-Token-Frame zu zerschießen. Wichtig, wenn du Reasoning-Modelle in agentischen Loops nutzt.</p>
+          <span class="src"><a href="https://github.com/ggml-org/llama.cpp/pull/22727">github.com/ggml-org PR #22727</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>vLLM 0.21.0 (heute) — CUDA 13 / PyTorch 2.11 baseline</h3>
+          <p>0.20.0 letzte Woche brachte TurboQuant (2-Bit KV-Cache, 4× Kapazität) und FA4 als Default für MLA-Prefill. 0.21 stabilisiert den CUDA-13-Pfad und schließt den DeepSeek-V4-Support ab. Für Self-Host-Setups die solideste Release seit Monaten.</p>
+          <div class="eli5"><strong class="eli5-term">TurboQuant:</strong> Wie der KV-Cache (also das „Kurzzeitgedächtnis" eines LLM für die laufende Conversation) auf 2 Bits pro Wert geschrumpft wird. Statt 16 Bits pro Eintrag → 2 Bits → 8× kleiner; vLLM gewinnt damit 4× mehr Kontext pro GPU-RAM-Einheit.</div>
+          <span class="src"><a href="https://github.com/vllm-project/vllm/releases">vllm-project/vllm</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Qwen3.6-27B bleibt das „Mac-Maß"</h3>
+          <p>Seit April 2026 unangefochten: 77,2 % SWE-Bench Verified, 53,5 % SWE-Bench Pro, 59,3 % Terminal-Bench 2.0. Bei Q4_K_M passt das Ding in ~16 GB, bei Q8_0 in ~29 GB — ein 64-GB-Mac trägt es ohne Schwitzen. Auf SWE-Verified nur ~3,7 Pkt. unter Opus 4.6; auf SWE-Pro ist die Lücke deutlich größer. <span class="chip good">try</span> wenn du noch nicht: Default-Pick für lokale Coding-Loops auf Apple Silicon.</p>
+          <span class="src"><a href="https://huggingface.co/Qwen/Qwen3.6-27B">huggingface.co/Qwen</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>DeepSeek-V4-Pro — 75 % Rabatt bis 31.05.</h3>
+          <p>Preview vom 24.04., 1,6 T params (49 B aktiv) MoE, 1 M Kontext. DeepSeek meldet 80,6 % auf SWE-Bench Verified — fast Opus-4.6-Niveau. Caveat: nur Verified, keine Pro-Zahl. API-Preise mit Rabatt aktuell $1,74/$3,48 pro M-Token (in/out), läuft am 31.05. aus. Gewichte sind auf HF, aber bei 1,6 T params praktisch nicht lokal fahrbar.</p>
+          <span class="src"><a href="https://api-docs.deepseek.com/news/news260424">api-docs.deepseek.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Mistral · Meta · Granite: ruhig</h3>
+          <p>Codestral steht weiter bei 25.08 (letzter Drop August 2025). Llama 4 Coder hat seit Quartal keine neue Release. IBM Granite 4.1 (3 B/8 B/30 B, Apache 2.0) ist Ende April erschienen, seitdem still. Drei stille Häuser in einer lauten Woche — manchmal die Geschichte.</p>
+        </article>
+      </section>
+
+      <section>
+        <h2>Bench-Update · skeptisch lesen</h2>
+        <p>Die Wahrheit zu SWE-Bench Verified ist seit Februar bekannt: OpenAI berichtet es nicht mehr, Trainings-Kontamination ist real, Top-Modelle reproduzieren Gold-Patches wörtlich. Die ehrlichere Sicht heute steht in zwei anderen Leaderboards.</p>
+
+        <div class="callout warn">
+          <span class="callout-label">Scaffold-Varianz</span>
+          Scale AIs SEAL-Scaffold liefert <strong>10+ Punkte weniger</strong> als die Custom-Scaffolds der Modell-Anbieter (Opus 4.5: 45,9 % auf SEAL vs. 50,2–55,4 % mit eigenem Scaffold auf SWE-Pro). Die Bench misst nicht das Modell — sie misst Modell + Scaffold + Tool-Stack. Bei jedem Vergleich zuerst nach Scaffold fragen.
+        </div>
+
+        <p>Auf SWE-Bench Pro (Stand 13.05., quelle <a href="https://labs.scale.com/leaderboard/swe_bench_pro_public">labs.scale.com</a>) ist die Reihenfolge:</p>
+
+        <div class="bench-wrap" data-component="benchmark-chart">
+          <div class="bench-head">SWE-Bench Pro — Top 6, Stand 13.05.2026 (Scale AI)</div>
+          <div class="bench-chart-wrap"><canvas></canvas></div>
+        </div>
+
+        <p>Mythos Preview ist 13,5 Pkt. vor Opus 4.7, dann ein Pulk von GPT-5.4/5.5/5.3-Codex in ein paar Punkten Abstand. Mythos ist nicht self-serve — Invitation-only für Defense-Cyber. Die spannende Zahl bleibt die Lücke <strong>Verified vs Pro</strong> beim selben Modell: Mythos 93,9 % vs 77,8 % (16 Pkt.), Opus 4.7 87,6 % vs 64,3 % (23 Pkt.). Verified sagt dir, wie gut das Modell Gold-Patches imitiert; Pro sagt dir, was bei echter Schwierigkeit übrig bleibt.</p>
+
+        <p>Nebius' SWE-rebench (contamination-aware, Time-Window-Filter) zeigt einen anderen Sieger: <strong>Opus 4.6 65,3 %, GLM-5 62,8 %, GLM-5.1 62,7 %</strong> — Top 3 in 2,6 Punkten. Saturation-Warnung. LiveCodeBench widerspricht sich diese Woche selbst je nach Mirror: LLM-Stats hat DeepSeek-V4-Pro-Max bei 0,935, PricePerToken hat Gemini 3 Pro bei 91,7 %, v6 hat Kimi K2.6 bei 0,896. Die Geschichte ist nicht „wer führt", sondern „dass die Tabellen sich widersprechen". Wenn dir jemand mit einer einzelnen LiveCodeBench-Zahl winkt, frag nach Mirror und Datum.</p>
+      </section>
+
+    </div>
+
+    <!-- COLUMN 2: Anthropic · OpenAI · Cursor + Tools-Block -->
+    <div class="col">
+
+      <section>
+        <h2>Anthropic · Credit-Pool, Agent View, Mythos</h2>
+
+        <article class="news-item">
+          <h3>Der Credit-Pool im Detail</h3>
+          <p>Ab 15.06.: Pro-User ($20/Monat) bekommt einen separaten Credit-Topf für Agent-SDK, <code>claude -p</code>, Claude-Code-GitHub-Actions, Third-Party-Agents. Max 5× ($100), Max 20× ($200), Enterprise per-Seat. Credits werden zu API-Raten gerechnet und rollen <strong>nicht</strong> über den Monat. Anthropic framt das als „programmatische Nutzung kommt zurück auf die Subscription" (sie war vorher kurz blockiert). Effektiv: für jemanden, der Cline oder opencode neben Claude Code im Terminal nutzt, schrumpft das Budget. Theo Browne hat öffentlich gekündigt und steuert User zu Codex/Cursor/Gemini um. VentureBeat-Schlagzeile: „Anthropic reinstates third-party agent usage on Claude subscriptions — with a catch".</p>
+          <div class="callout info">
+            <span class="callout-label">Was das für dich heißt</span>
+            Du nutzt Claude Code im Terminal — dein Subscription-Limit bleibt unverändert. Wenn du parallel mit Agent SDK oder einem Third-Party-Harness experimentierst, ab 15.06. tracken, wieviele Credits dort weggehen. Bei reiner Claude-Code-Nutzung: ignorieren.
+          </div>
+          <span class="src"><a href="https://thenewstack.io/anthropic-agent-sdk-credits/">thenewstack.io</a> · <a href="https://venturebeat.com/technology/anthropic-reinstates-openclaw-and-third-party-agent-usage-on-claude-subscriptions-with-a-catch">venturebeat.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Agent View (Research Preview): <code>claude agents</code></h3>
+          <p>Das ist die andere Seite der Anthropic-Woche: <code>claude agents</code> zeigt einen vereinten Sessions-Dashboard — running, blocked-on-you, done. Aus einer Session per Left-Arrow erreichbar, aus Pro/Max/Team/Enterprise/API verfügbar. Daneben drei kleinere Goodies: <code>/goal</code> setzt eine Completion-Condition (Claude arbeitet über Turns hinweg weiter, bis sie erfüllt ist), <code>claude project purge</code> löscht den kompletten Project-State, und Hooks dürfen jetzt Desktop-Notifications via <code>terminalSequence</code> auslösen, ohne das Terminal zu hijacken. <span class="chip good">try</span> Agent View — die Visibility über mehrere parallele Sessions hin war bisher der Schwachpunkt im Headless-Workflow.</p>
+          <span class="src"><a href="https://code.claude.com/docs/en/agent-view">code.claude.com/docs/agent-view</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Mythos Preview hilft beim macOS-Kernel-Exploit — wirklich?</h3>
+          <p>Calif (vietnamesische Security-Firma) hat gestern beschrieben, wie sie mit Mythos Preview eine macOS-26.4.1-LPE auf Apple-M5-Silizium gebaut haben, die Apples Memory Integrity Enforcement umgeht. Timeline: Bugs am 25.04., funktionierender Exploit am 01.05. — fünf Tage. <strong>Wichtige Caveat von den Researchern selbst</strong>: Mythos hat die Exploit-Kette nicht selbständig entwickelt; Menschen haben den Exploit-Dev geleitet, Mythos war stark beim Erkennen bekannter Bug-Class-Muster. Anthropic hat sich öffentlich nicht geäußert. Der 55-seitige Bericht ist embargoed bis Apple einen Fix shipt.</p>
+          <span class="src"><a href="https://9to5mac.com/2026/05/14/calif-team-details-how-anthropic-mythos-helped-build-a-working-macos-exploit-in-five-days/">9to5mac.com</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>OpenAI · Mobile, Sandbox, CLI</h2>
+
+        <article class="news-item">
+          <h3>Codex auf dem Handy — Preview, macOS-paired</h3>
+          <p>Die Mechanik ist clever: der Desktop hält Files, Credentials und Permissions; das Handy ist Remote-Control. Screenshots, Terminal-Output, Diffs, Test-Ergebnisse und Approval-Prompts streamen in die ChatGPT-App. <strong>Aber:</strong> nur Mac-Desktop am Start, Windows kommt später. Preview, alle Pläne inkl. Free, alle Regionen. Für Daniel mit Mac-Studio im Home-Office und Spaziergang am Salto-Hügel: heißt, „kleines Approval auf dem Handy abnicken statt zurück an den Schreibtisch" wird real. Bei mehrstündigen Agent-Runs ein echtes UX-Update.</p>
+          <span class="src"><a href="https://9to5mac.com/2026/05/14/openai-brings-codex-control-to-chatgpt-for-iphone-and-android/">9to5mac.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Windows-Sandbox unter der Haube</h3>
+          <p>Der Begleit-Post „Building a safe, effective sandbox to enable Codex on Windows" dokumentiert, wie OpenAI das Windows-native Codex-Sandbox-Modell härtet. Drei Constraints: Writes nur im aktiven Workspace, Outbound-Netz default blockiert mit explizitem Allowlist, Agent muss Approval für Schritte außerhalb anfragen. Implementation: separate Offline/Online-Sandbox-User, OS-Firewall-Checks, DPAPI-scoped Credentials, vier-stufige Exec-Pipeline. In WSL2 fährt Codex weiter den Linux-Sandbox-Pfad. Wichtig, wenn du Codex bei einem Windows-Kunden einsetzen willst.</p>
+          <span class="src"><a href="https://openai.com/index/building-codex-windows-sandbox/">openai.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Codex-CLI 0.130.0 (09.05.) stable</h3>
+          <p>Plugin-Sharing, Hook-Details, headless <code>codex remote-control</code> (das macht den Mobile-Pairing-Path), App-Server-Thread-Pagination, AWS-Bedrock-Auth via Console-Login-Profile, Multi-Environment-Image-Resolution. Der „research preview"-Banner ist aus <code>codex exec</code> raus. 0.131.0-Alphas churnen seit gestern (alpha.16/18/19). Wer Bedrock fährt: das ist der Auth-Pfad, auf den du gewartet hast.</p>
+          <span class="src"><a href="https://github.com/openai/codex/releases">github.com/openai/codex</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Altmans Promo: 2 Monate Codex gratis bei Switch</h3>
+          <p>Sams Tweet vom 13.05.: „codex is the best AI coding product… two months free codex usage for companies switching over for the next 30 days." In der Stunde nach dem Anthropic-Credit-Pool-Announcement gepostet — die kommerzielle Antwort auf den Sub-Schock ist offensichtlich. Für reine Solo-Nutzung weniger Bedeutung, aber für Teams ein konkretes Angebot.</p>
+          <span class="src"><a href="https://fxtwitter.com/sama/status/2054626219858293128">fxtwitter.com/sama</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Cursor · Bugbot, Cloud-Envs, RCE-Lücke</h2>
+
+        <article class="news-item">
+          <h3>Cursor 3.4 (13.05.) — Cloud Dev Environments</h3>
+          <p>Multi-Repo-Umgebungen, Dockerfile-as-Config mit Build-Secrets, Layer-Caching, Audit-Log + Rollback pro Environment. Cursor sagt „70 % schneller bei Cache-Hits" — nicht extern validiert. Klare Ansage: Cursor will ein „Coding-Werkzeug-Komplettsystem" sein, nicht ein Chat-Fenster. Drei Drops in einer Woche (3.3 mit /multitask vor 8 Tagen, Teams am 11.05., 3.4 jetzt).</p>
+          <span class="src"><a href="https://cursor.com/changelog/05-13-26">cursor.com/changelog</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Bugbot Effort-Levels (11.05.)</h3>
+          <p>Default/High/Custom für PR-Reviews. Cursor-Eigenwerbung: Default findet „0,7 Bugs/Run", High „0,95 Bugs/Run". Keine externe Validierung — und „Bugs/Run" ist eine künstliche Metrik (sagt nichts darüber, wie viele <em>echte</em> Bugs übersehen werden). Trotzdem: Effort-Toggle ist eine vernünftige UX. <span class="chip good">try</span> wenn du PR-Reviews automatisierst — High-Effort für sicherheitskritische Pfade, Default für Style/Refactor.</p>
+          <span class="src"><a href="https://cursor.com/changelog/05-11-26">cursor.com/changelog</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>CVE-2026-26268: High-Sev RCE in Cursor &lt; 2.5</h3>
+          <p>Externe Berichte gestern: Klonen eines bösartigen Repos triggert Remote-Code-Execution. Fix in v2.5. Wenn du auf v2.4 oder älter sitzt — heute upgraden.</p>
+          <span class="src"><a href="https://cybersecuritynews.com/cursor-ai-coding-agent-vulnerability/">cybersecuritynews.com</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Andere Tools · 7-Tage-Ausschnitt</h2>
+
+        <article class="news-item">
+          <h3>GitHub Copilot App — Technical Preview (14.05.)</h3>
+          <p>GitHub-native Desktop-App für agentische Entwicklung. Sessions starten aus Issue / PR / Prompt mit eigener Branch und eigenem Konversations-Stand. Pro/Pro+ können sich für Early-Access registrieren. Das ist GitHubs Antwort auf Cursor + Devin in einer Datei: die App entkoppelt den Agent vom Editor. Parallel: Copilot Code Review hat gestern Severity-Levels und gruppierte Suggestions bekommen.</p>
+          <span class="src"><a href="https://github.blog/changelog/2026-05-14-github-copilot-app-is-now-available-in-technical-preview/">github.blog</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Devin 2.0 (13.05.)</h3>
+          <p>Agent-native IDE, parallele Devins (jeder mit eigener Cloud-IDE), proaktives Planning, Devin Search für Codebase-Q&A, automatisches Repo-Indexing alle paar Stunden mit generierten Architektur-Wikis. Neuer Plan ab $20. Cognitions Selbstaussage: „antwortet in Sekunden mit Plan-Entwurf" — Marketing. Die ernsthafte Beobachtung: $20-Einstieg holt Devin in den Preisbereich, in dem Daniel mit Pro-Subscriptions vergleicht. Wer auf parallele Tasks pro-Repo nicht warten will, sollte 14 Tage testen.</p>
+          <span class="src"><a href="https://cognition.ai/blog/devin-2">cognition.ai</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Windsurf · v0 · Bolt · JetBrains</h3>
+          <p><strong>Windsurf</strong> hat am 12.05. „Fast and Comprehensive Code Review" geshippt — eigene Review-Pipeline statt nur Inline-Suggestions. <strong>v0.dev</strong> darf seit 12.05. Terminal-Befehle mit Permission-Prompt ausführen; Sandboxes „50 % schneller" (Vercel-Eigenwerbung). <strong>Bolt.new × Microsoft</strong> (05.05.): Marketplace-Listing, Azure-natives Deploy, Teams-Integration. <strong>JetBrains</strong> bringt Junie + ACP-Support in Visual Studio (ReSharper 2026.2 EAP, 11.05.) — JetBrains-Eingeständnis: „funktional aber nicht vollständig poliert".</p>
+          <span class="src"><a href="https://windsurf.com/changelog">windsurf.com</a> · <a href="https://v0.app/changelog">v0.app</a> · <a href="https://bolt.new/blog/news-press-release-bolt.new-on-microsoft-azure">bolt.new</a> · <a href="https://blog.jetbrains.com/dotnet/2026/05/11/the-resharper-2026-2-eap-any-ai-agent-in-visual-studio/">blog.jetbrains.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Continue · Aider · Cline · OpenHands · Plandex — ruhig</h3>
+          <p>Continue hat laufende MCP/OAuth-Arbeit in main, aber keinen Tag-Release diese Woche. Aiders letzte PyPI-Release liegt bei Februar. Cline zeigt v3.70.0 vom 04.03. als latest. OpenHands 1.7.0 ist 14 Tage alt (KVM-Sandboxes). Plandex still. Drei Wochen vor I/O ziehen sich die kleineren Player zurück und warten den 19.05. ab — keine schlechte Strategie.</p>
+        </article>
+      </section>
+
+    </div>
+
+    <!-- COLUMN 3: MCP · I/O Lead-up · Standing Threads -->
+    <div class="col">
+
+      <section>
+        <h2>MCP-Ökosystem · Sicherheits-Druck trifft Spec-Momentum</h2>
+
+        <article class="news-item">
+          <h3>AgentSeal-Doppelschlag: Registry-Scan + Runtime-Validierung</h3>
+          <p>Vor zwei Tagen: 1.808 von 8.013 gescannten MCP-Servern haben Findings — 1.067 Critical, 1.795 High, 1.240 Medium. Häufigste Critical-Klasse: Command Injection (114), dann Output Instruction Injection (32), Path Traversal (5), SSRF via unvalidated Connection URLs (4), Sandbox-Escape via Tool-Bridge (4). Gestern dann der Hammer: bei sechs hochpopulären Servern (zusammen 68 K Stars) reproduzierten sie 27 von 28 testbaren Critical/High-Findings <strong>real exploitable</strong> in isolierten Docker-Containern mit Test-Daten. Beispiel-Kette: lokaler Server mit <code>.env</code>-Credentials + permissive CORS + SSRF-Tool → bösartige Webseite zieht AWS-IMDS-Credentials.</p>
+          <div class="callout warn">
+            <span class="callout-label">Achtung</span>
+            Heute Mittag durchgehen, welche MCP-Server du im PATH hast — und welche davon Credentials in <code>.env</code> halten und Outbound-HTTP machen dürfen. Quick-Audit: <code>claude mcp list</code>, dann jeden Server gegen die AgentSeal-Findings-Liste.
+          </div>
+          <span class="src"><a href="https://agentseal.org/blog/mcp-server-security-findings">agentseal.org · Findings</a> · <a href="https://agentseal.org/blog/runtime-exploitation-mcp-servers">Runtime-Validierung</a> · <a href="https://www.theregister.com/security/2026/05/13/bug-hunter-tracks-down-three-serious-mcp-database-flaws-one-left-unpatched/">theregister.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>SDK-Coordinated-Commit-Burst am 14.05.</h3>
+          <p>C#, Rust, Ruby, TypeScript, Go, Inspector, Conformance-Tests, plus ein <code>experimental-ext-triggers-events</code> — alle haben gestern Commits bekommen. Kein public Changelog-Post (bislang). Das Muster sieht aus wie ein synchronisierter SDK-Push vor einem Spec-Revision-Drop. Watch this space.</p>
+          <span class="src"><a href="https://github.com/modelcontextprotocol">github.com/modelcontextprotocol</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>SEP-1865 / MCP Apps · Status-Korrektur</h3>
+          <p>Kleine Korrektur zur gestrigen Erwähnung: SEP-1865 ist seit Ende 2025 <strong>Final</strong> (Spec-Version <code>2026-01-26</code>). Die News heute ist Implementation: Cursor 2.6 unterstützt MCP Apps, Dify hat ein Issue für Support geöffnet (#35658), MCPJam Inspector hat eine Architecture-Doc veröffentlicht. Für Daniel: wenn du eigene MCP-Server schreibst, der UI-Pfad (<code>ui://</code> URI-Scheme, React-Komponenten inline in Claude/ChatGPT gerendert) ist jetzt der Standard-Weg.</p>
+          <span class="src"><a href="https://modelcontextprotocol.io/community/seps/1865-mcp-apps-interactive-user-interfaces-for-mcp">modelcontextprotocol.io</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Plugin-Marketplaces: Stand der Zählung</h3>
+          <p>claudemarketplaces.com (Stand 14.05.): 4.200+ Skills, 770+ MCP-Server, 2.500+ Marketplaces. Cursor hat zum 01.05. Team-Marketplace-Setup ohne Repo + Install-Controls (Default Off / Default On / Required) ausgerollt. Anthropic legt zusätzlich Vertical-Pakete drauf — 20+ MCP-Connectoren für die Legal-Vertical-Welt, 12 Practice-Area-Plugins. Thomson-Reuters-CoCounsel kommt via MCP.</p>
+          <span class="src"><a href="https://code.claude.com/docs/en/discover-plugins">code.claude.com</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Google · I/O-Lead-up, 4 Tage</h2>
+
+        <article class="news-item">
+          <h3>Gemini CLI 0.43-preview (13.05.)</h3>
+          <p>Surgical Code Edits (steuert das Modell auf den Edit-Tool-Pfad — weniger Kontext, weniger Regressions), Session Portability via CLI-Flag (Export/Import), gehärtete Shell-Command-Safety-Evals, adaptiver Token-Calculator, Tool-Call-IDs in UI sichtbar, MCP-Listenverwaltung verbessert. Stable bleibt 0.42. Genkit Middleware ist gestern ebenfalls offiziell („Intercept, extend, and harden your agentic apps") — beides Pre-I/O-Drops.</p>
+          <span class="src"><a href="https://geminicli.com/docs/changelogs/preview/">geminicli.com/changelogs</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Gemini 3.2 Flash — geleakt, nicht angekündigt</h3>
+          <p>Seit 05.05. im iOS-Gemini-App-Model-Picker und im AI-Studio sichtbar, läuft Bench-Runs auf LM Arena. Reported Pricing: <strong>$0,25 pro 1M Input-Token</strong>. Performance-Behauptungen (schneller als 3.1 Pro, besser im Coding) sind Single-Source-Leaks. Strong Candidate für Dienstag-Keynote.</p>
+          <span class="src"><a href="https://www.aixploria.com/en/ai-radar/google-gemini-3-2-flash-leaked-ios-lm-arena/">aixploria.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>„Gemini Omni" — UI-Strings am 02.05., Clips am 11.05.</h3>
+          <p>Erst tauchten UI-Strings auf („Powered by Omni" neben Veo-3.1), dann am 11.05. echte generierte Clips aus dem Gemini-Pro-User (Seaside-Spaghetti-Szene, Trigonometrie-Tafel). Drei Lesarten: Veo-Pfad-Rebrand, neues Gemini-trainiertes Video-Modell, oder echter Unified-Omni-Modell. Antigravity-Session am 19.05. dürfte die Klärung bringen — die Session-ID heißt <code>pa-keynote-2</code>: „Build next-gen AI experiences with Google AI Studio and Google Antigravity". Wer auf Antigravity wartet (letzter Release v1.23.2 ist 4 Wochen alt): am Dienstag passiert was.</p>
+          <span class="src"><a href="https://chromeunboxed.com/an-impressive-new-gemini-omni-video-model-just-leaked-ahead-of-google-i-o/">chromeunboxed.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Jules V2 / „Project Jitro" — Waitlist erwartet</h3>
+          <p>Pre-Launch. TestingCatalog und DevOps.com berichten: Pivot von Task-prompted zu <strong>Goal-prompted</strong> — der Agent identifiziert selbst, was zu ändern ist, um eine Metrik zu bewegen. Wenn das echt ist, ist es die natürliche Weiterentwicklung von Anthropics <code>/goal</code> aus dieser Woche, nur auf der gesamten Agent-Ebene. I/O Dienstag ist das wahrscheinliche Announce-Fenster.</p>
+          <span class="src"><a href="https://www.testingcatalog.com/google-prepares-jules-v2-agent-capable-of-taking-bigger-tasks/">testingcatalog.com</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Standing Threads</h2>
+
+        <article class="news-item">
+          <h3>Harness-Vergleich: was hat sich verschoben?</h3>
+          <p>Vor einer Woche war der Pitch noch: Claude Code = Default-Terminal-Tool, Cursor = beste IDE-UX, Aider = Open-Source-Klassiker, Codex = serverseitiges Async. Jetzt: Cursor schiebt sich Richtung Cloud-Plattform (Envs, Teams, Bugbot), Codex landet auf dem Handy, GitHub Copilot will die eigene App sein, Devin 2.0 verkauft sich für $20. Der breite Trend ist deutlich: <strong>weg vom Inline-Autocomplete, hin zum delegierbaren Agent mit eigener Sandbox</strong>. Drei der vier großen Tools (Cursor, Codex, Devin) haben diese Woche „eigene Cloud-Env" oder „eigene IDE" geshippt.</p>
+        </article>
+
+        <article class="news-item">
+          <h3>Open-Weights-Coding: Saturation auf Verified, Lücke auf Pro</h3>
+          <p>Qwen3.6-27B (77,2 % Verified) liegt 3,7 Pkt. unter Opus 4.6. Aber auf SWE-Bench Pro (53,5 % vs 64,3 % Opus 4.7) klafft eine 11-Punkte-Lücke. Das ist der ehrliche State: für „passt-in-meinen-Mac"-Workflows ist Qwen weit gekommen; für „kann selbst harte Tasks lösen" sind Closed-Frontier-Modelle weiter vorne. Ein offener 1,6 T-Modell-Drop wie DeepSeek-V4-Pro schließt die Lücke auf Verified — aber zum Self-Host-Preis, den niemand außerhalb von Mega-Clustern bezahlen kann.</p>
+        </article>
+
+        <article class="news-item">
+          <h3>Was am Dienstag wichtig wird</h3>
+          <p>Drei Erwartungen ranged von „sicher" bis „möglich":
+          <em>Sicher</em>: ein Gemini-Modell-Drop (3.2 Flash mit $0,25/M Pricing). <em>Wahrscheinlich</em>: Antigravity-Feature-Update mit AI-Studio-Tightening. <em>Möglich</em>: Jules V2 / Project Jitro Waitlist, Omni-Video-Modell-Reveal, neue Gemini-Code-Assist-Funktionen.
+          Daniel-Notiz: wenn 3.2 Flash bei $0,25/M Input-Token tatsächlich auf Pro-Coding-Niveau ist, ist das ein 4–5×-Preisdruck auf Opus 4.7. Das könnte den Anthropic-Credit-Pool-Switch retrospektiv erklären.</p>
+        </article>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<script type="application/json" id="bench-data">
+{"labels": ["Claude Mythos Preview","Claude Opus 4.7","GPT-5.4 (xHigh, SEAL)","GPT-5.5","GPT-5.3-Codex","Claude Opus 4.5 (SEAL)"],
+ "data":   [77.8, 64.3, 59.1, 58.6, 56.8, 45.9],
+ "max":    85,
+ "unit":   " %"}
+</script>
+
+</body>
+</html>

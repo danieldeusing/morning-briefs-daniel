@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-06-06</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-06</span>
+  </div>
+  <h1 class="masthead-title">When the signature itself becomes camouflage</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">A quiet Saturday, but this week's topics have gained depth: the <strong>Miasma</strong> worm from the Red Hat npm incident has now been autopsied by three major teams—Wiz, Microsoft, and Palo Alto's Unit 42—and the conclusion is uncomfortable. The packages carried <em>genuine</em> SLSA provenance, obtained through OIDC tokens from compromised GitHub Actions runs. In other words: the attestation that was supposed to prove "clean" co-signed the malware. Meanwhile, Let's Encrypt lays out a surprisingly elegant post-quantum path (Merkle-tree certificates), CISA adds several actively exploited flaws to the KEV list, and GitHub had two days of Dependabot lag plus an auth outage.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">OSS</span> <strong>Miasma autopsy</strong>: 32 Red Hat npm packages, ~117k downloads/week, malware signed with valid SLSA provenance.</li>
+      <li><span class="chip">Sec</span> <span class="chip">Global</span> <strong>Root cause identified</strong>: compromised Red Hat employee account → orphan commits → OIDC token from CI → signed package.</li>
+      <li><span class="chip good">Web</span> <span class="chip">Global</span> <strong>Let's Encrypt PQ</strong>: Merkle-tree certificates instead of bloated post-quantum handshakes—staging end of 2026, production 2027.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>Cisco Unified CM</strong>: CVE-2026-20230, rated critical by Cisco, PoC already public (06/03).</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>CISA KEV</strong>: Android framework zero-day (CVE-2025-48595) and an old Linux cgroups bug (CVE-2022-0492) actively exploited.</li>
+      <li><span class="chip">Infra</span> <span class="chip">Global</span> <strong>GitHub double trouble</strong>: Dependabot lag across ~1.5M repos (06/01–06/04), then auth outage on 06/05.</li>
+      <li><span class="chip">Web</span> <span class="chip">EU</span> <strong>FROST</strong>: Graz researchers read SSD timing from browser sandbox to infer which apps are open (~89% F1).</li>
+      <li><span class="chip">Regulation</span> <span class="chip">EU</span> <span class="chip">DE</span> <strong>CRA</strong>: On 06/11 the notification procedures activate—BSI begins notifying conformity assessors.</li>
+      <li><span class="chip good">Release</span> <span class="chip">Global</span> <strong>Browser cadence</strong>: Chrome 149 is stable (06/02), Firefox 152 arrives on 06/16.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">Supply-chain aftershocks, CVE deadlines, EU regulation—what's on this week's agenda</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Thu 06/04</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GitHub Dependabot lag resolved (began 06/01, up to 2-day PR delays)</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Fri 06/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GitHub auth outage (14:49–16:45 UTC, feature flag rolled back)</span>
+          <span>CISA deadline: Android zero-day CVE-2025-48595 for federal agencies</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Sat 06/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Miasma follow-up: rotate npm and GitHub tokens, audit repos for unknown workflows</span>
+          <span>Cisco Unified CM PoC circulating—check WebDialer status</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun 06/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet—monitor npm advisories and Unit 42 tracker</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 06/08</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Week start: dependency audit after Miasma recommended</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 06/09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Microsoft Patch Tuesday (06/09)—monitor bulletins</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu 06/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CRA: Chapter IV activates—BSI begins notifying conformity assessors</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Miasma: the autopsy—signature was camouflage, not protection <span class="h2-refs">[1][2][3]</span></h2>
+        <p>The Red Hat npm incident from early this week is now fully analyzed, and the numbers are solid: <strong>32 packages</strong> under the <code>@redhat-cloud-services</code> namespace were compromised, totaling around <span class="stat">117,000 downloads/week</span><sup>[3]</sup> (Wiz initially reported ~80,000), manipulated in two waves on 06/01.<sup>[1]</sup> Wiz, Microsoft, and Palo Alto's Unit 42 have independently reviewed it—and reach the same uncomfortable conclusion.</p>
+        <p>The <strong>root cause</strong> is clear: a compromised Red Hat employee GitHub account. It was used to push "orphan commits" (commits that don't hang from any branch and thus bypass code review) into two RedHatInsights repos. These then compromised the normal release mechanism: a GitHub Actions workflow requested an OIDC token and published the trojan package—<em>with valid SLSA provenance</em>.<sup>[1][2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">SLSA provenance / OIDC token:</strong> SLSA provenance is like a certified bill of lading that says "this package was built from exactly this commit, by exactly this pipeline". An OIDC token is the key the pipeline briefly presents to prove "it's really me"—like a day pass. If the attacker has compromised the pipeline, they get a <em>real</em> day pass and a <em>real</em> bill of lading. The certification then only proves "really from this pipeline"—not "really harmless".
+        </div>
+        <p>That's exactly the lesson for us: provenance and attestation answer the question <em>"where did this come from?"</em>, not <em>"is this clean?"</em> Anyone who reduces supply-chain security to "has a signature, so it's good" has answered the wrong question. The malware stole npm and GitHub tokens, SSH keys, cloud credentials (new: GCP and Azure identities), and CI/CD secrets—and republished further with them, so it spread like a worm.<sup>[1]</sup></p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.wiz.io/blog/miasma-supply-chain-attack-targeting-redhat-npm-packages">wiz.io — Miasma analysis</a></li>
+          <li><a href="https://www.microsoft.com/en-us/security/blog/2026/06/02/preinstall-persistence-inside-red-hat-npm-miasma-credential-stealing-campaign/">microsoft.com — Preinstall to persistence</a></li>
+          <li><a href="https://access.redhat.com/security/vulnerabilities/RHSB-2026-006">access.redhat.com — RHSB-2026-006</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Unit 42: the "nuisance era" of npm is over <span class="h2-refs">[4]</span></h2>
+        <p>Aptly timed with the Miasma incident, Unit 42 updated its npm threat landscape dossier on 06/02—and it reads like a taxonomy of what we're witnessing. Key takeaway: since the original <em>Shai-Hulud</em> worm, npm attacks have evolved from isolated typosquatting to systematic campaigns—with worm-like spread, infrastructure persistence, and multi-stage payloads.<sup>[4]</sup></p>
+        <p>The practical takeaway for Daniel's own stacks (npm in every frontend, GitHub Actions as CI): priority is not "patch faster," but <strong>token hygiene</strong>. Keep personal access tokens and npm tokens short-lived, use OIDC instead of long-lived secrets in Actions, and regularly audit repos for unknown workflows, new tokens, and third-party actions. Attackers are targeting precisely the trust layer that makes our pipelines fast.</p>
+        <div class="footnotes"><ol start="4">
+          <li><a href="https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attacks/">unit42.paloaltonetworks.com — npm Threat Landscape (Updated 06/02)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>GitHub: two days of Dependabot lag, then an auth outage <span class="h2-refs">[5]</span></h2>
+        <p>Not dramatic, but felt in daily workflows: between 06/01 (23:00 UTC) and 06/04 (04:11 UTC), scheduled <strong>Dependabot updates</strong> were delayed—pull requests arrived up to two days late, affecting approximately <span class="stat">1.5 million repos</span> with active version updates according to GitHub. The cause was a change to an internal routing service.<sup>[5]</sup></p>
+        <p>Right on its heels, on 06/05 (14:49–16:45 UTC), <strong>auth errors</strong> for legitimate requests—a newly enabled feature flag that was then disabled; Slack and Teams channel subscriptions also broke. No data leak, but two reminders in one package: security tooling that fires late is a silent risk factor (Miasma week!), and feature flags deserve the same rollout rigor as code.</p>
+        <div class="footnotes"><ol start="5">
+          <li><a href="https://www.githubstatus.com/">githubstatus.com — Incident History</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Let's Encrypt goes post-quantum—via Merkle trees <span class="h2-refs">[6][7]</span></h2>
+        <p>Arguably the most substantial web-standards news of the week: Let's Encrypt announced on 06/03 its path to post-quantum-safe authentication—and solves elegantly a problem most underestimate.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Post-quantum + Merkle-tree certificate (MTC):</strong> Post-quantum cryptography covers algorithms that a future quantum computer still can't break—but their signatures are <em>fat</em>. A Merkle tree is a family tree of hash values: you don't sign each leaf individually, but the root of the whole tree once, and for each leaf a short path upward serves as proof. Instead of "one fat signature per certificate," it's "one signature for a whole batch."
+        </div>
+        <p>Today's pain point: a typical web PKI handshake carries five signatures and two public keys. If you naively swap them out for ML-DSA (the post-quantum standard), a single TLS handshake balloons to "well over 10 kilobytes"—and that's what breaks connections.<sup>[6]</sup> MTC packs the authentication load <em>smaller</em> than today. Timeline: staging environment by end of 2026, production-ready in 2027. The IETF working group <em>PLANTS</em> is standardizing, Cloudflare and Chrome are already running field trials, and Chrome has named MTC the preferred post-quantum path.<sup>[6][7]</sup></p>
+        <p>Why it matters even though 2027 sounds distant: Let's Encrypt issues the majority of all public TLS certificates (industry reports cite ~54% in Q1 2026). What they choose as standard <em>becomes</em> the de-facto standard for encrypted web traffic. For us, that means: ACME, Caddy and others will need to catch up over the next one to two years—no action required today, but a date to keep in mind.</p>
+        <div class="footnotes"><ol start="6">
+          <li><a href="https://letsencrypt.org/2026/06/03/pq-certs">letsencrypt.org — A Post-Quantum Future</a></li>
+          <li><a href="https://www.heise.de/en/news/Post-Quantum-without-bloated-handshakes-Let-s-Encrypt-s-new-path-11319001.html">heise.de — Post-Quantum without bloated handshakes</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>FROST: the browser reads your SSD <span class="h2-refs">[8][9]</span></h2>
+        <p>Researchers at TU Graz (with Liebherr Transportation) demonstrated a side-channel attack called <strong>FROST</strong> that requires no click and no permission—entirely from the browser sandbox.<sup>[8]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Side-channel via OPFS:</strong> The "Origin Private File System" is browser storage where a website can place files without asking. FROST deliberately reads and writes there—and measures how long it takes. If another app simultaneously accesses the same SSD, tiny delays occur. From the pattern of these delays, the attacker infers which other apps or websites are open—like listening through a wall, but via SSD load.
+        </div>
+        <p>Hit rate: ~89% F1 in the closed-world test, ~87% in the open scenario.<sup>[8]</sup> OPFS is present in Chrome, Firefox, and Safari, so it's relevant cross-engine. This is research, not an active exploit—but a clean example of how each new web platform API is also a new measurement surface. Browser vendors will need to tighten here (reduce timing precision, decouple OPFS I/O).</p>
+        <div class="footnotes"><ol start="8">
+          <li><a href="https://hannesweissteiner.com/publications/frost/">hannesweissteiner.com — FROST (Paper)</a></li>
+          <li><a href="https://www.heise.de/en/news/Web-browsers-can-spy-on-information-via-SSD-access-times-11312045.html">heise.de — Browsers spy via SSD access times</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Browser cadence: Chrome 149 stable, Firefox 152 on 06/16 <span class="h2-refs">[10]</span></h2>
+        <p>Quiet release rhythm: <strong>Chrome 149</strong> has been stable since 06/02, Chrome 150 follows on 06/30. <strong>Firefox 151</strong> is current (since 05/19), 152 arrives on 06/16.<sup>[10]</sup> Nothing to upend your day—but for anyone running their own frontend, a heads-up that FROST (above) and the OPFS discussion are unfolding right in this engine window.</p>
+        <div class="footnotes"><ol start="10">
+          <li><a href="https://developer.chrome.com/release-notes/149">developer.chrome.com — Release Notes</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>CVE cluster: actively exploited flaws this week <span class="h2-refs">[11][12][13][14]</span></h2>
+        <p><strong>Cisco Unified CM (CVE-2026-20230):</strong> An SSRF hole in the WebDialer service, rated <em>critical</em> by Cisco despite CVSS 8.6, because it leads to unauthenticated root write access and privilege escalation. Published 06/03 (advisory <code>cisco-sa-cucm-ssrf-cXPnHcW</code>), PoC code is already public. Some reassurance: WebDialer is <em>off</em> by default—but anyone using CTI or click-to-call has it enabled. Fix in 14SU6; version 15 not until September (15SU5), interim COP patches available.<sup>[11]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">SSRF:</strong> "Server-side request forgery"—you trick the server into making a request on your behalf that you couldn't make yourself. Like convincing the security guard to unlock an interior door you're not authorized to access.
+        </div>
+        <p><strong>CISA KEV—newly added:</strong> On 06/02 two entries arrived: the Android framework zero-day <strong>CVE-2025-48595</strong> (integer overflow, local privilege escalation; Google: "may be limited, targeted exploitation," typical spyware pattern; fixed in June Android update, federal agency deadline was 06/05) and the old Linux cgroups bug <strong>CVE-2022-0492</strong>—four years old, now actively abused, classic container-escape risk.<sup>[12][13]</sup> On 06/03 came <strong>CVE-2026-45247</strong> (Mirasvit Full Page Cache deserialization)—Magento/Adobe Commerce ecosystem.<sup>[14]</sup></p>
+        <p>Not a "patch tonight" alarm—but the mix is instructive: a fresh zero-day, a four-year zombie, and an e-commerce plugin hole. For Daniel's world, it mainly underscores: container hosts with old kernels are not a "done" problem, and KEV lists deserve a weekly glance.</p>
+        <div class="footnotes"><ol start="11">
+          <li><a href="https://threat-modeling.com/cisco-unified-cm-ssrf-root-cve-2026-20230/">threat-modeling.com — Cisco Unified CM SSRF</a></li>
+          <li><a href="https://www.helpnetsecurity.com/2026/06/02/android-vulnerability-exploited-cve-2025-48595/">helpnetsecurity.com — Android CVE-2025-48595</a></li>
+          <li><a href="https://www.cisa.gov/news-events/alerts/2026/06/02/cisa-adds-two-known-exploited-vulnerabilities-catalog">cisa.gov — KEV Add 06/02</a></li>
+          <li><a href="https://www.cisa.gov/news-events/alerts/2026/06/03/cisa-adds-one-known-exploited-vulnerability-catalog">cisa.gov — KEV Add 06/03</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: from 06/11 the government machinery ramps up <span class="h2-refs">[15]</span></h2>
+        <p>The EU Cyber Resilience Act remains the ongoing thread with a concrete date: on <strong>06/11</strong> Chapter IV activates—the rules for designating conformity assessors. In Germany the BSI takes over and begins notifying third parties who may act as test facilities.<sup>[15]</sup></p>
+        <p>This is admin ramp-up first, no manufacturer pressure yet. That becomes concrete on <strong>09/11</strong>: from then the obligation to report flaws and incidents via the central platform kicks in (Art. 14). Full applicability then 12/11/2027. Relevant for Daniel as a solo developer if twiceD ever distributes a "product with digital elements" in the EU—so: note the dates, do nothing yet.</p>
+        <div class="footnotes"><ol start="15">
+          <li><a href="https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Cyber_Resilience_Act/cyber_resilience_act_node.html">bsi.bund.de — Cyber Resilience Act</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Brief notes</h2>
+        <p><strong>Linux 7.0</strong> is rolling out: the first major jump in over a decade arrived 04/12—not a fresh news peg, but anyone still on 6.x has a clear target now.<sup>[16]</sup> · <strong>OSS consolidation:</strong> Percona hard-forked the Crunchy Data PostgreSQL K8s operator (independent from 3.0.0)—another example of the "fork rather than depend" wave among license-critical infra building blocks.<sup>[17]</sup> · <strong>Microsoft Build 2026</strong> recordings (Windows Coreutils GA, WSL containers, Azure Linux 4.0) continue on-demand—context was in the 06/05 brief.</p>
+        <div class="footnotes"><ol start="16">
+          <li><a href="https://www.theregister.com/2026/04/13/linux_kernel_7_releaseed/">theregister.com — Linux 7.0</a></li>
+          <li><a href="https://www.percona.com/blog/not-all-open-source-is-equal-choosing-postgresql-operator-kubernetes-2026/">percona.com — PostgreSQL operator fork</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Saturday, June sixth. The news day itself is quiet, but this week's biggest stories have substance now—especially the Red Hat npm incident, which three security teams have now thoroughly dissected.</p>
+  <p>The worm called Miasma infected thirty-two packages under the Red Hat Cloud Services namespace, totaling about eighty thousand downloads per week. Wiz, Microsoft, and Palo Alto's Unit forty-two reach the same uncomfortable conclusion: The malicious packages carried genuine supply-chain certification, so-called SLSA provenance. The attacker compromised an employee account, bypassed code review, and then used GitHub Actions' normal publishing mechanism to obtain a valid token. The lesson: a signature proves where something came from—not whether it's clean.</p>
+  <p>Unit forty-two updated its npm threat picture right on cue. The message: the harmless phase of npm attacks is over. Today it's worm-like, self-propagating campaigns that specifically steal tokens and CI secrets. For Daniel's own projects, that means above all: keep tokens short-lived and regularly audit repositories for unfamiliar workflows.</p>
+  <p>The best news of the week comes from Let's Encrypt. They announced a path to quantum-safe certificates that elegantly solves the biggest problem. Quantum-safe signatures are huge—a single handshake would otherwise balloon to over ten kilobytes. With so-called Merkle-tree certificates, you no longer sign each certificate individually, but instead batch-sign many at once. The test environment arrives by year-end, production in twenty twenty-seven. Since Let's Encrypt issues the majority of all web certificates, this will become the de-facto standard.</p>
+  <p>On the vulnerability front, there's fresh action. Cisco disclosed a critically-rated flaw in its telephony software for which a proof-of-concept is already circulating. CISA added several actively exploited flaws to the list—including an Android zero-day and, oddly, a four-year-old Linux bug that allows container escapes.</p>
+  <p>From Graz comes an elegant attack idea called FROST: a website can guess which other apps are currently open just from solid-state drive access times—no permission required, right from the browser. This is still research, but it shows that every new browser interface is also a new measurement surface.</p>
+  <p>GitHub suffered a double setback: two days of Dependabot update delays across one and a half million repositories, then a brief authentication outage. Nothing dramatic, but during a supply-chain week, an unwelcome reminder that delayed security tooling is itself a risk.</p>
+  <p>On Thursday, June eleventh, the EU's machinery ramps up on the Cyber Resilience Act: the BSI begins designating test facilities. Real manufacturer pressure comes later in September. Next week we'll watch the Microsoft patch day and the fallout from npm week. In the meantime: rotate those tokens and enjoy your Saturday.</p>
+</div>
+
+</body>
+</html>

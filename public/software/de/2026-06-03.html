@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-06-03</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-06-03</span>
+  </div>
+  <h1 class="masthead-title">Build macht Windows zur Unix-Kiste — und npm brennt schon wieder</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Tag zwei der Microsoft Build: Die KI-Keynote lief beim Nachbarn (Details im ai-dev-Brief), aber das Dev-Tooling abseits davon ist diesmal richtig handfest — native Linux-Befehle in Windows, WSL-Container ohne Docker-Desktop, Post-Quanten-Krypto im TLS-Stack. Parallel zwei npm-Lieferketten-Vorfälle binnen 72 Stunden und zwei frische CISA-KEV-Einträge. Ein guter Tag, um die Supply-Chain-Hausaufgaben zu prüfen.</p>
+    <ul>
+      <li><span class="chip">Release · Global</span> <strong>Coreutils for Windows</strong>: 75+ Linux-Befehle (<code>ls</code>, <code>cp</code>, <code>grep</code>) laufen jetzt nativ auf Windows — GA, in Rust, ohne WSL.</li>
+      <li><span class="chip hot">Sec · Global</span> <strong>npm „Miasma"</strong>: 96 Versionen über 32 <code>@redhat-cloud-services</code>-Pakete kompromittiert — Worm klaut GitHub-, SSH-, Cloud-Tokens.</li>
+      <li><span class="chip hot">Sec · Global</span> <strong>33 Fake-npm-Pakete</strong> via Dependency-Confusion (Microsoft-TI) — noch im Recon-Modus, Schalter für Vollangriff schon drin.</li>
+      <li><span class="chip hot">Sec · USA</span> <strong>CISA KEV +2</strong> (02.06.): Linux-Kernel-cgroups CVE-2022-0492 und Android-Framework CVE-2025-48595, beide aktiv ausgenutzt.</li>
+      <li><span class="chip">Infra · Global</span> <strong>WSL-Container</strong>: Linux-Container direkt aus Windows, eigene CLI/API — Public Preview „coming soon".</li>
+      <li><span class="chip good">Sec · Global</span> <strong>PQC im Windows-TLS-Stack</strong>: Hybrid-Schlüsseltausch gegen den „jetzt mitschneiden, später entschlüsseln"-Angriff.</li>
+      <li><span class="chip">Web · Global</span> <strong>Chrome 149 stable</strong> (02.06.): CSS Gap Decorations, Scroll-Promises, BFCache trotz offenem WebSocket.</li>
+      <li><span class="chip">Regulierung · EU</span> <strong>CRA-Meldepflicht</strong> ab 11.09.2026: 24h-Frühwarnung, 72h-Vollmeldung für aktiv ausgenutzte Lücken.</li>
+      <li><span class="chip">Sec · Global</span> <strong>Android-Juni-Patch</strong>: 124 Lücken, darunter der aktiv ausgenutzte Zero-Day CVE-2025-48595.</li>
+      <li><span class="chip">OSS · BR</span> <strong>Nubank</strong> kündigt R$ 45 Mrd. Investition 2026 an — Engineering-Hiring inklusive.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Was diese Woche ansteht — Konferenz-Ende, Patch-Fristen, Releases</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Mi 03.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heute</span>
+          <span>Microsoft Build 2026, Tag 2 (letzter Tag)</span>
+          <span>Miasma-Fallout: betroffene <code>@redhat-cloud-services</code>-Versionen auditieren</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Do 04.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CISA-KEV-Frist läuft (BOD 22-01) für die 02.06.-Einträge an FCEB-Behörden</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fr 05.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Ruhiger Tag erwartet — Wochen-Patch-Welle ist durch</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Di 09.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Microsoft Patch Tuesday Juni</span>
+          <span>Adobe-/SAP-Patchday im selben Fenster</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fern</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>30.06: Chrome 150 stable erwartet</span>
+          <span>11.09: CRA-Meldepflicht greift (EU)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Build 2026: Windows wird zur ordentlichen Unix-Kiste <span class="h2-refs">[1][2]</span></h2>
+        <p>Die schlagzeilen-trächtige KI-Keynote der Microsoft Build (2.–3. Juni) liegt im Revier des ai-dev-Briefs — hier nur das, was Devs unabhängig von KI-Agenten direkt etwas bringt. Und das ist diesmal ungewöhnlich greifbar.</p>
+        <p><strong>Coreutils for Windows</strong> ist jetzt allgemein verfügbar: über 75 Linux-Standardbefehle — <code>ls</code>, <code>cp</code>, <code>mv</code>, <code>rm</code>, <code>cat</code>, <code>grep</code>, <code>find</code> — laufen nativ auf Windows, ohne WSL und ohne VM. Gebaut aus dem Open-Source-Projekt <em>uutils</em>, einer Neuimplementierung der GNU Coreutils in Rust.<sup>[1]</sup> Technisch ein einziges <code>coreutils.exe</code>, auf das NTFS-Hardlinks (<code>ls.exe</code>, <code>cp.exe</code> …) zeigen.<sup>[2]</sup> Für jeden, der zwischen Linux-Server und Windows-Laptop pendelt, verschwindet damit ein täglicher Reibungspunkt in der Shell.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Coreutils:</strong> Das sind die kleinen Grundbefehle, mit denen man auf Linux durch Ordner läuft, Dateien kopiert und Text filtert — wie das Grundbesteck in der Küche. Bisher hieß dasselbe Besteck auf Windows anders und lag in einer anderen Schublade; jetzt liegt das Linux-Besteck direkt in der Windows-Küche.
+        </div>
+      </section>
+
+      <section class="news-item">
+        <h2>WSL-Container & Dev-Configs: weniger Setup-Reibung <span class="h2-refs">[2]</span></h2>
+        <p>Zweiter handfester Build-Punkt: <strong>WSL-Container</strong> — eine eingebaute Möglichkeit, Linux-Container über vertraute CLI und API direkt aus Windows zu erzeugen, zu starten und anzusteuern; Public Preview laut Microsoft „coming soon".<sup>[2]</sup> Das ist die Container-Engine ein Stück tiefer im OS, ohne den Umweg über eine separate Desktop-App.</p>
+        <p>Dazu <strong>Windows Developer Configurations</strong>: von der frischen Maschine zur einsatzbereiten Umgebung „in Minuten", mit vorkonfigurierten Tools — WSL, PowerShell 7, Git, GitHub CLI, VS Code, Python.<sup>[2]</sup> Für Daniels Stack (Java/Spring, Angular, Python, Docker) heißt das: weniger manuelles Nachziehen beim Aufsetzen, mehr reproduzierbarer Startpunkt. Kein Weltwunder, aber spart real Stunden bei jedem neuen Gerät.</p>
+      </section>
+
+      <section class="news-item">
+        <h2>Post-Quanten-Krypto landet im Windows-TLS-Stack <span class="h2-refs">[2]</span></h2>
+        <p>Build-Punkt drei aus der Trust-Ecke: Windows erweitert die Post-Quanten-Kryptografie um <strong>PQ-Hybrid-Schlüsseltausch im TLS-Stack</strong> und in den Zertifikatsdiensten.<sup>[2]</sup> „Hybrid" heißt: ein klassisches und ein quanten-resistentes Verfahren laufen zusammen, sodass die Verbindung selbst dann sicher bleibt, wenn eines der beiden später knackbar wird.</p>
+        <div class="eli5">
+          <strong class="eli5-term">„Harvest now, decrypt later":</strong> Angreifer schneiden heute verschlüsselten Verkehr einfach mit und heben ihn auf — in der Hoffnung, ihn in zehn Jahren mit einem Quantencomputer zu entschlüsseln. Wie ein abgeschlossener Brief, den jemand klaut und einlagert, bis er irgendwann den passenden Schlüssel hat. PQ-Krypto sorgt dafür, dass der Brief auch dann noch zu ist.
+        </div>
+        <p>Praktisch heute noch kein Handlungsdruck, aber die Richtung ist gesetzt — TLS-Bibliotheken und -Konfigurationen werden in den nächsten Jahren hybride Suites als Default sehen. Wer eigene TLS-Endpunkte betreibt (Caddy, Reverse-Proxies), sollte das auf dem Schirm behalten.</p>
+        <div class="footnotes"><ol>
+          <li id="fn1"><a href="https://www.bleepingcomputer.com/news/microsoft/microsofts-coreutils-project-brings-linux-commands-to-windows/">bleepingcomputer.com — Coreutils for Windows</a></li>
+          <li id="fn2"><a href="https://blogs.windows.com/windowsdeveloper/2026/06/02/build-2026-furthering-windows-as-the-trusted-platform-for-development/">blogs.windows.com — Build 2026 Developer Blog</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Chrome 149 stable: CSS Gap Decorations & Scroll-Promises <span class="h2-refs">[3][4]</span></h2>
+        <p>Chrome 149 ist am 02.06.2026 in den Stable-Kanal gegangen (Android, ChromeOS, Linux, macOS, Windows).<sup>[3]</sup> Für Frontend-Arbeit relevant: <strong>CSS Gap Decorations</strong> — Lücken in Grid/Flexbox lassen sich endlich direkt stylen (neue Properties wie <code>column-rule-inset</code>, <code>row-rule-visibility-items</code>), analog zu <code>column-rule</code> im Mehrspalten-Layout.<sup>[4]</sup></p>
+        <p>Dazu <strong>Scroll-Promises</strong>: <code>element.scrollTo()</code> gibt jetzt ein Promise zurück — eine alte Lücke, die das Warten aufs Ende einer Scroll-Animation ohne Timer-Gefrickel ermöglicht. Außerdem darf eine Seite mit offenem WebSocket jetzt in den Back-/Forward-Cache, weil der Socket beim Eintritt proaktiv geschlossen wird. Kleinkram einzeln, aber genau die Plattform-Lücken, die man als Angular/React-Dev sonst mit Polyfills überbrückt.</p>
+        <div class="footnotes"><ol start="3">
+          <li id="fn3"><a href="https://developer.chrome.com/release-notes/149">developer.chrome.com — Chrome 149 Release Notes</a></li>
+          <li id="fn4"><a href="https://developer.chrome.com/blog/new-in-chrome-149">developer.chrome.com — New in Chrome 149</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>BR-Tech: Nubank investiert R$ 45 Mrd. in 2026 <span class="h2-refs">[5]</span></h2>
+        <p>Nubank kündigt für 2026 eine Investition von R$ 45 Mrd. (≈ 8,2 Mrd. US$) in Brasilien an — fast doppelt so viel wie vor zwei Jahren; das Geld geht laut Unternehmen in Produkte, Büro-Expansion, Hiring und finanzielle Inklusion (sowie KI).<sup>[5]</sup> Für die BR-Engineering-Szene heißt das vor allem: anhaltend hohe Nachfrage nach Entwicklern in einem der größten lokalen Tech-Arbeitgeber (131 Mio. Kunden weltweit, davon ~113 Mio. in Brasilien). Kein Code-Thema im engeren Sinn, aber ein Signal für den Arbeitsmarkt, in dem Daniel sitzt.</p>
+        <div class="footnotes"><ol start="5">
+          <li id="fn5"><a href="https://international.nubank.com.br/company/nubank-to-invest-r-45-billion-in-brazil-in-2026/">nubank.com.br — R$ 45 bn Investment 2026</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>npm „Miasma": Red-Hat-Pakete als Wurm-Vehikel <span class="h2-refs">[6][7]</span></h2>
+        <p>Am 01.06.2026 entdeckte Wiz Research eine Lieferketten-Kompromittierung im npm-Namespace <code>@redhat-cloud-services</code>: mindestens 32 Pakete, insgesamt <span class="stat">96 Versionen</span>, enthielten unautorisierte Änderungen, die nicht zu den Quell-Repos passen.<sup>[6]</sup> Auslöser war ein gekapertes GitHub-Konto eines Red-Hat-Mitarbeiters; der Angreifer schob bösartige GitHub-Actions-Workflows in drei RedHatInsights-Repos.<sup>[7]</sup></p>
+        <p>Die Malware — getauft <strong>„Miasma"</strong>, eine Variante der Mini-Shai-Hulud-Familie — lief über einen <code>preinstall</code>-Script: der Payload startet automatisch bei <code>npm install</code>, vor dem eigentlichen App-Code und ohne sichtbare Warnung. Sie sammelt GitHub-Tokens, SSH-Keys und Cloud-Credentials (neu in dieser Variante: GCP- und Azure-Identitäten).<sup>[6]</sup> Jede Infektion bekommt einen einzigartig verschlüsselten Payload — Hash-basierte IOCs taugen damit nur pro Paketversion.</p>
+        <div class="eli5">
+          <strong class="eli5-term">preinstall-Script:</strong> npm darf bei der Installation eines Pakets vorab ein Skript ausführen — gedacht für Setup-Arbeit. Wie ein Möbelstück, das beim Auspacken selbsttätig einen Helfer losschickt. Ist das Paket bösartig, läuft fremder Code auf deiner Maschine, bevor du auch nur eine Zeile davon importiert hast.
+        </div>
+        <div class="callout warn">
+          <span class="callout-label">Achtung</span> Wer <code>@redhat-cloud-services</code>-Pakete zieht: betroffene Versionen auditieren, GitHub-Tokens/SSH-Keys/Cloud-Credentials rotieren, CI/CD-Umgebungen prüfen. Generell hilft <code>npm install --ignore-scripts</code> als Default gegen genau diese Klasse.
+        </div>
+        <div class="footnotes"><ol start="6">
+          <li id="fn6"><a href="https://www.wiz.io/blog/miasma-supply-chain-attack-targeting-redhat-npm-packages">wiz.io — Miasma Supply-Chain-Attack</a></li>
+          <li id="fn7"><a href="https://www.securityweek.com/supply-chain-attack-hits-32-red-hat-npm-packages/">securityweek.com — 32 Red-Hat-npm-Pakete</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>33 Fake-npm-Pakete via Dependency-Confusion <span class="h2-refs">[8]</span></h2>
+        <p>Fast zeitgleich (28.–29.05.) deckte Microsoft Threat Intelligence eine zweite Kampagne auf: <span class="stat">33 bösartige npm-Pakete</span> über drei Wellen, verteilt auf neun Organisations-Scopes, die echte interne Firmen-Namespaces nachahmen — klassische <strong>Dependency-Confusion</strong>.<sup>[8]</sup> Hinter den drei Maintainer-Aliassen (<code>mr.4nd3r50n</code>, <code>ce-rwb</code>, <code>t-in-one</code>) steckt laut gemeinsamer C2-Infrastruktur ein einzelner Akteur.</p>
+        <p>Bemerkenswert: Die Pakete waren noch im <em>Recon-Modus</em> — sie sammelten System-Infos, Hostnames, Umgebungsvariablen und Entwickler-Kontext, mit einem eingebauten Schalter für Vollausbeutung in Folgeangriffen. Also Aufklärung vor dem eigentlichen Schlag.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Dependency-Confusion:</strong> Firmen nutzen oft interne Pakete mit eigenen Namen. Lädt jemand ein gleichnamiges Paket öffentlich hoch, kann der Paketmanager versehentlich das öffentliche (bösartige) statt des internen ziehen. Wie ein Paketbote, der ein untergeschobenes Paket mit deinem Namen drauf einfach mit annimmt.
+        </div>
+        <div class="callout info">
+          <span class="callout-label">Mitigation</span> Microsoft rät: interne Registries scope-locken (kein Fallback auf öffentliches npm), Post-Install-Scripts deaktivieren, Egress zur C2-Domain blocken, CI/CD-Logs prüfen. Für eigene Projekte: Scoped-Packages und ein vorgeschalteter Registry-Proxy.
+        </div>
+        <div class="footnotes"><ol start="8">
+          <li id="fn8"><a href="https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-npm-packages-abuse-dependency-confusion-profile-developer-environments/">microsoft.com — 33 malicious npm packages</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>CISA KEV: zwei frische Einträge am 02.06. <span class="h2-refs">[9][10]</span></h2>
+        <p>CISA hat am 02.06.2026 zwei aktiv ausgenutzte Lücken in den KEV-Katalog aufgenommen:<sup>[9]</sup></p>
+        <ul>
+          <li><strong>CVE-2022-0492</strong> — Linux-Kernel, cgroups v1: ein Logik-Bug im <code>release_agent</code> erlaubt Privilege-Escalation und potenziell Container-Ausbruch. Betrifft die ältere, aber noch weit verbreitete cgroup-v1-Architektur.<sup>[10]</sup> Eine alte Lücke (2022), die jetzt offenbar wieder aktiv missbraucht wird — Container-Hosts patchen bzw. auf cgroup v2 prüfen.</li>
+          <li><strong>CVE-2025-48595</strong> — Android-Framework, Integer-Overflow: lokale Privilege-Escalation ohne Nutzer-Interaktion. Google spricht von „limited, targeted exploitation" — das Muster, das oft mit Spyware-Anbietern verbunden ist.</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">CISA-KEV-Katalog:</strong> Eine Liste von Lücken, die nachweislich in freier Wildbahn ausgenutzt werden. US-Bundesbehörden müssen die bis zu einer Frist schließen — für alle anderen ist die Liste ein priorisiertes „diese zuerst patchen", weil Angreifer sie real benutzen.
+        </div>
+        <div class="footnotes"><ol start="9">
+          <li id="fn9"><a href="https://www.cisa.gov/news-events/alerts/2026/06/02/cisa-adds-two-known-exploited-vulnerabilities-catalog">cisa.gov — KEV-Add 02.06.2026</a></li>
+          <li id="fn10"><a href="https://unit42.paloaltonetworks.com/cve-2022-0492-cgroups/">unit42.paloaltonetworks.com — CVE-2022-0492 cgroups</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Palo Alto GlobalProtect: CVE-2026-0257 aktiv ausgenutzt <span class="h2-refs">[11]</span></h2>
+        <p>Die GlobalProtect-Lücke <strong>CVE-2026-0257</strong> wird aktiv ausgenutzt; der CVSS-Wert (v4.0) liegt bei <span class="stat">7,8</span> (hoch). Sie erlaubt unautorisierten Nutzern, die Authentifizierung der Remote-Access-Funktion zu umgehen.<sup>[11]</sup> Patches liegen für PAN-OS 10.2, 11.1, 11.2 und 12.1 sowie Prisma Access 10.2/11.2 vor; CISA-KEV-Frist für Behörden war der 01.06. Wer ein PAN-Gateway betreibt, sollte längst gepatcht haben — der Eintrag steht hier als Erinnerung, nicht als Alarm.</p>
+        <div class="footnotes"><ol start="11">
+          <li id="fn11"><a href="https://borncity.com/news/palo-alto-globalprotect-kritische-luecke-cve-2026-0257-wird-aktiv-ausgenutzt/">borncity.com — Palo Alto GlobalProtect CVE-2026-0257</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Android-Juni-Patch: 124 Lücken, ein Zero-Day <span class="h2-refs">[12]</span></h2>
+        <p>Googles Android-Sicherheitsupdate für Juni 2026 schließt 124 Schwachstellen, darunter der oben genannte aktiv ausgenutzte Zero-Day CVE-2025-48595.<sup>[12]</sup> Für Daniel als Dev kein Code-Thema, aber Geräte-Hygiene: Update zeitnah einspielen, gerade wenn das Telefon im 2FA-/Token-Pfad für Konten hängt, die auch im Dev-Alltag wichtig sind.</p>
+        <div class="footnotes"><ol start="12">
+          <li id="fn12"><a href="https://thehackernews.com/2026/06/google-june-2026-android-update-patches.html">thehackernews.com — Android-Juni-Patch 2026</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>EU-Regulierung: CRA-Meldepflicht ab 11.09.2026 <span class="h2-refs">[13]</span></h2>
+        <p>Standing Thread, weil die Frist näher rückt: Die Melde-Pflichten des EU Cyber Resilience Act (CRA) greifen ab dem 11.09.2026. Hersteller von „Produkten mit digitalen Elementen" müssen aktiv ausgenutzte Schwachstellen und schwere Vorfälle melden — <strong>Frühwarnung binnen 24 Stunden</strong>, Vollmeldung binnen 72 Stunden — über die CRA Single Reporting Platform, die ENISA gerade baut.<sup>[13]</sup> Die Hauptpflichten des CRA gelten ab 11.12.2027, aber die Meldepflicht ist die erste scharfe Frist.</p>
+        <div class="eli5">
+          <strong class="eli5-term">CRA / SBOM:</strong> Der CRA verlangt u. a. eine maschinenlesbare Stückliste der Software-Bestandteile (Software Bill of Materials) — wie eine Zutatenliste auf der Verpackung, nur für alle Bibliotheken im Produkt. Ohne reifen SBOM-Prozess sind die Melde-Fristen kaum einzuhalten.
+        </div>
+        <p>Für Daniel/twiceD-relevant, sobald ein verkauftes Produkt mit digitalen Elementen in den EU-Markt geht: SBOM-Pipeline und einen Melde-Prozess früh einplanen, nicht erst im September nachziehen.</p>
+        <div class="footnotes"><ol start="13">
+          <li id="fn13"><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">ec.europa.eu — CRA Reporting Obligations</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>OSS-Politik: OpenSSF & der Stand der Lieferketten-Werkzeuge <span class="h2-refs">[14]</span></h2>
+        <p>Passend zum npm-Doppelschlag: Die OpenSSF (Open Source Security Foundation) meldet aus dem Mai fünf neue Mitglieder, die erste Ambassador-Kohorte und den v1.0.0 des Python Secure Coding Guide.<sup>[14]</sup> Außerdem ist das nach der DARPA-AI-Cyber-Challenge entstandene Open Source Cyber Reasoning System (OSS-CRS) jetzt offiziell unter dem OpenSSF-Dach — autonomes Finden und Patchen von Lücken. Praktischer Mehrwert für Daniel: Wer Lieferketten härtet, findet bei OpenSSF die kostenlosen Bausteine (SBOM-Tooling, Scorecards, Sigstore) — genau das, was die beiden npm-Vorfälle dieser Woche unterstreichen.</p>
+        <div class="footnotes"><ol start="14">
+          <li id="fn14"><a href="https://openssf.org/newsletter/2026/05/28/openssf-newsletter-may-2026/">openssf.org — Newsletter Mai 2026</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert: Releases im Hintergrund</h2>
+        <p>Kein eigener Aufhänger, aber für die Versions-Hygiene: <strong>PostgreSQL 18.4</strong> (sowie 17.10/16.14/15.18/14.23) kam am 14.05. als Minor-Release.<sup>[15]</sup> <strong>Node.js 26</strong> läuft als „Current" (V8 14.6, Temporal-API per Default an) und geht im Oktober in LTS. Beides ruhig — Punkt-Releases einplanen, keine Eile.</p>
+        <div class="footnotes"><ol start="15">
+          <li id="fn15"><a href="https://www.postgresql.org/about/news/postgresql-184-1710-1614-1518-and-1423-released-3297/">postgresql.org — 18.4 Minor-Release</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Mittwoch, der dritte Juni, der zweite und letzte Tag der Microsoft Build. Die große KI-Show besprechen wir nicht hier — die gehört in den Entwickler-KI-Brief. Spannend ist diesmal das Dev-Tooling daneben, und das ist ungewöhnlich handfest.</p>
+  <p>Windows wird ein Stück mehr zur Unix-Kiste. Coreutils für Windows ist allgemein verfügbar: über fünfundsiebzig Linux-Standardbefehle wie ls, cp und grep laufen jetzt nativ auf Windows, ohne Umweg über das Linux-Subsystem, gebaut in der Sprache Rust. Dazu kommen eingebaute Linux-Container direkt aus Windows heraus und ein Setup, das eine frische Maschine in Minuten arbeitsbereit macht. Für jeden, der zwischen Server und Windows-Laptop pendelt, verschwindet damit täglicher Reibungsverlust.</p>
+  <p>Microsoft härtet außerdem die Verschlüsselung: Post-Quanten-Kryptografie zieht in den TLS-Stack ein. Der Hintergrund ist das Mitschneiden von verschlüsseltem Verkehr heute, in der Hoffnung, ihn später mit einem Quantencomputer zu knacken. Heute kein Handlungsdruck, aber die Richtung ist gesetzt.</p>
+  <p>Auf der Sicherheitsseite brennt npm gleich zweimal. Am ersten Juni fand die Firma Wiz eine Kompromittierung im Red-Hat-Paket-Bereich: sechsundneunzig Versionen über zweiunddreißig Pakete wurden mit einem Wurm namens Miasma verseucht, der GitHub-Tokens, SSH-Schlüssel und Cloud-Zugänge abgreift. Er läuft über ein Vorab-Installations-Skript, also schon bevor man eine einzige Zeile importiert.</p>
+  <p>Fast zeitgleich deckte Microsoft eine zweite Kampagne auf: dreiunddreißig gefälschte npm-Pakete, die echte interne Firmen-Namen nachahmen. Sie waren noch im Aufklärungs-Modus, sammelten also Umgebungs-Informationen, hatten aber einen Schalter für den späteren Vollangriff schon eingebaut. Die Lehre für beide Fälle ist dieselbe: Installations-Skripte standardmäßig abschalten und interne Paket-Quellen fest verriegeln.</p>
+  <p>Die US-Behörde CISA nahm am zweiten Juni zwei aktiv ausgenutzte Lücken in ihren Pflicht-Patch-Katalog auf: einen alten Linux-Kernel-Fehler in den Control Groups, der einen Container-Ausbruch erlaubt, und eine Android-Lücke, die offenbar gezielt für Spionage genutzt wird. Dazu schließt Googles Juni-Update für Android hundertvierundzwanzig Schwachstellen.</p>
+  <p>Im Browser ging Chrome hundertneunundvierzig am zweiten Juni in die stabile Version: man kann jetzt die Abstände in Grid- und Flexbox-Layouts direkt stylen, und das Scrollen per Skript gibt endlich ein Versprechen zurück, auf das man sauber warten kann.</p>
+  <p>In Europa rückt eine Frist näher: Ab dem elften September greift die Meldepflicht des Cyber Resilience Act. Hersteller müssen aktiv ausgenutzte Lücken binnen vierundzwanzig Stunden früh-melden und binnen zweiundsiebzig Stunden voll melden. Wer Software in den EU-Markt bringt, sollte jetzt eine Software-Stückliste und einen Melde-Prozess aufsetzen.</p>
+  <p>Aus Brasilien: Nubank kündigt fünfundvierzig Milliarden Real Investition für dieses Jahr an, inklusive Engineering-Hiring. Morgen wird ruhiger — die wöchentliche Patch-Welle ist durch, der nächste große Termin ist der Microsoft-Patchday am neunten Juni. Bis dahin.</p>
+</div>
+
+</body>
+</html>

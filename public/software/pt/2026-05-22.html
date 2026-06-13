@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-05-22</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Edição 22/05/2026</span>
+  </div>
+  <h1 class="masthead-title">Docker corrige três escapes via <code>docker cp</code> para root do host</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Sexta-feira, e o fio condutor da semana é desconfortavelmente concreto: as fronteiras em que os desenvolvedores confiam estão todas vazando ao mesmo tempo. O <strong>isolamento de contêineres</strong> — a Docker fecha três caminhos no <code>docker cp</code> que permitem a um contêiner malicioso escalar para root do host, e a containerd corrige em paralelo um bypass de <code>runAsNonRoot</code>. A <strong>camada de banco de dados</strong> — um bug de SQL injection no core do Drupal atinge <em>apenas</em> instalações PostgreSQL, risco 23/25, e a partir de hoje o Drupal diz que tentativas de exploração estão sendo observadas na prática. E a <strong>cadeia de suprimentos</strong> — o verme Shai-Hulud do brief anterior rolou pelo ecossistema AntV como "Wave 5": ~639 versões envenenadas em cerca de meia hora, e o código do verme agora é público. O contrapeso vem do lado das linguagens: o TC39 finalizou o <code>using</code> em Amsterdã (ES2026), o JDK 27 está se consolidando, o Node lançou um patch LTS fresco. E a máquina de soberania da UE está esquentando: CADA na segunda, um contrato de nuvem de € 250 mi na Alemanha.</p>
+    <ul>
+      <li><span class="chip hot">Infra</span> <strong>Docker Engine 29.5.1</strong> (18/05): três falhas no <code>docker cp</code> — <strong>CVE-2026-41567</strong> (binário como root do host via <code>PATH</code> do contêiner), <strong>CVE-2026-42306</strong> (redirecionamento TOCTOU de bind mount), <strong>CVE-2026-41568</strong> (criação de arquivo TOCTOU). A Docker as chama de "critical"; os registros GHSA dizem High/High/Medium. O <strong>29.5.2</strong> (20/05) corrige uma regressão.</li>
+      <li><span class="chip hot">Infra</span> <strong>containerd</strong> <strong>CVE-2026-46680</strong> (CVSS v4 <span class="stat">7,3</span>): bypass de <code>runAsNonRoot</code> — um contêiner declarado como non-root ainda pode rodar como root. Corrigido em 2.3.1 / 2.2.4 / 2.0.9 / 1.7.32 (20/05).</li>
+      <li><span class="chip hot">Sec</span> <strong>Drupal SA-CORE-2026-004</strong> (CVE-2026-9082): SQL injection sem autenticação, <strong>apenas PostgreSQL</strong>, risco <span class="stat">23/25</span> — mas NVD só <span class="stat">6,5</span> MEDIUM. A partir de hoje (22/05), tentativas de exploração relatadas na prática. Corrigido em 11.3.10/11.2.12/11.1.10/10.6.9/10.5.10.</li>
+      <li><span class="chip hot">Cadeia de suprimentos</span> <strong>Mini Shai-Hulud "Wave 5"</strong> (19/05): via um mantenedor <code>atool</code> sequestrado, ~<strong>639 versões maliciosas em 323 pacotes</strong> no ecossistema AntV em ~30 min (echarts-for-react, @antv/g2/g6). Código do verme público desde 12/05 → risco de imitadores.</li>
+      <li><span class="chip">Sec</span> <strong>CISA KEV</strong>: em 21/05, <strong>Langflow</strong> (CVE-2025-34291, CVSS <span class="stat">9,4</span>) + Trend Micro Apex One; em 20/05, sete CVEs (incl. dois bugs do MS Defender). Prazo FCEB para as adições de 21/05: 04/06.</li>
+      <li><span class="chip good">Release</span> <strong>Node.js 26.2.0</strong> (Current, 20/05) &amp; <strong>24.16.0 "Krypton"</strong> (Active LTS, 21/05) — o patch LTS chegou ontem, essa é a linha de produção.</li>
+      <li><span class="chip good">JVM</span> <strong>JDK 27</strong> build 22 do EA: três JEPs <em>Proposed to Target</em> (revisão encerrada em 19/05) — <strong>JEP 523</strong> (G1 como GC padrão em todo lugar), <strong>JEP 534</strong> (Compact Object Headers por padrão), <strong>JEP 537</strong> (Vector API, 12ª incubadora).</li>
+      <li><span class="chip good">Web</span> <strong>TC39 #114 Amsterdã</strong> encerrada: <strong><code>using</code> / Explicit Resource Management → Stage 4</strong> (ES2026), além de Atomics.pause &amp; Iterator.zip. <strong>Decorators</strong> só de 2 → 2.7 — ainda não Stage 3.</li>
+      <li><span class="chip good">Browser</span> <strong>Angular 22.0.0-rc.1</strong> (20/05) + patch 21.2.14; <strong>Firefox 152 beta</strong> (20/05): <code>field-sizing</code>, passkeys entre domínios. Chrome continua no 148 (149 ~02/06).</li>
+      <li><span class="chip">EU</span> <strong>CADA</strong>: adoção pela Comissão na <strong>seg 27/05</strong> (pacote de soberania tecnológica). Um rascunho vazado avalia restringir nuvem dos EUA para dados <em>governamentais</em> sensíveis — não é proibição, não toca a iniciativa privada.</li>
+      <li><span class="chip">DE</span> <strong>Cluster de soberania</strong>: contrato de € 250 mi para uma nuvem (de IA) soberana para T-Systems+SAP / SVA+Schwarz Digits+Codesphere; "Deutschland-Stack" detalhado; STF investe € 1,29 mi na KDE.</li>
+      <li><span class="chip">OSS</span> <strong>OpenSSF Community Day NA</strong> (21/05): Python Secure Coding Guide <strong>v1.0.0</strong>, OSS-CRS aceito como projeto Sandbox, primeiro grupo de Ambassadors. A sessão de Sigstore quântico não trouxe entregável anunciado.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Próximos dias</div>
+      <div class="timeline-sub">O que os próximos dias trazem</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Sex 22/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Hoje</span>
+          <span><strong>Fila de patches</strong>: Docker 29.5.2 · containerd 2.3.1 · Tailscale 1.98.3</span>
+          <span>SQLi do Drupal: tentativas de exploração relatadas na prática</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Seg 27/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>UE CADA</strong> · adoção pela Comissão (adiada 2×)</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Seg 01/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Release train do Spring</strong> 01–05/06 (Boot 4.1)</span>
+          <span><strong>Prazo de interop DMA-Apple</strong></span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Ter 02/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Chrome 149 stable (esperado)</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Qui 04/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>JDK 27 RDP1</strong> · feature freeze bifurca</span>
+          <span>Prazo CISA KEV: Langflow / Apex One</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Docker — três caminhos do contêiner ao root do host via <code>docker cp</code></h2>
+        <p>Este é o patch obrigatório da semana, e ele fica bem no stack do Daniel. O <strong>Docker Engine 29.5.1</strong> (18/05) fecha três falhas que compartilham um núcleo: um <em>contêiner malicioso</em> pode escapar durante o aparentemente inofensivo <code>docker cp</code> e alcançar o sistema de arquivos do host, porque a lógica de cópia roda com privilégios de root do host. <strong>CVE-2026-41567</strong>: os binários de descompressão (<code>xz</code>, <code>unpigz</code>) são resolvidos pelo <code>PATH</code> <em>dentro do contêiner</em> — um binário plantado então roda como root do host. <strong>CVE-2026-42306</strong>: uma corrida TOCTOU redireciona um bind mount para um caminho arbitrário no host. <strong>CVE-2026-41568</strong>: uma troca de symlink TOCTOU cria arquivos/diretórios arbitrários no host. A Docker classifica todas as três como "critical"; os registros GHSA correspondentes atribuem High/High/Medium <a href="https://docs.docker.com/engine/release-notes/29/">[1]</a>.</p>
+        <div class="eli5">
+          <strong class="eli5-term">TOCTOU (time-of-check / time-of-use):</strong> Como o segurança conferindo sua identidade, você trocando-a por uma falsa num piscar de olhos, e o carimbo indo para a carteirinha errada. O programa verifica um caminho, o atacante o altera na fração de segundo entre as etapas, e a ação privilegiada atinge o alvo plantado — aqui, um caminho do host em vez do caminho esperado do contêiner.
+        </div>
+        <p>O <strong>29.5.2</strong> (20/05) é o complemento: o 29.5.1 introduziu uma regressão na qual o <code>docker cp</code> com bind mounts atravessando symlinks dentro do contêiner (<code>/var/run → /run</code>) falhava com "mkdirat: file exists". Então, se você já pulou para o 29.5.1, pegue o 29.5.2 já <a href="https://docs.docker.com/engine/release-notes/29/">[1]</a>.</p>
+        <div class="callout warn">
+          <span class="callout-label">O que fazer hoje</span>
+          Verifique a versão da engine (<code>docker version</code>) e suba para a <strong>29.5.2</strong>. O ataque exige um contêiner comprometido ou hostil que intercepte um <code>docker cp</code> — quem roda imagens de terceiros ou contêineres de CI disparados por PR é o alvo principal. Até corrigir, não rode <code>docker cp</code> contra contêineres não confiáveis.
+        </div>
+        <div class="footnotes"><ol>
+          <li><a href="https://docs.docker.com/engine/release-notes/29/">docs.docker.com/engine/release-notes/29</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>containerd — <code>runAsNonRoot</code> era um pedido, não uma tranca</h2>
+        <p>Um andar abaixo, no mesmo dia: <strong>CVE-2026-46680</strong> (GHSA-fqw6-gf59-qr4w, CVSS v4 <span class="stat">7,3</span>) na containerd. O tratamento de user-ID pode ser enganado de modo que um contêiner que deveria rodar <em>sem</em> ser root via <code>runAsNonRoot</code> rode mesmo assim. Isso derruba uma das garantias de hardening padrão de que os perfis de pod-security do Kubernetes dependem. Afetados: 1.7.27–1.7.31, 2.0.4–2.0.8, 2.1.0–2.2.3 e 2.3.0-beta–2.3.0; corrigido em <strong>2.3.1 / 2.2.4 / 2.0.9 / 1.7.32</strong> (20/05). Correção ao brief de quarta: a CVE desta onda é a 2026-46680, não o número de spdystream citado lá <a href="https://github.com/containerd/containerd/releases/tag/v2.3.1">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://github.com/containerd/containerd/releases/tag/v2.3.1">github.com/containerd/releases/v2.3.1</a> · GHSA-fqw6-gf59-qr4w</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>SQLi no core do Drupal — só Postgres, e já na prática</h2>
+        <p>O release "highly critical" do Drupal anunciado na quarta chegou: <strong>SA-CORE-2026-004</strong> / <strong>CVE-2026-9082</strong> (20/05). Uma SQL injection sem autenticação na abstração de banco do core — com a reviravolta interessante para o Daniel: atinge <strong>apenas instalações PostgreSQL</strong> (MySQL/MariaDB/SQLite e Drupal 7 estão fora). O modelo de risco do próprio Drupal a classifica em <span class="stat">23/25</span> ("highly critical"), enquanto o NVD atribui só <span class="stat">6,5</span> MEDIUM — o mesmo efeito de divergência de score do Exchange na semana passada, e os dois valores merecem ser citados. Mais urgente é a atualização de hoje no próprio advisory: o score de risco foi elevado porque <strong>tentativas de exploração estão sendo observadas na prática desde 22/05</strong>. Corrigido em 11.3.10/11.2.12/11.1.10/10.6.9/10.5.10 (mais patches manuais para os ramos EOL) <a href="https://www.drupal.org/sa-core-2026-004">[1]</a><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-9082">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.drupal.org/sa-core-2026-004">drupal.org/sa-core-2026-004</a> (atualizado 22/05)</li>
+          <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-9082">nvd.nist.gov/CVE-2026-9082</a> · <a href="https://www.tenable.com/blog/cve-2026-9082-highly-critical-sql-injection-vulnerability-in-drupal-core-sa-core-2026-004">tenable.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Shai-Hulud Wave 5 — o verme rola pelo AntV</h2>
+        <p>O verme npm/PyPI autorreplicante do brief anterior não esfriou — está escalando. Em <strong>19/05</strong> (01:39–02:06 UTC) uma quinta onda atingiu o ecossistema <strong>AntV</strong>: por meio de uma conta de mantenedor <code>atool</code> comprometida, ~<strong>639 versões maliciosas em 323 pacotes</strong> foram publicadas em cerca de meia hora — aproximadamente 7,6× a onda da TanStack. Afetados são pacotes com milhões de downloads semanais (<code>echarts-for-react</code>, <code>size-sensor</code>, <code>@antv/g2</code>, <code>@antv/g6</code>). Pior: o código totalmente armado do verme foi postado publicamente no GitHub em <strong>12/05</strong> (já removido) — a técnica não é mais exclusiva do grupo original, e imitadores são o novo risco. Continua sendo o primeiro caso documentado de pacotes npm maliciosos com provenance SLSA válida <a href="https://snyk.io/blog/mini-shai-hulud-antv-npm-supply-chain-attack/">[1]</a><a href="https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attacks/">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://snyk.io/blog/mini-shai-hulud-antv-npm-supply-chain-attack/">snyk.io (19/05)</a></li>
+          <li><a href="https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attacks/">unit42.paloaltonetworks.com (atualizado 21/05)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>CISA KEV — Langflow, Apex One e sete atrasados</h2>
+        <p>Duas ondas frescas de KEV desde quarta. Em <strong>21/05</strong> chegaram <strong>CVE-2025-34291</strong> (Langflow, CVSS <span class="stat">9,4</span> — uma cadeia CORS/CSRF/code-exec por design até RCE que vaza tokens de workspace e chaves de API) e <strong>CVE-2026-34926</strong> (Trend Micro Apex One on-prem, directory traversal pré-autenticação); prazo FCEB <strong>04/06</strong>. Em <strong>20/05</strong>, sete CVEs foram adicionadas, incluindo dois bugs do Microsoft Defender (EoP CVE-2026-41091, DoS CVE-2026-45498), o resto itens legados de 2008–2010. Nota de disciplina de pesquisa: o cisa.gov devolveu um 403 ao nosso crawler — as listas KEV estão cruzadas via The Hacker News, não puxadas direto da página .gov <a href="https://thehackernews.com/2026/05/cisa-adds-exploited-langflow-and-trend.html">[1]</a><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://thehackernews.com/2026/05/cisa-adds-exploited-langflow-and-trend.html">thehackernews.com (21/05)</a></li>
+          <li><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov/kev</a> · <a href="https://www.cisa.gov/news-events/alerts/2026/05/20/cisa-adds-seven-known-exploited-vulnerabilities-catalog">cisa.gov (alerta 20/05)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Rastreador de patches — acompanhamentos rápidos</h2>
+        <h3>NGINX "Rift" (CVE-2026-42945) — o Caddy não é afetado</h3>
+        <p>O bug de reverse proxy de destaque da semana: um heap buffer overflow no módulo <code>rewrite</code> do NGINX (0.6.27–1.30.0), RCE em potencial. A pontuação diverge: <strong>NVD 8,1 HIGH</strong>, enquanto a própria F5/NGINX o classifica como "Medium". Corrigido em 13/05 nas versões 1.30.1 (stable) / 1.31.0 (mainline). A Help Net Security relata exploração já em curso; um registro CISA KEV ainda falta — ou seja: relatado como explorado, ainda não confirmado pelas autoridades. Para o Daniel é só valor de analogia: ele roda <strong>Caddy</strong>, não NGINX <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42945">[1]</a><a href="https://www.helpnetsecurity.com/2026/05/18/ngnix-vulnerability-exploited-cve-2026-42945/">[2]</a>.</p>
+        <h3>Linux "Copy Fail" &amp; Exchange — status se mantém</h3>
+        <p>A <strong>CVE-2026-31431</strong> (root local + escape de contêiner, no KEV desde 01/05) segue séria: existe um PoC público de escape de contêiner em K8s, há correções de kernel das distros — nós K8s e runners de CI primeiro. E a <strong>CVE-2026-42897</strong> (XSS em Exchange on-prem, no KEV desde 15/05) continua o caso de disputa de score: Microsoft 8,1 HIGH vs. NVD 6,1 MEDIUM, ainda sem patch completo <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-31431">[3]</a><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42897">[4]</a>.</p>
+        <h3>Tailscale 1.98.3 (21/05)</h3>
+        <p>Uma correção de netfilter no Linux: regras connmark/CGNAT eram aplicadas de forma inconsistente após uma troca de modo de netfilter falhada; agora só após o update de modo ter sucesso. Bem no caminho da tailnet do Daniel, sem drama, mas vale pegar <a href="https://tailscale.com/changelog">[5]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42945">nvd.nist.gov/CVE-2026-42945</a> · <a href="https://nginx.org/en/CHANGES">nginx.org/CHANGES</a></li>
+          <li><a href="https://www.helpnetsecurity.com/2026/05/18/ngnix-vulnerability-exploited-cve-2026-42945/">helpnetsecurity.com (18/05)</a></li>
+          <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-31431">nvd.nist.gov/CVE-2026-31431</a></li>
+          <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42897">nvd.nist.gov/CVE-2026-42897</a></li>
+          <li><a href="https://tailscale.com/changelog">tailscale.com/changelog</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Node.js — um patch LTS fresco na linha de produção</h2>
+        <p>Duas versões avançaram desde quarta. O <strong>Node.js 26.2.0</strong> (20/05) é a linha Current atual. Mais relevante para produção: o <strong>24.16.0 "Krypton"</strong> (21/05) é a linha <strong>Active LTS</strong> — o patch chegou ontem, e é a versão na qual os serviços Node do Daniel deveriam rodar. Se você ainda está na Current 26, lembre: só os majors pares (24, 26) vão para LTS; os ímpares (25) saem de suporte após seis meses. A partir do Node 27, o ciclo de release passa a ser anual <a href="https://nodejs.org/en/about/previous-releases">[1]</a><a href="https://github.com/nodejs/node/releases">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://nodejs.org/en/about/previous-releases">nodejs.org/previous-releases</a></li>
+          <li><a href="https://github.com/nodejs/node/releases">github.com/nodejs/node/releases</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>OpenJDK — JDK 27 se consolida, três JEPs perto do target</h2>
+        <p>A linha Early-Access está no <strong>build 22</strong> (de ~17 na quarta). Três JEPs foram a <em>Proposed to Target</em>, com a janela de revisão encerrando em <strong>19/05</strong>: <strong>JEP 523</strong> (G1 como GC padrão em todos os ambientes), <strong>JEP 534</strong> (Compact Object Headers por padrão — a promoção do JEP 519 do JDK 25) e <strong>JEP 537</strong> (Vector API, 12ª incubadora). Novo em <em>Candidate</em>: <strong>JEP 538</strong> (encodings PEM de objetos criptográficos). O RDP1 (feature freeze) bifurca em 04/06, GA em setembro. Aviso de honestidade: que os três JEPs passaram de <em>Proposed to Target</em> para de fato <em>Targeted</em> não foi possível confirmar de forma final na página primária do openjdk.org (que retorna 403) — janela de revisão fechada, targeting esperado <a href="https://openjdk.org/projects/jdk/27/">[1]</a><a href="https://openjdk.org/jeps/534">[2]</a>.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Compact Object Headers:</strong> Todo objeto Java carrega um pequeno header de controle. O JDK 25 o encolheu de 12–16 para 8 bytes — como dar a cada caixa do armazém uma etiqueta menor: em milhões de objetos isso libera heap de verdade e assim corta pausas de GC (~15% menos GCs no SPECjbb2015). O JEP 534 torna isso o padrão no JDK 27 em vez de uma flag opt-in.
+        </div>
+        <div class="footnotes"><ol>
+          <li><a href="https://openjdk.org/projects/jdk/27/">openjdk.org/projects/jdk/27</a> · <a href="https://www.infoq.com/news/2026/05/java-news-roundup-may11-2026/">infoq.com (roundup)</a></li>
+          <li><a href="https://openjdk.org/jeps/534">openjdk.org/jeps/534</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>TC39 #114 — <code>using</code> agora é ECMAScript</h2>
+        <p>O plenário de Amsterdã (hospedado pela JetBrains) terminou na quinta; as mudanças de stage estão no repositório <code>tc39/proposals</code>, com as notas narrativas ainda por vir. Destaque: <strong>Explicit Resource Management</strong> — as declarações <code>using</code> e <code>await using</code> que muitos conhecem do TypeScript — atingiu o <strong>Stage 4</strong> e agora faz parte do ECMAScript 2026. Também no Stage 4: <strong>Atomics.pause</strong> (uma dica de spin-loop para memória compartilhada) e <strong>Joint Iteration</strong> (<code>Iterator.zip</code>). Avançaram para o Stage 3, entre outros, iterator chunking/includes/join e um accessor padronizado de <code>error.stack</code>. <strong>Decorators</strong> foi só de 2 para 2.7 — a velha ressalva se mantém: nenhuma das grandes engines quer ser a primeira a enviar, então o cronograma fica frouxo <a href="https://github.com/tc39/proposals/commits/main">[1]</a><a href="https://github.com/tc39/agendas/blob/main/2026/05.md">[2]</a>.</p>
+        <div class="eli5">
+          <strong class="eli5-term"><code>using</code> / Explicit Resource Management:</strong> Como o <code>try-with-resources</code> do Java, mas para JavaScript: escreva <code>using file = openFile()</code> e o recurso é fechado automaticamente quando o bloco termina — seja saindo normalmente ou por exceção. Acabaram os blocos <code>finally { close() }</code> esquecidos.
+        </div>
+        <div class="footnotes"><ol>
+          <li><a href="https://github.com/tc39/proposals/commits/main">github.com/tc39/proposals (commits)</a></li>
+          <li><a href="https://github.com/tc39/agendas/blob/main/2026/05.md">github.com/tc39/agendas (2026/05)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Angular 22 se aproxima — RC.1 e um patch do 21</h2>
+        <p>Para o mundo Angular do Daniel: o <strong>Angular 22.0.0-rc.1</strong> (20/05) é o segundo release candidate (o rc.0 foi 13/05), com correções de compiler/core incluindo tratamento endurecido de <code>&lt;script&gt;</code> em SVG e sanitização de resource-URL. O release stable 22 é iminente, na cadência usual de seis meses; na linha 22, os Signal Forms ficam stable, OnPush vira padrão, além de componentes selectorless. Em paralelo veio o <strong>21.2.14</strong> (20/05) — o patch a pegar se você fica no 21 antes do salto para o 22 <a href="https://github.com/angular/angular/releases">[1]</a><a href="https://angular.dev/reference/releases">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://github.com/angular/angular/releases">github.com/angular/angular/releases</a></li>
+          <li><a href="https://angular.dev/reference/releases">angular.dev/reference/releases</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Browsers — Firefox 152 beta, Chrome segura no 148</h2>
+        <p>O <strong>Firefox 152</strong> está em beta desde 20/05 (stable previsto para 16/06). Relevante para dev: <code>field-sizing</code> (controles de formulário crescem automaticamente com o conteúdo), WebAuthn Related Origin Requests (passkeys entre domínios), botões <code>actions</code> em Notification e Pointer Lock <code>unadjustedMovement</code>. O <strong>Chrome</strong> segura no <strong>148</strong> stable (desde 05/05); o 149 só é esperado por volta de <strong>02/06</strong>. Nada fresco do WebKit/Safari na janela <a href="https://www.firefox.com/en-US/firefox/152.0beta/releasenotes/">[1]</a><a href="https://developer.chrome.com/release-notes/148">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.firefox.com/en-US/firefox/152.0beta/releasenotes/">firefox.com/152.0beta/releasenotes</a></li>
+          <li><a href="https://developer.chrome.com/release-notes/148">developer.chrome.com/release-notes/148</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Status da JVM — Quarkus &amp; Spring ainda quietos</h2>
+        <p>Duas correções por capricho. <strong>Quarkus</strong>: o 3.36 Final ainda em aberto no brief de 20/05 <em>continua não estando aqui</em> — o stable mais novo segue 3.35.4 (20/05), o artefato 3.36 mais recente ainda é o CR1 (13/05). "Anunciado ≠ entregue" se mantém. <strong>Spring</strong>: o Boot 4.0.6 é stable, o 4.1.0-RC1 é a linha pré-release; o release train (Boot 4.1) ainda mira em 01–05/06 — nada se moveu. Ambos: nada a fazer <a href="https://github.com/quarkusio/quarkus/releases">[1]</a><a href="https://github.com/spring-projects/spring-boot/releases">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://github.com/quarkusio/quarkus/releases">github.com/quarkusio/quarkus/releases</a></li>
+          <li><a href="https://github.com/spring-projects/spring-boot/releases">github.com/spring-projects/spring-boot/releases</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>CADA — fica sério na segunda</h2>
+        <p>O <strong>Cloud and AI Development Act</strong>, após dois adiamentos, está na agenda da reunião da Comissão para <strong>segunda, 27/05</strong>, como parte do pacote de soberania tecnológica (CADA + Chips Act 2). O objetivo é o mesmo: triplicar a capacidade de data centers da UE, regras de elegibilidade em toda a UE para provedores de nuvem, uma política única de compras de nuvem para a administração pública. A notícia <em>viva</em> está no rascunho vazado: avalia-se restringir o <strong>uso de nuvem dos EUA (AWS/Azure/Google) para dados governamentais sensíveis</strong> (saúde, finanças, justiça) — explicitamente <em>não</em> uma proibição e <em>não</em> para a iniciativa privada. Precisa do aval de todos os 27 Estados-membros. Se você atende contratos do setor público na UE, leia o texto real na segunda <a href="https://www.europarl.europa.eu/legislative-train/theme-a-new-plan-for-europe-s-sustainable-prosperity-and-competitiveness/file-cloud-and-ai-development-act">[1]</a><a href="https://www.cnbc.com/2026/05/07/eu-commission-cloud-sensitive-data.html">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.europarl.europa.eu/legislative-train/theme-a-new-plan-for-europe-s-sustainable-prosperity-and-competitiveness/file-cloud-and-ai-development-act">europarl.europa.eu/legislative-train</a></li>
+          <li><a href="https://www.cnbc.com/2026/05/07/eu-commission-cloud-sensitive-data.html">cnbc.com (07/05)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>OpenSSF Community Day NA — o que realmente saiu</h2>
+        <p>O evento de quinta em Minneapolis (junto ao OSS Summit NA) produziu resultados concretos. O mais diretamente útil: o <strong>Python Secure Coding Guide v1.0.0</strong> (pyscg) do grupo de trabalho BEST — anti-patterns mais exemplos conformes por CWE. Além disso, o <strong>OSS-CRS</strong> (Open Source Cyber Reasoning System, busca/correção automatizada de vulnerabilidades da linhagem DARPA AIxCC) foi aceito como projeto Sandbox, o primeiro <strong>grupo de Ambassadors</strong> (13 pessoas) foi nomeado, e cinco novos membros entraram. Correção importante à expectativa de quarta: a sessão "Quantum Proofing Sigstore" aconteceu, mas não produziu <strong>nenhum release PQ do Sigstore anunciado nem compromisso de roadmap</strong> — uma palestra, não um entregável, então não dá para vender como fato aqui <a href="https://openssf.org/press-release/2026/05/21/openssf-notes-quarter-of-growth-with-new-members-added-ai-security-resources-and-growing-community/">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://openssf.org/press-release/2026/05/21/openssf-notes-quarter-of-growth-with-new-members-added-ai-security-resources-and-growing-community/">openssf.org/press-release (21/05)</a> · <a href="https://openssf.org/blog/">openssf.org/blog</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Alemanha — uma semana cara de soberania</h2>
+        <p>Um bloco DE incomumente denso, tudo de 21/05. O governo federal adjudicou um <strong>contrato de € 250 mi</strong> para uma plataforma de nuvem (de IA) soberana — principalmente à <strong>T-Systems + SAP</strong>, secundariamente à <strong>SVA + Schwarz Digits + Codesphere</strong>; enquadrado como infraestrutura de soberania digital (zero-trust, padrões abertos, anti-vendor-lock-in) para a administração federal/estadual/municipal — o lado da infraestrutura, não o lado do modelo. Em paralelo, o <strong>"Deutschland-Stack"</strong> foi detalhado: API-first, interoperável na UE, apoiado na certificação KaaS do Sovereign Cloud Stack, ~800 issues abertas, meta de testes no Q4 2026. E o <strong>Sovereign Tech Fund</strong> está investindo <strong>€ 1,29 mi</strong> na KDE (infra de testes, arquitetura de segurança) <a href="https://www.heise.de/news/Bundesregierung-vergibt-250-Millionen-Euro-Auftrag-fuer-den-Aufbau-einer-KI-Cloud-11303121.html">[1]</a><a href="https://kde.org/announcements/sovereign-tech-fund-invests-kde/">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.heise.de/news/Bundesregierung-vergibt-250-Millionen-Euro-Auftrag-fuer-den-Aufbau-einer-KI-Cloud-11303121.html">heise.de (21/05, nuvem de € 250 mi)</a> · <a href="https://www.heise.de/news/Cloud-KI-Co-Wie-der-Deutschland-Stack-digitale-Souveraenitaet-schaffen-soll-11303221.html">heise.de (Deutschland-Stack)</a></li>
+          <li><a href="https://kde.org/announcements/sovereign-tech-fund-invests-kde/">kde.org (STF→KDE)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>DMA/DSA &amp; CRA — o pano de fundo regulatório</h2>
+        <p>Curto, porque é postura e não decisões frescas: a revisão estatutária do <strong>DMA</strong> (devida em 03/05) examina, entre outras coisas, se as obrigações de interoperabilidade serão estendidas às redes sociais — um possível novo mandato de implementação para devs de plataformas. Em 19/05 a Comissão lançou, sob o <strong>DSA</strong>, a primeira rodada de acesso a dados por pesquisadores credenciados (Art. 40) — as plataformas agora operacionalizam os pipelines de acesso a dados. O <strong>CRA</strong> está quieto esta semana: obrigações de reporte a partir de 11/09/2026 (alerta precoce de 24h), retroativas para produtos existentes — status inalterado, a timeline segue valendo <a href="https://digital-strategy.ec.europa.eu/en/policies/digital-services-act">[1]</a><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://digital-strategy.ec.europa.eu/en/policies/digital-services-act">digital-strategy.ec.europa.eu/dsa</a></li>
+          <li><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">digital-strategy.ec.europa.eu/cra-reporting</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Brasil — honestamente magro hoje</h2>
+        <p>Da segunda casa, nenhuma história sólida de software não-IA na janela — a cobertura BR fresca é comentário de mercado fintech (Nubank, Mercado Pago, volumes do PIX) ou pesada em IA, e por isso pertence a outros briefs. Em vez de encher linguiça, um gancho para frente: a <strong>ANPD</strong> (autoridade brasileira de proteção de dados) foi elevada a agência por lei e precisa autorizar o concurso público para 200 vagas permanentes até <strong>31/05</strong> — mais capacidade de fiscalização em torno da LGPD/proteção de dados, relevante para tudo que processa dados pessoais no Brasil <a href="https://convergenciadigital.com.br/governo/lula-sanciona-lei-que-transforma-anpd-em-agencia-e-gt-tem-ate-maio-para-fazer-concurso/">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://convergenciadigital.com.br/governo/lula-sanciona-lei-que-transforma-anpd-em-agencia-e-gt-tem-ate-maio-para-fazer-concurso/">convergenciadigital.com.br</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Comentário — as fronteiras em que confiamos</h2>
+        <p>Três das principais histórias de hoje são a mesma história em três camadas. O contêiner não deveria enxergar o host — o <code>docker cp</code> e o bypass de <code>runAsNonRoot</code> mostram que a parede de isolamento é mais fina do que o modelo mental. O ORM deveria tornar a SQL injection impossível — a falha do Drupal mostra que "só no Postgres" basta para derrubar essa premissa. E a provenance SLSA deveria provar a confiança da cadeia de suprimentos — o Shai-Hulud mostra há duas semanas que um build sequestrado herda essa confiança. O padrão: não é a cripto ou a feature que está quebrada, mas a <em>fronteira</em> onde paramos de pensar.</p>
+        <p>Para o stack do Daniel isso significa algo pragmático e administrável: suba o Docker para o 29.5.2 e não rode <code>docker cp</code> contra contêineres não confiáveis; se Postgres-Drupal roda em algum lugar, corrija hoje; siga de olho em lockfiles npm e comprometimentos de mantenedores. A boa notícia vem da mesma indústria que está trocando de pele: o <code>using</code> agora é ECMAScript, o JDK 27 torna os Compact Object Headers o padrão, o Node tem seu patch LTS. Na segunda a UE entrega a próxima peça de soberania com o CADA — e aí veremos se o parágrafo vazado sobre nuvem dos EUA vira texto legal de verdade <a href="https://www.europarl.europa.eu/legislative-train/theme-a-new-plan-for-europe-s-sustainable-prosperity-and-competitiveness/file-cloud-and-ai-development-act">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.europarl.europa.eu/legislative-train/theme-a-new-plan-for-europe-s-sustainable-prosperity-and-competitiveness/file-cloud-and-ai-development-act">europarl.europa.eu/legislative-train</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>É sexta-feira, 22 de maio. O fio condutor de hoje é desconfortavelmente concreto: as fronteiras em que os desenvolvedores confiam estão todas vazando ao mesmo tempo — no isolamento de contêineres, no banco de dados e na cadeia de suprimentos.</p>
+  <p>A maior história fica bem no stack do Docker. O Docker Engine vinte e nove ponto cinco ponto um fecha três falhas que permitem a um contêiner malicioso escapar durante o aparentemente inofensivo comando de cópia docker cp e escalar para root do host — uma vez porque os programas de descompressão são resolvidos pelo caminho dentro do contêiner, e duas vezes por uma corrida de tempo que redireciona um ponto de montagem para o sistema de arquivos do host. A Docker classifica as três como críticas. Um andar abaixo, a containerd corrige no mesmo dia um bypass que deixa um contêiner que não deveria rodar como root fazer isso mesmo assim. O conselho de hoje: suba a engine para vinte e nove ponto cinco ponto dois, porque a primeira correção introduziu uma regressão — e não rode docker cp contra contêineres em que você não confia.</p>
+  <p>A segunda camada é o banco de dados. O release do Drupal anunciado na quarta chegou: uma SQL injection sem autenticação no core que atinge apenas instalações PostgreSQL. O próprio Drupal a classifica em vinte e três de vinte e cinco, enquanto a base de vulnerabilidades americana a chama só de média — e os dois valores merecem ser citados. E a partir de hoje, o Drupal diz que tentativas de exploração estão sendo observadas na prática. Se você roda Drupal sobre Postgres, corrija hoje.</p>
+  <p>A terceira camada é a cadeia de suprimentos. O verme autorreplicante do brief anterior, o Shai-Hulud, não esfriou — está escalando. Em dezenove de maio uma quinta onda rolou pelo ecossistema AntV: por meio de um mantenedor sequestrado, cerca de seiscentas e trinta e nove versões maliciosas em trezentos e vinte e três pacotes foram publicadas em aproximadamente meia hora. Pior, o código do verme agora é público, e imitadores são o novo risco. Além disso, a agência americana CISA acrescentou novas falhas ativamente exploradas, incluindo uma no Langflow com pontuação nove vírgula quatro.</p>
+  <p>Há boas notícias também, e vêm da mesma indústria que está trocando de pele. O comitê de padrões TC39 finalizou a declaração using em Amsterdã — limpeza automática de recursos, como o try-with-resources do Java, agora parte do ECMAScript dois mil e vinte e seis. O JDK vinte e sete está se consolidando no build vinte e dois com três JEPs perto da linha de chegada, incluindo Compact Object Headers por padrão. O Node tem um patch LTS fresco na linha vinte e quatro, o Angular vinte e dois está pronto como release candidate, e o Firefox cento e cinquenta e dois está em beta. Quarkus e Spring seguem quietos — o final do Quarkus esperado na quarta ainda não chegou.</p>
+  <p>E a máquina de soberania europeia está esquentando. Na segunda a Comissão da UE adota o Cloud and AI Development Act; um rascunho vazado avalia restringir nuvem dos EUA para dados governamentais sensíveis — não é proibição, e não para a iniciativa privada. Na Alemanha, um contrato de duzentos e cinquenta milhões de euros para uma nuvem soberana foi adjudicado e o Deutschland-Stack foi apresentado. E o OpenSSF Community Day entregou um Guia de Codificação Segura em Python na versão um ponto zero.</p>
+  <p>O fio comum: não é a cripto ou a feature que está quebrada, mas a fronteira onde paramos de pensar. Na segunda veremos se o parágrafo vazado sobre nuvem dos EUA vira texto legal de verdade, e se o Quarkus finalmente entrega. Até lá.</p>
+</div>
+
+</body>
+</html>

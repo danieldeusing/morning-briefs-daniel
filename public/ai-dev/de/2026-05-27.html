@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief AI-Dev — 2026-05-27</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI-Dev</span>
+    <span class="dot">·</span>
+    <span>Mittwoch, 2026-05-27</span>
+    <span class="dot">·</span>
+    <span>Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">Die großen CLIs wachen auf — Claude Code 2.1.152, Codex 0.134 stable</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Gestern war der Tag der großen Bühne (Qwen Conference) und der lokale Stack ging leer aus. Heute ist das Gegenteil: kein Modell-Spektakel, dafür <strong>Werkzeug-Tag</strong>. Die beiden Harnesses, die Daniel täglich anfasst, haben nach Tagen Stille beide neue Builds geliefert — <strong>Claude Code 2.1.152</strong> (heute, 27.05.) mit <code>/code-review --fix</code>, Skill-<code>disallowed-tools</code> und Hot-Reload für Skills; <strong>OpenAI Codex 0.134.0</strong> ist gestern (26.05.) von Alpha auf <strong>stable</strong> gesprungen, mit durchsuchbarer Gesprächs-Historie und feinerem MCP-Handling. Im MCP-Spec-Repo lief parallel ein <strong>Governance-Schub</strong>: drei neue SEPs an einem Tag (Tool-Risk-Metadata, i18n, Constraints) plus der gestern gemergte „Codex/ChatGPT lesen jetzt Server-Instructions". Und der Kontrast zu gestern bleibt: <strong>Qwen 3.7 hat immer noch keine offenen Gewichte</strong> — bestätigt ist jetzt sogar, dass auch <em>Plus</em> geschlossen bleibt. Benchmark-Spitze unverändert eingefroren bei 79,2 %.</p>
+    <ul>
+      <li><span class="chip hot">Claude</span> <strong>Claude Code 2.1.152</strong> (heute, 27.05., hoch von 2.1.150): <code>/code-review --fix</code> schreibt Review-Vorschläge direkt in den Working-Tree, Skills können Tools per <code>disallowed-tools</code> wegnehmen, <code>/reload-skills</code> + <code>SessionStart</code>-Hot-Reload, neuer <code>MessageDisplay</code>-Hook. <span class="chip good">Try</span></li>
+      <li><span class="chip hot">OpenAI</span> <strong>Codex 0.134.0 stable</strong> (gestern, 26.05.): die Alpha ist durch — durchsuchbare lokale Gesprächs-Historie, <code>--profile</code> als primärer Profil-Selektor, per-Server-MCP-Env + OAuth für streamable HTTP, read-only MCP-Tools laufen jetzt parallel</li>
+      <li><span class="chip">MCP</span> <strong>Governance-Schub im Spec-Repo</strong>: PR #2790 „Codex und ChatGPT unterstützen Server-Instructions" gemergt (26.05.), dazu drei frische SEPs am 26.05. — <strong>Tool-Risk-Metadata (#2793)</strong>, Per-Request-i18n (#2792), Constraints (#2778). SEP-2787-Attestation bleibt offen, bekommt aber Test-Vektoren (#2789)</li>
+      <li><span class="chip">Tool</span> <strong>Junie 1836.1</strong> (Nightly, heute), <strong>Copilot</strong> (26.05.: Memory-Lösch-/Scope-Controls + Copilot CLI), <strong>Windsurf Next 2.3.1015</strong> (26.05.) — die kleineren Werkzeuge ticken weiter; Cline (3.85.0) und Zed (1.3.7) unverändert seit gestern</li>
+      <li><span class="chip">OSS</span> <strong>Qwen 3.7 weiter ohne offene Gewichte</strong>: <code>huggingface.co/Qwen</code> = neueste Familie bleibt <strong>3.6</strong> (27B / 35B-A3B, Apache 2.0), kein 3.7-Repo. Neu bestätigt: auch <strong>Qwen3.7-Plus ist geschlossen</strong> (DashScope-only) — die „offenes Plus"-Hoffnung ist tot, offene 27B/35B bleiben angekündigt ohne Datum</li>
+      <li><span class="chip">OSS</span> <strong>DeepSeek-Preis-Seite weiter stale</strong>: <code>api-docs.deepseek.com</code> zeigt heute <em>immer noch</em> den alten „Rabatt endet 2026/05/31"-Text, während Sekundär-Medien den 75-%-Cut als dauerhaft melden. Divergenz hält an</li>
+      <li><span class="chip">Local</span> <strong>llama.cpp b9354</strong> (heute) im gewohnten Sub-Tagestakt; Ollama-RC auf rc27, vLLM v0.21.0 und LM Studio 0.4.14 unverändert</li>
+      <li><span class="chip">Bench</span> <strong>SWE-Bench Verified eingefroren</strong>: Spitze weiter <strong>79,2 % (Opus 4.5)</strong>, jüngste Submission 26.02., kein Eintrag ≥80 %, kein <code>verified:true</code>. Die kursierenden 87,6 % (Opus 4.7) / 60,6 % (Qwen3.7-Max) stehen <strong>nicht</strong> im Datensatz</li>
+      <li><span class="chip">Community</span> <strong>Simon Willison</strong> dokumentiert eine Prompt-Injection-Exfiltration über Microsoft Copilot „Cowork" — die Kehrseite der Agenten-Euphorie</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick · AI-Dev</div>
+      <div class="timeline-sub">Werkzeug-Tag heute — die zwei harten Daten stehen im Juni/Juli</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Mi 27.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Claude Code 2.1.152</strong> · <strong>Codex 0.134.0 stable</strong> (gestern)</span>
+          <span>MCP-Spec: Governance-SEP-Schub · Copilot Memory-Controls</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Do 18.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Gemini CLI: Ende für Free + AI Pro/Ultra</strong></span>
+          <span>Umzug auf Antigravity CLI — Standard/Enterprise behalten Zugang</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 28.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>MCP-Spec-Release-Candidate (Ziel-Datum, PR #2750 gemergt)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section>
+        <h2>Claude Code · 2.1.152 bringt Auto-Fix und Skill-Kontrolle <span class="h2-refs">[1]</span></h2>
+
+        <p>Nach der Vorwoche, in der Claude Code bei <strong>2.1.150</strong> (23.05.) festhing, ist heute <strong>2.1.152</strong> da — und es ist der substanziellste Build der Reihe seit Tagen. Drei Dinge lohnen den Blick.<sup>[1]</sup></p>
+
+        <article class="news-item">
+          <h3><code>/code-review --fix</code> schreibt zurück</h3>
+          <p>Bisher war <code>/code-review</code> ein Read-only-Gutachten. Jetzt <strong>schreibt <code>--fix</code> die Befunde direkt in den Working-Tree</strong> — Reuse-, Vereinfachungs- und Effizienz-Vorschläge werden angewandt statt nur aufgelistet. <code>/simplify</code> ruft intern dasselbe <code>--fix</code> auf. Das ist der Schritt vom „der Reviewer sagt dir was" zum „der Reviewer macht's". <span class="chip good">Try</span> Für Daniels Workflow der relevanteste Punkt: einen Review-Pass abnicken und die mechanischen Änderungen gleich im Diff sehen, statt sie von Hand nachzutragen.</p>
+          <span class="src"><a href="https://code.claude.com/docs/en/changelog">code.claude.com/docs/changelog</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Skills dürfen jetzt Werkzeug wegnehmen</h3>
+          <p>Skills und Slash-Commands können in ihrem Frontmatter <strong><code>disallowed-tools</code></strong> setzen — Tools, die dem Modell entzogen werden, solange der Skill aktiv ist. Dazu kommt <code>/reload-skills</code> (Skill-Verzeichnisse neu scannen ohne Session-Neustart) und ein <code>SessionStart</code>-Hook, der <code>reloadSkills: true</code> zurückgeben kann, damit ein vom Hook installierter Skill in derselben Session sofort verfügbar ist.</p>
+          <div class="eli5">
+            <strong class="eli5-term"><code>disallowed-tools</code> im Skill:</strong> Stell dir einen Werkzeugkasten vor, aus dem du für eine bestimmte Aufgabe absichtlich die scharfe Säge rausnimmst, damit niemand sie versehentlich greift. Genauso kann ein Skill jetzt sagen „solange ich laufe, kein <code>Bash</code>" — enger Rahmen = weniger Wege, etwas kaputtzumachen.
+          </div>
+          <span class="src"><a href="https://code.claude.com/docs/en/changelog">code.claude.com/docs/changelog</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Kleinkram mit Folgen</h3>
+          <p>Drei Zeilen, die im Alltag zählen: ein neuer <strong><code>MessageDisplay</code>-Hook</strong> kann Assistant-Text beim Anzeigen umschreiben oder verstecken; bei nicht gefundenem Primär-Modell <strong>schaltet Claude Code auf <code>--fallback-model</code></strong> für den Rest der Session, statt jede Anfrage scheitern zu lassen; und <strong>„Auto mode no longer requires opt-in consent"</strong> — der autonome Modus läuft ohne vorgeschaltete Zustimmungsfrage. Letzteres ist eine Bequemlichkeit mit Beigeschmack: ein Klick weniger, aber auch eine Bestätigung weniger vor unbeaufsichtigten Läufen.</p>
+          <span class="src"><a href="https://code.claude.com/docs/en/changelog">code.claude.com/docs/changelog</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Codex · 0.134.0 von Alpha auf stable <span class="h2-refs">[2]</span></h2>
+
+        <article class="news-item">
+          <h3>Die Alpha ist durch</h3>
+          <p>Was seit dem 22.05. als <code>0.134.0-alpha.1…3</code> reifte, ist gestern (26.05., 19:13 UTC) als <strong>stable 0.134.0</strong> veröffentlicht — hoch vom Stable 0.133.0 (21.05.). Die nennenswerten Neuerungen: <strong>durchsuchbare lokale Gesprächs-Historie</strong> (case-insensitive), <code>--profile</code> ist jetzt der <strong>primäre Profil-Selektor</strong> (Legacy-Profil-Configs werden abgelehnt), <strong>per-Server-MCP-Env-Targeting</strong> plus OAuth für streamable HTTP, und <strong>read-only MCP-Tools laufen jetzt parallel</strong> statt seriell.<sup>[2]</sup></p>
+          <p>Die letzten beiden Punkte sind das eigentliche Signal: Codex schraubt diese Woche sichtbar am MCP-Unterbau — und passt zum MCP-Spec-Schub auf der anderen Seite (siehe rechts). Read-only-Tools parallel zu fahren ist genau die Art Latenz-Gewinn, die agentische Läufe spürbar schneller macht, ohne das Risiko paralleler Schreibzugriffe.</p>
+          <span class="src"><a href="https://github.com/openai/codex/releases">github.com/openai/codex/releases</a></span>
+        </article>
+      </section>
+
+      <div class="footnotes">
+        <ol>
+          <li id="ref-1"><a href="https://code.claude.com/docs/en/changelog">code.claude.com — Claude Code 2.1.152 (/code-review --fix, Skill disallowed-tools, /reload-skills, MessageDisplay-Hook)</a>, 27.05.2026 (releasebot-Mirror war stale bei 2.1.150 — offizieller Changelog gilt)</li>
+          <li id="ref-2"><a href="https://github.com/openai/codex/releases">github.com/openai/codex — rust-v0.134.0 stable, veröffentlicht 26.05.2026 19:13 UTC (hoch von 0.133.0 vom 21.05.)</a></li>
+        </ol>
+      </div>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>Equal-Coverage · was sich wirklich bewegt hat <span class="h2-refs">[3][4]</span></h2>
+
+        <p>Silent-Roll-Call, damit kein Tool unsichtbar bleibt. <strong>Frisch seit gestern</strong> (über Claude Code/Codex oben hinaus):</p>
+
+        <article class="news-item">
+          <h3>JetBrains Junie, Copilot, Windsurf</h3>
+          <p><strong>Junie</strong> hält den Nightly-Takt: heute <strong>1836.1</strong> (08:12 UTC), dazu 1834.1 (gleicher Tag) und 1833.1 (26.05.) — mehrere Builds in 48 h, weit über dem gestern genannten 1823.1. <strong>GitHub Copilot</strong> hat am 26.05. <strong>Memory-Controls</strong> (Löschen, Scope) plus die <strong>Copilot CLI</strong> erweitert und „Modell-Targeting für Orgs per Model-Rules" ergänzt. <strong>Windsurf Next</strong> ist auf <strong>2.3.1015</strong> (26.05., hoch von 2.3.1012) — bündelt den Devin-Local-Agent 2026.5.26 und „Open-Files-Awareness".<sup>[3]</sup></p>
+          <span class="src"><a href="https://github.com/JetBrains/junie/releases">JetBrains/junie</a> · <a href="https://github.blog/changelog/label/copilot">github.blog/changelog</a> · <a href="https://windsurf.com/changelog">windsurf.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Still seit gestern oder länger</h3>
+          <ul class="news-item-list">
+            <li><strong>Cline</strong>: VS-Code-Ext weiter <strong>3.85.0</strong> (25.05.), CLI <strong>3.0.13</strong> (23.05.) — gestern schon gemeldet, heute kein neuer Build.<sup>[4]</sup></li>
+            <li><strong>Zed</strong>: weiter <strong>1.3.7 stable / 1.4.2-pre</strong> (25.05.) — unverändert.</li>
+            <li><strong>Cursor</strong>: <strong>v3.5</strong> (20.05.), Composer-2.5 (18.05.) — kein neuer Eintrag (<a href="https://cursor.com/changelog">cursor.com</a>).</li>
+            <li><strong>Gemini CLI</strong>: <strong>v0.43.0</strong> stable / v0.44.0-preview.0 (beide 22.05.) — v0.44 noch nicht stable; Sunset Free + AI Pro/Ultra am <strong>18.06.</strong> steht.</li>
+            <li><strong>OpenHands</strong>: SDK <strong>1.7.0</strong> (01.05.) bleibt jüngste Release.</li>
+            <li><strong>Devin</strong>: letzte Release-Note <strong>22.05.</strong> — Rolling-Release ohne neueren Eintrag.</li>
+            <li><strong>Continue</strong>: <strong>v1.2.22 / v1.3.38-pre</strong> (27.03.) — ~2 Monate still.</li>
+            <li><strong>Aider</strong>: an Nutzer ausgeliefert nichts Neues seit <strong>v0.86.2</strong> (PyPI, 12.02.); GitHub-Releases hängen 9 Monate alt bei v0.86.0 (09.08.2025). <code>main</code> commitet leise weiter (zuletzt 22.05.), aber kein getaggtes Release.</li>
+            <li><strong>Plandex</strong>: cli/v2.2.1 (16.07.2025) — ~10 Monate dormant.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section>
+        <h2>Open-Weights · Qwen 3.7 bleibt zu, auch Plus <span class="h2-refs">[5][6]</span></h2>
+
+        <article class="news-item">
+          <h3>Einen Tag nach der Conference: kein Repo</h3>
+          <p>Heute erneut geprüft: <code>huggingface.co/Qwen</code> trägt als neueste Modell-Familie weiter <strong>Qwen3.6</strong> (27B und 35B-A3B, Apache 2.0) — <strong>kein 3.7-Repo</strong>. <code>ollama.com/library</code> ebenso: neuester Qwen-Eintrag ist <strong>qwen3.6</strong> („vor 5 Tagen aktualisiert"), kein 3.7. Neu und wichtig: Recherche-Quellen bestätigen jetzt, dass <strong>auch Qwen3.7-Plus geschlossen bleibt</strong> (nur über DashScope/Model Studio) — die zuvor erwartete <em>offene</em> Plus-Variante kommt nicht. Offene 27B/35B-Ableger sind weiter angekündigt, aber <strong>ohne Datum und ohne Gewichte</strong>.<sup>[5]</sup></p>
+          <div class="eli5">
+            <strong class="eli5-term">Offene Gewichte vs. API-only:</strong> „Offene Gewichte" = du lädst die Modell-Datei herunter und fährst sie auf dem eigenen Rechner (Auto kaufen). „API-only" = du darfst es nur über einen Cloud-Endpunkt mieten. Für Daniels lokalen Ollama/llama.cpp-Stack zählt allein das Erste — und davon gibt es bei 3.7 weiter nichts.
+          </div>
+          <span class="src"><a href="https://huggingface.co/Qwen">huggingface.co/Qwen</a> · <a href="https://ollama.com/library?sort=newest">ollama.com/library</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>DeepSeek · Preis-Seite hinkt weiter hinterher</h3>
+          <p>Der berichtete dauerhafte <strong>75-%-Cut auf V4-Pro</strong> (~$0,435 Input / $0,87 Output je 1 M Token) hat heute <strong>immer noch</strong> kein Echo auf der offiziellen Seite: <code>api-docs.deepseek.com/quick_start/pricing</code> zeigt unverändert den alten Text („…nach Ende des 75-%-Rabatts am 2026/05/31 15:59 UTC"). Die Zahlen stimmen in beiden Fällen — „dauerhaft" stützt sich aber weiter nur auf Sekundär-Medien, nicht auf die Primärseite. Divergenz seit Tagen unverändert.<sup>[6]</sup></p>
+          <span class="src"><a href="https://api-docs.deepseek.com/quick_start/pricing">api-docs.deepseek.com (Promo-Text stale)</a></span>
+        </article>
+      </section>
+
+      <div class="footnotes">
+        <ol start="3">
+          <li id="ref-3"><a href="https://github.com/JetBrains/junie/releases">JetBrains/junie 1836.1; github.blog/changelog Copilot Memory-Controls + CLI (26.05.); windsurf.com Next 2.3.1015 (26.05.)</a>, 26.–27.05.2026</li>
+          <li id="ref-4"><a href="https://github.com/cline/cline/releases">cline/cline — VS-Code 3.85.0 (25.05.), CLI 3.0.13 (23.05.), unverändert</a>, abgerufen 27.05.2026</li>
+          <li id="ref-5"><a href="https://huggingface.co/Qwen">huggingface.co/Qwen — neueste Familie 3.6 (27B/35B-A3B), kein 3.7-Repo; Qwen3.7-Plus geschlossen</a>, abgerufen 27.05.2026</li>
+          <li id="ref-6"><a href="https://api-docs.deepseek.com/quick_start/pricing">DeepSeek API-Pricing — Primärseite zeigt weiter „Rabatt endet 2026/05/31"; dauerhaft nur sekundär berichtet</a>, abgerufen 27.05.2026</li>
+        </ol>
+      </div>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>MCP · Governance-Schub im Spec-Repo <span class="h2-refs">[7][8]</span></h2>
+
+        <p>Während die CLIs neue Builds shippten, lief im <code>modelcontextprotocol</code>-Repo der aktivste Tag seit Wochen — und der Schwerpunkt ist auffällig: <strong>Sicherheit, Auditierbarkeit, Governance</strong>.</p>
+
+        <article class="news-item">
+          <h3>Gemergt: Codex/ChatGPT lesen Server-Instructions</h3>
+          <p>PR <strong>#2790</strong> (gemergt 26.05.) hält fest, dass <strong>Codex und ChatGPT jetzt MCP-Server-Instructions unterstützen</strong> — der vom Server mitgelieferte Bedienungs-Hinweistext wird vom Client tatsächlich gelesen und ins Modell gespeist. Jüngster Merge im Repo ist inzwischen #2800 (27.05., Release-Workflow-Kram); die veröffentlichte Spec bleibt <strong>2025-11-25</strong>, das RC-Ziel der <strong>28.07.</strong> (PR #2750 gemergt).<sup>[7]</sup></p>
+          <div class="eli5">
+            <strong class="eli5-term">MCP-Server-Instructions:</strong> Wie der Beipackzettel an einem Gerät — der Server sagt dem KI-Client von sich aus „so benutzt du mich richtig" (welche Tools wofür, welche Reihenfolge). Bisher ignorierten manche Clients den Zettel; Codex und ChatGPT lesen ihn jetzt.
+          </div>
+          <span class="src"><a href="https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2790">MCP PR #2790</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Drei neue SEPs an einem Tag</h3>
+          <p>Am 26.05. landeten gleich drei Proposals: <strong>SEP „Tool Risk Metadata" (#2793)</strong> erweitert die <code>ToolAnnotations</code> um maschinenlesbare Risiko-Angaben, damit ein Client automatisch entscheiden kann, was ohne Rückfrage laufen darf und was nicht; <strong>#2792</strong> bringt Per-Request-Sprachverhandlung (i18n); <strong>#2778</strong> „Adding constraints". Die <strong>SEP-2787-Attestation</strong> (signierte Tool-Call-Belege, EU-AI-Act Art. 12) bleibt offen, bekam aber am 26.05. mit <strong>#2789</strong> erste Test-Vektoren. Alle offen, alle Extensions-Track — aber die Richtung ist klar.<sup>[8]</sup></p>
+          <div class="eli5">
+            <strong class="eli5-term">Tool Risk Metadata:</strong> Ein Etikett an jedem Werkzeug, das sagt, wie gefährlich es ist — „nur lesen" (grün) vs. „löscht Dateien" (rot). Der Agent kann dann die grünen ohne Nachfragen nutzen und nur bei den roten anhalten. Heute trifft diese Entscheidung oft eine handgepflegte Liste; das Etikett macht sie maschinenlesbar.
+          </div>
+          <span class="src"><a href="https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2793">MCP PR #2793</a> · <a href="https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2787">#2787</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Local-Stack · llama.cpp im Tagestakt <span class="h2-refs">[9]</span></h2>
+
+        <ul class="news-item-list">
+          <li><strong>llama.cpp b9354</strong> (heute, 27.05.): der gewohnte Sub-Tagestakt läuft weiter, hoch von b9334.<sup>[9]</sup></li>
+          <li><strong>Ollama</strong>: stable <strong>v0.24.0</strong> (14.05.), Pre-Release jetzt <strong>v0.30.0-rc27</strong> (13.05., hoch von rc23) — der llama.cpp-Engine-Umbau reift im RC.</li>
+          <li><strong>vLLM</strong>: <strong>v0.21.0</strong> (15.05.) — unverändert.</li>
+          <li><strong>LM Studio</strong>: <strong>0.4.14</strong> (22.05.) — unverändert.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Benchmarks · die Spitze steht still <span class="h2-refs">[10][11]</span></h2>
+
+        <p>Stand 27.05.2026, direkt aus den offenen SWE-Bench-Daten (180 Einträge) gezogen. <strong>Keine Bewegung</strong> — und kein neuer Conference-Star im Datensatz.</p>
+
+        <article class="news-item">
+          <h3>SWE-Bench Verified · unverändert</h3>
+          <p><strong>Opus 4.5 hält die Spitze mit 79,2 %</strong> (live-SWE-agent, 15.12.2025; gleichauf mit Sonar Foundation Agent, 05.12.2025), dahinter TRAE + Doubao-Seed-Code 78,8 % (28.09.2025). Die jüngste Submission im Datensatz bleibt vom <strong>26.02.</strong> (mini-SWE-agent + Gemini 3 Pro, 69,6 %). <strong>Kein Eintrag ≥80 %, kein einziger mit <code>verified:true</code></strong> — alle Werte sind selbst gemeldet.<sup>[10]</sup></p>
+          <div class="callout warn">
+            <span class="callout-label">Achtung</span>
+            Die diese Woche herumgereichten <strong>87,6 % (Opus 4.7)</strong> und <strong>60,6 % (Qwen3.7-Max, „SWE-Bench Pro")</strong> stehen <strong>nicht</strong> im prüfbaren SWE-Bench-Verified-Datensatz — es sind Anbieter-/Blog-Zahlen ohne unabhängigen, datierten Eintrag. Bis eine geprüfte Messung vorliegt, gelten sie hier als Marketing, nicht als Score.
+          </div>
+          <span class="src"><a href="https://www.swebench.com/#verified">swebench.com/#verified</a> · <a href="https://github.com/SWE-bench/swe-bench.github.io/blob/master/data/leaderboards.json">swe-bench.github.io (Daten)</a></span>
+        </article>
+
+        <div class="eli5">
+          <strong class="eli5-term">SWE-Bench Verified:</strong> Eine Sammlung echter GitHub-Bugs mit einem menschlich geprüften Test, der sagt, ob der Fix wirklich greift. Die Prozentzahl ist der Anteil gelöster Aufgaben — gemessen wird immer das <em>Bündel</em> aus Modell und Agent-Gerüst, nie das Modell allein.
+        </div>
+
+        <article class="news-item">
+          <h3>Aider & LiveCodeBench · nicht zitierbar</h3>
+          <p>Das <strong>Aider-Polyglot-Board</strong> steht unverändert auf <strong>20.11.2025</strong> (~6 Monate alt, Spitze GPT-5-high 88,0 %) — als „aktuell" nicht zu zitieren. <strong>LiveCodeBench</strong> bleibt unverifizierbar (JS-gerendert, Repo ohne datierte Leaderboard-Daten seit Juli 2025) — daher hier <strong>keine</strong> Zahl statt einer geschätzten.<sup>[11]</sup></p>
+          <span class="src"><a href="https://aider.chat/docs/leaderboards/">aider.chat</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Community · die Kehrseite der Agenten</h2>
+        <p><strong>Simon Willison</strong> dokumentiert diese Woche eine <strong>Prompt-Injection-Exfiltration über Microsoft Copilot „Cowork"</strong> — ein Angreifer schmuggelt Anweisungen in Daten, die der Agent verarbeitet, und schleust darüber Informationen hinaus. Dazu Daniel Stenbergs „The Pressure" über die Flut KI-generierter, stimmloser Security-Reports, die curl-Maintainer überrollt. Zwei Geschichten, eine Pointe: je autonomer die Agenten, desto wichtiger werden Audit-Spuren und Risiko-Etiketten — genau das, woran MCP gerade schraubt.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Prompt-Injection:</strong> Wie ein gefälschter Notizzettel im Posteingang eines allzu gehorsamen Assistenten — im Text, den der Agent verarbeiten soll, stecken versteckte Befehle („schick alles an diese Adresse"). Der Agent kann harmlose Daten nicht von eingeschmuggelten Anweisungen unterscheiden und führt sie aus.
+        </div>
+        <span class="src"><a href="https://simonwillison.net/">simonwillison.net</a></span>
+      </section>
+
+      <section>
+        <h2>Watchlist · was als Nächstes zählt</h2>
+        <ul class="news-item-list">
+          <li><strong>Qwen Open-Weights</strong>: kommen die angekündigten offenen 27B/35B in den Tagen nach der Conference auf HuggingFace — oder bleibt es bei Versprechen?</li>
+          <li><strong>MCP-Risk-Metadata (#2793)</strong>: setzt sich das Etikett-Schema durch, bevor das RC am 28.07. eingefroren wird?</li>
+          <li><strong>DeepSeek-Preis-Seite</strong>: wann zieht die Primärseite nach — oder rollt der Rabatt am 31.05. doch zurück?</li>
+          <li><strong>Gemini CLI 18.06.</strong>: harter Sunset für Free + AI Pro/Ultra — wer noch darauf baut, plant den Umzug auf Antigravity CLI.</li>
+        </ul>
+
+        <p class="byline">Damit endet der Brief für heute. Gestern lieferte die Bühne ein geschlossenes Flaggschiff, heute lieferten die Werkzeuge: Claude Code und Codex beide mit echten Builds, dazu ein bemerkenswerter Governance-Schub im MCP-Repo. Der lokale Stack wartet weiter auf offenes Qwen 3.7, die Benchmark-Spitze steht eisern. Morgen schauen wir, ob die SEP-Welle Substanz behält. Bis dahin.</p>
+
+        <div class="footnotes">
+          <ol start="7">
+            <li id="ref-7"><a href="https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2790">modelcontextprotocol — PR #2790 „Codex and ChatGPT support MCP server instructions" (gemergt 26.05.); jüngster Merge #2800 (27.05.); RC-Ziel 28.07.</a>, 26.–27.05.2026</li>
+            <li id="ref-8"><a href="https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2793">modelcontextprotocol — SEPs #2793 (Tool Risk Metadata), #2792 (i18n), #2778 (constraints), alle offen; #2787 Attestation + #2789 Test-Vektoren</a>, 26.05.2026</li>
+            <li id="ref-9"><a href="https://github.com/ggml-org/llama.cpp/releases">ggml-org/llama.cpp — b9354 (hoch von b9334)</a>, 27.05.2026</li>
+            <li id="ref-10"><a href="https://github.com/SWE-bench/swe-bench.github.io/blob/master/data/leaderboards.json">swe-bench.github.io — Verified-Leaderboard (offene Daten, 180 Einträge), Spitze 79,2 %, kein Eintrag ≥80 %, kein verified:true</a>, abgerufen 27.05.2026</li>
+            <li id="ref-11"><a href="https://aider.chat/docs/leaderboards/">aider.chat — Polyglot-Leaderboard (Stand 20.11.2025)</a>, abgerufen 27.05.2026</li>
+          </ol>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Mittwoch, der siebenundzwanzigste Mai. Gestern war der Tag der großen Bühne, die Qwen Conference, und für den lokalen Stack blieb sie leer. Heute ist es umgekehrt: kein Modell-Spektakel, dafür ein Werkzeug-Tag. Die beiden Programme, die Daniel täglich anfasst, haben nach Tagen Stille beide neue Versionen geliefert.</p>
+  <p>Claude Code ist heute auf Version zwei-Punkt-eins-Punkt-hundertzweiundfünfzig gesprungen. Das Wichtigste: der eingebaute Code-Review schreibt seine Vorschläge jetzt direkt in den Arbeitsstand, statt sie nur aufzulisten. Außerdem dürfen Skills jetzt einzelne Werkzeuge gezielt sperren, solange sie laufen, und neue Skills lassen sich ohne Neustart nachladen. Eine kleine Änderung mit Beigeschmack: der autonome Modus läuft jetzt ohne vorgeschaltete Zustimmungsfrage — bequemer, aber auch eine Bestätigung weniger vor unbeaufsichtigten Läufen.</p>
+  <p>OpenAI Codex ist gestern Abend von der Alpha auf stabil gesprungen, auf Version null-Punkt-hundertvierunddreißig. Neu sind eine durchsuchbare Gesprächs-Historie und feineres Handling für Model-Context-Protocol-Server. Vor allem laufen jetzt nur-lesende Werkzeuge parallel statt nacheinander — das macht agentische Läufe spürbar schneller.</p>
+  <p>Passend dazu lief im Spec-Repo des Model Context Protocol der aktivste Tag seit Wochen, und der Schwerpunkt ist Sicherheit und Nachvollziehbarkeit. Gestern wurde festgehalten, dass Codex und ChatGPT jetzt die Bedienungs-Hinweise eines Servers tatsächlich lesen. Dazu kamen an einem Tag gleich drei neue Vorschläge, darunter Risiko-Etiketten für Werkzeuge: ein maschinenlesbares Schild, das sagt, ob ein Werkzeug nur liest oder auch löschen kann. Der schon länger offene Attestations-Vorschlag bekam erste Test-Vektoren.</p>
+  <p>Bei den kleineren Werkzeugen tickten JetBrains Junie, GitHub Copilot und Windsurf weiter. Cline und Zed blieben unverändert seit gestern. Aider liegt weiter brach, seit Februar nichts Neues für Nutzer.</p>
+  <p>Und der Kontrast zu gestern bleibt: Qwen drei-Punkt-sieben hat weiter keine offenen Gewichte. HuggingFace trägt als neueste Familie weiter drei-Punkt-sechs. Neu bestätigt ist sogar, dass auch die Plus-Variante geschlossen bleibt — die Hoffnung auf ein offenes Plus ist damit erledigt. Bei DeepSeek zeigt die offizielle Preis-Seite weiter den alten Text mit dem Enddatum einunddreißigster Mai, obwohl Medien den Rabatt als dauerhaft melden.</p>
+  <p>Die Benchmarks stehen weiter eisern still. SWE-Bench Verified hält bei neunundsiebzig Komma zwei Prozent, die jüngste geprüfte Einreichung ist vom sechsundzwanzigsten Februar, kein Eintrag liegt über achtzig Prozent. Die herumgereichten siebenundachtzig Prozent für Opus vier-Punkt-sieben stehen nicht im prüfbaren Datensatz.</p>
+  <p>Zum Schluss eine Mahnung von Simon Willison: er dokumentiert, wie sich über Microsoft Copilot Cowork per Prompt-Injection Daten herausschleusen lassen. Je autonomer die Agenten, desto wichtiger werden Audit-Spuren und Risiko-Etiketten — genau das, woran das Model Context Protocol gerade arbeitet. Morgen schauen wir, ob die Vorschlags-Welle Substanz behält. Bis dahin.</p>
+</div>
+
+</body>
+</html>

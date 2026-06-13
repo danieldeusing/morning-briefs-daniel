@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI-Dev · 2026-06-01</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI-Dev</span>
+    <span class="dot">·</span>
+    <span>Edição 01/06/2026</span>
+  </div>
+  <h1 class="masthead-title">Agentes voltam para casa: sandbox na sua própria rede</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Segunda-feira tranquila — sem grandes notícias de última hora, mas duas semanas de infraestrutura pesada chegando agora. Os grandes lançamentos caíram em meados/fim de maio: "Code with Claude" da Anthropic (19/20 de maio) e Google I/O (19 de maio). Hoje não é sobre um modelo novo, mas sobre onde seu agente vai <em>rodar</em> no futuro — e uma data que você deve marcar se usa Gemini CLI.</p>
+    <ul>
+      <li><span class="chip hot">Claude</span> <strong>Self-hosted Sandboxes (Beta Pública, desde 19 de maio)</strong>: Orquestração permanece na Anthropic, mas a <em>execução</em> roda na sua infraestrutura — código, filesystem e saída de rede nunca deixam sua fronteira.</li>
+      <li><span class="chip">MCP</span> <strong>MCP Tunnels (Preview de Pesquisa)</strong>: Agente alcança servidores MCP privados sem um endpoint público — uma conexão criptografada ponta a ponta, nenhuma regra de firewall de entrada.</li>
+      <li><span class="chip good">Tool</span> <strong>Provedores de Primeiro Dia</strong>: Cloudflare, Daytona, Modal e Vercel têm guias prontos para sandbox — você não precisa construir o worker do zero.</li>
+      <li><span class="chip">Google</span> <strong>Antigravity 2.0 (19 de maio)</strong>: App de desktop + CLI + SDK. O harness de agente como produto — impulsionado por Gemini 3.5 Flash.</li>
+      <li><span class="chip hot">Atenção</span> <strong>Prazo 18 de junho</strong>: Gemini CLI &amp; extensões Code-Assist IDE desligam para planos consumer — migração para CLI Antigravity necessária.</li>
+      <li><span class="chip">Bench</span> <strong>Gemini 3.5 Pro ainda não foi lançado</strong>: confirmado para junho, mas não entregue — Pichai: "nos deem até o mês que vem". Live é apenas Flash.</li>
+      <li><span class="chip good">Tool</span> <strong>Cursor 3.6</strong> (29 de maio) Modo Auto-Review; <strong>OpenHands 1.7.0</strong>, <strong>Cline</strong> v3.82.0 + SDK. <strong>Aider</strong> continua quieto desde fev.</li>
+      <li><span class="chip">$$</span> <strong>Harness</strong> aparece em feeds de notícias — mas os 240 Mi. $ são de 11 de dezembro de 2025, não é uma história de junho. Contexto abaixo.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Semana à frente</div>
+      <div class="timeline-sub">O que caiu em meados de maio chega agora — e qual prazo está se aproximando</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Ter 26.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Guias de Provedor de Sandbox</span>
+          <span>Docs de Cloudflare/Daytona/Modal/Vercel entram no ar</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Qui 28.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Opus 4.8 (veja ontem)</span>
+          <span>Contexto para modelo sandbox: suporte NextOpus adicionado</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sex 29.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cursor 3.6 Auto-Review</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Seg 01.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Hoje</span>
+          <span>Esta edição — resumo sandbox/tunnel</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Seg 08.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cursor Bugbot: Cobrança por Uso na renovação</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Qui 18.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Gemini CLI / Extensões Code-Assist: desligamento consumer</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Junho</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Esperado: Gemini 3.5 Pro GA ("próximo mês")</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section>
+        <h2>Self-hosted Sandboxes: o agente agora roda em você</h2>
+        <article class="news-item">
+          <p>Em "Code with Claude" em Londres (<strong>19/20 de maio</strong>, primeira conferência de dev da Anthropic na Europa), chegou o anúncio mais importante para nós — não um modelo, mas uma decisão de arquitetura. <strong>Self-hosted Sandboxes</strong> entraram em <strong>Beta Pública</strong>: orquestração (agent loop, gerenciamento de contexto, recuperação de erros) permanece no lado da Anthropic, mas a <em>execução de ferramentas</em> se move para infraestrutura que você controla. "<em>The agent's code, filesystem, and network egress never leave your environment</em>", diz a documentação oficial.<sup>[1]</sup></p>
+          <div class="eli5">
+            <strong class="eli5-term">Sandbox:</strong> um playground isolado onde o agente executa seus comandos (<code>bash</code>, ler/escrever arquivos, executar código) — separado do resto do seu sistema. Até agora, este playground era a nuvem da Anthropic. Agora você pode hospedá-lo em seu próprio servidor: Anthropic diz "faça o passo X", mas <em>onde</em> X roda é escolha sua. Como o arquiteto envia a planta, mas a casa fica em seu terreno.
+          </div>
+          <p>Na prática: um <strong>Environment Worker</strong> na sua máquina consulta uma fila de trabalho, assume a sessão, carrega as skills e executa as chamadas de ferramentas localmente. CLI (<code>ant beta:worker poll</code>) e SDK já incluem o worker; para isolamento mais forte você inicia um container Docker fresco por sessão. Por que isso importa: para qualquer coisa que não pode atravessar sua fronteira de rede — serviços internos, conformidade, elegibilidade ZDR/HIPAA — Managed Agents eram proibidos antes. Agora não são.</p>
+          <div class="callout info">
+            <span class="callout-label">Ressalva</span>
+            Nem tudo está pronto ainda: "<em>Memory is not yet supported with self-hosted sandboxes</em>", diz a documentação. E Claude Platform on AWS não tem o endpoint da lista de trabalho. Beta Pública significa Beta Pública.
+          </div>
+          <span class="src"><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes">platform.claude.com</a> · <a href="https://thenewstack.io/anthropic-mcp-tunnels-sandboxes/">thenewstack.io</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>MCP Tunnels: servidor privado sem porta aberta <span class="h2-refs">[1][2]</span></h2>
+        <article class="news-item">
+          <p>O anúncio irmão — <strong>MCP Tunnels</strong> — é apenas <strong>Preview de Pesquisa</strong> (acesso sob solicitação), mas conceitualmente exatamente o que muitos estavam esperando. Eles resolvem o problema feio: seu agente em nuvem precisa alcançar um servidor MCP profundo em sua rede privada — sem expô-lo à internet pública.</p>
+          <div class="eli5">
+            <strong class="eli5-term">MCP (Model Context Protocol):</strong> um padrão USB para ferramentas de IA. Em vez de encaixar cada ferramenta individualmente, o agente fala um protocolo comum, e cada "servidor MCP" (seu banco de dados, seu sistema de tickets, uma API interna) se registra como um soquete. Até agora você tinha que deixar esse soquete alcançável — então abre um buraco no firewall. Esse é exatamente o risco.
+          </div>
+          <p>O tunnel inverte a direção: um gateway leve que você implementa em sua rede abre <strong>uma única conexão de saída</strong>, criptografada ponta a ponta — "<em>no inbound firewall rules, no public endpoints</em>".<sup>[1]</sup> Sandbox e tunnel são independentemente combinavelmente: até uma sessão na nuvem da Anthropic pode alcançar seus servidores MCP privados através do tunnel. <em>Minha leitura:</em> Este é o passo de "demo interessante" para "pode ir na rede corporativa". Para mandatos como os da twiceD com requisitos de soberania, a combinação sandbox-plus-tunnel é a primeira vez que Managed Agents sequer vale considerar.</p>
+          <div class="footnotes">
+            <ol>
+              <li id="fn1"><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes">Anthropic Docs — Self-hosted sandboxes (em 01/06/2026)</a></li>
+              <li id="fn2"><a href="https://www.infoq.com/news/2026/05/claude-mcp-tunnels/">InfoQ — Anthropic MCP Tunnels (05/2026)</a></li>
+            </ol>
+          </div>
+        </article>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>Antigravity 2.0: o harness vira produto <span class="h2-refs">[3][4]</span></h2>
+        <article class="news-item">
+          <p>No Google I/O (<strong>19 de maio</strong>), chegou <strong>Antigravity 2.0</strong> — resposta da Google para ferramentas de coding agentic, agora como um trio: uma <strong>App de Desktop</strong> standalone (orquestre múltiplos agentes, workflows de subagentes, tarefas de fundo agendadas), uma <strong>CLI</strong> e um <strong>SDK</strong> que expõe o mesmo agent harness alimentando os próprios produtos da Google. A CLI é "lightweight, high-velocity" — segundo TechCrunch escrita em Go e portanto mais ágil; a nota oficial de I/O não nomeia a linguagem, então considere o "em Go" como secundário.<sup>[3]</sup></p>
+          <p>O motor abaixo é <strong>Gemini 3.5 Flash</strong>, disponível em geral desde 19 de maio. Nos benches de coding/agentic que a própria Google publicou, Flash bate o 3.1 Pro mais antigo: <strong>Terminal-Bench 2.1 em 76,2 %</strong> (3.1 Pro: 70,3 %), MCP Atlas 83,6 %. Notável: <strong>Artificial Analysis mediu independentemente esses números — delta 0,0</strong> para os claims de 19 de maio do Google.<sup>[4]</sup> Isso é raro e argumenta contra benchmark gaming aqui.</p>
+          <div class="eli5">
+            <strong class="eli5-term">Terminal-Bench:</strong> testa se um agente resolve tarefas reais em um shell real — instalar pacotes, consertar builds, escrever scripts — não apenas snippets de código isolados. Mais próximo do seu dia a dia que um teste de algoritmo abstrato.
+          </div>
+          <p><em>Ceticismo necessário mesmo assim:</em> No <strong>SWE-Bench Pro</strong> mais pesado, a vantagem do Flash é minúscula — 55,1 % vs. 54,2 % para 3.1 Pro.<sup>[5]</sup> O que significa: em bugs reais multi-arquivo do GitHub, o salto é mais velocidade (4x mais rápido) que capacidade bruta. Para loops agentic iterativos onde você quer muitas execuções por minuto, velocidade pode ser a vitória.</p>
+          <span class="src"><a href="https://techcrunch.com/2026/05/19/google-launches-antigravity-2-0-with-an-updated-desktop-app-and-cli-tool-at-io-2026/">techcrunch.com</a> · <a href="https://deepmind.google/models/model-cards/gemini-3-5-flash/">deepmind.google</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Gemini 3.5 Pro: confirmado, mas não aqui</h2>
+        <article class="news-item">
+          <p>Importante para definir expectativas: <strong>Gemini 3.5 Pro NÃO foi lançado a partir de hoje (01 de junho)</strong>. O changelog da API mostra apenas <code>gemini-3.5-flash</code>; o modelo Pro está listado como "coming soon", em preview Vertex limitado. No palco de I/O, Sundar Pichai literalmente disse "<em>give us until next month to get it to you</em>" — então junho, sem data fixa.<sup>[6]</sup></p>
+          <p><em>Contexto:</em> Qualquer um lendo "Gemini 3.5 Pro bate Opus" em feeds de notícias de IA está lendo especulação ou números de Flash com rótulo errado como Pro. O que é esperado é um contexto de 2 milhões de tokens e um flagship de coding para rivalizar Opus 4.8 e GPT-5.5 — mas até uma entrada GA datada aparecer, é uma promessa. Observe, não planeje com isso.</p>
+          <div class="footnotes">
+            <ol start="3">
+              <li id="fn3"><a href="https://blog.google/innovation-and-ai/technology/developers-tools/google-io-2026-developer-highlights/">Google — I/O 2026 Developer Highlights (19 de maio de 2026)</a></li>
+              <li id="fn4"><a href="https://www.digitalapplied.com/blog/gemini-3-5-flash-5-day-benchmarks-independent-eval-roundup">DigitalApplied — Gemini 3.5 Flash, Independent Eval Roundup</a></li>
+              <li id="fn5"><a href="https://llm-stats.com/blog/research/gemini-3-5-flash-launch">llm-stats — Gemini 3.5 Flash Benchmarks</a></li>
+              <li id="fn6"><a href="https://ai.google.dev/gemini-api/docs/changelog">Google AI — Gemini API Changelog</a></li>
+            </ol>
+          </div>
+        </article>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>Prazo 18 de junho: Gemini CLI está sendo desligado <span class="chip hot">Atenção</span></h2>
+        <article class="news-item">
+          <p>Concreto e calendado: Google está migrando Gemini CLI para a nova <strong>Antigravity CLI</strong>. Em <strong>18 de junho de 2026</strong>, <strong>Gemini CLI e as extensões Gemini Code-Assist IDE</strong> desligarão — para usuários de AI-Pro, AI-Ultra e Free-Tier do Code Assist for Individuals.<sup>[7]</sup> Licenças Standard/Enterprise pagas e integrações GitHub via Google Cloud retêm acesso.</p>
+          <div class="callout warn">
+            <span class="callout-label">Se isso o afeta</span>
+            Se você usa Gemini CLI em um plano consumer (por ex., em um script ou pipeline), você tem até 18 de junho para migrar para Antigravity CLI. Google recomenda mudar agora; guias em vídeo vêm "nas próximas semanas". Três semanas de aviso — marque no seu calendário.
+          </div>
+          <span class="src"><a href="https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/">developers.googleblog.com</a></span>
+          <div class="footnotes">
+            <ol start="7">
+              <li id="fn7"><a href="https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/">Google Developers Blog — Gemini CLI → Antigravity CLI (19 de maio de 2026)</a></li>
+            </ol>
+          </div>
+        </article>
+      </section>
+
+      <section>
+        <h2>Chamada: Harnesses &amp; IDEs</h2>
+        <article class="news-item">
+          <h3>Cursor 3.6 — Auto-Review <span class="chip good">experimente</span></h3>
+          <p><strong>Cursor 3.6</strong> (29 de maio) traz <strong>Auto-Review</strong> como um modo de execução: longas execuções agentic com menos cliques de aprovação, mas execução segura. <em>Por que experimentar:</em> o meio termo entre cego "permitir tudo" e clique a clique. De lado: <strong>Bugbot</strong> muda para cobrança por uso (sem taxas de assento), efetivo da primeira renovação após <strong>08 de junho</strong> — relevante se você paga por um time.</p>
+          <span class="src"><a href="https://cursor.com/changelog">cursor.com</a></span>
+        </article>
+        <article class="news-item">
+          <h3>OpenHands &amp; Cline</h3>
+          <p><strong>OpenHands 1.7.0</strong> (20 de maio): perfis LLM salvos + comando <code>/model</code> para mudar no meio do chat. <strong>Cline</strong> em v3.82.0 e migrou sua CLI para o novo <strong>Cline SDK</strong> (extensões IDE chegando) — a tendência em direção ao agent runtime-as-SDK corre por todas as ferramentas.</p>
+          <span class="src"><a href="https://www.openhands.dev/blog/openhands-product-update---may-2026">openhands.dev</a> · <a href="https://github.com/cline/cline/releases">github.com/cline</a></span>
+        </article>
+        <div class="callout info">
+          <span class="callout-label">Quieto nas sombras</span>
+          <strong>Aider</strong> permanece quieto — nenhum novo lançamento de tag desde v0.86.x (meados de fevereiro); dormente por mais de três meses. <strong>Continue</strong>: ativo no ecossistema, mas nenhum salto relevante ao dev na janela de 7 dias. <strong>JetBrains AI / GitHub Copilot</strong>: nenhum movimento na janela.
+        </div>
+      </section>
+
+      <section>
+        <h2>Contexto: Harness não é uma história de junho</h2>
+        <article class="news-item">
+          <p>Alguns feeds de financiamento de IA estão circulando <strong>Harness</strong> (AI-CI/CD, "everything after code") com uma <strong>rodada de 240 Mi. $</strong> em avaliação de 5,5 Bi. $, liderada por Goldman Sachs Alternatives. Chave para datação: a rodada foi anunciada em <strong>11 de dezembro de 2025</strong> — seis meses atrás, não notícia de hoje.<sup>[8]</sup> Mencionado porque está circulando como "atual". A substância para nós: Harness aborda os 60–70% do tempo que vêm <em>após</em> a escrita de código (testes, deploy, segurança, conformidade) — a tese de que o próximo foco agentic é o "outer loop", não o editor. A <em>tese</em> é relevante; o financiamento é contexto, não um evento de junho.</p>
+          <span class="src"><a href="https://www.harness.io/blog/240m-financing-to-bring-ai-to-everything-after-code">harness.io</a></span>
+          <div class="footnotes">
+            <ol start="8">
+              <li id="fn8"><a href="https://www.prnewswire.com/news-releases/harness-announces-240m-financing-round-led-by-goldman-sachs-alternatives-to-advance-ai-for-everything-after-code-302638707.html">PRNewswire — Harness 240 Mi. $ (11 de dezembro de 2025)</a></li>
+            </ol>
+          </div>
+        </article>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>É segunda-feira, primeiro de junho. Um dia de notícias tranquilo para coding assistido por IA — sem manchete de última hora, mas duas semanas de infraestrutura pesada chegando agora. Os grandes lançamentos caíram em meados de maio: conferência Code with Claude da Anthropic em Londres nos dias dezenove e vinte, e a conferência de desenvolvedores Google I/O no dia dezenove. Hoje não é sobre um modelo novo, mas sobre onde seu agente vai rodar no futuro.</p>
+  <p>O anúncio mais importante é o das self-hosted sandboxes da Anthropic, em beta pública desde dezenove de maio. Uma sandbox é o playground isolado onde o agente executa seus comandos. Até agora, este playground era a nuvem da Anthropic. Agora você pode hospedá-lo em seu próprio servidor: orquestração permanece na Anthropic, mas código, filesystem e acesso à rede nunca deixam sua fronteira. Para qualquer coisa que precisa ficar em sua rede por razões de conformidade, agentes gerenciados eram proibidos antes — agora não são. Uma desvantagem: suporte a memória ainda não está aqui.</p>
+  <p>Depois há MCP Tunnels, embora apenas como preview de pesquisa. MCP é um padrão universal para ferramentas de IA conversarem com seus sistemas — como uma porta USB para ferramentas. Até agora você tinha que furar um firewall. O tunnel vira isso: um pequeno gateway em sua rede abre uma única conexão de saída, criptografada. Nenhuma porta aberta. Esta combinação de sandbox e tunnel é o que torna até valer a pena considerar tais agentes para a rede corporativa.</p>
+  <p>Do lado do Google veio Antigravity dois ponto zero: um app de desktop, uma linha de comando e um SDK que abre o mesmo agent harness rotor os próprios produtos do Google. O motor é Gemini três ponto cinco Flash. No teste de coding Terminal-Bench, Flash marca em setenta e seis ponto dois por cento — e inusualmente, um pessoal independente chamado Artificial Analysis mediu exatamente esse número sem desvio. No SWE-bench Pro mais pesado, porém, a vantagem é minúscula. O ganho é mais velocidade que capacidade bruta.</p>
+  <p>Importante para expectativas: o grande Gemini três ponto cinco Pro ainda não está aqui. É confirmado para junho, mas Sundar Pichai apenas disse no palco, nos deem até o próximo mês. Qualquer um lendo nos feeds que Pro bate Opus está lendo especulação. Live é apenas Flash.</p>
+  <p>Um evento concreto no calendário: em dezoito de junho, Google desliga a linha de comando Gemini e as extensões Code-Assist para planos consumer. Se você usa isso em um script ou pipeline, deve migrar para a nova linha de comando Antigravity antes disso. Três semanas de aviso.</p>
+  <p>No lado das ferramentas: Cursor trouxe versão três ponto seis com um modo auto-review que permite longas execuções com menos cliques de confirmação. OpenHands está em um ponto sete, Cline em três ponto oitenta e dois com um novo SDK. Mas Aider permanece quieto, dormente por mais de três meses. E se você vê Harness com duzentos e quarenta milhões de dólares como notícia: a rodada é de onze de dezembro, seis meses atrás — a tese sobre automatizar o que vem depois do código é interessante, o dinheiro não é.</p>
+  <p>O que observar: se Gemini três ponto cinco Pro consegue uma entrada de lançamento real ainda em junho, e como rapidamente começam a chegar relatórios do mundo real sobre self-hosted sandboxes. Amanhã verificamos o que se moveu na stack de coding novamente.</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief AI-Dev — 2026-05-18</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+
+<!-- Chart.js für den Benchmark-Bar-Chart. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI-Dev</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-05-18</span>
+  </div>
+  <h1 class="masthead-title">I/O minus 24h: OpenAI zieht Codex aufs Handy, Anthropic lässt den Agent von alleine laufen</h1>
+</header>
+
+<main class="shell">
+
+  <!-- BAND 1: TL;DR -->
+  <section class="tldr">
+    <p class="lead">Heute ist der Vorabend. Morgen um 19:00 deutscher Zeit beginnt Google I/O — das letzte Embargo-Fenster, in dem Anbieter ihre Drops noch einsortieren können, bevor die Bühne Aufmerksamkeit absaugt. Bemerkenswert: OpenAI und Anthropic gehen <em>nicht</em> in Deckung, sondern haben am Wochenende beide unverschämt prominent gedroppt — Codex landet auf dem Handy, Claude Code bekommt einen <code>/goal</code>-Loop, der den Agent eigenständig zu Ende arbeiten lässt. Das ist die ehrliche Lesart von „Pre-I/O ist still": die Lautstärke verschiebt sich von Modell-Releases zu Workflow-Mechanik. Wer heute aufräumt, hat morgen Bandbreite für die Gemini-Welle.</p>
+    <ul>
+      <li><span class="chip hot">Google</span> <strong>I/O Countdown 24h</strong>: Keynote Di 19.05. 10:00 PT / 19:00 MEZ, Developer-Keynote 13:30 PT / 22:30 MEZ; agentic-coding-Sessions am Dienstagabend</li>
+      <li><span class="chip hot">OpenAI</span> <strong>Codex aufs Handy</strong> (seit Do 14.05.): ChatGPT-iOS/Android-App steuert Codex-Sessions auf Mac/Server, Remote-SSH jetzt GA</li>
+      <li><span class="chip hot">Anthropic</span> <strong>Claude Code v2.1.139</strong> (12.05.): <code>/goal</code>-Befehl + Agent-View-Dashboard für alle laufenden Sessions</li>
+      <li><span class="chip good">Tool</span> <strong>Cursor 3.4</strong> (13.05.): Dockerfile-basierte Dev-Environments für Cloud-Agenten, 70 % schnelleres Layer-Caching, Teams-Integration</li>
+      <li><span class="chip good">OSS</span> <strong>Cline SDK</strong> (14.05.): kompletter Agent-Loop als Apache-2.0-TypeScript-Paket — dritter offener Agent-Runtime neben Anthropic SDK und OpenHands</li>
+      <li><span class="chip good">Tool</span> <strong>Zed 1.2.6</strong> (15.05.): erster Editor, der ChatGPT-Abos statt API-Tokens als Agent-Provider akzeptiert</li>
+      <li><span class="chip">Tool</span> <strong>GitHub Copilot Desktop App</strong> (14.05.) in Technical Preview — Microsofts Antwort auf Cursor und Devin, eigene Surface ausserhalb der IDE</li>
+      <li><span class="chip hot">MCP</span> <strong>Drei Datenbank-MCP-CVEs</strong> (13.05.): Apache Doris, Alibaba RDS, Apache Pinot — Pinot bleibt vorerst unpatched</li>
+      <li><span class="chip">Bench</span> Gemini 3.1 Pro Preview ist seit 13.05. im Code-Assist sichtbar — Google zeigt morgen wahrscheinlich GA</li>
+      <li><span class="chip">Local</span> llama.cpp tickt durch (b9202-Bereich), <strong>vLLM 0.21.0 mit yank-Verdacht</strong>: nicht sauber bestätigt, vorerst auf 0.20.2 bleiben</li>
+    </ul>
+  </section>
+
+  <!-- BAND 2: Wochenausblick -->
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick · AI-Dev</div>
+      <div class="timeline-sub">Pre-I/O-Stille → Tuesday-Bühne → Recap-Welle bis Freitag, Wochenend-Ruhe</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Mo 18.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Heute</strong></span>
+          <span>I/O-Embargo-Drops bei Reviewern erwartet</span>
+          <span>Cursor-Wochen-Slot (3.4 frisch, evtl. 3.4.1)</span>
+          <span>AGENTS.md im eigenen Repo schreiben, falls noch nicht</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Di 19.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Google I/O · Keynote 10:00 PT / 19:00 MEZ</strong></span>
+          <span>Developer-Keynote 13:30 PT / 22:30 MEZ</span>
+          <span>16:30 PT „Agent-first workflows from prompt to production"</span>
+          <span>Erwartet: Gemini 3.x bump, Jules V2 (Jitro), Antigravity-Update, evtl. „Omni"-Video-Modell</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 20.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>I/O Tag 2 · Codelab-Sessions</span>
+          <span>Gemini Code Assist Live-Demos</span>
+          <span>Erste Reaktionen aus Open-Weights-Lager (DeepSeek/Qwen)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Do 21.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>I/O On-Demand-Sessions verfügbar</span>
+          <span>Recap-Welle in Newslettern und Benchmark-Updates</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fr 22.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cursor-Freitags-Build-Slot</span>
+          <span>Reaktionen Open-Weights (Coder-Releases historisch häufig Fr)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">So 31.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>OpenAI Codex-Pro-2×-Usage-Promo läuft aus (laut TC)</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mo 15.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Claude-Doppel-Stichtag</strong> (Carry-over)</span>
+          <span>Credit-Pool-Switch + Sonnet-4/Opus-4 (Mai-Snapshots) retired</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <!-- COLUMN 1: Frontier Labs -->
+    <div class="col">
+
+      <section>
+        <h2>OpenAI · Codex zieht aufs Handy, Remote-SSH wird GA <span class="h2-refs">[1][2][3]</span></h2>
+
+        <p>OpenAIs Donnerstag-Drop (14.05.) ist die strukturell wichtigste Bewegung der Woche. Codex landet als <strong>Steuersurface in der ChatGPT-App auf iOS und Android</strong> — über alle Pläne hinweg, einschliesslich Free und Go. Wichtige Einschränkung: das Handy verbindet sich zur Codex-Session, die auf deinem Mac (Codex-Desktop-App) läuft. Windows-Support angekündigt, undatiert.</p>
+
+        <article class="news-item">
+          <h3>Was das praktisch ändert</h3>
+          <p>Bisher war die Approval-Schleife für autonome Agenten ein Argument gegen lange Laufzeiten — man wollte nicht eine Stunde vor dem Terminal sitzen, um „yes" zu tippen. Mit der Mobile-Anbindung kannst du den Agent auf der Mini im Büro laufen lassen, im Zug ein <em>„run the migration"</em> bestätigen, einen Diff genehmigen, Test-Output durchscrollen. Live-Project-Context, Plugins, Screenshots, Terminal-Output, Diffs, Test-Resultate — alles auf dem Handy.</p>
+          <p>Skeptische Note: bei Free/Go läuft das auf OpenAI-Infrastruktur, bei Plus/Pro lokal — das Privacy-Modell zwischen den Tiers ist nicht gut dokumentiert. Wer für Kunden arbeitet, klärt das vor dem ersten Run.</p>
+          <span class="src"><a href="https://openai.com/index/work-with-codex-from-anywhere/">openai.com</a> · <a href="https://techcrunch.com/2026/05/14/openai-says-codex-is-coming-to-your-phone/">techcrunch.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Remote-SSH + Hooks jetzt GA, Access-Tokens für Business</h3>
+          <p>Im selben Bundle: <strong>Remote-SSH</strong> liest deine <code>~/.ssh/config</code> und führt Threads in fernen Devboxen aus — vorher Preview, jetzt allgemein verfügbar. <strong>Hooks GA</strong>: Prompts auf Secrets scannen, Validatoren laufen lassen, Konversationen loggen, Per-Repo-Customizing. Programmatic Access-Tokens für Business/Enterprise — CI-Pipelines, Release-Workflows. Plus: HIPAA-eligible-Modus für PHI in lokalen Environments unter ChatGPT-Enterprise. OpenAI nennt im Begleittext <strong>&gt; 4 Mio. wöchentliche Codex-User</strong>.</p>
+          <span class="src"><a href="https://developers.openai.com/codex/changelog">developers.openai.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Codex CLI 0.130.0 — Vim-Mode, Bedrock-Auth, <code>remote-control</code>-Entrypoint</h3>
+          <p>Im Schatten der Mobile-Story bringt 0.130.0 substantielle CLI-Arbeit: modaler Vim-Editing-Mode im TUI, neuer Resume/Fork-Picker, bessere Scrollback- und Diff-Views, AWS-Bedrock-Authentication via <code>aws login</code>-Profil. Neuer <code>codex remote-control</code>-Entrypoint öffnet einen Headless-App-Server — das ist das technische Fundament der Mobile-App und gleichzeitig für Eigenbau-Integrationen nutzbar.</p>
+        </article>
+
+        <div class="footnotes">
+          <ol>
+            <li id="ref-1"><a href="https://openai.com/index/work-with-codex-from-anywhere/">openai.com — Work with Codex from anywhere</a>, 14.05.2026</li>
+            <li id="ref-2"><a href="https://techcrunch.com/2026/05/14/openai-says-codex-is-coming-to-your-phone/">TechCrunch — Codex is coming to your phone</a>, 14.05.2026</li>
+            <li id="ref-3"><a href="https://developers.openai.com/codex/changelog">developers.openai.com — Codex changelog</a>, abgerufen 18.05.2026</li>
+          </ol>
+        </div>
+      </section>
+
+      <section>
+        <h2>Anthropic · <code>/goal</code> macht aus der CLI einen Long-Horizon-Agent</h2>
+
+        <p>Claude Code <strong>v2.1.139</strong> ist seit Mo 12.05. draussen, hat sich übers Wochenende verbreitet und ist das Counter-Story zu Codex-Mobile: statt am Workflow drumherum (Steuerung, Approval) zu schrauben, schraubt Anthropic am Agent-Loop selbst.</p>
+
+        <article class="news-item">
+          <h3>Was <code>/goal</code> tut</h3>
+          <p>Du schreibst eine Erfolgs-Bedingung — <em>„alle CI-Tests im Repo grün"</em> oder <em>„Endpoint <code>/orders</code> hat eine OpenAPI-Spec"</em>. Der Agent arbeitet dann über mehrere Turns hin, und ein kleines Prüf-Modell (Haiku per Default) liest jeweils das Transcript und prüft, ob die Bedingung erfüllt ist. Wenn ja, stoppt. Wenn nein, weiter. Funktioniert in interaktivem Modus, in <code>-p</code> und in Remote-Control. Live-Overlay zeigt Elapsed-Time, Turn-Count und Token-Verbrauch.</p>
+          <p>Das ist der gleiche Loop, den Devin und OpenHands seit Monaten haben — Anthropic kommt spät, aber sauber. Der Trick ist die Trennung von Worker und Judge: das billige Haiku prüft, das teure Opus arbeitet.</p>
+          <span class="src"><a href="https://github.com/anthropics/claude-code/releases/tag/v2.1.139">github.com/anthropics/claude-code</a> · <a href="https://code.claude.com/docs/en/goal">code.claude.com/docs/en/goal</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Agent-View — endlich das Dashboard, das gefehlt hat</h3>
+          <p><code>claude agents</code> öffnet eine einzige Liste aller Claude-Code-Sessions im System: laufend, auf User-Input wartend, fertig. Sortierbar, durchklickbar. Wenn du drei Tasks parallel auf drei Repos laufen lässt — exakt der Workflow, den die <code>/goal</code>-Logik erst sinnvoll macht — ist das Dashboard die Voraussetzung, dass du den Überblick behältst.</p>
+        </article>
+
+        <div class="callout info">
+          <span class="callout-label">Try-this</span>
+          Wenn du Claude Code nutzt: <code>npm i -g @anthropic-ai/claude-code@latest</code>, dann auf einem überschaubaren Bug-Fix-Task <code>/goal "alle tests grün und keine flake-warnings"</code> probieren. Schaut ihm 15 Min zu, ob das Judge-Modell vernünftig stoppt — die kritische Frage ist nicht „kann der Worker das", sondern „weiss der Judge, wann fertig fertig ist".
+        </div>
+      </section>
+
+      <section>
+        <h2>Google · was morgen wirklich auf der Bühne stehen wird <span class="h2-refs">[4][5][6]</span></h2>
+
+        <p>I/O 2026 läuft morgen ab 10:00 PT / 19:00 MEZ im Shoreline Amphitheater (Mountain View), Developer-Keynote 13:30 PT / 22:30 MEZ. Programm ist hybrid auf <a href="https://io.google/2026/">io.google/2026</a>. Coding-Track hat zwei explizite Sessions namentlich: <em>„Unlock modern web capabilities in your AI coding workflows"</em> und die agentic-Session am Di-Abend 16:30 PT.</p>
+
+        <article class="news-item">
+          <h3>Bestätigt: Gemini 3.1 Pro Preview im Code Assist</h3>
+          <p>Gemini Code Assist Release-Notes vom <strong>13.05.</strong> listen Gemini 3.1 Pro und Gemini 3.0 Flash als <em>Preview</em> für Agent-Mode, Chat und Code-Gen in VS Code + IntelliJ. Gemini 2.5 Pro/Flash sind jetzt GA. Lesart: 3.1 Pro ist im Tool sichtbar, also wird die Stage-Show morgen <em>mindestens</em> 3.1 Pro öffnen — vermutlich plus ein neues Frontier-Pendant.</p>
+          <span class="src"><a href="https://developers.google.com/gemini-code-assist/resources/release-notes">developers.google.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Leak: „Gemini Omni" — Video-Generations-Modell</h3>
+          <p>Eine UI-String <em>„Powered by Omni"</em> ist seit 02.05. in der Gemini-App im Video-Tab gesichtet, neben dem bisher mit Veo-3.1 betriebenen „Toucan". Sieht stark nach I/O-Reveal aus. Für AI-Coding eher tangential, aber wenn das mit Code-Assist-Integration kommt (Storyboard → Komponenten?), wird's relevant.</p>
+          <span class="src"><a href="https://wavespeed.ai/blog/posts/google-omni-video-model-leak-i-o-2026/">wavespeed.ai</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Leak: Jules V2 unter Codename „Jitro"</h3>
+          <p>Jules war Googles erster autonomer Coding-Agent (asynchron, GitHub-getrieben). V2 soll laut Internal-Builds <strong>goal-driven</strong> sein — du gibst nicht den Task, sondern das Outcome. Konzeptuell dieselbe Richtung wie Anthropics <code>/goal</code>. Erwartet: Waitlist-Launch morgen, früher Zugang für AI Pro/Ultra. Wenn die Demo überzeugt, gehört das in den Test-Stapel.</p>
+          <span class="src"><a href="https://www.testingcatalog.com/google-prepares-jules-v2-agent-capable-of-taking-bigger-tasks/">testingcatalog.com</a></span>
+        </article>
+
+        <div class="footnotes">
+          <ol start="4">
+            <li id="ref-4"><a href="https://io.google/2026/">io.google/2026 — offizielles Programm</a></li>
+            <li id="ref-5"><a href="https://developers.google.com/gemini-code-assist/resources/release-notes">developers.google.com — Code Assist release notes</a>, 13.05.2026</li>
+            <li id="ref-6"><a href="https://9to5google.com/2026/04/14/google-i-o-2026-sessions/">9to5Google — I/O 2026 sessions preview</a></li>
+          </ol>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- COLUMN 2: Tooling -->
+    <div class="col">
+
+      <section>
+        <h2>Cursor 3.4 · Dockerfile-Environments für Cloud-Agenten</h2>
+
+        <p>Cursor hat am Di 13.05. die Hauptbewegung der Woche im Tool-Layer gemacht: <strong>v3.4</strong> bringt <em>development environments for cloud agents</em> — Dockerfile-basierte Env-Konfiguration mit Build-Secrets, Multi-Repo-Environments (bauen auf den bestehenden Multi-Root-Workspaces auf), 70 % schnelleres Layer-Caching, Per-Environment-Audit-Logs + Version-History, Scoped-Egress/Secrets. Zusätzlich am 11.05.: <strong>Microsoft Teams-Integration</strong> — <code>@Cursor</code> in einem Channel mentionen, der Cloud-Agent übernimmt.</p>
+
+        <article class="news-item">
+          <h3>Warum das die wichtige Cursor-Bewegung 2026 ist</h3>
+          <p>Cloud-Agents waren bis vor Quartalen ein „magic black box"-Layer mit unklarer Reproducibility. Mit Dockerfile-Definition wird die Env zur First-Class-Citizen — du kannst die gleiche Env lokal builden, in CI verwenden, im Cloud-Agent laufen lassen. Das senkt die Risk-Hürde, von Local zu Cloud zu wechseln. Wer eine Flotte paralleler Cloud-Agents fahren will (Code-Reviews, Test-Generierung, Migration-Helper), bekommt damit das Audit-Log obendrauf.</p>
+          <span class="src"><a href="https://cursor.com/changelog/05-13-26">cursor.com/changelog</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Zed 1.2.6 · ChatGPT-Abo als Agent-Provider — die kleine grosse Idee</h2>
+
+        <p>Zed hat <strong>am 15.05.</strong> v1.2.5 und v1.2.6 hintereinander veröffentlicht. Die unauffällige, aber paradigmatische Änderung: <strong>du kannst dein ChatGPT-Plus/Pro-Abo statt API-Token als Agent-Provider hinterlegen</strong>. v1.2.6 ergänzt Effort-Level-Steuerung für OpenAI-Modelle über das Subscription-Window.</p>
+
+        <article class="news-item">
+          <h3>Warum das interessant ist</h3>
+          <p>API-Kosten für agentic Workflows skalieren brutal — wer mit Codex/Claude Code intensiv arbeitet, sieht zweistellige Dollar/Stunde. Consumer-Abos sind dagegen für $20/Monat fix bepreist, mit Rate-Limits statt Token-Kosten. Zed legt jetzt eine Schicht drüber, die das Abo als Backend nutzt. Skeptische Note: OpenAIs Terms erlauben das offiziell, aber die Limits sind <em>nicht</em> dieselben wie bei der API — wer hier eine Production-Pipeline draufschnürt, lebt im Hoffnungs-Modus.</p>
+          <span class="src"><a href="https://zed.dev/releases/stable">zed.dev/releases</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Cline · der Agent-Runtime wird OSS — <code>@cline/sdk</code></h2>
+
+        <article class="news-item">
+          <h3>Was am 14.05. passiert ist</h3>
+          <p>Cline hat seinen internen Agent-Harness als <strong>Apache-2.0-TypeScript-SDK</strong> extrahiert (<code>@cline/sdk</code>). Cline-CLI, -Kanban und die IDE-Extensions werden jetzt darauf umgebaut. Das SDK liefert den vollen Loop: LLM-Calls, Tool-Orchestration, Session-Persistence, Multi-Agent-Koordination, Scheduling. Plus: <code>--worktree</code>-Flag, das automatisch ein frisches git-worktree unter <code>~/.cline/worktrees/</code> anlegt — sauber isolierte Task-Läufe ohne Working-Tree-Konflikte.</p>
+          <p>Damit hat das OSS-Lager jetzt drei ernstzunehmende Agent-Runtimes: <strong>Anthropic Claude Agent SDK</strong> (Sept-2025-Pivot), <strong>OpenHands SDK</strong> (All-Hands), <strong>Cline SDK</strong>. Wer als Drittentwickler einen domain-spezifischen Coding-Agent bauen will, hat damit echte Wahl statt vendor-Lock-in.</p>
+          <span class="src"><a href="https://www.marktechpost.com/2026/05/14/cline-releases-cline-sdk-an-open-source-agent-runtime-now-powering-its-cli-and-kanban-with-ide-extensions-being-migrated/">marktechpost.com</a></span>
+        </article>
+
+        <div class="eli5">
+          <strong class="eli5-term">Agent-Runtime:</strong> wie ein Mini-Betriebssystem für LLM-Agents — der Code, der entscheidet <em>„ruf jetzt das LLM, dann führe das vorgeschlagene Tool aus, speichere das Ergebnis, geh in die nächste Runde"</em>. Vorher musste man das pro Projekt neu bauen; jetzt importierst du es wie ein Framework.
+        </div>
+      </section>
+
+      <section>
+        <h2>GitHub Copilot · Desktop App in Technical Preview</h2>
+
+        <article class="news-item">
+          <h3>Microsofts Cursor-Antwort</h3>
+          <p>Am Mi 14.05. hat GitHub eine <strong>Copilot Desktop App</strong> (Technical Preview) angekündigt — agentic Development direkt aus jedem GitHub-Issue oder PR starten, isoliert laufen lassen, steuern, via PR-Review mergen. Zusätzlich diese Woche: <strong>Pro/Pro+/Student-Neuanmeldungen pausiert</strong>, um bestehende Kunden zu schützen; Opus-Modelle vom Pro-Tier entfernt (nur Opus 4.7 bleibt auf Pro+); Rate-Limit-Info wird jetzt inline in VS Code + Copilot CLI angezeigt.</p>
+          <p>Das ist Microsofts klare Aussage, dass Copilot nicht mehr nur eine VS-Code-Extension ist, sondern eine eigene Surface bekommt. Konkurrenz zu Cursor (gleiche Idee, aber Editor-zentriert) und Devin (gleiche Idee, aber agent-zentriert).</p>
+          <span class="src"><a href="https://github.blog/changelog/2026-05-14-github-copilot-app-is-now-available-in-technical-preview/">github.blog/changelog</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Windsurf, Devin, JetBrains, Aider · Wochen-Update</h2>
+
+        <ul class="news-item-list">
+          <li><strong>Windsurf</strong> hat „Adaptive"-Modell-Selektor und tieferes Devin-Review-Bundling am Laufen — Cognitions Akquisition rollt durch die Subscription. GPT-5.5 ist eingeklinkt. <a href="https://windsurf.com/changelog">windsurf.com/changelog</a></li>
+          <li><strong>Devin / Cognition</strong>: am 13.05. <strong>Android-AVD-Support</strong> — Devin kann jetzt einen Android-Emulator hochziehen für autonome App-Entwicklung. Erster grosser Coding-Agent mit Mobile-Emulator. Devin-v3-API aus Beta, RBAC, Skills via <code>/name</code>-Slash. <a href="https://docs.devin.ai/release-notes/overview">docs.devin.ai</a></li>
+          <li><strong>JetBrains Junie</strong>: keine kapazitive Bewegung diese Woche; Stand seit Januar-Launch.</li>
+          <li><strong>Aider</strong>: weiterhin v0.86.2 vom 12.02. — kein neuer Tag. Wer Aider parallel zu den anderen testet, sollte sich nicht wundern, wenn er gegen viel jüngere Konkurrenz antritt.</li>
+          <li><strong>Continue</strong>: jüngster Release v1.5.45 (CLI, 04.03.) — keine getaggte Bewegung diese Woche, aber Commits in der Pipeline.</li>
+          <li><strong>OpenHands</strong>: v1.7.0 (01.05.) bleibt aktuell — Support für Opus 4.6, Sonnet 4.6, Kimi-K2.5, Qwen3-Coder-Next, Gemini 3.1 Pro Preview eingepflegt. <a href="https://github.com/All-Hands-AI/OpenHands/releases">github.com/All-Hands-AI/OpenHands</a></li>
+        </ul>
+      </section>
+
+    </div>
+
+    <!-- COLUMN 3: Open-Stack + Security + Benchmarks -->
+    <div class="col">
+
+      <section>
+        <h2>MCP-Security · drei Datenbank-Server-CVEs auf einmal <span class="h2-refs">[7][8][9]</span></h2>
+
+        <p>Bug-Hunter Konstantin Burov (Akamai) hat am Mi 13.05. drei MCP-Datenbank-Server gleichzeitig gemeldet. Pattern: alle drei führen Tool-Argumente in SQL-/Query-Kontext, ohne sauber zu validieren. Klassisches LLM-Tool-Validation-Loch — der Agent kann „freundliche" Argumente bekommen, die wie Daten aussehen und wie Query-Code wirken.</p>
+
+        <article class="news-item">
+          <h3>Was genau betroffen ist</h3>
+          <ul>
+            <li><strong>Apache Doris MCP Server</strong> — <strong>CVE-2025-66335</strong>, SQL-Injection via unvalidiertem <code>db_name</code> in <code>exec_query</code>. Kein Auth nötig. <strong>Fix in 0.6.1</strong>, jetzt upgraden.</li>
+            <li><strong>Alibaba RDS MCP</strong> — Metadata-Exfiltration. Patch in Arbeit.</li>
+            <li><strong>Apache Pinot MCP</strong> — Takeover-Pfad. <strong>Vendor lehnt Patch vorerst ab</strong>, Empfehlung: server abdrehen oder isolieren.</li>
+          </ul>
+          <span class="src"><a href="https://www.theregister.com/security/2026/05/13/bug-hunter-tracks-down-three-serious-mcp-database-flaws-one-left-unpatched/5238916">theregister.com</a> · <a href="https://www.akamai.com/blog/security-research/one-fluke-3-pattern-mcp-back-end-vulnerabilities">akamai.com</a> · <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-66335">nvd.nist.gov</a></span>
+        </article>
+
+        <div class="callout warn">
+          <span class="callout-label">Achtung</span>
+          Wer einen MCP-Server vor eine Datenbank gehängt hat: heute überprüfen. Die Burov-Befunde sind das deutlichste Signal dieses Quartals, dass MCP-Server denselben Threat-Modellierungs-Aufwand brauchen wie öffentliche APIs. Auth, Input-Validation, Least-Privilege-DB-User — alles non-negotiable.
+        </div>
+
+        <p>Weiterhin im Hintergrund relevant: die <strong>OX-Security-„Mother of All AI Supply Chains"</strong>-Welle (April) berichtet von ~7.000 öffentlich erreichbaren Servern und 150 Mio.+ Downloads im MCP-STDIO-Pfad — Anthropic nennt das öffentlich „expected behavior". Plus offene CVEs: <strong>CVE-2026-32211</strong> (Azure MCP), <strong>CVE-2026-33032</strong> (nginx-ui MCP, CVSS 9.8), <strong>CVE-2026-26118</strong> (Microsoft MCP tool hijacking).</p>
+
+        <div class="footnotes">
+          <ol start="7">
+            <li id="ref-7"><a href="https://www.theregister.com/security/2026/05/13/bug-hunter-tracks-down-three-serious-mcp-database-flaws-one-left-unpatched/5238916">The Register — Bug hunter tracks down MCP DB flaws</a>, 13.05.2026</li>
+            <li id="ref-8"><a href="https://www.akamai.com/blog/security-research/one-fluke-3-pattern-mcp-back-end-vulnerabilities">Akamai Research — MCP back-end vulnerabilities</a></li>
+            <li id="ref-9"><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-66335">NVD CVE-2025-66335</a></li>
+          </ol>
+        </div>
+      </section>
+
+      <section>
+        <h2>Lokaler Stack · llama.cpp tickt, vLLM 0.21.0 mit yank-Verdacht</h2>
+
+        <article class="news-item">
+          <h3>llama.cpp im b9202-Bereich</h3>
+          <p>Geht weiter im Vier-Stunden-Takt. Das Mai-Highlight war die DeepSeek-V4-Vollintegration zwischen 04. und 11.05.: GGUF-Konversion, Runtime-Graph/Memory, native FP4/FP8-Quantization, CUDA-Performance. Wer V4 lokal serviert, sollte heute pullen.</p>
+          <span class="src"><a href="https://github.com/ggml-org/llama.cpp/releases">github.com/ggml-org/llama.cpp</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>vLLM 0.21.0 — Status unklar, Recherche widersprüchlich</h3>
+          <p>Der Release-Tag steht laut PyPI auf dem 15.05. Recherche-Reports der letzten 48h sind sich uneinig: eine Quelle sagt <em>„yank wegen Tensor-Parallelism-Bug"</em>, eine andere <em>„Release steht, was zurückgezogen wurde war ein RC"</em>. Eine direkte Verifikation auf PyPI war heute nicht eindeutig möglich — beide Lesarten sind in Newsletter-Quellen vertreten. <strong>Praktische Empfehlung:</strong> bis zur Klärung auf 0.20.2 bleiben (enthält Model-Runner-V2 mit +56 % Throughput-Claim auf GB200), 0.21.0-Upgrade nur in Test-Env, sauberen Tensor-Parallelism-Sanity-Test vorher.</p>
+          <span class="src"><a href="https://pypi.org/project/vllm/">pypi.org/project/vllm</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>Ollama, LM Studio</h3>
+          <p><strong>Ollama 0.23.4</strong> (14.05.): Vision-Image-Inputs in <code>ollama launch opencode</code>, gefixte Claude-Tool-Result-Formatierung für lokale Image-Pfade. Drei Anfang-Mai-CVEs (das „Bleeding Llama"-Cluster + zwei Windows-Updater-Flaws) — für Selbst-Hoster relevant. <strong>LM Studio 0.4.13 Build 1</strong> (13.05.): MLX v1.8.1, parallele Predictions für Vision-Modelle (Qwen 3.5/3.6, Gemma 4).</p>
+          <span class="src"><a href="https://github.com/ollama/ollama/releases">github.com/ollama/ollama</a> · <a href="https://lmstudio.ai/changelog">lmstudio.ai/changelog</a></span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Open-Weights · still seit DeepSeek V4</h2>
+
+        <p>Keine neuen Coding-Modell-Releases im 72h-Fenster. Der April-Stack wirkt nach:</p>
+
+        <ul class="news-item-list">
+          <li><strong>DeepSeek V4 Pro / V4 Flash</strong> (~24.04.): MoE, 1M-Kontext. V4-Pro = 1,6T total / 49B active; V4-Flash = 284B / 13B. Open-weight, auf HF (<code>deepseek-ai/DeepSeek-V4-Pro</code>). Anbieter-Claim: 27 % Compute / 10 % Memory von V3.2 bei 1M Tokens. <a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro">huggingface.co</a></li>
+          <li><strong>Qwen3.6-27B</strong> (April): dense 27B, soll Qwen3.5-397B-A17B-MoE bei Coding-Benchmarks schlagen. <a href="https://qwen.ai/blog?id=qwen3.6-27b">qwen.ai/blog</a></li>
+          <li><strong>IBM Granite 4.1</strong> (29.04.): 3B/8B/30B, Apache-2.0, Coding-Support. <a href="https://research.ibm.com/blog/granite-4-1-ai-foundation-models">research.ibm.com</a></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Bench-Snapshot · skeptisch lesen <span class="h2-refs">[10][11][12]</span></h2>
+
+        <p>Stand 17.–18.05.2026. Drei Leaderboards, drei Geschichten — und alle drei mit dem üblichen Kontaminations-Vorbehalt aus dem Sonntags-Brief.</p>
+
+        <div class="bench-wrap" data-component="benchmark-chart">
+          <div class="bench-head">
+            <div class="bench-title">SWE-Bench Verified · Top-Modelle, Stand 17.05.2026</div>
+            <div class="bench-sub">Marketing-Variante — Anbieter-reported. Pro-Suite (kontaminations-ärmer) liegt 15–25 Punkte tiefer.</div>
+          </div>
+          <div class="bench-chart-wrap">
+            <canvas id="bench-chart"></canvas>
+          </div>
+        </div>
+
+        <article class="news-item">
+          <h3>SWE-Bench, Aider, LiveCodeBench im Schnellcheck</h3>
+          <p><strong>SWE-Bench Verified</strong>: Claude „Mythos Preview" führt mit 93,9 %, Opus 4.7 auf 87,6 %, GPT-5.5 mit 88,7 % (Anbieter-reported, 23.04.). <strong>SWE-Bench Pro</strong> (Scale): Top-Werte im ~46 %-Bereich — die ehrliche Variante, etwa 40 Punkte unter Verified. <strong>Aider Polyglot</strong>: Opus 4.5 89,4 % (Anthropic-reported) &gt; GPT-5-high 88,0 % &gt; Gemini 2.5 Pro Preview 06-05 82,2 %. DeepSeek V3.2-Exp landet bei 74,2 % zu ~$1,30/run — ca. 22× billiger als GPT-5. <strong>LiveCodeBench</strong>: DeepSeek-V4-Pro-Max 93,5 %, Gemini 3 Pro Preview 91,7 %. Kimi K2.6 auf v6 bei 0,896 — erstes Nicht-Western-Modell in Tier-A.</p>
+          <span class="src"><a href="https://www.swebench.com/">swebench.com</a> · <a href="https://aider.chat/docs/leaderboards/">aider.chat/docs/leaderboards</a> · <a href="https://livecodebench.github.io/leaderboard.html">livecodebench.github.io</a></span>
+        </article>
+
+        <div class="callout info">
+          <span class="callout-label">Lesart</span>
+          Closed-Frontier (Claude/Gemini) führt weiter bei agentic SWE-Bench. Open-Weights (DeepSeek V4-Pro, Kimi K2.6) sind auf kontaminations-ärmeren Benchmarks (LiveCodeBench) <em>tatsächlich</em> konkurrenzfähig, zu einem Bruchteil der Kosten. Der Gap schrumpft schnell bei reinen Code-Completion-Aufgaben, langsam bei agent-Loops mit Tool-Use.
+        </div>
+
+        <div class="footnotes">
+          <ol start="10">
+            <li id="ref-10"><a href="https://www.swebench.com/">swebench.com — Verified Leaderboard</a>, abgerufen 18.05.2026</li>
+            <li id="ref-11"><a href="https://aider.chat/docs/leaderboards/">aider.chat/docs/leaderboards — Polyglot</a></li>
+            <li id="ref-12"><a href="https://livecodebench.github.io/leaderboard.html">livecodebench.github.io — Leaderboard</a></li>
+          </ol>
+        </div>
+      </section>
+
+      <section>
+        <h2>Korrektur-Tracking · vLLM-Status, ACP-Spec</h2>
+
+        <p>Aus den letzten zwei Tagen offen geblieben:</p>
+
+        <ul class="news-item-list">
+          <li><strong>vLLM 0.21.0:</strong> Sonntag-Brief sagte „nicht zurückgezogen, RC zurück" — heute findet eine zweite unabhängige Recherche „yank wegen Tensor-Parallelism-Bug". Direkte PyPI-Verifikation heute nicht eindeutig. <strong>Bis zur Klärung als ungeklärt flaggen</strong>, in Production weiter 0.20.2 fahren.</li>
+          <li><strong>JetBrains ACP:</strong> Samstags-Brief hatte <em>„Agent Control Protocol"</em> stehen — korrigiert auf Sonntag. <strong>Agent Client Protocol</strong>, co-entwickelt mit Zed, lebt auf einer anderen Layer als MCP (Editor↔Agent vs Agent↔Tool). Diese Woche neu: ACP läuft per ReSharper 2026.2 EAP auch in Visual Studio via Junie.</li>
+        </ul>
+
+        <p class="byline">Damit endet der Vorabend. Morgen um 19:00 deutscher Zeit beginnt I/O, ab Mittwoch früh sind die ersten Codelabs nutzbar. Der Brief am Dienstag wird ein Live-Tracking, der am Mittwoch ein Recap mit Tool-Vergleich. Heute lohnt sich: AGENTS.md schreiben, Codex-Mobile durchprobieren, Claude Code <code>/goal</code> auf einem überschaubaren Task testen, MCP-Datenbank-Server checken. Drei kleine Aufräum-Aufgaben — morgen bist du froh, dass sie weg sind.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<!-- VOICE SUMMARY -->
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Montag, der achtzehnte Mai, vierundzwanzig Stunden vor Google I/O. Der Vorabend dieser Konferenzen ist normalerweise eine Funkstille — Anbieter halten sich zurück, damit ihre Drops nicht von der grossen Bühne überschattet werden. Diese Woche ist es anders: OpenAI und Anthropic haben am Donnerstag und Dienstag <em>vor</em> dem Wochenende beide unverschämt prominent gedroppt, und Cursor, Cline und Zed haben am Wochenende nachgelegt. Die Verschiebung ist subtil aber wichtig: 2026 läuft der Wettbewerb nicht mehr nur über Modell-Bench-Scores, sondern über Workflow-Mechanik.</p>
+  <p>OpenAI bringt Codex aufs Handy. Seit Donnerstag steuerst du von der ChatGPT-iOS-App eine Codex-Session, die auf deinem Mac oder einem Server läuft — Approvals, Diffs, Test-Output, alles auf dem Telefon. Im selben Bundle: Remote-SSH ist jetzt allgemein verfügbar, Hooks sind GA, programmatic Access-Tokens für Business-Pläne sind raus, plus eine HIPAA-eligible-Variante für lokale Environments. OpenAI nennt mehr als vier Millionen wöchentliche Codex-User im Begleittext. Die strukturelle Aussage: lange Agent-Läufe brauchen keine Schreibtisch-Präsenz mehr.</p>
+  <p>Anthropic geht den gegenteiligen Weg. Claude Code zwei-Punkt-eins-Punkt-einhundertneununddreissig ist seit dem zwölften Mai draussen und bringt zwei Dinge: einen Schrägstrich-goal-Befehl, der dem Agent eine Erfolgs-Bedingung gibt, und ein Agent-View-Dashboard, das alle laufenden Sessions auflistet. Der Schrägstrich-goal-Loop benutzt ein billiges Haiku-Modell als Schiedsrichter, der nach jeder Runde prüft, ob die Bedingung erfüllt ist — und entscheidet, ob der teure Opus-Worker weitermacht. Konzeptuell dasselbe wie Devin oder OpenHands seit Monaten, aber sauber implementiert.</p>
+  <p>Im Tool-Layer bewegen sich diese Woche drei Sachen. Erstens: Cursor drei-Punkt-vier bringt Dockerfile-basierte Cloud-Agent-Environments mit Build-Secrets, Multi-Repo, siebzig Prozent schnellerem Layer-Caching und Audit-Logs. Zweitens: Zed eins-Punkt-zwei-Punkt-sechs ist der erste Editor, der dein ChatGPT-Plus-Abo statt API-Tokens als Agent-Provider akzeptiert — kleines Detail, grosse Kostenfrage für Heavy-User. Drittens: Cline hat seinen internen Agent-Runtime als Apache-Zwei-Komma-Null-TypeScript-SDK extrahiert. Damit gibt es jetzt drei ernstzunehmende offene Agent-Runtimes: Anthropics eigenen, OpenHands und Cline.</p>
+  <p>Zur Sicherheitslage. Konstantin Burov von Akamai hat am dreizehnten Mai drei MCP-Datenbank-Server-Schwachstellen auf einmal gemeldet. Apache Doris hat SQL-Injection — Fix in null-Komma-sechs-Punkt-eins, jetzt upgraden. Alibaba RDS leakt Metadaten. Apache Pinot ist takeover-fähig und der Vendor lehnt einen Patch ab. Wer einen MCP-Server vor einer Datenbank sitzen hat: heute überprüfen. Im Hintergrund läuft die OX-Security-Welle weiter — schätzungsweise siebentausend öffentlich erreichbare Server mit dem MCP-STDIO-Risiko.</p>
+  <p>Zur Google-I/O-Vorschau. Bestätigt: Gemini drei-Punkt-eins-Pro ist seit dem dreizehnten Mai als Preview im Code-Assist sichtbar, also wird morgen auf der Bühne mindestens dieser Bump kommen — vermutlich plus ein neues Frontier-Pendant. Gerüchteweise: ein „Omni"-Video-Modell, dessen UI-String seit Anfang Mai in der Gemini-App auftaucht. Und Jules V2 unter dem Codename „Jitro" als goal-driven Coding-Agent — konzeptuell dieselbe Richtung wie Anthropics Schrägstrich-goal-Logik. Wenn die Demo überzeugt, gehört das in den Test-Stapel.</p>
+  <p>Aus dem lokalen Stack: llama-Punkt-cpp tickt im Vier-Stunden-Takt, das Mai-Highlight war die DeepSeek-V-vier-Integration mit nativer FP-vier- und FP-acht-Quantization. vLLM null-Komma-einundzwanzig hat einen unklaren Yank-Status — eine Quelle sagt zurückgezogen wegen Tensor-Parallelism-Bug, eine andere sagt Release steht. Bis zur Klärung in Production auf null-Komma-zwanzig-Punkt-zwei bleiben.</p>
+  <p>Bench-Lage in einem Satz: Closed-Frontier führt weiter bei agentic SWE-Bench, Open-Weights wie DeepSeek-V-vier-Pro und Kimi K-zwei-Punkt-sechs sind auf kontaminations-ärmeren LiveCodeBench-Slices tatsächlich konkurrenzfähig — zu einem Bruchteil der Kosten. Die übliche Bench-Skepsis bleibt: Verified-Scores minus fünfzehn bis fünfundzwanzig Punkte ist der reale Performance-Bereich.</p>
+  <p>Für morgen: I/O-Keynote läuft um neunzehn Uhr deutscher Zeit, Developer-Keynote um zweiundzwanzig-Uhr-dreissig, agentic-coding-Sessions ab Mitternacht. Heute lohnen sich drei kleine Aufräum-Aufgaben: AGENTS.md ins eigene Repo schreiben falls nicht geschehen, Codex-Mobile auf dem eigenen Stack durchprobieren, und wer einen MCP-Datenbank-Server fährt, prüft heute die drei neuen CVEs. Morgen bist du froh, dass das weg ist.</p>
+</div>
+
+<!-- Benchmark-Chart-Daten -->
+<script type="application/json" id="bench-data">
+{
+  "labels": ["Claude Mythos Preview", "GPT-5.5 (claim)", "Claude Opus 4.7", "Claude Opus 4.5", "GPT-5 high (Aider)", "DeepSeek V3.2-Exp (Aider)"],
+  "data":   [93.9, 88.7, 87.6, 80.9, 88.0, 74.2],
+  "max":    100,
+  "unit":   " %"
+}
+</script>
+
+</body>
+</html>

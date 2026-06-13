@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-06-13</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software &amp; IT</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-13</span>
+  </div>
+  <h1 class="masthead-title">The largest Patch Tuesday ever — and a wormable kernel flaw</h1>
+  <div class="masthead-meta">Saturday, June 13, 2026 · Ribeirão Claro/PR</div>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">A major security week echoes into the weekend. Microsoft shipped the largest Patch Tuesday in its history — over 200 holes, including a wormable kernel RCE with the profile of EternalBlue. Spring dumped its entire portfolio patch train in parallel: a good dozen CVEs across Framework, Boot, Cloud, and Integration — Daniel's Java stack is directly affected. And the npm/PyPI worm "Miasma" has been chewing through the package ecosystem since early June, this time even through Red Hat scopes. Releases are quiet, security is loud.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Patch Tuesday</strong>: 208 CVEs — record. Wormable kernel RCE CVE-2026-45657 (CVSS 9.8), no click, no login required.</li>
+      <li><span class="chip hot">Sec</span> <strong>Spring patch train</strong>: ~12 advisories from June 8–12 across the portfolio — including deserialization RCE in Statemachine, arbitrary file write in Integration.</li>
+      <li><span class="chip hot">Sec</span> <strong>Miasma/Shai-Hulud</strong>: npm/PyPI worm since June 1, 100+ packages, Red Hat Cloud scope compromised — steals cloud credentials, propagates itself.</li>
+      <li><span class="chip hot">Sec</span> <strong>Ivanti Sentry</strong>: CVE-2026-10520 (CVSS 10.0), unauthenticated root RCE, in CISA KEV — agency deadline June 14.</li>
+      <li><span class="chip">Sec</span> <strong>Defender</strong>: CVE-2026-41091 (EoP) actively exploited; "RoguePlanet" zero-day still without a patch.</li>
+      <li><span class="chip">Infra</span> <strong>Docker Engine 29</strong>: BuildKit path traversal (CVE-2026-33747) and AuthZ bypass (CVE-2026-34040) fixed.</li>
+      <li><span class="chip good">Release</span> <strong>Python 3.15</strong>: Feature freeze — <code>frozendict</code> as builtin, cleaner asyncio TaskGroup cancellation, GA on Oct 1.</li>
+      <li><span class="chip">Regulation</span> <strong>CRA</strong>: less than 100 days to mandatory reporting (Sept 11) — ENISA platform not yet live.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">Patches, releases, and deadlines coming this week</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Sat 6/13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Roll out kernel patch CVE-2026-45657 before exploits surface</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Sun 6/14</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CISA KEV deadline</span>
+          <span>Patch Ivanti Sentry (CVE-2026-10520) at agencies</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 6/15</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Week starts</span>
+          <span>Plan Spring upgrades (Framework/Boot/Cloud)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 6/16</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>—</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Wed 6/17</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Node.js security releases</span>
+          <span>26.x / 24.x / 22.x, highest level HIGH</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu 6/18</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>The largest Patch Tuesday ever — featuring a wormable kernel hole <span class="h2-refs">[1][2]</span></h2>
+        <p>Microsoft's June cumulative patch from <strong>June 9</strong> is off the charts: Trend Micro's Zero Day Initiative counted <strong>208 CVEs</strong> from Microsoft alone — the largest single Patch Tuesday since the program started in 2003, beating the previous record of 177 (2025). Add in Chromium and other bundled third-party components, and the month hits 571 CVEs.<sup>[1]</sup> This is not a "click and move on" situation — it's a real planning job for anyone running Windows servers.</p>
+        <p>The one hole that stands out: <strong>CVE-2026-45657</strong>, a use-after-free in the Windows kernel when processing TCP/IP traffic. CVSS <span class="stat">9.8</span>, explicitly rated by ZDI as <strong>wormable</strong> — no login, no user interaction, the attack can propagate itself across the network.<sup>[2]</sup> The profile recalls EternalBlue, the hole behind WannaCry. Multiple researchers expect the gap between patch and working public exploit to be measured in days rather than weeks.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Wormable:</strong> A "normal" vulnerability needs someone to click it or actively exploit it. A wormable flaw is like a cold in an open office: one infected machine infects its neighbors on its own, who infect theirs — without anyone doing anything. This property is what made WannaCry so devastating in 2017.
+        </div>
+        <p>Currently being actively exploited is a different bug from the pile: <strong>CVE-2026-41091</strong>, a privilege escalation in Microsoft Defender (CVSS 7.8) — it elevates an attacker who already has a foothold to full machine control.<sup>[2]</sup> Not a direct hit to Daniel's Linux/container world, but if you have Windows hosts in reach — even just a build-runner VM — don't defer the kernel fix to the next maintenance window.</p>
+        <div class="footnotes"><ol>
+          <li id="fn1"><a href="https://therecord.media/microsoft-ships-largest-patch-tuesday-on-record">therecord.media</a></li>
+          <li id="fn2"><a href="https://www.zerodayinitiative.com/blog/2026/6/9/the-june-2026-security-update-review">zerodayinitiative.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Spring dumps its full portfolio patch train — and Daniel's stack is in it</h2>
+        <p>The usually quiet Spring release train turned into a security convoy this week: between <strong>June 8 and 12</strong>, about a dozen advisories stacked up across the portfolio — Framework, Boot, Cloud, Integration, Security, Statemachine, WS.<sup>[3]</sup> For anyone running Java/Spring, this is the patch priority of the week, not the kernel.</p>
+        <p>The sharpest entries: In <strong>Spring Statemachine</strong>, <strong>CVE-2026-41862</strong> (HIGH) allows deserializing persisted state-machine contexts via Kryo without a class allowlist — according to spring.io, "can lead to remote code execution," the classic deserialization path to code execution. In <strong>Spring Integration</strong>, the remote file synchronizer writes files without path canonicalization to arbitrary locations (<strong>CVE-2026-40987</strong>, HIGH) — a textbook path-traversal bug.<sup>[3]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Deserialization:</strong> A program saves an object as a byte sequence (serialization) and rebuilds it later (deserialization). If strict checks aren't applied to which classes are allowed, an attacker can slip in a crafted byte sequence — like a kit that secretly starts a second machine when assembled. "Class allowlist" means: only accept explicitly approved components.
+        </div>
+        <p>Add denial-of-service in <strong>Spring Framework</strong> via versioned static resources (CVE-2026-41842; affects 5.3, 6.1, 6.2, and 7.0 lines) and unbounded SpEL cache (CVE-2026-41851), a header-trust issue in <strong>Spring Cloud Gateway</strong> (CVE-2026-47825, HIGH), plus various medium-severity fixes in Boot, Security, and WS.<sup>[4]</sup> Pragmatically: check which of these modules you're running, and upgrade selectively to the patched versions — blindly bumping the whole stack is rarely needed.</p>
+        <div class="callout info">
+          <span class="callout-label">On the side, for the ai-dev beat</span>
+          In the same batch is <strong>CVE-2026-47835</strong> in <strong>Spring AI</strong>: special characters in vector-store metadata filters can force arbitrary queries in Elasticsearch/OpenSearch/GemFire. This is a real injection class at the RAG layer — but the model-side piece belongs in the ai-dev brief.
+        </div>
+        <div class="footnotes"><ol start="3">
+          <li id="fn3"><a href="https://spring.io/security/">spring.io/security</a></li>
+          <li id="fn4"><a href="https://spring.io/security/cve-2026-41842/">spring.io (CVE-2026-41842)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>"Miasma": the npm/PyPI worm now chewing through Red Hat scopes</h2>
+        <p>Since <strong>June 1</strong>, a new wave of the Shai-Hulud supply-chain worm has been running, internally called "Miasma" (npm) or "Hades" (PyPI). The tally grows daily: SecurityWeek counts <strong>over 100 affected packages</strong> across npm and PyPI; in the Miasma variant alone, there were at least 57 npm packages and over 300 malicious versions by June 5.<sup>[5]</sup> The most spectacular landing: in the first wave, <strong>32 packages in the <code>@redhat-cloud-services</code> scope</strong> (Red Hat's hybrid-cloud console ecosystem) were published with malicious versions via compromised repos.</p>
+        <p>The mechanism is the real lesson: Miasma sneaks in via crafted <code>binding.gyp</code> files during <code>npm install</code>, Hades via <code>*-setup.pth</code> at Python startup — hooks that run <em>automatically</em> on install or import. The payload scans the local system and connected cloud services (AWS, GCP, Azure, Kubernetes) for credentials, API keys, and tokens, exfiltrates them, and uses the stolen access to spread further via the victim's repos.<sup>[5]</sup></p>
+        <div class="callout warn">
+          <span class="callout-label">A new twist, handle with care</span>
+          Multiple trackers (including Socket) report an AI component: some packages planted <code>.cursorrules</code> and <code>CLAUDE.md</code> files with zero-width Unicode-hidden instructions, so an AI coding assistant would "follow" them when opening the project and run a supposed security scan that leaks secrets. This claim <strong>stands only in aggregator sources so far</strong> and is unconfirmed by SecurityWeek — noted as an early signal, not as established fact. The confirmed core remains classic install-hook theft.
+        </div>
+        <p>Concretely for anyone with npm or pip lockfiles: enforce <code>--ignore-scripts</code> in CI installs, audit lockfiles for the affected versions, and rotate CI/cloud tokens that have passed through fresh installs since early June. Those tokens are the prize.</p>
+        <div class="footnotes"><ol start="5">
+          <li id="fn5"><a href="https://www.securityweek.com/over-100-npm-pypi-packages-hit-in-new-shai-hulud-supply-chain-attacks/">securityweek.com</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Ivanti Sentry: bullseye CVE in the KEV list, agency deadline tomorrow</h2>
+        <p>CISA added <strong>CVE-2026-10520</strong> to the Known-Exploited-Vulnerabilities catalog on <strong>June 11</strong> — an OS command injection in <strong>Ivanti Sentry</strong> (before R10.5.2/R10.6.2/R10.7.1) with a maximum score of <span class="stat">CVSS 10.0</span>. A remote, unauthenticated attacker achieves root RCE on publicly exposed instances in certain configurations.<sup>[6]</sup> The agency deadline is tight — patch by <strong>June 14</strong>.</p>
+        <p>The backstory is interesting: the Shadowserver Foundation documented that many internet-exposed Sentry gateways were compromised shortly after patches became available — even though Ivanti initially saw no signs of active exploitation.<sup>[6]</sup> Sentry is Ivanti's mobile/VPN gateway, typically sitting right at the network edge. Not a direct hit to Daniel's stack, but the pattern "edge appliance + unauthenticated RCE + immediately exploited" is reliable enough now that every such box deserves its own patch track.</p>
+        <div class="footnotes"><ol start="6">
+          <li id="fn6"><a href="https://securityaffairs.com/193557/security/u-s-cisa-adds-ivanti-sentry-flaw-to-its-known-exploited-vulnerabilities-catalog-and-urges-patching-by-june-14.html">securityaffairs.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Docker Engine 29: BuildKit escape and AuthZ bypass fixed</h2>
+        <p>The Docker Engine 29 line shipped two security fixes relevant to container builders. <strong>CVE-2026-33747</strong>: in BuildKit, an untrusted frontend could write files <em>outside</em> the BuildKit state directory — an escape from the intended workspace, fixed in BuildKit 0.28.1. Plus <strong>CVE-2026-34040</strong>, an authorization bypass in AuthZ plugins that can circumvent authorization plugins under certain conditions.<sup>[7]</sup></p>
+        <p>Also bundled: containerd 2.2.2 and Go runtime 1.25.8. For Daniel's Docker/CI practice: if you run builds from not-fully-controlled Dockerfiles or frontends (multi-tenant CI, third-party PRs), upgrade the Engine to the 29 fix level — the BuildKit issue is exactly where "untrusted build input" meets "shared builder" that it's dangerous.</p>
+        <div class="footnotes"><ol start="7">
+          <li id="fn7"><a href="https://docs.docker.com/engine/release-notes/29/">docs.docker.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Python 3.15: Feature freeze — what lands in October</h2>
+        <p>With Beta 1, <strong>Python 3.15</strong> has been in <strong>feature freeze</strong> since May 7; from now on, bugfixes only, final release on <strong>October 1</strong>.<sup>[8]</sup> So what's coming is locked in — and some of it is pleasantly practical: a <strong><code>frozendict</code> as a builtin</strong> (immutable dict, finally without a third-party library), clean cancellation of asyncio TaskGroups, thread-safe iterator helpers that replace a lot of <code>Queue</code> boilerplate, and a builtin sentinel object (PEP 829).<sup>[9]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Feature freeze:</strong> From this point forward, no new features are accepted — the version is "content-complete," only bugs get fixed. Like the moment when you stop changing the recipe and start tasting.
+        </div>
+        <p>For FastAPI/Python services, nothing that forces action immediately — but <code>frozendict</code> and more robust TaskGroup cancellation are exactly the kind of quality-of-life improvements to pick up come October.</p>
+        <div class="footnotes"><ol start="8">
+          <li id="fn8"><a href="https://www.theregister.com/devops/2026/05/11/feature-freeze-for-python-315-as-first-beta-released/5237934">theregister.com</a></li>
+          <li id="fn9"><a href="https://realpython.com/python-news-june-2026/">realpython.com</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>CRA: less than 100 days to mandatory reporting</h2>
+        <p>Yesterday was the quiet June 11 milestone of the EU Cyber Resilience Act topic here (the conformity assessment body rules). Today the follow-up: it's now <strong>less than 100 days</strong> until the operationally toughest piece — the <strong>Article 14 mandatory reporting requirement starting September 11, 2026</strong>, the obligation to actively report exploited holes and major incidents to ENISA or the CSIRT within tight timeframes.<sup>[10]</sup></p>
+        <p>The catch: the central reporting platform (Single Reporting Platform) is <strong>not yet live</strong>, according to the current status. ENISA plans to deliver registration guidance, training materials, and dry runs in June; the platform is supposed to be operational by September 11, with a test phase before then.<sup>[10]</sup> For a solo shop like twiceD, not yet acute pressure — but if you bring "digital-element products" to the EU market, now is the time to think through your incident-reporting process, not in September when the 24/72-hour window gets tight.</p>
+        <div class="footnotes"><ol start="10">
+          <li id="fn10"><a href="https://www.crowell.com/en/insights/client-alerts/eu-cyber-resilience-act-countdown-11-september-2026-incidentvulnerability-reporting-deadline-is-less-than-100-days-away">crowell.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>RoguePlanet remains open <span class="h2-refs">[11]</span></h2>
+        <p>As a reminder from this week's thread: the <strong>Defender zero-day "RoguePlanet"</strong> — the race condition that elevates a local user to SYSTEM — has yet to get <strong>either a CVE or a fix</strong> even after Patch Tuesday. Researcher "Nightmare Eclipse" published it nearly simultaneously with June's patch day, hours after Microsoft fixed two other Defender holes.<sup>[11]</sup> That means: Defender remains an open attack surface for local privilege escalation. Standard hygiene — accounts without admin rights, EDR telemetry sharp — remains the only brake.</p>
+        <div class="footnotes"><ol start="11">
+          <li id="fn11"><a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-defender-rogueplanet-zero-day-grants-system-privileges/">bleepingcomputer.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Brief notes</h2>
+        <p><strong>Node.js</strong> sticks to its announced <strong>June 17</strong> date: security releases across the 26.x, 24.x, and 22.x lines, with the top severity being HIGH. If you run Node server-side, plan for Wednesday's updates. <span class="src"><a href="https://nodejs.org/en/blog/vulnerability/june-2026-security-releases">nodejs.org</a></span></p>
+        <p><strong>Frontend</strong>: <strong>Angular 22.0.0</strong> landed on June 3 (new stable, major jump from the 21 line), <strong>Chrome 149</strong> hit the stable channel on June 2, Chrome 150 is expected late June. Both routine cadence, no emergency — pick them up on the next dependency bump. <span class="src"><a href="https://browsercalendar.com/browsers/chrome">browsercalendar.com</a></span></p>
+        <p><strong>BR-Tech</strong> stays quiet on the non-AI engineering side: the substantive stories from Brazil this week spin around AI (Huawei cloud MaaS, government rules for AI procurement) — that's ai-usecases territory, not here. From Nubank, Mercado Livre, or StackSpot: no standalone release or infra news that deserves a block. Noted, moved on.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Saturday, June 13. The release calendar is quiet, but the security week was one of the heaviest in recent times — and it carries into the weekend.</p>
+  <p>The biggest story comes from Microsoft. The June cumulative patch is the largest in Patch Tuesday's history: the Zero Day Initiative counted two hundred eight holes from Microsoft alone; the previous record was one hundred seventy-seven. With third-party components like Chromium, the month reaches five hundred seventy-one. The one hole that stands out has the identifier CVE-2026-45657 and sits in the Windows kernel, in the handling of network traffic. It has a severity of nine point eight and is rated as wormable — it can spread itself across the network without anyone clicking on anything. The profile is reminiscent of EternalBlue, the flaw behind WannaCry. Researchers expect a working exploit to emerge in days rather than weeks.</p>
+  <p>For Java developers, though, Spring is the real patch priority this week. The otherwise quiet Spring release train dumped about a dozen security advisories between June 8 and 12 across the entire portfolio — Framework, Boot, Cloud, Integration. Particularly serious: a deserialization flaw in Spring Statemachine that can lead to code execution, and an error in Spring Integration that allows writing files to arbitrary locations. If you use Spring, you should check which modules are affected and upgrade selectively to the patched versions.</p>
+  <p>A third story shows how supply-chain threats continue to escalate. Since early June, a new wave of the Shai-Hulud worm, internally called Miasma, has been circulating. Over one hundred packages in npm and PyPI ecosystems are affected, including thirty-two packages in a Red Hat scope. The malware runs automatically at install, searches the system and connected cloud services for credentials, steals them, and spreads itself using the stolen access. There are also reports of an AI component where hidden instructions in config files could compromise a coding assistant — but that claim stands only in individual sources and is not fully confirmed.</p>
+  <p>There was also a bullseye flaw in Ivanti Sentry, the mobile and VPN gateway: a remote attacker without authentication achieves root access, with a severity of ten out of ten. CISA added the flaw to the list of actively exploited vulnerabilities on June 11 and gave agencies a deadline of June 14.</p>
+  <p>On the quieter side: the Docker Engine 29 line shipped two security fixes, an escape from the build directory and a bypass of authorization plugins. And Python 3.15 reached its feature freeze — it brings a built-in immutable dictionary and cleaner cancellation of asyncio tasks, among other things. The final release comes on October 1.</p>
+  <p>For the EU Cyber Resilience Act, the countdown is on: less than one hundred days until the hard mandatory reporting requirement on September 11. Interestingly, the EU's central reporting platform hasn't been set up yet.</p>
+  <p>On the horizon for next week: on Wednesday, Node opens its scheduled security-release window across multiple version lines. And whether a public exploit emerges for the wormable kernel bug will be the question of the week.</p>
+</div>
+
+</body>
+</html>

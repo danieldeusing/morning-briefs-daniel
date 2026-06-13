@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-06-01</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-01</span>
+  </div>
+  <h1 class="masthead-title">An npm worm now signs itself cleanly</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Monday morning, and the supply chain is the headline. "Mini Shai-Hulud" has managed to ship malicious npm packages with a <em>valid</em> authenticity signature — the first documented case in which the Provenance chain we all rely on has been turned against us. In parallel, today marks the expiry of the CISA deadline for an actively exploited PAN-OS gap, and Angular 22 is expected to ship this week. No alarm bells, but a good day to audit your own CI tokens.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>Mini Shai-Hulud</strong>: self-propagating npm/PyPI worm, ~169 packages (TanStack, Mistral, UiPath), CVE-2026-45321, CVSS 9.6 — first malware package with valid SLSA Provenance.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>PAN-OS CVE-2026-0257</strong> (CVSS 9.1): GlobalProtect Auth Bypass, actively exploited since May 17 — CISA deadline for US agencies expires <strong>today</strong>.</li>
+      <li><span class="chip">Sec</span> <span class="chip">Global</span> <strong>Typosquatting wave</strong>: 14 fake packages (OpenSearch/Elastic) harvest AWS and Vault tokens, Microsoft analysis from May 28.</li>
+      <li><span class="chip good">Release</span> <span class="chip">Web</span> <strong>Angular 22</strong> expected to ship this week: zoneless &amp; signal-first as default, Signal Forms stable, Vitest instead of Karma.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Infra</span> <strong>Dirty Frag</strong> (Linux kernel LPE, CVE-2026-43284/43500): PoC public, one command = root. Patches available — ongoing task, not a new emergency.</li>
+      <li><span class="chip">Sec</span> <span class="chip">DE</span> <strong>BSI</strong> warns of 7-Zip gap CVE-2026-48095 (CVSS 8.8): crafted NTFS containers, fix in 26.01.</li>
+      <li><span class="chip good">Release</span> <span class="chip">Infra</span> <strong>PostgreSQL</strong> 18.4/17.10/… (May 14): 11 security fixes, including a timing leak in MD5 password comparison.</li>
+      <li><span class="chip">Browser</span> <span class="chip">Global</span> <strong>Chrome 148</strong> patches two critical RCE gaps (WebRTC use-after-free) — manual update recommended before rollout.</li>
+      <li><span class="chip">Regulation</span> <span class="chip">EU</span> <strong>CRA</strong>: from Sept. 11 onward, reporting obligation for actively exploited gaps — SBOM and VEX process should be in place now.</li>
+      <li><span class="chip">OSS</span> <span class="chip">Global</span> <strong>OpenSSF</strong> measures damage from "AI-Slop" — AI-generated garbage in vulnerability reports that drowns maintainers.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">What's on the calendar — deadlines, releases, patches</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Mon 06/01</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>CISA deadline PAN-OS CVE-2026-0257 expires (KEV-Add May 29)</span>
+          <span>Angular-22 week kicks off (RC.1 in circulation since May 20)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 06/03</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CISA deadline Defender gaps CVE-2026-41091 / -45498</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue–Thu</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Angular 22 GA expected</span>
+          <span>signal-first &amp; zoneless as default, Signal Forms stable</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">ongoing</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Roll out Dirty-Frag kernel patches (PoC public)</span>
+          <span>Rotate npm tokens in wake of Shai-Hulud wave</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">09/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Far-out deadline: CRA reporting obligation kicks in — prepare SBOM/VEX now</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Mini Shai-Hulud: an npm worm that signs itself validly <span class="h2-refs">[1][2][3]</span></h2>
+        <p>The week's biggest software story is not a release, but a crack in the trust model. The group "TeamPCP" launched a self-propagating worm called <strong>Mini Shai-Hulud</strong> across npm and PyPI registries on May 11 — roughly 169 npm package names with over 370 malicious versions, including household names like <code>@tanstack/*</code> (TanStack Router serves ~12 million downloads per week), <code>@mistralai/*</code>, and over 70 <code>@uipath</code> packages.<sup>[1]</sup> Tracked under CVE-2026-45321, CVSS 9.6.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">SLSA Provenance:</strong> Imagine every package gets a sealed receipt proving "this artifact came from exactly this verified build pipeline." The worm issued that receipt to itself — it hijacked a real GitHub Actions pipeline using stolen OIDC tokens and generated valid Build Level 3 attestations with it. The receipt is genuine, the contents are poison. It's the first documented npm worm to produce validly attested malware packages.<sup>[3]</sup>
+        </div>
+        <p>Mechanics: The worm hunts for an npm token with <code>bypass_2fa = true</code> (published without second factor), then queries all packages owned by that maintainer and poisons them further. TanStack traced the initial breach to a chain of <code>pull_request_target</code>, GitHub Actions cache poisoning, and memory extraction of an OIDC token from the runner process — three gaps, none of which alone would have sufficed.<sup>[1]</sup></p>
+        <div class="callout warn">
+          <span class="callout-label">Heads up</span> Practical consequence for Daniel's CI: Provenance signatures tell you <em>which</em> pipeline built something, not <em>whether</em> it behaved correctly. If you install npm lockfiles with <code>--ignore-scripts</code>, keep OIDC tokens short-lived, and enforce 2FA on publish tokens, you strip the worm of its three levers. Tokens that may have been exposed in the wave should be rotated.
+        </div>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.stepsecurity.io/blog/mini-shai-hulud-is-back-a-self-spreading-supply-chain-attack-hits-the-npm-ecosystem">stepsecurity.io — Mini Shai-Hulud is back</a></li>
+          <li><a href="https://www.tenable.com/blog/mini-shai-hulud-frequently-asked-questions">tenable.com — Mini Shai-Hulud FAQ (CVE-2026-45321)</a></li>
+          <li><a href="https://tanstack.com/blog/npm-supply-chain-compromise-postmortem">tanstack.com — Postmortem</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Typosquatting targets CI/CD secrets directly <span class="h2-refs">[4]</span></h2>
+        <p>Fitting the worm wave, a second supply-chain story that Microsoft analyzed on May 28: A single actor (alias <code>vpmdhaj</code>) published 14 malware packages within four hours, spoofing OpenSearch, ElasticSearch, and DevOps libraries (names like <code>opensearch-setup</code>, <code>elastic-opensearch-helper</code>).<sup>[4]</sup></p>
+        <p>The twist is target selection: The ~195-KB credential harvester runs silently on <code>install</code> and targets AWS IAM/STS, HashiCorp Vault tokens, GitHub Actions secrets, and npm publish tokens — exactly the keys that compromise the supply chain <em>further down</em>. Microsoft's advice mirrors the above: <code>npm install --ignore-scripts</code>, and rotate all CI tokens that may have touched an affected runner or dev machine.<sup>[4]</sup></p>
+        <div class="src"><a href="https://www.microsoft.com/en-us/security/blog/2026/05/28/typosquatted-npm-packages-used-steal-cloud-ci-cd-secrets/">microsoft.com — Typosquatted npm packages (May 28, 2026)</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>OpenSSF measures damage from "AI-Slop" <span class="h2-refs">[5]</span></h2>
+        <p>A quieter thread, but relevant for OSS maintainers: The OpenSSF is surveying community impact (survey open through May 31) of <strong>"AI-Slop"</strong> — low-quality, AI-generated vulnerability reports that clog project security inboxes and bury real disclosures. Separately, eight mentees were selected for the Summer 2026 cohort to work on RSTUF, gittuf, SBOMit, and Minder — all building blocks that directly address the supply-chain problems described above.<sup>[5]</sup></p>
+        <div class="src"><a href="https://openssf.org/newsletter/2026/05/28/openssf-newsletter-may-2026/">openssf.org — Newsletter May 2026</a></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PAN-OS GlobalProtect: CISA deadline expires today <span class="h2-refs">[6][7]</span></h2>
+        <p>Palo Alto's GlobalProtect has an authentication bypass, CVE-2026-0257, CVSS 9.1. An unauthenticated attacker forges "Authentication-Override" cookies and builds an unauthorized VPN tunnel into the internal network.<sup>[6]</sup> Rapid7 spotted the first attacks starting May 17 (first wave May 18 from Vultr infrastructure, second starting May 21). CISA added the gap to the KEV catalog on May 29 with agency deadline <strong>June 1</strong> — today.<sup>[7]</sup></p>
+        <p>Affected: PAN-OS 10.2.x, 11.1.x, 11.2.x, and 12.1.x, plus Prisma Access deployments. Anyone running exposed GlobalProtect gateways without patches should upgrade to the fixed version for their branch (e.g., 10.2.13-h18).</p>
+        <div class="eli5">
+          <strong class="eli5-term">KEV Catalog:</strong> CISA's list of "known exploited vulnerabilities." US agencies <em>must</em> patch entries by the stated deadline — for everyone else, a KEV listing is the strongest signal that "this is being actively exploited right now," not just theoretically possible.
+        </div>
+        <div class="footnotes"><ol start="6">
+          <li><a href="https://thehackernews.com/2026/05/pan-os-globalprotect-authentication.html">thehackernews.com — PAN-OS GlobalProtect Auth Bypass</a></li>
+          <li><a href="https://threat-modeling.com/palo-alto-pan-os-globalprotect-auth-bypass-cve-2026-0257/">threat-modeling.com — CVE-2026-0257 (KEV deadline 06/01)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Dirty Frag: 9-year-old kernel bug, PoC public <span class="h2-refs">[8][9]</span></h2>
+        <p>In circulation since May 8, but remains an ongoing task: "Dirty Frag" (CVE-2026-43284 + CVE-2026-43500, plus CVE-2026-46300 in Red Hat's RHSB-2026-003) is a local privilege escalation in the in-place decrypt path of esp4/esp6 and rxrpc. The ESP portion was introduced in 2017, the RxRPC portion in 2023 — the gap is old.<sup>[8]</sup></p>
+        <p>Critical: A working PoC is public, and any local unprivileged user reaches root with a single command. The exploit needs only standard syscalls and modules (esp4, esp6, rxrpc) that ship enabled in default kernel packages across all major enterprise distros — Ubuntu, RHEL, Alma, Fedora, openSUSE. Microsoft reported active post-compromise exploitation. Patches are linked from NVD and available from the distros; KernelCare delivered live patches within 24 hours.<sup>[9]</sup></p>
+        <div class="callout info">
+          <span class="callout-label">Assessment</span> No remote vector — requires a foothold already. But for precisely that reason, it's a classic "privilege escalation after initial access" component that you patch on every Linux box (including ddmini/ddStudio) via regular distro updates.
+        </div>
+        <div class="footnotes"><ol start="8">
+          <li><a href="https://access.redhat.com/security/vulnerabilities/RHSB-2026-003">access.redhat.com — RHSB-2026-003 (Dirty Frag)</a></li>
+          <li><a href="https://www.microsoft.com/en-us/security/blog/2026/05/08/active-attack-dirty-frag-linux-vulnerability-expands-post-compromise-risk/">microsoft.com — Active attack: Dirty Frag</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>BSI warns of 7-Zip gap <span class="h2-refs">[10]</span></h2>
+        <p>From Germany: The BSI warned on May 26 about the 7-Zip vulnerability CVE-2026-48095 (CVSS 8.8, discovered by GitHub Security Lab). A crafted NTFS container lets the stream-buffer size shift to exponent 32 — the buffer is mis-allocated to 1 byte, the next read triggers a heap overflow, which enables code execution.<sup>[10]</sup> Treacherous: The signature fallback logic also routes files with endings <code>.7z</code>, <code>.zip</code>, or <code>.rar</code> through the NTFS parser. Fix is 7-Zip 26.01 (late April); everything through 26.00 is affected.</p>
+        <div class="src"><a href="https://www.it-boltwise.de/bsi-warnt-vor-7-zip-luecke-codeausfuehrung-per-heap-fehler-cve-2026-48095.html">it-boltwise.de — BSI warning 7-Zip</a> · <a href="https://securityonline.info/7-zip-heap-buffer-overflow-cve-2026-48095/">securityonline.info</a></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Angular 22 ships this week — the "signal-first" era <span class="h2-refs">[11][12]</span></h2>
+        <p>For Daniel's frontend side, the release of the week: Angular 22 is scheduled for the week of June 1 (RC.1 has been in circulation since May 20).<sup>[11]</sup> It consolidates what's been building since Angular 17:</p>
+        <ul>
+          <li><strong>Zoneless as default</strong> for new projects, new components standardly OnPush.</li>
+          <li><strong>Signal Forms stable</strong> — the signal-based form system experimental in 21 replaces the classic Reactive Forms pattern with a lighter API.</li>
+          <li><strong>Selectorless Components</strong>: components can be imported directly in templates without a selector string.</li>
+          <li><strong>Vitest</strong> is the new default test runner; experimental Jest/web-test-runner paths are removed.</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">Zoneless / Signals:</strong> Previously, Angular listened via Zone.js to <em>every</em> event, then checked the whole component tree for changes — like a janitor who walks the entire building after every noise. Signals are tiny containers that notify Angular when their value changes — Angular updates only the places that actually depend on that signal. Less work, faster UI, no Zone.js overhead.
+        </div>
+        <div class="callout info">
+          <span class="callout-label">Assessment</span> If you're on Angular 21, the jump should be relatively smooth — the hard shift (signals, standalone, control flow) is behind us. Reactive Forms stay for now, but for new work, Signal Forms are worth exploring.
+        </div>
+        <div class="footnotes"><ol start="11">
+          <li><a href="https://angular.dev/reference/releases">angular.dev — Versioning &amp; releases</a></li>
+          <li><a href="https://versionlog.com/blog/what-to-expect-in-angular-22/">versionlog.com — What to Expect in Angular 22</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL collection release patches 11 gaps <span class="h2-refs">[13]</span></h2>
+        <p>Database maintenance: PostgreSQL 18.4, 17.10, 16.14, 15.18, and 14.23 shipped on May 14 — 11 security fixes plus over 60 bugfixes.<sup>[13]</sup> Three are relevant for Daniel's Postgres setups: a missing authorization check in <code>CREATE TYPE</code> (an object creator can hijack foreign queries that resolve types via <code>search_path</code>); a covert timing leak in MD5 password comparison (does <em>not</em> affect scram-sha-256, the default); and uncontrolled recursion in SSL/GSS negotiation that permits sustained DoS via the AF_UNIX socket.</p>
+        <div class="src"><a href="https://www.postgresql.org/about/news/postgresql-184-1710-1614-1518-and-1423-released-3297/">postgresql.org — Release notes (May 14, 2026)</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Chrome 148 patches two critical RCE gaps <span class="h2-refs">[14]</span></h2>
+        <p>Browser hygiene: The Chrome update from May 19 (version 148.0.7778.178/179) patches multiple gaps, two critical — a use-after-free in WebRTC (CVE-2026-9111, RCE via a crafted page visit) and a faulty UI implementation on Windows. Neither was actively exploited before the patch. Anyone on managed or manually updated systems should not wait for the staggered rollout.<sup>[14]</sup></p>
+        <div class="src"><a href="https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html">Chrome Releases — Stable Update 148.0.7778.178</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA countdown: reporting obligation kicks in September <span class="h2-refs">[15]</span></h2>
+        <p>Ongoing regulation thread: The EU Cyber Resilience Act activates reporting obligations on <strong>September 11, 2026</strong> — actively exploited gaps and severe incidents in "products with digital elements" must be reported via Single-Reporting-Platform within 24 hours (early warning) or 72 hours, with a final report due within 14 days of available remediation.<sup>[15]</sup> It also applies retroactively to products already on the market. Practically, for anyone shipping software in the EU: set up SBOM and a vulnerability/VEX process now, not in September. Full product obligations kick in December 11, 2027.</p>
+        <div class="src"><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">ec.europa.eu — CRA Reporting obligations</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>BR-Tech: DevOps maturity, not buzzwords</h2>
+        <p>From the Brazilian scene, a snapshot rather than discrete news: In 2026, Brazil is past the <em>whether</em> of DevOps and into how mature the delivery pipelines are. At Nubank, iFood, Stone, B3, and well-funded startups, SLIs/SLOs, error budgets, fully automated CI/CD, Kubernetes environments, Terraform IaC, and automated rollback are international-standard baseline. For Daniel's twiceD lens: the middle market lags — exactly the gap between "fintech maturity" and "the rest" is consulting and tooling space.</p>
+        <div class="src"><a href="https://stackbrasil.com/devops-brasil-2026/">stackbrasil.com — DevOps Brasil 2026</a></div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Monday, June first. Today's news turns on software supply chains — and a line that was crossed this week.</p>
+  <p>An attacker group called TeamPCP launched a self-propagating worm named Mini Shai-Hulud across npm and PyPI registries. Around one hundred sixty-nine package names were poisoned, including household names like TanStack, Mistral, and UiPath. What's new: the worm shipped its malicious packages with a valid authenticity signature. This so-called Provenance is supposed to prove a package came from a verified build pipeline — and the worm issued that proof to itself by hijacking a real pipeline with stolen tokens. It's the first documented case of its kind. Anyone who might have been caught in the wave should rotate their CI tokens and install packages with the ignore-scripts option.</p>
+  <p>A second supply-chain story, analyzed by Microsoft in late May, fits right in: fourteen fake packages spoofing OpenSearch and Elastic libraries that specifically target AWS and Vault tokens — the exact keys used to compromise the chain further.</p>
+  <p>Meanwhile, a deadline expires today. The US Cyber Agency CISA added an actively exploited vulnerability in Palo Alto's GlobalProtect VPN to its list — an authentication bypass with a severity of nine point one, observed since May seventeenth. Agencies must be patched today. And in the Linux kernel, Dirty Frag remains current: an old privilege escalation for which a public proof of concept exists. Patches are available; roll them out.</p>
+  <p>On the brighter side: Angular twenty-two is expected to ship this week. It makes signal-based, zoneless architecture the standard, Signal Forms become stable, and Vitest replaces the old test runner. PostgreSQL closed eleven security gaps in mid-May, and Chrome is at version one hundred forty-eight with two critical fixes.</p>
+  <p>In the background, the clock is ticking for the European Cyber Resilience Act: from September eleventh onward, there's a reporting obligation for exploited gaps. Anyone shipping software in the EU should set up SBOM and a vulnerability process now.</p>
+  <p>Tomorrow we'll see whether Angular really ships and whether new KEV entries follow the PAN-OS deadline.</p>
+</div>
+
+</body>
+</html>

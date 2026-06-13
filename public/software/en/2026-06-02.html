@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-06-02</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-02</span>
+  </div>
+  <h1 class="masthead-title">Supply chain under fire — and a $5 billion patch</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">A quiet release Tuesday with loud security backdrop: The OSS supply chain is squeezed from two sides at once — a new multi-registry campaign (npm/PyPI/Crates) and a 19-year-old Linux kernel bug handing out local root. IBM and Red Hat are answering with five billion dollars and the bid to become a "security clearinghouse" for open source — not everyone is cheering. Plus actively exploited edge devices (PAN-OS, WebLogic) and a Quarkus auth bypass that touches Daniel's Java territory directly.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">Supply-Chain</span> <strong>TrapDoor</strong>: 34 packages, 384+ versions across npm, PyPI <em>and</em> Crates — and the payload deliberately manipulates <code>CLAUDE.md</code>/<code>.cursorrules</code>.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Linux</span> <strong>CIFSwitch</strong>: 19-year-old CIFS upcall bug, local user → root. RHEL 7–10 affected, PoC public, CVE pending.</li>
+      <li><span class="chip good">OSS</span> <span class="chip">M&A-adjacent</span> <strong>Project Lightwell</strong>: IBM/Red Hat stake $5B + 20,000 engineers on OSS security — with backport-over-upgrade model and Wall Street as first customers.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Infra</span> <strong>PAN-OS</strong>: GlobalProtect auth bypass (CVE-2026-0257, CVSS 7.8) actively exploited since 05/17, KEV deadline was yesterday.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Java</span> <strong>WebLogic</strong> (CVE-2024-21182) added to CISA-KEV on 06/01 — unauth via T3/IIOP, deadline 06/04.</li>
+      <li><span class="chip">Release</span> <span class="chip">Java</span> <strong>Quarkus</strong>: Emergency releases against authz bypass (CVE-2026-39852) — semicolon in path bypasses <code>/api/admin</code> protection.</li>
+      <li><span class="chip">Web</span> <span class="chip">Browser</span> <strong>Chrome 149</strong> stable today: BFCache for WebSocket pages, <code>scrollTo()</code> returns a Promise, CSS Gap Decorations.</li>
+      <li><span class="chip">Regulation</span> <span class="chip">EU</span> <strong>CRA</strong>: Reporting obligation starts 09/11 — 24h early warning, 72h full disclosure for actively exploited gaps. Affects anyone selling software into the EU.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">KEV deadlines, Build keynote, and a few milestones to plan around</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Tue 06/02</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Chrome 149 stable rolled out</span>
+          <span>Microsoft Build (Day 1, Keynote 9:30 PT / 18:30 CEST)</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Wed 06/03</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Build Day 2</span>
+          <span>KEV deadline: 2× Microsoft Defender CVEs (FCEB)</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu 06/04</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>KEV deadline: Oracle WebLogic (CVE-2024-21182)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 06/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet day expected</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 06/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Weekend reading: CIFSwitch PoC if distro patch still pending</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun 06/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>—</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 06/08</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>heise-Online conference: Software Quality in the AI Era</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>TrapDoor: a worm template across three registries at once</h2>
+        <p>The biggest fresh supply-chain story is <strong>TrapDoor</strong> — a campaign that, according to Socket, <strong>rolled out 34 malicious packages in over 384 versions</strong> simultaneously across npm, PyPI <em>and</em> Crates.io (disclosed on 05/25).<sup>[1]</sup> The payload harvests everything valuable in a dev setup: crypto wallets (Sui, Solana, Aptos), SSH keys, browser profiles, AWS environment variables — then anchors itself persistently via systemd services, cron jobs, Git hooks, and shell hooks.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Supply-chain attack:</strong> Instead of hacking your machine directly, attackers poison a software ingredient you're going to download anyway — like someone putting poison in a flour bag at the supermarket instead of breaking into your home. On the next <code>npm install</code>, you bake it yourself.
+        </div>
+        <p>What's genuinely new: TrapDoor explicitly targets AI coding workflows. It rewrites <code>.cursorrules</code> and <code>CLAUDE.md</code> in projects, so an AI agent willingly carries the malicious logic on the next run — the agent-tooling layer becomes a persistence vector, not the model. Good news: Socket caught the releases with a median detection time of <span class="stat">5 min. 27 sec.</span> before they gained wide adoption. That's the point — detection speed beats prevention now, because publishing costs seconds.</p>
+        <span class="src"><a href="https://www.cryptika.com/hackers-compromised-34-packages-in-npm-pypi-and-crates-in-new-supply-chain-attack/">cryptika.com</a></span>
+      </article>
+
+      <article class="news-item">
+        <h2>CIFSwitch: 19-year-old Linux bug gives away local root</h2>
+        <p>On 05/28, researcher Asim Manizada disclosed <strong>CIFSwitch</strong> — a local privilege escalation in the Linux kernel's CIFS client that has been dormant since roughly 2007.<sup>[2]</sup> When a CIFS share is mounted with Kerberos, the kernel calls the root-privileged helper <code>cifs.upcall</code> via the keyring system. By forging <code>cifs.spnego</code> key descriptions plus user and mount namespace tricks, an unprivileged local user forces the helper to load a malicious NSS library — and lands as root.</p>
+        <p>Red Hat lists this in <strong>RHSB-2026-005</strong> as "Important" and flags <strong>RHEL 7, 8, 9, and 10</strong> plus OpenShift, OpenStack, and Virtualization as affected.<sup>[3]</sup> A CVE number is still pending, the upstream kernel patch exists, but distro updates are rolling out — and a PoC is already public. For Daniel's Linux/Docker world, this means: hosts mounting CIFS/SMB shares are the problem children. Not a "patch tonight" emergency, but until the distro update lands, it's worth checking whether unprivileged users are allowed to mount CIFS at all.</p>
+        <span class="src"><a href="https://access.redhat.com/security/vulnerabilities/RHSB-2026-005">access.redhat.com</a> · <a href="https://threat-modeling.com/cifswitch-linux-kernel-privilege-escalation/">threat-modeling.com</a></span>
+      </article>
+
+      <article class="news-item">
+        <h2>Quarkus emergency releases: semicolon bypasses auth</h2>
+        <p>Straight into Daniel's Java territory: Quarkus pushed emergency releases across all supported streams against <strong>CVE-2026-39852</strong> (disclosed 05/05, Red Hat "Important").<sup>[4]</sup> The root is classic and instructive — a <em>path normalization inconsistency</em>: the security layer checks the raw URL path including matrix parameters (semicolons), while RESTEasy Reactive strips semicolons before routing. Result: <code>/api/admin;anything</code> bypasses the authorization policy for <code>/api/admin</code>, but still lands on the protected endpoint.</p>
+        <p>Fixed in 3.20.6.1, 3.27.3.1, 3.33.1.1, 3.35.1.1, 3.34.7, and 3.35.2. The lesson applies beyond Quarkus: if you build path-based authz, you must ensure security filters and router see the <em>same</em> normalized path. This class of bug surfaces in every framework that lets two layers match independently.</p>
+        <span class="src"><a href="https://quarkus.io/blog/CVE-2026-39852/">quarkus.io</a></span>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>Project Lightwell: $5B to make open source "belong" to somebody</h2>
+        <p>On 05/28, IBM and Red Hat announced <strong>Project Lightwell</strong> — a <strong>$5 billion commitment</strong> plus over <strong>20,000 engineers</strong> to help enterprises secure open source.<sup>[5]</sup> The clever part: instead of forcing companies onto a new version, Lightwell aims to <em>backport the fix to exactly the version</em> already running in production. That's the real pain point in regulated shops, where a major upgrade costs a quarter.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Backporting:</strong> A repair built for the latest version, carefully adapted back to an older one — like reworking a replacement part meant for a new car model so it fits a ten-year-old model without swapping the whole engine.
+        </div>
+        <p>First customers are eleven financial houses — Bank of America, Citi, Goldman Sachs, JPMorgan, Mastercard, Visa, and others; it will be sold as a subscription later. The AI angle: Anthropic's "Mythos Preview" found ~3,900 gaps with high or critical severity when scanning open-source software.</p>
+        <div class="callout info">
+          <span class="callout-label">My take</span> The model is genuinely useful — backport-over-upgrade is exactly what the middle market needs. But "IBM becomes security clearinghouse for open source" has an aftertaste: a single corporation as gatekeeper for which fixes count as trustworthy centralizes exactly what makes OSS strong in its decentralization. The Linux community is reacting accordingly mixed. For twiceD customers: adopt the <em>idea</em> (targeted backports), not the dependence on a gatekeeper.
+        </div>
+        <span class="src"><a href="https://newsroom.ibm.com/2026-05-28-ibm-and-red-hat-commit-5-billion-to-redefine-the-future-of-open-source-in-the-ai-era">newsroom.ibm.com</a> · <a href="https://www.infoworld.com/article/4178451/ibm-and-red-hat-want-to-become-the-security-clearinghouse-for-open-source-applications-in-the-enterprise.html">infoworld.com</a></span>
+      </article>
+
+      <article class="news-item">
+        <h2>Edge devices are burning: PAN-OS and WebLogic actively exploited</h2>
+        <p>Two classics under live fire. With the <strong>PAN-OS GlobalProtect auth bypass</strong> (<strong>CVE-2026-0257</strong>, CVSS <span class="stat">7.8</span> per Palo Alto advisory), attackers forge override cookies to VPN in without logging in.<sup>[6]</sup> Rapid7 observed successful exploitation starting on 05/17 across multiple customers, in two waves on 05/18 and 05/21 — the CISA KEV deadline expired yesterday (06/01).<sup>[7]</sup></p>
+        <div class="callout warn">
+          <span class="callout-label">Source note</span> A security aggregator listed CVE-2026-0257 with CVSS 9.1; the official Palo Alto advisory states 7.8. I'm taking the vendor value.
+        </div>
+        <p>In parallel, CISA added an old <strong>Oracle WebLogic</strong> gap (<strong>CVE-2024-21182</strong>) to KEV on 06/01: unauthenticated access via T3/IIOP protocols, agency deadline 06/04. Both stories tell the same lesson — the most dangerous attack surface is always the box at the network edge that everyone forgets about because it "just works." KEV deadlines formally apply only to US agencies, but they're the best free prioritization list available.</p>
+        <span class="src"><a href="https://security.paloaltonetworks.com/CVE-2026-0257">paloaltonetworks.com</a> · <a href="https://www.rapid7.com/blog/post/etr-rapid7-observed-exploitation-of-pan-os-globalprotect-authentication-bypass-vulnerability-cve-2026-0257/">rapid7.com</a></span>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>Chrome 149 is stable today</h2>
+        <p>Google is rolling out <strong>Chrome 149</strong> as stable today — solid web-platform substance without AI hooks.<sup>[8]</sup> Highlights for web devs: pages with open WebSocket connections (Notion, Figma, Slack Web) now qualify for <em>BFCache</em>, so the back button loads instantly; <code>element.scrollTo()</code> now returns a Promise (finally cleanly awaitable); and <strong>CSS Gap Decorations</strong> let you natively style gaps in grid/flex instead of manual separator divs.</p>
+        <div class="eli5">
+          <strong class="eli5-term">BFCache (Back/Forward-Cache):</strong> The browser freezes a page when you leave instead of throwing it away — like a bookmark that doesn't just remember the page number, but holds the entire open book in exact position. Back = instant, no reload.
+        </div>
+        <p>In the broader web-platform landscape, <strong>WebGPU</strong> is now Baseline across all major browsers, and Safari 26.5 brings the <code>:open</code> pseudo-class for <code>&lt;details&gt;</code>/<code>&lt;dialog&gt;</code> — small stones that together continue closing the platform gap between engines.</p>
+        <span class="src"><a href="https://developer.chrome.com/blog/chrome-149-beta">developer.chrome.com</a> · <a href="https://web.dev/blog/web-platform-05-2026">web.dev</a></span>
+      </article>
+
+      <article class="news-item">
+        <h2>CRA clock: reporting obligation from September, plannable today</h2>
+        <p>The EU <strong>Cyber Resilience Act</strong> casts its shadow: Starting <strong>09/11/2026</strong>, the reporting obligation kicks in — makers of "products with digital elements" must disclose actively exploited vulnerabilities within <strong>24 hours</strong> as early warning and <strong>72 hours</strong> as full disclosure to ENISA/CSIRT.<sup>[9]</sup> The full load (secure-by-design, SBOM, CE marking, conformity assessment) arrives later on 12/11/2027, but the reporting machinery must be in place first.</p>
+        <div class="eli5">
+          <strong class="eli5-term">SBOM (Software Bill of Materials):</strong> An ingredient list for software — which libraries in which versions are included. Like the label on a food package: if a poisoned ingredient shows up tomorrow, you instantly know whether it's in your product.
+        </div>
+        <p>Penalties: up to <span class="stat">€15 million</span> or 2.5% of global annual revenue. For solo/mid-market devs like Daniel, this isn't a "later" topic: if you're selling software into the EU, you need a process by late summer that reports an exploited gap within 24 hours — that's organizational lead time, not a line of code.</p>
+        <span class="src"><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">digital-strategy.ec.europa.eu</a></span>
+      </article>
+
+      <article class="news-item">
+        <h2>Briefly noted</h2>
+        <p><strong>Microsoft Build</strong> runs today and tomorrow (Fort Mason, SF); keynote starts 9:30 PT / 18:30 CEST. Expect mainly AI topics — the non-AI substance relevant to Daniel (.NET, C#, TypeScript, and cloud-native tooling) lives in companion sessions; details on AI agent announcements in the <em>ai-dev</em> brief.<sup>[10]</sup></p>
+        <p><strong>PostgreSQL</strong> stays at 05/14 release (18.4 / 17.10 / 16.14 / 15.18 / 14.23, 11 security fixes); no new point release this week. The next major, <strong>PG 19</strong>, is planned for September.<sup>[11]</sup> <strong>OpenSSF Scorecard</strong> is moving its container images to the GitHub Container Registry and migrating older versions too — small but sensible hygiene step for action-CI.</p>
+        <span class="src"><a href="https://news.microsoft.com/build-2026-live-blog/">news.microsoft.com</a> · <a href="https://www.postgresql.org/about/news/postgresql-184-1710-1614-1518-and-1423-released-3297/">postgresql.org</a></span>
+      </article>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Tuesday, June second. A quiet day on releases, but a loud one in the background — the software supply chain is under pressure from two sides, and the industry's answer costs five billion dollars.</p>
+  <p>The biggest fresh story is called TrapDoor. An attack campaign rolled out thirty-four malicious packages in over three hundred eighty-four versions simultaneously across the three registries npm, PyPI, and Crates. The malware steals crypto wallets, SSH keys, and cloud credentials. What's new: it deliberately rewrites the config files of AI coding assistants so an agent carries the malware logic on the next run. Security firm Socket caught the packages after an average of five and a half minutes — speed beats prevention here.</p>
+  <p>At the same time, a Linux bug is making headlines — it's nineteen years old. It's called CIFSwitch, sits in the CIFS client of the kernel, and lets a normal user escalate to root. Red Hat rates it as important; all current enterprise Linux versions are affected. A CVE number is still missing, but a working proof-of-concept is already circulating.</p>
+  <p>The answer comes from IBM and Red Hat. Under the name Project Lightwell, they're putting five billion dollars and over twenty thousand engineers into open-source security. The clever part: they don't want to deliver fixes through forced upgrades; they want to backport them directly into the version the customer is already running. First customers are eleven major banks. My caveat: a single corporation as gatekeeper for trustworthy open-source fixes centralizes exactly what makes open source strong in its decentralization.</p>
+  <p>In the background, two old acquaintances are burning at the network edge. With the Palo Alto VPN PAN-OS, attackers bypass login with forged cookies; exploitation has been running since mid-May. And CISA just added an old Oracle WebLogic gap to the list of actively exploited vulnerabilities. The lesson both times is the same: the most dangerous attack surface is the box at the network edge that everyone forgets because it just works.</p>
+  <p>For Daniel's Java world there's a concrete patching topic: Quarkus pushed emergency releases because a semicolon in the URL path could bypass access control. And for the web front, Chrome one hundred forty-nine is now stable, with faster back navigation and native gap styling in CSS.</p>
+  <p>Finally, looking ahead: the EU Cyber Resilience Act clock is ticking — starting September eleventh, a reporting obligation takes effect with twenty-four-hour early warning. Anyone selling software to the EU needs a process for that by late summer — no code required, just organization. Tomorrow we'll see what Microsoft Build brings in non-AI substance for the dot-NET and TypeScript world.</p>
+</div>
+
+</body>
+</html>

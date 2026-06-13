@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-05-18</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-05-18</span>
+  </div>
+  <h1 class="masthead-title">GPT-5.3-Codex über Nacht zum Copilot-Default, CloudNativePG-CVE 9,4 schließt den Wochenend-Patch-Run ab, OSSNA Minneapolis startet</h1>
+</header>
+
+<main class="shell">
+
+  <!-- BAND 1: TL;DR -->
+  <section class="tldr">
+    <p class="lead">Montag ist kein lauter Tag — aber drei Dinge haben sich über das Wochenende ohne große Presse-Salve verschoben. <strong>Erstens</strong>: GitHub hat am Sonntag den Basismodell-Schalter umgelegt — alle Copilot-Business- und Enterprise-Tenants antworten seit heute mit GPT-5.3-Codex statt GPT-4.1. Wer keine Modell-Pin gesetzt hat, sieht ab heute Vormittag andere Vorschläge im selben Editor. <strong>Zweitens</strong>: das CloudNativePG-Postgres-Operator-Projekt hat seinen ersten CVE überhaupt — <span class="stat">CVSS 9,4</span>, ein DB-User wird zu OS-Command-Exec im Primary-Pod. Wer Postgres auf Kubernetes mit CloudNativePG fährt (in DACH-Stacks häufig), updatet heute. <strong>Drittens</strong>: in Minneapolis startet der Open Source Summit NA — und die Keynote-Slots gehören dieses Mal nicht den Kernel-Maintainern, sondern der Supply-Chain. Direkte Folge der TanStack/SLSA-Welle vom 11. Mai. Morgen wird es dann laut: Firefox 151 stable, TC39 in Amsterdam, Google I/O mit erwartetem Gemini-4-Reveal — alles an einem Tag.</p>
+    <ul>
+      <li><span class="chip">Tools</span> <strong>GPT-5.3-Codex ist seit 17.05. Copilot-Default</strong> für Business + Enterprise (löst GPT-4.1 ab). Höhere „code survival rate" laut GitHub — Modell-Pin im <code>.github/copilot</code>-Config überlebt den Switch.</li>
+      <li><span class="chip hot">Sec</span> <strong>CloudNativePG CVE-2026-44477</strong> (CVSS 9,4): metrics-exporter konnte als <code>postgres</code>-Superuser auf <code>RESET ROLE</code> + <code>COPY ... TO PROGRAM</code> geführt werden. Fixed in 1.28.3 / 1.29.1.</li>
+      <li><span class="chip hot">Sec</span> <strong>Spring Boot Actuator CVE-2026-40976</strong> (CVSS 9,1): Standard-Filter-Chain ohne Health-Endpoint exponiert alle Actuator-Endpoints. Audit-relevant für jeden Spring-Stack.</li>
+      <li><span class="chip">Sec</span> <strong>F5 BIG-IP Quarterly</strong>: >50 CVEs, davon CVE-2026-42945 (NGINX rewrite, CVSS 9,2) und CVE-2026-41225 (iControl REST, 8,6) am gefährlichsten. Keine In-the-Wild-Ausnutzung — bisher.</li>
+      <li><span class="chip">Sec</span> <strong>TanStack-Postmortem ist online</strong>: TeamPCP-Welle umfasst jetzt auch SAP-npm-Pakete; insgesamt >400 Versionen, 169–172 Pakete. Endor Labs hat die CI-Workflow-Kette dokumentiert.</li>
+      <li><span class="chip">Konferenz</span> <strong>OSSNA Minneapolis</strong> startet heute: Brendan-Burns-Keynote zu „From Open Source to Agentic Systems", Supply-Chain-Track-Headliner mit OpenSSF, MS, OpenAI, Intel.</li>
+      <li><span class="chip good">Release</span> <strong>Python 3.14.5</strong>: <em>inkrementeller GC zurückgerollt</em> auf den generationalen aus 3.13. Wer 3.14.0–3.14.4 produktiv fährt, hatte Memory-Druck — Pflicht-Upgrade.</li>
+      <li><span class="chip good">Release</span> <strong>Caddy 2.11.3</strong> (12.05.): stiller Sprung von 2.10. Relevant für jeden, der eine Caddy-Edge betreibt — ddmini-Doku zeigt noch 2.10.</li>
+      <li><span class="chip good">Release</span> <strong>Next.js 16.2</strong>, <strong>Bun 1.3.14</strong>, <strong>K8s 1.34.8</strong>, <strong>Docker Desktop Mai-Drop</strong> mit SLSA-v1-Provenance. Wochenend-Cleanup.</li>
+      <li><span class="chip">EU</span> <strong>iOS 26.5 ist live</strong>: AirPods-Style-Pairing für Drittanbieter-Earbuds, Live Activities auf non-Apple-Watches. Zwei Wochen vor der harten DMA-Frist 01.06.</li>
+      <li><span class="chip">DE</span> <strong>NIS2-Registrierungsfrist 06.03. ist verstrichen</strong> — wer jetzt nicht im BSI-Register steht, ist im Verzug. Persönliche Vorstandshaftung bis 10 Mio. € oder 2 % Weltumsatz.</li>
+      <li><span class="chip">M&amp;A</span> <strong>Workday kauft Sana</strong> (Stockholm-AI-Learning) für 1,1 Mrd. $; <strong>Atlassian schluckt DX</strong> (Engineering-Intelligence) für ~1 Mrd. $. Konsolidierung an der „Dev-Productivity-Mess-Schicht".</li>
+    </ul>
+  </section>
+
+  <!-- BAND 2: Wochenausblick -->
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Patch-Fristen, Releases, Konferenzen — die nächsten drei Wochen</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Mo 18.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heute</span>
+          <span><strong>Copilot-Default-Switch live</strong> → GPT-5.3-Codex</span>
+          <span>OSSNA Minneapolis Tag 1 — Brendan-Burns-Keynote</span>
+          <span>PyCon US 2026 Sprints — Long Beach, Mo–Di</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Di 19.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Firefox 151 → Stable</strong></span>
+          <span>TC39 114 Plenary Amsterdam (bis Do) — Source Phase Imports, Temporal</span>
+          <span>Google I/O Keynote — Gemini-4-Reveal erwartet</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 20.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Quarkus 3.36 Core Final</strong></span>
+          <span>TC39 114 Tag 2</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Do 21.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>OpenSSF Community Day NA — „Quantum Proofing Sigstore"</span>
+          <span>TC39 114 Tag 3 / Closing</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 27.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Quarkus 3.36 Platform GA</strong></span>
+          <span>EU-Tech-Sovereignty-Paket — Cloud + AI Development Act</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mo 01.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>GitHub-Copilot-Token-Billing</strong> live</span>
+          <span><strong>DMA-Apple-Interop-Deadline</strong> (Notifications, Audio-Switching, Proximity-Pairing)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 03.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>AI-Act Art. 50 Konsultationsfrist (Wasserzeichen + Synthetik-Marking)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fr 11.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CRA-Haupt-Verpflichtungen (Reporting + Vulnerability-Handling) treten in Kraft</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <!-- COLUMN 1: Security & Supply Chain -->
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Sicherheit &amp; Lieferkette</h2>
+
+        <h3>CloudNativePG CVE-2026-44477 — Postgres-on-K8s mit OS-RCE</h3>
+        <p>Der erste CVE überhaupt im CloudNativePG-Postgres-Operator, und er sitzt direkt im Pfad, der gerade in halb DACH den klassischen <code>postgres</code>-Container ablöst. Der metrics-Exporter hat seine PG-Verbindung als <code>postgres</code>-Superuser über den Pod-Unix-Socket geöffnet und dann via <code>SET ROLE pg_monitor</code> demotet — der <code>session_user</code> blieb aber <code>postgres</code>. Ein niedrig-privilegierter DB-Nutzer konnte das mit <code>RESET ROLE</code> umkehren und dann mit <code>COPY ... TO PROGRAM</code> arbiträre OS-Commands im Primary-Pod ausführen.</p>
+        <div class="eli5">
+          <strong class="eli5-term">CloudNativePG:</strong> Stell Dir den Postgres-Operator wie einen kompetenten Hausmeister vor, der in Deinem Kubernetes-Cluster alle Postgres-Häuser verwaltet — neue baut, Backups dreht, Failover orchestriert. Anders als die ältere Methode (Postgres im Container, Du baust das HA selbst) macht CloudNativePG das deklarativ über Custom Resources. Marktführer in Cloud-Native-Postgres-Deployments.
+        </div>
+        <p>Drei Dinge daran: (a) <strong>kein bestehender Container-Escape-Bug</strong> nötig — der Angriff läuft in der vorgesehenen API. (b) <strong>Niedrig-privilegierter DB-Account</strong> reicht; klassische Apps haben so etwas. (c) Fix in <strong>1.28.3 und 1.29.1</strong> ist ein eigenständiger <code>cnpg_metrics_exporter</code>-Role mit nur <code>pg_monitor</code>-Privilegien — saubere Architektur, aber rückwärts-kompatibel ist es nicht. Postgres-on-K8s-Klienten heute auf Major-Version-Pin prüfen <a href="https://www.postgresql.org/about/news/cloudnativepg-1291-and-1283-released-critical-cve-fix-3296/">[1]</a><a href="https://securityonline.info/cloudnativepg-vulnerability-cve-2026-44477-postgresql-rce/">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.postgresql.org/about/news/cloudnativepg-1291-and-1283-released-critical-cve-fix-3296/">postgresql.org/news</a></li>
+          <li><a href="https://securityonline.info/cloudnativepg-vulnerability-cve-2026-44477-postgresql-rce/">securityonline.info</a></li>
+        </ol></div>
+
+        <h3>Spring Boot Actuator CVE-2026-40976 — Auth-Bypass per Filter-Chain</h3>
+        <p>Spring-Boot-Standard-Security-Filter-Chain trifft eine Annahme, die für 95 % aller Configs stimmt — und für die restlichen 5 % eine Pre-Auth-Lücke ist. Wer eine Custom-Filter-Chain ohne explizite Autorisierungsregel <em>für die Actuator-Endpoints</em>, aber <em>mit</em> einer für <code>/actuator/health</code> hat, bekommt alle anderen Actuator-Endpoints (<code>env</code>, <code>configprops</code>, <code>heapdump</code>, <code>shutdown</code>) ohne Authentifizierung exponiert. <span class="stat">CVSS 9,1</span>. Betroffen: Spring Boot 3.0–3.5 und 4.0 vor den 14.05.-Patches.</p>
+        <p>Der Fix ist trivial, aber die Audit-Frage ist nicht „habe ich gepatcht?", sondern „habe ich diese Filter-Chain-Form überhaupt?". Antwort findet man am schnellsten mit <code>curl /actuator/env</code> gegen produktive Hosts <a href="https://github.com/advisories/GHSA-8v8j-3hxp-93wr">[1]</a><a href="https://securityonline.info/spring-boot-vulnerability-cve-2026-40976-security-bypass/">[2]</a>.</p>
+        <div class="callout warn">
+          <span class="callout-label">Sanity-Check</span>
+          Wenn <code>/actuator/env</code> oder <code>/actuator/configprops</code> ohne Login antwortet, sind nicht nur Konfigurationswerte, sondern oft <strong>DB-Connection-Strings inkl. Passwort, Cloud-API-Keys, JWT-Secrets</strong> im Klartext sichtbar. Der CVE eskaliert in der Regel sofort zu „Game Over".
+        </div>
+        <div class="footnotes"><ol>
+          <li><a href="https://github.com/advisories/GHSA-8v8j-3hxp-93wr">github.com/advisories/GHSA-8v8j-3hxp-93wr</a></li>
+          <li><a href="https://securityonline.info/spring-boot-vulnerability-cve-2026-40976-security-bypass/">securityonline.info</a></li>
+        </ol></div>
+
+        <h3>F5 BIG-IP Quarterly — >50 CVEs auf einmal</h3>
+        <p>F5 hat am 14.05. seine Quarterly Security Notification gefeuert: mehr als 50 CVEs in BIG-IP, NGINX und iControl REST. Die zwei mit der größten Sprengkraft sind <strong>CVE-2026-42945</strong> im NGINX-<code>ngx_http_rewrite_module</code> (<span class="stat">CVSS 9,2</span>, DoS bei manipuliertem Header-Pattern) und <strong>CVE-2026-41225</strong> in iControl REST (8,6, Command-Exec mit Manager-Rechten). Daneben mehrere RCE/Command-Injection-Pfade in BIG-IP selbst (CVE-2026-41957, -34176, -39459). Talos und CISA sehen <em>noch</em> keine Ausnutzung im Feld — F5-CVEs werden aber traditionell zwischen Disclosure und „in KEV" sehr schnell, weil die Geräte direkt am Edge stehen <a href="https://my.f5.com/manage/s/article/K000160932">[1]</a><a href="https://www.securityweek.com/f5-patches-over-50-vulnerabilities/">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://my.f5.com/manage/s/article/K000160932">my.f5.com K000160932</a></li>
+          <li><a href="https://www.securityweek.com/f5-patches-over-50-vulnerabilities/">securityweek.com</a></li>
+        </ol></div>
+
+        <h3>TanStack/Shai-Hulud — Postmortem online, SAP-Pakete dazu</h3>
+        <p>Die Welle vom 11.05. ist in der Aufarbeitungs-Phase, hat aber zwei Nachträge produziert, die das Bild schärfen. TanStack hat das eigene <a href="https://tanstack.com/blog/npm-supply-chain-compromise-postmortem">Postmortem</a> publiziert: gefoerkter Repo → <code>pull_request_target</code>-Workflow → Cache-Poisoning des OIDC-Tokens, dann legitime Sigstore-Signatur mit Malware-Inhalt. <strong>ReversingLabs und Dark Reading</strong> haben TeamPCP unabhängig auch mit kompromittierten <strong>SAP-npm-Paketen</strong> verbunden — der Vektor ist nicht TanStack-spezifisch, sondern jede Repo-Topologie mit <code>pull_request_target</code> + öffentlich-erreichbare CI ist Ziel. Gesamtbilanz heute: <span class="stat">400+</span> bösartige Versionen über 169–172 Pakete (npm + PyPI), kumulativ <span class="stat">~518 Mio.</span> Downloads.</p>
+        <p>Endor Labs hat die <a href="https://www.endorlabs.com/learn/how-a-misconfigured-ci-workflow-became-an-npm-supply-chain-compromise">CI-Workflow-Kette komplett dokumentiert</a> — Pflichtlektüre für jeden, der einen Publish-Workflow betreut. GitHub hat als direkte Reaktion bereits am 07.11.2025 angekündigt, dass <code>pull_request_target</code> und Environment-Branch-Protection ab 08.12.2025 gegen den Default-Branch evaluiert werden — wer das nicht gezogen hat, wiederholt die Lektion <a href="https://www.reversinglabs.com/blog/mini-shai-hulud-tears-at-oss-trust">[1]</a><a href="https://hackread.com/teampcp-mini-shai-hulud-worm-npm-pypi-packages/">[2]</a><a href="https://github.blog/changelog/2025-11-07-actions-pull_request_target-and-environment-branch-protections-changes/">[3]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.reversinglabs.com/blog/mini-shai-hulud-tears-at-oss-trust">reversinglabs.com</a></li>
+          <li><a href="https://hackread.com/teampcp-mini-shai-hulud-worm-npm-pypi-packages/">hackread.com (16.05.)</a></li>
+          <li><a href="https://github.blog/changelog/2025-11-07-actions-pull_request_target-and-environment-branch-protections-changes/">github.blog/changelog (07.11.2025)</a></li>
+        </ol></div>
+
+        <h3>NIS2 in DE — Frist ist verstrichen, Haftung läuft</h3>
+        <p>Die deutsche NIS2-Umsetzung ist seit 06.12.2025 in Kraft, die Registrierungsfrist für betroffene Unternehmen am 06.03.2026 abgelaufen. Wer als „besonders wichtige" oder „wichtige" Einrichtung gilt und sich bis dahin nicht beim BSI registriert hat, ist heute formal im Verzug — und die persönliche Vorstandshaftung im Schadensfall beträgt bis zu <span class="stat">10 Mio. €</span> oder 2 % vom Weltumsatz, je nachdem, was höher ist <a href="https://www.mofo.com/resources/insights/251208-flipping-the-nis2-switch-what-germanys-implementation">[1]</a>. Parallel hat das BSI Ende April den <strong>C5:2026</strong>-Kriterienkatalog veröffentlicht: integriert Post-Quantum-Kryptographie-Strategie, Confidential Computing, Container-Management; verpflichtende Anwendung auf Audit-Engagements ab 01.06.2027 <a href="https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Kriterienkatalog-C5/C5_2025/C5_2025_node.html">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.mofo.com/resources/insights/251208-flipping-the-nis2-switch-what-germanys-implementation">mofo.com (DE-NIS2-Übersicht)</a></li>
+          <li><a href="https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Kriterienkatalog-C5/C5_2025/C5_2025_node.html">bsi.bund.de C5:2026</a></li>
+        </ol></div>
+
+      </section>
+
+    </div>
+
+    <!-- COLUMN 2: Releases & Toolchain -->
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Releases &amp; Toolchain</h2>
+
+        <h3>Copilot wechselt das Basismodell — GPT-5.3-Codex ist heute Default</h3>
+        <p>GitHub hat am Sonntag-Abend US-Zeit den Default-Modell-Schalter umgelegt: alle Copilot-Business- und Copilot-Enterprise-Tenants antworten ab heute mit <strong>GPT-5.3-Codex</strong> statt GPT-4.1. Free/Pro-Tarife folgen in den nächsten Wochen. GitHub publiziert keine Benchmarks, aber spricht von „deutlich höherer code survival rate" bei Enterprise-Kunden — Codex ist die Coding-spezialisierte Reasoning-Linie, GPT-4.1 war der allgemeine Long-Context-Default.</p>
+        <p>Was sich praktisch ändert: Vorschläge mit Mehr-Datei-Kontext werden klarer (Codex hält Repo-Strukturen im State), Single-Line-Completions fühlen sich gelegentlich konservativer an. Wer einen bestimmten Modell-Hash für Reproduzierbarkeit braucht, kann ihn in <code>.github/copilot/config.yml</code> pinnen — der Default-Switch lässt explizite Pins in Ruhe <a href="https://github.blog/changelog/2026-05-17-gpt-5-3-codex-is-now-the-base-model-for-copilot-business-and-enterprise/">[1]</a>.</p>
+        <div class="callout info">
+          <span class="callout-label">Kostenseitig</span>
+          Token-basiertes <strong>Copilot-Premium-Billing</strong> startet am 01.06. Wer heute den Modell-Default akzeptiert, sieht ab Juni unter Umständen einen anderen Verbrauch pro Anfrage — Codex-Antworten sind tendenziell länger und context-richer als GPT-4.1.
+        </div>
+        <div class="footnotes"><ol>
+          <li><a href="https://github.blog/changelog/2026-05-17-gpt-5-3-codex-is-now-the-base-model-for-copilot-business-and-enterprise/">github.blog/changelog (17.05.)</a></li>
+        </ol></div>
+
+        <h3>Python 3.14.5 — der inkrementelle GC ist zurück</h3>
+        <p>Wer 3.14 produktiv fährt, hat letzten Monat möglicherweise Memory-Druck gesehen, den 3.13 nicht hatte. Der Grund: 3.14.0 hatte einen <strong>inkrementellen Garbage Collector</strong> ausgeliefert, der die GC-Pausen reduzieren sollte — in Produktion zeigte sich aber ein anderer Effekt: bestimmte Allocation-Pattern hielten Objekte länger lebendig, Resident Memory stieg um zweistellige Prozent. Mit 3.14.5 (10.05.) ist der Rollback durch: Python 3.14 nutzt wieder den <em>generationalen</em> GC aus 3.13. Plus ~154 reguläre Bugfixes.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Garbage Collector (GC):</strong> Der Aufräum-Dienst der Sprachlaufzeit. Findet Objekte im Speicher, auf die nichts mehr zeigt, und gibt den Speicher frei. <em>Generational</em>: behandelt „junge" Objekte häufiger als „alte" (weil junge typischerweise schneller sterben). <em>Inkrementell</em>: macht den Job in vielen kleinen Schritten statt einem großen — kürzere Pausen, aber mehr Buchführung. Letzteres funktionierte in 3.14.0 nicht wie geplant.
+        </div>
+        <p>Für Daniel-Stack-Codebasen (FastAPI, Pandas-Pipelines, langlaufende Worker): wenn der Memory-Graph eines Service in den letzten Wochen ungewöhnlich nach oben gewandert ist und nichts am Code-Pfad sich geändert hat — das hier ist der wahrscheinliche Grund. Upgrade ist pflicht <a href="https://www.python.org/downloads/release/python-3145/">[1]</a><a href="https://blog.python.org/2026/05/python-3145rc1/">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.python.org/downloads/release/python-3145/">python.org Release-Notes</a></li>
+          <li><a href="https://blog.python.org/2026/05/python-3145rc1/">blog.python.org</a></li>
+        </ol></div>
+
+        <h3>Caddy 2.11.3, K8s 1.34.8, Docker Desktop — die ruhigen Treiber</h3>
+        <p>Drei Releases, die ohne große Presse-Salve den Stack-Boden anheben. <strong>Caddy 2.11.3</strong> (12.05.) ist die stabile 2.11.x-Linie — der Sprung von 2.10 ist still passiert (2.11.1 war der erste 2.11-Tag, 2.11.0 wurde wegen eines externen Bruchs im Release-Prozess übersprungen). Für die ddmini-Edge: die manufaktur-Caddy-Doku zeigt noch 2.10; vor dem nächsten <code>deploy-caddy.sh</code>-Lauf den Image-Tag aktualisieren <a href="https://github.com/caddyserver/caddy/releases">[1]</a>.</p>
+        <p><strong>Kubernetes 1.34.8</strong> (12.05.) fixt vor allem Dynamic Resource Allocation (Doppelallokation an Devices durch Race zwischen Goroutines) und kubeadm-Node-Patch-Verhalten. <strong>Docker Desktop Mai-Update</strong> liefert SLSA-v1-Provenance-Unterstützung (interessantes Timing nach TanStack), schließt CVE-2026-33990 im Docker Model Runner und packt K8s 1.34.3 + Linux-Kernel 6.12.72 ein <a href="https://kubernetes.io/releases/patch-releases/">[2]</a><a href="https://docs.docker.com/desktop/release-notes/">[3]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://github.com/caddyserver/caddy/releases">github.com/caddyserver/caddy/releases</a></li>
+          <li><a href="https://kubernetes.io/releases/patch-releases/">kubernetes.io/releases</a></li>
+          <li><a href="https://docs.docker.com/desktop/release-notes/">docs.docker.com</a></li>
+        </ol></div>
+
+        <h3>JavaScript-Front — Next.js 16.2, Bun 1.3.14, Svelte Mai-Digest</h3>
+        <p><strong>Next.js 16.2</strong> (15.05.) bringt experimentelle <strong>Agent DevTools</strong> — strukturierte Inspektion von LLM-Agent-Aktivität direkt in der React-DevTools-Schwesterspalte. Plus Browser-Log-Forwarding und Turbopack-Updates (Fast Refresh, WASM Workers, Dynamic-Import-Tree-Shaking). 200+ Fixes. <strong>Bun 1.3.14</strong> (13.05.) liefert experimentelle HTTP/2- und HTTP/3-Clients für <code>fetch()</code>, HTTP/3 in <code>Bun.serve()</code>, eine vollständige <code>fs.watch()</code>-Neufassung auf Linux/macOS — und erste FreeBSD- und Android-Builds. <strong>Svelte Mai-Digest</strong> (16.05.) bestätigt TypeScript-6.0-Support und ausgebaute SvelteKit Remote Functions. JS-Ökosystem hat trotz Wochenende geliefert <a href="https://releasebot.io/updates/vercel/next-js">[1]</a><a href="https://bun.com/blog/bun-v1.3.14">[2]</a><a href="https://svelte.dev/blog/whats-new-in-svelte-may-2026">[3]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://releasebot.io/updates/vercel/next-js">releasebot.io / Next.js</a></li>
+          <li><a href="https://bun.com/blog/bun-v1.3.14">bun.com/blog/bun-v1.3.14</a></li>
+          <li><a href="https://svelte.dev/blog/whats-new-in-svelte-may-2026">svelte.dev/blog</a></li>
+        </ol></div>
+
+        <h3>Open Source Summit NA — Minneapolis startet</h3>
+        <p>Drei Tage Linux Foundation in Minneapolis, parallel mit Embedded Linux Conference, Linux Security Summit, Observability Summit und OpenSSF Community Day NA. <strong>Brendan Burns</strong> (Microsoft Azure CVP, Kubernetes-Mitgründer) eröffnet heute Vormittag mit „From Open Source to Agentic Systems". Die Sessions-Auswahl ist 2026 sehr eindeutig auf <strong>Supply Chain</strong> zugeschnitten — direkter Reflex der TanStack/Shai-Hulud-Welle: „Securing the AI Supply Chain" (OpenSSF + MS + OpenAI + Intel), SBOM-Operationalisierung, „Quantum Proofing Sigstore" am Donnerstag. Wer Tickets hat und auf Lieferketten-Themen fokussiert, ist diese Woche am richtigen Ort <a href="https://osselcna2026.sched.com/">[1]</a><a href="https://events.linuxfoundation.org/2026/03/26/open-source-summit-north-america-2026-schedule-showcases-next-era-of-ai-infrastructure-security-and-open-ecosystems/">[2]</a>.</p>
+        <p>Parallel laufen in Long Beach die <strong>PyCon US Sprints</strong> Mo + Di durchgehend bis 21:00 PST. Teilnehmende Projekte u. a. CPython-Infra, Hatch, Django. Sprints sind reine Arbeitssessions, kein PR-Programm — Output wandert über die Woche in Commit-Logs, nicht in Pressemitteilungen <a href="https://us.pycon.org/2026/events/dev-sprints/">[3]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://osselcna2026.sched.com/">osselcna2026.sched.com</a></li>
+          <li><a href="https://events.linuxfoundation.org/2026/03/26/open-source-summit-north-america-2026-schedule-showcases-next-era-of-ai-infrastructure-security-and-open-ecosystems/">linuxfoundation.org (26.03.)</a></li>
+          <li><a href="https://us.pycon.org/2026/events/dev-sprints/">us.pycon.org/2026/events/dev-sprints</a></li>
+        </ol></div>
+
+        <h3>JetBrains ReSharper für VS Code &amp; Cursor — GA</h3>
+        <p>Nach gut einem Jahr Public Preview ist <strong>ReSharper</strong> jetzt offiziell für VS Code und kompatible Editoren (Cursor, Windsurf) verfügbar. Bisher war die .NET-Refactoring-Extension nur in Visual Studio nutzbar. JetBrains' Strategie wird damit deutlicher: das eigene Rider/IDEA-IDE-Monopol nicht mehr verteidigen, sondern die Sprach-Intelligence-Layer auf neutrale Editor-Hosts portieren. Für DACH-Klienten mit gemischten .NET/JS-Teams: ein Inkonsistenz-Punkt weniger im Tooling-Stack <a href="https://blog.jetbrains.com/dotnet/2026/03/05/resharper-for-visual-studio-code-cursor-and-compatible-editors-is-out/">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://blog.jetbrains.com/dotnet/2026/03/05/resharper-for-visual-studio-code-cursor-and-compatible-editors-is-out/">blog.jetbrains.com (GA-Annonce)</a></li>
+        </ol></div>
+
+        <h3>Spring-Mai-Train verschoben, Quarkus-Countdown</h3>
+        <p>Stille auf der JVM-Frontseite, aber zwei Datums-Updates: <strong>Spring Boot 4.1</strong> ist offiziell vom Mai- in den ersten Juni-Slot verschoben (01.–05.06.) — aktueller Stable bleibt <strong>4.0.6</strong> vom 23.04. <strong>Quarkus 3.36</strong>: Core Final 20.05., Platform GA 27.05. — der Termin steht. CR1 (13.05.) trägt OIDC-SPIFFE-Client-Auth, GraphQL-Client-TLS-Reload ohne Restart, Flyway-Auto-Detect im Dev-Mode <a href="https://spring.io/blog/2026/05/11/may-train-shift">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://spring.io/blog/2026/05/11/may-train-shift">spring.io/blog (Train-Shift)</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <!-- COLUMN 3: Politik / M&A / BR + Kommentar -->
+    <div class="col">
+
+      <section class="news-item">
+        <h2>EU-Regulierung &amp; Politik</h2>
+
+        <h3>iOS 26.5 ist live — Apple liefert vor der DMA-Deadline</h3>
+        <p>Apple hat am 11./12.05. iOS und iPadOS <strong>26.5</strong> ausgerollt — und damit konkret die DMA-Interop-Funktionen geliefert, die die Kommission ein Wochenende zuvor öffentlich angemahnt hatte: AirPods-äquivalentes Proximity-Pairing für Drittanbieter-Earbuds, Live Activities auf non-Apple-Wearables, interaktive Notifications für Drittanbieter-Watches und -TVs. Zubehör-Hersteller müssen die Implementierung auf ihrer Seite leisten — das Feature ist im OS, nicht in den Geräten. Die <em>non-connected audio routes</em>-Pflicht (Audio-Switching ohne aktive iPhone-Verbindung) bleibt aufgeschoben bis 01.06.<strong>2027</strong>; das macht öffentlich klar, dass Apple die Compliance-Verschiebung ausgehandelt hat, und nicht zufällig erst nächstes Jahr liefert <a href="https://daringfireball.net/linked/2026/05/12/new-dma-compliance-features-for-eu-users-in-ios-265">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://daringfireball.net/linked/2026/05/12/new-dma-compliance-features-for-eu-users-in-ios-265">daringfireball.net (12.05.)</a></li>
+        </ol></div>
+
+        <h3>AI Act Art. 50 — die Konsultation läuft bis 03.06.</h3>
+        <p>Die Kommission hat am 08.05. die <strong>Draft Guidelines zu Art. 50</strong> veröffentlicht — Transparenz-Pflichten für KI-generierte Inhalte und KI-Interaktionen. Die zielgerichtete Konsultation läuft bis <strong>03.06.2026</strong>; finaler Text im Juni, Pflichten ab 02.08.2026. Inhaltlich gibt der Draft den von Industrie und Forschung erwarteten <em>mehrschichtigen Ansatz</em> vor: Metadaten + unmerkliche Wasserzeichen + Fingerprinting, keine Einzelmethode reicht. Wer Output-Marking-Pipelines baut oder Generative-Produkte in der EU vertreibt: die Konsultations-Eingabe ist die formale Gelegenheit, technische Realität in den Implementing Act zu bringen <a href="https://digital-strategy.ec.europa.eu/en/library/draft-guidelines-implementation-transparency-obligations-certain-ai-systems-under-article-50-ai-act">[1]</a><a href="https://www.insideglobaltech.com/2026/05/12/10-takeaways-european-commission-draft-guidelines-on-ai-transparency-under-the-eu-ai-act/">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://digital-strategy.ec.europa.eu/en/library/draft-guidelines-implementation-transparency-obligations-certain-ai-systems-under-article-50-ai-act">digital-strategy.ec.europa.eu (08.05.)</a></li>
+          <li><a href="https://www.insideglobaltech.com/2026/05/12/10-takeaways-european-commission-draft-guidelines-on-ai-transparency-under-the-eu-ai-act/">insideglobaltech.com</a></li>
+        </ol></div>
+
+        <h3>Sovereign-Cloud-Tender — €180 Mio. parallel zum 27.05.-Paket</h3>
+        <p>Die Kommission hat zusätzlich zur Ankündigung des Tech-Sovereignty-Pakets am 27.05. einen separaten <strong>€180-Mio.-Tender für sovereign cloud</strong> ausgeschrieben — die ersten konkreten EU-Mittel, die in den Aufbau eigener Hosting-Kapazität fließen sollen. Das ist das Signal an die Mitgliedstaaten, dass das CADA (Cloud and AI Development Act) nicht nur Pflichtkriterien, sondern auch Förder-Infrastruktur bringt. <em>Single-Source-Flag</em>: nur Kommission-Presscorner, noch keine unabhängige Bestätigung der Tender-Details <a href="https://ec.europa.eu/commission/presscorner/api/files/document/print/en/ip_26_833/IP_26_833_EN.pdf">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://ec.europa.eu/commission/presscorner/api/files/document/print/en/ip_26_833/IP_26_833_EN.pdf">ec.europa.eu/commission/presscorner</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>M&amp;A &amp; OSS-Politik</h2>
+
+        <h3>Workday ↔ Sana, Atlassian ↔ DX — Konsolidierung an der Mess-Schicht</h3>
+        <p>Zwei Übernahmen, eine Woche, gleicher Frame. <strong>Workday kauft Sana</strong> (Stockholm-AI-Learning) für 1,1 Mrd. $ — Sana ist seit 2024 die Plattform, die Unternehmens-Wissen über LLMs durchsuchbar macht und Lerninhalte automatisch generiert. <strong>Atlassian schluckt DX</strong> (Engineering-Intelligence) für rund 1 Mrd. $ — DX misst, wie produktiv Engineering-Organisationen <em>wirklich</em> sind (PR-Zyklen, Code-Review-Latenz, Deploy-Frequenz, Survey-Layer).</p>
+        <p>Lesart: nachdem 2023–2024 die <em>Workflow</em>-Schicht (Jira, Linear, Asana) konsolidiert wurde, kommt jetzt die <em>Outcomes</em>-Schicht dran. Wer DACH-Klienten in Engineering-Transformation berät, sieht in den kommenden Monaten beide Tools in Procurement-Listen — und beide direkt im Bündel mit dem jeweiligen Plattform-Anbieter <a href="https://www.cio.com/article/4058625/workday-buys-sana-for-1-1-billion-to-address-the-era-of-superintelligence-in-the-workplace.html">[1]</a>.</p>
+        <p>Parallel weiterhin in Talks-Phase: <strong>Anthropic ↔ Stainless</strong> für ~300 Mio. $ (Stand 13.05., unsigned). Stainless schreibt die offiziellen SDKs für OpenAI, Google, Meta und Anthropic — wenn der Deal closed, sitzt Anthropic in der SDK-Layer der eigenen Konkurrenz. The Information bleibt einzige Erstquelle <a href="https://www.theinformation.com/articles/anthropic-talks-buy-developer-tools-startup-openai-google">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.cio.com/article/4058625/workday-buys-sana-for-1-1-billion-to-address-the-era-of-superintelligence-in-the-workplace.html">cio.com (Workday/Sana)</a></li>
+          <li><a href="https://www.theinformation.com/articles/anthropic-talks-buy-developer-tools-startup-openai-google">theinformation.com (Anthropic/Stainless)</a></li>
+        </ol></div>
+
+        <h3>SAP Joule Studio 2.0 — Eingeständnis und Reset</h3>
+        <p>Auf der Sapphire in Orlando (11.–13.05.) hat SAP <strong>Joule Studio 2.0</strong> GA — und ungewöhnlich offen eingeräumt, dass die erste Version „geflopt" sei. Das neue Studio ist eine AI-first Build-Umgebung für Custom-Agents, integriert <strong>n8n</strong> (Visual Workflow), <strong>Vercel</strong> (Design-Tooling), <strong>NVIDIA OpenShell</strong> (Secure Runtime). Code lässt sich via GitHub-Push in Drittwerkzeuge wie VS Code öffnen — ein klares Signal in Richtung „Lock-in nicht über den Editor, sondern über das ABAP-/HANA-Backend". SAP legt 100 Mio. € Partner-Funding für Agent-Entwicklung hinter — und macht Design-Time bis Ende 2026 kostenfrei <a href="https://news.sap.com/2026/05/new-joule-studio-enterprise-scale-agentic-development/">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://news.sap.com/2026/05/new-joule-studio-enterprise-scale-agentic-development/">news.sap.com (Joule Studio 2.0)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Brasilien</h2>
+
+        <h3>Nubank-Engineering, ANPD-Sandbox, weiter ruhig</h3>
+        <p>Brasilianisches Wochenende technisch ruhig. <strong>Nubank</strong> hat aktuell ~110 offene Engineering-Positionen (Schwerpunkt Mobile-Platform und Staff-Engineers, Standorte São Paulo, BH, Campinas, Rio) — also weiterhin Hiring-Modus, kein Layoff-Signal trotz Q1-Schwäche bei den Konkurrenten Stone und PagBank <a href="https://international.nubank.com.br/careers/engineering/">[1]</a>.</p>
+        <p>Die <strong>ANPD</strong> (brasilianische Daten-/AI-Aufsicht) hat ihre AI-Regulatorik-Sandbox seit Februar in praktischer Testphase mit drei ausgewählten Unternehmen unter direkter Aufsicht; Laufzeit bis Dezember 2026. Auf dem IAPP Global Summit in Washington präsentierte die Agentur ihre Regulierungsagenda — pragmatischer Pfad: <em>autoridade residual</em>, bestehende LGPD-Hebel statt eigenständiger AI-Gesetz-Architektur. PL 2338/2023 (das diskutierte brasilianische AI-Gesetz) wartet weiter auf die Abstimmung in der Câmara dos Deputados <a href="https://convergenciadigital.com.br/governo/anpd-avanca-e-parte-para-testar-sandbox-regulatorio-de-inteligencia-artificial/">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://international.nubank.com.br/careers/engineering/">international.nubank.com.br/careers</a></li>
+          <li><a href="https://convergenciadigital.com.br/governo/anpd-avanca-e-parte-para-testar-sandbox-regulatorio-de-inteligencia-artificial/">convergenciadigital.com.br</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Kommentar — der gemeinsame Faden</h2>
+        <p>Drei der heutigen Stories sind dieselbe Bewegung aus drei Winkeln. <strong>GPT-5.3-Codex als Copilot-Default</strong>: das Modell, auf dessen Vorschlägen seit gestern die Codebasen großer DACH-Klienten weitergewachsen werden, ist ein anderes als das von Freitag — ohne Migration, ohne Release-Notes im eigenen Repo. <strong>Spring Boot Actuator-CVE</strong>: ein Default in der Filter-Chain hat sich von „in 95 % der Fälle sicher" zu „in 5 % der Fälle Pre-Auth-Exposure" verschoben — nicht durch Code-Änderung, sondern durch Sicherheits-Perspektive. <strong>NIS2-Frist in DE</strong>: am 06.03. ist still etwas in Kraft getreten, was Vorstandshaftung trägt — viele Klienten haben das nicht aktiv quittiert.</p>
+        <p>Gemeinsamer Nenner: <em>Defaults verschieben sich unter dem Stack, ohne dass jemand auf der Konsole „migrate" tippt.</em> Drei Kontrollpunkte heute — der Modell-Pin im Copilot-Config, ein <code>curl /actuator/env</code> gegen produktive Spring-Hosts, ein Blick auf den BSI-Registrierungs-Status. Morgen wird laut: Firefox 151 Stable, TC39 in Amsterdam, Google I/O Keynote mit erwartetem Gemini-4-Reveal — drei Fronten in einem Tag. Heute ist die letzte ruhige Stunde, um die stillen Verschiebungen zu quittieren.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<!-- VOICE SUMMARY -->
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Montag, der achtzehnte Mai. Kein lauter Tag — keine Konferenz-Keynote in Europa, kein Patch-Tuesday, kein angekündigtes Major-Release. Aber drei Dinge haben sich über das Wochenende verschoben, ohne dass jemand groß darüber gesprochen hat.</p>
+  <p>GitHub hat am Sonntag-Abend US-Zeit den Default-Modell-Schalter im Copilot umgelegt. Alle Business- und Enterprise-Tenants antworten ab heute mit GPT fünf Komma drei Codex statt mit GPT vier Komma eins. Free- und Pro-Tarife folgen in den kommenden Wochen. GitHub publiziert keine Benchmarks, aber spricht von deutlich höherer code survival rate. Praktisch heißt das: derselbe Editor, derselbe Cursor, andere Vorschläge. Wer einen bestimmten Modell-Hash für Reproduzierbarkeit braucht, kann ihn weiterhin in der Copilot-Config pinnen — der Default-Switch lässt explizite Pins in Ruhe.</p>
+  <p>Zweite stille Verschiebung: das CloudNativePG-Projekt — der Postgres-Operator, der in halb DACH gerade die klassischen Postgres-Container ablöst — hat seinen ersten CVE überhaupt. CVSS neun Komma vier. Ein niedrig-privilegierter Datenbank-Nutzer konnte über den metrics-Exporter zu OS-Command-Exec im Primary-Pod kommen. Der Fix steckt in den Versionen ein-Punkt-achtundzwanzig-Punkt-drei und ein-Punkt-neunundzwanzig-Punkt-eins. Wer Postgres auf Kubernetes mit CloudNativePG fährt: heute updaten.</p>
+  <p>Drittens läuft seit heute Vormittag der Open Source Summit North America in Minneapolis. Drei Tage Linux Foundation, parallel mit Embedded Linux Conference und OpenSSF Community Day. Die Keynote-Slots gehören diesmal nicht den Kernel-Maintainern, sondern der Supply Chain. Brendan Burns von Microsoft eröffnet mit „From Open Source to Agentic Systems". Direkte Folge der TanStack-und-Shai-Hulud-Welle vom elften Mai — die hat das Programm in den letzten Wochen umgeschrieben.</p>
+  <p>Auf der Release-Seite drei weitere stille Treiber. Python drei-Punkt-vierzehn-Punkt-fünf rollt den inkrementellen Garbage Collector zurück, der seit drei-Punkt-vierzehn-Punkt-null Memory-Druck in Produktion verursacht hat. Wer drei-Punkt-vierzehn fährt und unerklärlich gewachsene Resident-Memory-Graphen sieht: das hier ist der Grund. Caddy zwei-Punkt-elf-Punkt-drei ist die neue Stable-Linie — die ddmini-Edge-Doku zeigt noch zwei-Punkt-zehn, vor dem nächsten Deploy-Lauf aktualisieren. Und Spring Boot Actuator hat einen CVE-Wert von neun Komma eins: eine Standard-Filter-Chain-Form ohne separate Autorisierungsregel für die Actuator-Endpoints exponiert env, configprops, heapdump und shutdown ohne Login. Schneller Sanity-Check ist ein curl gegen actuator-env auf einem produktiven Host.</p>
+  <p>Auf der Politik-Seite hat Apple mit iOS sechsundzwanzig Komma fünf seine DMA-Pflicht-Features ausgeliefert — Proximity-Pairing für Drittanbieter-Earbuds, Live Activities auf non-Apple-Watches. Genau zwei Wochen vor der harten Frist am ersten Juni. Die Kommission hat parallel die Draft-Guidelines zu Artikel fünfzig des AI Acts veröffentlicht; die Konsultation läuft bis zum dritten Juni. Und in Deutschland: die NIS-Zwei-Registrierungsfrist ist am sechsten März verstrichen. Wer als wichtige oder besonders wichtige Einrichtung gilt und sich bis dahin nicht beim BSI registriert hat, ist heute formal im Verzug — mit Vorstandshaftung bis zehn Millionen Euro oder zwei Prozent Weltumsatz.</p>
+  <p>An der M-und-A-Front zwei Deals dieselbe Woche: Workday kauft Sana, das schwedische AI-Learning-Startup, für eins Komma eins Milliarden Dollar; Atlassian schluckt DX, die Engineering-Intelligence-Plattform, für rund eine Milliarde. Konsolidierung an der Stelle, an der gemessen wird, wie produktiv Engineering-Organisationen wirklich sind. Wer in Engineering-Transformation berät, hat damit zwei neue Logos in den Procurement-Listen.</p>
+  <p>In Brasilien bleibt es ruhig. Nubank hat hundertzehn offene Engineering-Positionen, weiter Hiring-Modus. Die ANPD-AI-Sandbox läuft mit drei Pilot-Unternehmen bis Dezember.</p>
+  <p>Morgen wird es laut. Firefox einhunderteinundfünfzig Stable, TC39 Plenary in Amsterdam, Google I O Keynote mit erwartetem Gemini-vier-Reveal — drei Fronten an einem Tag. Heute ist die letzte ruhige Stunde, um die stillen Verschiebungen zu quittieren: der Modell-Pin im Copilot-Config, ein curl gegen actuator-env, ein Blick auf den BSI-Registrierungs-Status.</p>
+</div>
+
+</body>
+</html>

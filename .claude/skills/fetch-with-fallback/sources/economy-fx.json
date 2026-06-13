@@ -1,0 +1,50 @@
+{
+  "_comment": "Reference source config for the economy brief's FX values. Each KEY is a metric; its VALUE is the source LADDER (tried top to bottom). The engine returns the first rung that yields a value. Authoritative rung first (ECB), key-free fallback below (Frankfurter, also ECB-backed). Economy owner: extend/replace these rungs and add DXY etc. Both rungs expose a real sample date so the value isn't flagged date_inferred. Avoid sources that need an API key (e.g. exchangerate.host now does) — the engine will report a parse miss and step down, but a key-gated rung is a dead rung.",
+
+  "eurbrl": [
+    {
+      "name": "ECB euro reference rates (daily XML)",
+      "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml",
+      "kind": "html",
+      "extract": { "regex": "currency=['\"]BRL['\"]\\s+rate=['\"]([0-9.]+)['\"]" },
+      "date_extract": { "regex": "<Cube\\s+time=['\"]([0-9]{4}-[0-9]{2}-[0-9]{2})['\"]" }
+    },
+    {
+      "name": "Frankfurter (ECB-backed, no key) EUR→BRL",
+      "url": "https://api.frankfurter.app/latest?from=EUR&to=BRL",
+      "kind": "json",
+      "extract": { "path": "rates.BRL" },
+      "date_extract": { "path": "date" }
+    }
+  ],
+
+  "usdbrl": [
+    {
+      "name": "Frankfurter (ECB-backed, no key) USD→BRL",
+      "url": "https://api.frankfurter.app/latest?from=USD&to=BRL",
+      "kind": "json",
+      "extract": { "path": "rates.BRL" },
+      "date_extract": { "path": "date" }
+    }
+  ],
+
+  "eurusd": [
+    {
+      "name": "Frankfurter (ECB-backed, no key) EUR→USD",
+      "url": "https://api.frankfurter.app/latest?from=EUR&to=USD",
+      "kind": "json",
+      "extract": { "path": "rates.USD" },
+      "date_extract": { "path": "date" }
+    }
+  ],
+
+  "_comment_dxy": "DXY (US-Dollar-Index) is a basket index, not an FX pair, so the key-free pair APIs above don't carry it. The rung below scrapes the TradingEconomics currency page the brief already cites; if its markup shifts the regex misses and the engine reports it (no fabrication). DXY has no clean key-free JSON source — if this rung fails, source DXY by hand for the day. The fx-snapshot cross-check does NOT depend on DXY, so a missing DXY never blocks the EUR/BRL consistency check.",
+  "dxy": [
+    {
+      "name": "TradingEconomics US dollar index (DXY) page",
+      "url": "https://tradingeconomics.com/united-states/currency",
+      "kind": "html",
+      "extract": { "regex": "TEScewItemValue[^>]*>\\s*([0-9]+\\.[0-9]+)" }
+    }
+  ]
+}

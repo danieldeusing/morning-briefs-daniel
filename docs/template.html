@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — {{YYYY-MM-DD}}</title>
+<!-- Favicon path is ../../favicon.svg because daily files live two folders
+     deep (<category>/<lang>/<date>.html). The same file serves the dashboard
+     at /favicon.svg, so deep-linking to a newsletter shows the right icon. -->
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<!-- Open every external link in a new browser tab. The dashboard iframes the newsletter,
+     and external pages can't render inside iframes (X-Frame-Options). _blank escapes the iframe. -->
+<base target="_blank">
+
+<!-- Shared styles live in /lib/styles.css. No inline <style> in the daily file.
+     Daily files now sit two folders deep (e.g. economy/de/2026-05-15.html), so
+     the lib path is two levels up — keep both link/script paths at ../../lib/. -->
+<link rel="stylesheet" href="../../lib/styles.css">
+
+<!-- Optional CDN scripts — include ONLY if a component used by this newsletter requires them.
+     - Chart.js: needed by fx-card-set + fx-detail-panel (economy) and benchmark-bar-chart (ai-dev).
+     - Mermaid:  needed by causal-chain-mermaid (any newsletter using it).
+     Most newsletters (family, jobs, football, software, ai-usecases without bench) need neither. -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script> -->
+
+<!-- Shared interactive behaviour. Safe to include even if no component needs it — auto-detects targets. -->
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<!-- Body class sets the per-category accent colour. Pick one:
+     cat-economy · cat-software · cat-ai-dev · cat-ai-usecases · cat-football · cat-family · cat-jobs -->
+<body class="cat-{{category}}">
+
+<header class="masthead">
+  <!-- Kicker line — category · edition. The dashboard header already carries
+       the project brand, and the lead/date is implied by the iframe context. -->
+  <div class="masthead-issue">
+    <span>{{Kategorie}}</span>
+    <span class="dot">·</span>
+    <span>Ausgabe {{YYYY-MM-DD}}</span>
+  </div>
+
+  <!-- Headline. Fraunces display, max ~22ch. -->
+  <h1 class="masthead-title">{{Schlagzeile}}</h1>
+</header>
+
+<main class="shell">
+
+  <!-- BAND 1: SUMMARY — editorial lead paragraph + TL;DR scan list, no box.
+       The lead frames today's brief (drop cap in accent colour); the bullets
+       give 6–12 chip-tagged highlights. Skip the <p class="lead"> entirely
+       for very short briefs where it would feel padded. -->
+  <section class="tldr">
+    <!-- <p class="lead">{{Editorial-Aufmacher}}</p> -->
+    <ul>
+      <!-- <li><span class="chip [hot|good]">TAG</span> <strong>Headline</strong>: payload.</li> -->
+    </ul>
+  </section>
+
+  <!-- BAND 2: Wochenausblick / Event-Horizont — full-width timeline.
+       Use event-timeline-7day for software/ai-dev/ai-usecases/football/family/jobs;
+       event-timeline-multistage for economy. Paste from docs/COMPONENTS.md. -->
+  <!-- <div class="timeline"> ... </div> -->
+
+  <!-- DASHBOARD (per-category specialised cards):
+       economy   → fx-card-set + fx-detail-panel
+       football  → freiburg-match-card + form-curve detail
+       family    → weather-card + wochenend-pick-card
+       jobs      → top-listing-cards + listings-table
+       software / ai-dev / ai-usecases → omit; those categories go straight from
+         the timeline band into the body-grid (the deep dives carry the stories
+         themselves — no separate "Top-Stories" tier).
+       Paste components from docs/COMPONENTS.md into the slots. -->
+  <!--
+  <section class="dashboard">
+    <!- - left - ->
+    <!- - right - ->
+  </section>
+  -->
+
+  <!-- Optional STRIP row (e.g., economy uses it for the R$/h calculator). -->
+  <!--
+  <section class="strip">
+    ...
+  </section>
+  -->
+
+  <!-- BODY GRID: deep-dive sections. 3 columns by default; add .cols-2 for 2-column. -->
+  <!-- TL;DR is no longer in here — it's the top band above. -->
+  <div class="body-grid">
+
+    <div class="col">
+      <!-- column 1 sections -->
+    </div>
+
+    <div class="col">
+      <!-- column 2 sections -->
+    </div>
+
+    <div class="col">
+      <!-- column 3 sections (omit when using .body-grid.cols-2) -->
+    </div>
+
+  </div>
+
+</main>
+
+<!-- VOICE SUMMARY (REQUIRED). The top-right 🔊 button on the masthead reads
+     this block instead of walking the visible page text. Written for spoken
+     delivery — flowing prose, no headlines, no chips, no "[N]" refs. 5–10
+     paragraphs total. Translate per language file; do not duplicate DE.
+     See docs/FORMAT.md → "Voice-summary block". -->
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>{{Aufmacher-Satz — Wochentag + Datum + ein-Satz-Aufhänger}}</p>
+  <p>{{Geschichte 1 als Narration, 2–4 Sätze}}</p>
+  <p>{{Geschichte 2 …}}</p>
+  <p>{{Geschichte 3 …}}</p>
+  <p>{{Abschluss — was morgen oder nächste Woche wichtig wird}}</p>
+</div>
+
+<!-- Optional inline JSON for interactive components. Examples:
+
+<script type="application/json" id="fx-series">
+{
+  "eurbrl": {"label": "EUR/BRL",
+             "W": {"labels": ["…"], "data": [5.85, …]},
+             "M": {"labels": ["…"], "data": [5.91, …]},
+             "Y": {"labels": ["…"], "data": [5.62, …]}},
+  "usdbrl": {"label": "USD/BRL", "W": {…}, "M": {…}, "Y": {…}},
+  "dxy":    {"label": "DXY",     "W": {…}, "M": {…}, "Y": {…}}
+}
+</script>
+
+<script type="application/json" id="bench-data">
+{"labels": ["Claude Sonnet 4.6","GPT-5","Gemini Code 2.5","DeepSeek-Coder V3","Qwen-Coder 3","Codestral 2"],
+ "data":   [69.5, 64.8, 61.0, 58.2, 56.7, 52.3],
+ "max":    80,
+ "unit":   " %"}
+</script>
+
+-->
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-06-10</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-10</span>
+  </div>
+  <h1 class="masthead-title">The biggest Patch Tuesday ever — and a Chrome zero-day live in the wild</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Yesterday was Patch Tuesday, and it broke a record: Microsoft closed more vulnerabilities in a single month than ever before since the program began. More interesting than the sheer number is the mix — three zero-days publicly known in advance, plus a Defender hole already being exploited since May. Simultaneously, a real browser emergency: Chrome 149 patches a V8 zero-day already under active attack in the field, the BSI warns. And in the supply chain, the "Miasma" worm in Red Hat's npm packages shows that signed attestations don't stop a hijacked CI/CD pipeline. Meanwhile: PostgreSQL 19 Beta 1 to test-drive, and an EU CRA deadline that goes live tomorrow.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">USA</span> <strong>Record Patch Tuesday</strong>: Microsoft closes ~200 holes (ZDI counts 208) — the largest monthly round since 2017, previous record 177. Three zero-days were publicly known, but not actively exploited at release time.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Browser</span> <span class="chip">Global</span> <strong>Chrome V8 zero-day</strong> <code>CVE-2026-11645</code> (CVSS 8.8): Out-of-bounds in the JS engine, <em>actively exploited</em>, fifth Chrome zero-day in 2026. Fixed in Chrome 149; BSI warns.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Infra</span> <strong>Cisco SD-WAN without patch</strong> <code>CVE-2026-20245</code> (CVSS 7.8): Command injection to root in Catalyst SD-WAN Manager, exploited, no fix yet — on CISA KEV.</li>
+      <li><span class="chip">Sec</span> <span class="chip">OSS</span> <strong>"Miasma" worm in Red Hat's npm</strong>: 96 versions across 32 packages poisoned, published via compromised GitHub account through Actions OIDC — signed attestation didn't block it.</li>
+      <li><span class="chip good">Release</span> <span class="chip">OSS</span> <strong>PostgreSQL 19 Beta 1</strong> is here (06/04): Property-graph queries, <code>ON CONFLICT DO SELECT</code>, parallel autovacuum, online checksums. JIT now off by default.</li>
+      <li><span class="chip">Regulation</span> <span class="chip">EU</span> <strong>CRA deadline tomorrow</strong> (06/11): Conformity assessment body naming rules take effect — the 24h/72h reporting deadline follows in September.</li>
+      <li><span class="chip">Sec</span> <span class="chip">Infra</span> <strong>CISA KEV follow-up</strong>: Arista EOS <code>CVE-2026-7473</code> and the above Chrome and Cisco holes hit the Exploited list together yesterday.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">Patch cleanup, a live CRA deadline, and the PG19 beta test</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Wed 06-10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Patch Tuesday cleanup: roll out ~200 Microsoft CVEs, update Chrome to 149</span>
+          <span>CISA KEV trio from yesterday: Arista EOS, Chrome V8, Cisco SD-WAN</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu 06-11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>EU CRA: conformity assessment body naming rules take effect (Chapter IV)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 06-12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cisco SD-WAN: still unpatched — restrict manager access, check IOCs</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 06-13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet weekend — time to test PostgreSQL 19 Beta on a replica</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun 06-14</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>—</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 06-15</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>npm supply chain: check lockfiles against Miasma IOCs before the week starts</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 06-16</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>The biggest Patch Tuesday since 2017 — record volume, but no fresh in-the-wild zero-day <span class="h2-refs">[1][2]</span></h2>
+        <p>Yesterday was Microsoft's monthly Patch Tuesday, and it broke every previous record. The Zero Day Initiative — whose analyst has counted every month since 2017 — tallies <span class="stat">208 CVEs</span>; the previous high stood at 177 the year before. The mainstream security press counts slightly more conservatively ("~198–200 holes", excluding Microsoft's own duplicate edge entries), but either way: this is the fattest monthly round the program has ever seen.<sup>[1][2]</sup></p>
+        <p>What's remarkable is the risk structure underneath — and it's more reassuring than the number suggests. Three of the holes were <em>publicly known in advance</em> (zero-days in the strict sense), but according to Microsoft at patch time <strong>not</strong> actively exploited: a BitLocker bypass through physical access (<code>CVE-2026-50507</code>), an HTTP/2 resource exhaustion in <code>HTTP.sys</code> that can take down a server (<code>CVE-2026-49160</code>), and a privilege escalation through link-following in the Collaborative Translation Framework (<code>CVE-2026-45586</code>). Additionally, the Defender hole already reported in May and exploited since then rolls into the cumulative June engine: <code>CVE-2026-41091</code> (CVSS 7.8, SYSTEM privileges).<sup>[1][3]</sup></p>
+        <div class="callout info">
+          <span class="callout-label">Heads up</span> No "patch tonight" alarm. The record count is more a signal that Microsoft's internal fuzzing and bug bounty program find a lot — not that 200 doors suddenly opened. For Daniel's stack (Windows build runners, .NET, Visual Studio are in the list), that means: normal rollout rhythm, no emergency. The Defender EoP was due for US agencies anyway by 06/03.
+        </div>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.zerodayinitiative.com/blog/2026/6/9/the-june-2026-security-update-review">zerodayinitiative.com — June 2026 Review (208 CVEs, record)</a></li>
+          <li><a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-june-2026-patch-tuesday-fixes-3-zero-day-200-flaws/">bleepingcomputer.com — 3 Zero-Days, 200 Flaws</a></li>
+          <li><a href="https://www.helpnetsecurity.com/2026/05/21/microsoft-defender-vulnerabilities-cve-2026-41091-cve-2026-45498/">helpnetsecurity.com — Defender CVE-2026-41091 (exploited since May)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Chrome V8 zero-day <code>CVE-2026-11645</code>: live in the wild, fifth this year — Chrome 149 patches <span class="h2-refs">[4][5][6]</span></h2>
+        <p>This is the bug that really demands speed. Google has in <strong>Chrome 149</strong> (builds 149.0.7827.102/.103 for Windows/macOS, .102 for Linux, rolled out 06/08–09) closed an out-of-bounds read/write hole in the JavaScript engine V8 — and confirmed that "an exploit for it exists in the wild".<sup>[4]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">V8 / Out-of-bounds:</strong> V8 is the engine that executes every line of JavaScript in the browser — including code from any website. "Out-of-bounds" means: code reads or writes accidentally past the allowed memory region, like reaching into a neighbor's shelf in a high cabinet. Someone who controls that deliberately can run code in the browser — and just visiting a weaponized page is enough.
+        </div>
+        <p>CVSS 8.8. It's the <span class="stat">fifth</span> in-the-wild exploited Chrome zero-day this year. The BSI has rated the hole as high-risk and warned of active attacks. In practice: Chrome (and every Chromium derivative — Edge, Brave, Vivaldi) checks and forces restart so the update actually takes effect.<sup>[5][6]</sup></p>
+        <div class="footnotes"><ol start="4">
+          <li><a href="https://www.helpnetsecurity.com/2026/06/09/google-chrome-zero-day-cve-2026-11645/">helpnetsecurity.com — Chrome zero-day CVE-2026-11645</a></li>
+          <li><a href="https://thehackernews.com/2026/06/chrome-v8-zero-day-cve-2026-11645.html">thehackernews.com — V8 OOB, CVSS 8.8</a></li>
+          <li><a href="https://www.ad-hoc-news.de/wissenschaft/chrome-sicherheitsluecke-cve-2026-11645-bsi-warnt-vor-aktiven-angriffen/69510236">BSI warning (via ad-hoc-news)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Cisco Catalyst SD-WAN Manager: root hole without patch, already exploited <span class="h2-refs">[7][8]</span></h2>
+        <p>A command injection in the Cisco Catalyst SD-WAN Manager CLI (<code>CVE-2026-20245</code>, CVSS 7.8) allows an attacker with netadmin rights to upload a weaponized file and run arbitrary commands <strong>as root</strong>. Cisco is already seeing limited exploitation — including cases where configuration changes were pushed to edge devices. It's the seventh SD-WAN zero-day of the year at Cisco. As of now there's <em>neither patch nor mitigation</em>; CISA listed the hole on KEV yesterday.<sup>[7][8]</sup></p>
+        <div class="callout warn">
+          <span class="callout-label">Heads up</span> The issue here is the lack of mitigation. Until a fix arrives: lock down access to the Manager web/CLI interface strictly to trusted management networks and audit netadmin accounts. A "requires netadmin" hole becomes critical the moment an attacker reaches the management segment through another route.
+        </div>
+        <div class="footnotes"><ol start="7">
+          <li><a href="https://thehackernews.com/2026/06/cisco-catalyst-sd-wan-cve-2026-20245.html">thehackernews.com — Cisco SD-WAN zero-day active</a></li>
+          <li><a href="https://www.helpnetsecurity.com/2026/06/05/cisco-sd-wan-cve-2026-20245-0-day-exploited/">helpnetsecurity.com — no patch available</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>"Miasma" worm in Red Hat's npm: signed attestation didn't block the pipeline hijack <span class="h2-refs">[9][10][11]</span></h2>
+        <p>A lesson in the supply chain as an attack surface — and exactly the software-engineering second-order effect that belongs in this brief, not in an AI brief. Since 06/01, <span class="stat">96 versions</span> across <span class="stat">32 packages</span> under the npm namespace <code>@redhat-cloud-services</code> have been poisoned with malware called "Miasma" (together ~117,000 downloads/week), a variant of the known "Shai-Hulud" worm. The poisoned package carries a <code>preinstall</code> script that on install immediately runs an obfuscated payload, steals developer and cloud credentials (GitHub Actions tokens, AWS/GCP/Azure keys, Vault, kubeconfig, SSH keys, all <code>.env</code>), and tries to spread to further packages on the victim's system.<sup>[9]</sup></p>
+        <p>The real pivot point for Daniel's world: the code was smuggled in via a <strong>compromised GitHub account</strong> of a Red Hat employee with orphan commits bypassing multiple branch protections — and published through GitHub Actions OIDC. That is: the CI/CD pipeline itself was compromised, not a stolen npm token. That means the beautiful new world of <strong>signed provenance attestations</strong> falls flat: the artifact was "genuinely signed" from the real pipeline run — only the run itself was hijacked. Meanwhile, 57 more packages have been affected.<sup>[10][11]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Provenance attestation:</strong> A cryptographic "origin seal" that proves which repo and which build run a package came from. Meant as an authenticity badge — but a seal only proves <em>where</em> something was built, not whether the build robot was kidnapped during construction.
+        </div>
+        <div class="callout warn">
+          <span class="callout-label">Heads up</span> Check lockfiles against the published IOCs, pin/remove affected <code>@redhat-cloud-services</code> versions, and rotate all credentials that were on a machine that saw a fresh <code>npm install</code> of these packages in the last few days.
+        </div>
+        <div class="footnotes"><ol start="9">
+          <li><a href="https://www.wiz.io/blog/miasma-supply-chain-attack-targeting-redhat-npm-packages">wiz.io — Miasma: 96 versions / 32 packages</a></li>
+          <li><a href="https://www.microsoft.com/en-us/security/blog/2026/06/02/preinstall-persistence-inside-red-hat-npm-miasma-credential-stealing-campaign/">microsoft.com — Preinstall-to-persistence analysis</a></li>
+          <li><a href="https://www.techtimes.com/articles/317832/20260605/red-hat-npm-packages-compromised-57-more-follow-signed-attestations-cannot-block-pipeline-hijack.htm">techtimes.com — Signed attestation doesn't block pipeline hijack</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>PostgreSQL 19 Beta 1 is here — property graphs, <code>ON CONFLICT DO SELECT</code>, online checksums <span class="h2-refs">[12][13]</span></h2>
+        <p>On 06/04, the first beta of PostgreSQL 19 landed — this is the moment when it pays to test a copy of your own database with it, long before GA arrives in the fall. The highlights for Daniel's stack:</p>
+        <ul>
+          <li><strong>SQL/PGQ property-graph queries</strong>: graph queries directly in SQL, without a separate graph database on the side.</li>
+          <li><strong><code>ON CONFLICT DO SELECT</code></strong>: atomic fetch-or-create in a single statement — sidesteps the classic upsert race condition.</li>
+          <li><strong>Parallel autovacuum</strong> and <strong>faster inserts</strong>: less maintenance stall on large tables.</li>
+          <li><strong>Online checksums</strong>: data checksums can be toggled on/off while the cluster is running, no restart needed.</li>
+        </ul>
+        <p>Two defaults have flipped, things to watch on upgrade: <strong>JIT is now off by default</strong> (was a frequent source of surprise latency), TOAST compression now uses <code>lz4</code> by default, and RADIUS authentication is <em>removed</em>. Beta means: for testing, not production — but that's exactly what it's for.<sup>[12][13]</sup></p>
+        <div class="footnotes"><ol start="12">
+          <li><a href="https://www.postgresql.org/about/news/postgresql-19-beta-1-released-3313/">postgresql.org — 19 Beta 1 Release</a></li>
+          <li><a href="https://neon.com/postgresql/postgresql-19-new-features">neon.com — PG19 New Features</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>EU CRA gets a turn of the screw tomorrow: conformity body rules take effect 06/11 <span class="h2-refs">[14]</span></h2>
+        <p>The Cyber Resilience Act ramps up in stages, and tomorrow is a milestone: starting <strong>06/11/2026</strong>, the rules from Chapter IV governing the <em>designation of conformity assessment bodies</em> take effect — national authorities can now designate the bodies that certify high-critical products. For Daniel as a solo/small developer, this isn't an action item yet, but it's the lead-in to what really bites in the fall.</p>
+        <p>The date to actually mark: <strong>09/11/2026</strong>. That's when the Article 14 reporting duties kick in — manufacturers of products with digital elements must actively report exploited vulnerabilities and incidents, with <span class="stat">24 hours</span> for early warning and <span class="stat">72 hours</span> for full disclosure. If you ship software with "digital elements" in the EU, you should have your reporting process in place by then.<sup>[14]</sup></p>
+        <div class="footnotes"><ol start="14">
+          <li><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-summary">ec.europa.eu — CRA summary (deadlines)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>CISA KEV trio from yesterday: Arista, Chrome, Cisco together on the Exploited list <span class="h2-refs">[15]</span></h2>
+        <p>For completeness, since KEV adds always belong in this brief: CISA listed three holes together as "known exploited" on 06/09 — the Chrome V8 hole discussed above <code>CVE-2026-11645</code>, the Cisco SD-WAN bug <code>CVE-2026-20245</code>, and additionally an Arista EOS vulnerability (<code>CVE-2026-7473</code>, "Incomplete Comparison with Missing Factors"). The KEV list is binding for US agencies but works as a solid prioritization aid for everyone: what lands here is proven to be under attack.<sup>[15]</sup></p>
+        <div class="footnotes"><ol start="15">
+          <li><a href="https://www.cisa.gov/news-events/alerts/2026/06/09/cisa-adds-three-known-exploited-vulnerabilities-catalog">cisa.gov — KEV add 06/09 (Arista, Chrome, Cisco)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Briefly noted: Node.js cadence &amp; AI coding tools <span class="h2-refs">[16]</span></h2>
+        <p><strong>Node.js</strong> shipped v26.3.0 on 06/01; the bigger story — the switch starting v27 (Oct 2026) to <em>one</em> major per year, every version gets LTS — ran in last month's brief, here just as a reminder: no rush, but plan for a calmer annual cadence going forward.<sup>[16]</sup></p>
+        <p><strong>AI coding tools</strong> (Copilot, Cursor, Claude Code &amp; Co.) deliberately stay out — that's the turf of the <em>ai-dev</em> brief. Here only the software second-order effect if one arises; today there's plenty happening on the non-AI infrastructure side anyway.</p>
+        <div class="footnotes"><ol start="16">
+          <li><a href="https://www.infoq.com/news/2026/06/nodejs-release-changes/">infoq.com — Node.js: one major/year from v27</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Wednesday, June tenth. Yesterday was Microsoft's Patch Tuesday, and it broke a record — it's the largest monthly security round the program has ever seen. Today is mostly about security: a record patch day, a Chrome emergency, an unpatched Cisco bug, and a worm deep in the npm supply chain.</p>
+  <p>First Microsoft. The Zero Day Initiative counts two hundred and eight vulnerabilities in this round; the old record was one hundred and seventy-seven. Sounds like an alarm, but it's not. Three of the holes were publicly known in advance — a BitLocker bypass, an HTTP two denial of service hole, and a privilege escalation — but at patch time not actively exploited. The one Defender hole that really is being attacked had already been known since May. For Daniel's build runners, that means: normal rollout, no drama.</p>
+  <p>The bug that really deserves speed is in the browser. Google has in Chrome one hundred and forty-nine closed a hole in the JavaScript engine V8 — the number is CVE twenty twenty-six, eleven-six-four-five. Google confirms that an attack is already running in the wild, the severity is eight point eight, and it's already the fifth exploited Chrome zero-day this year. The BSI explicitly warns. Just visiting a weaponized website can be enough — so update Chrome and all Chromium variants and restart.</p>
+  <p>Then Cisco. In the Catalyst SD-WAN Manager there's a hole through which an attacker can run commands as root. It's already being exploited, in some cases even pushing configurations to edge devices — and there's no patch or mitigation yet. The only thing that helps is locking down management access tight until Cisco ships.</p>
+  <p>The lesson of the day comes from the supply chain. Since June first, ninety-six versions across thirty-two packages in Red Hat's npm namespace have been poisoned with a worm called Miasma. What's interesting isn't the theft of credentials, but how it happened: via a hijacked GitHub account and the build pipeline itself. So the package was cleanly signed — from the real run — only the run was kidnapped. The beautiful new world of signed provenance proofs didn't stop it. Whoever installed these packages should check lockfiles and rotate keys.</p>
+  <p>Two quieter pieces to close. PostgreSQL nineteen has landed as a first beta — with graph queries right in SQL, an atomic fetch-or-create, parallel autovacuum, and checksums you can flip while running. Now's exactly the time to test it on a copy. And in Europe, the Cyber Resilience Act gets a turn of the screw tomorrow; the date that really matters is September eleventh, when the twenty-four and seventy-two hour reporting duties kick in.</p>
+  <p>Tomorrow we'll see if Cisco finally ships a patch and how the npm worm spreads. Until then.</p>
+</div>
+
+</body>
+</html>

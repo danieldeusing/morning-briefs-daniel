@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-05-31</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-05-31</span>
+  </div>
+  <h1 class="masthead-title">The AI-tooling layer is now an attack surface</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">A quiet patch day, a loud rest of the month. Microsoft's May patch day was the first in nearly two years <strong>without actively exploited zero-days</strong> — and yet May was the most intense month yet for the <em>layer around it</em>: AI-agent tools shipped insecurely, and npm packages distributing malware with valid provenance. The model isn't the problem; the software that packages and ships it is.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>PraisonAI CVE-2026-44338</strong>: AI-agent framework ships a legacy API server with auth <em>disabled</em> by default — scanned within hours.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">USA</span> <strong>Azure AI Foundry CVE-2026-35435</strong>: critical privilege escalation (CVSS 8.6) in M365 agents. Fixed cloud-side, no customer action — but "Exploitation More Likely".</li>
+      <li><span class="chip good">Sec</span> <span class="chip">USA</span> <strong>May patch day</strong>: 132 CVEs, 29 critical, <em>zero</em> zero-days — the first exploit-free patch day since mid-2024.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">OSS</span> <strong>TanStack worm</strong>: 42 npm packages compromised — first time with <em>valid</em> SLSA Build Level 3 provenance for malware packages.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">OSS</span> <strong>node-ipc + typosquat wave</strong>: credential stealer in 10-million-download libraries, 14 misspelled packages hunting AWS/Vault/CI-CD secrets.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Infra</span> <strong>PAN-OS CVE-2026-0257</strong>: GlobalProtect VPN auth bypass actively exploited, now in CISA-KEV — federal deadline June 1.</li>
+      <li><span class="chip">Release</span> <span class="chip">OSS</span> <strong>PostgreSQL</strong> 18.4/17.10/… closes 11 CVEs, including an MD5 timing channel — reason to drop MD5 auth.</li>
+      <li><span class="chip">Regulation</span> <span class="chip">EU</span> <strong>CRA reporting obligation</strong> from 09-11-2026: 24h early warning, 72h full report — in Germany via BSI/CERT-Bund.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">Deadlines and follow-up dates this week</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Thu 28.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Typosquat wave</span>
+          <span>14 npm packages (alias "vpmdhaj") hunting cloud/CI-CD secrets</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Fri 29.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>PAN-OS enters CISA-KEV</span>
+          <span>CVE-2026-0257 listed — federal deadline June 1</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 30.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet weekend</span>
+          <span>no new major advisory</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Sun 31.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Recap: AI-tooling CVEs + npm supply chain</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mon 01.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>PAN-OS deadline</span>
+          <span>CISA remediation deadline for federal systems (CVE-2026-0257)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 02.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Patch window</span>
+          <span>Deploy PostgreSQL/7-Zip updates to production</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 03.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>expected quiet</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu 04.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>expected quiet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PraisonAI ships its API with auth disabled — and was scanned within hours <span class="h2-refs">[1][2]</span></h2>
+        <div class="eli5">
+          <strong class="eli5-term">AI-agent framework:</strong> A library for building small programs that execute tasks autonomously — "read this email, summarize it, file a ticket". Think of it like giving an intern a to-do list (`agents.yaml`) and watching them work through it.
+        </div>
+        <p>With <strong>PraisonAI</strong>, that intern's front door was wide open. The bundled legacy API server (an old Flask backend) has <code>AUTH_ENABLED = False</code> and <code>AUTH_TOKEN = None</code> hardcoded — the auth check always gives the green light. Anyone reaching the server over the network can read the configuration via <code>/agents</code> and execute the stored workflows via <code>/chat</code>, no token required.<sup>[1]</sup></p>
+        <p>This is <strong>CVE-2026-44338</strong>, rated <span class="stat">7.3 (High)</span> under CVSS 3.1. Affected are all Python package versions from <code>2.5.6</code> through <code>4.6.33</code>; fixed in <code>4.6.34</code>.<sup>[1]</sup> The real kicker is the speed: within <strong>three hours and 44 minutes</strong> of the advisory's publication (May 11, 13:56 UTC), a scanner called "CVE-Detector/1.0" was already knocking on the vulnerable endpoint; the first targeted request landed at 17:40 UTC.<sup>[2]</sup></p>
+        <div class="callout info">
+          <span class="callout-label">Context</span>
+          Why is this in the software brief, not the ai-dev brief? Because the hook isn't the model — it's the <strong>software delivery</strong>: an insecure default in a shipped server. This is a classic "insecure by default" bug — the same kind we've seen for years with MongoDB/Elastic/Redis-without-auth, only this time in the AI-tooling layer. If your agent can execute what's in `agents.yaml`, an open API isn't a data leak — it's remote code execution through the back door.
+        </div>
+        <div class="footnotes"><ol>
+          <li id="s1"><a href="https://github.com/advisories/GHSA-6rmh-7xcm-cpxj">github.com/advisories</a> — GHSA-6rmh-7xcm-cpxj (CVE-2026-44338), CVSS + versions.</li>
+          <li id="s2"><a href="https://thehackernews.com/2026/05/praisonai-cve-2026-44338-auth-bypass.html">thehackernews.com</a> · Cross-check exploit timing: <a href="https://www.sysdig.com/blog/cve-2026-44338-praisonai-authentication-bypass-in-under-4-hours-and-the-growing-trend-of-rapid-exploitation">sysdig.com</a>.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Azure AI Foundry: critical privilege escalation, fixed cloud-side <span class="h2-refs">[3][4]</span></h2>
+        <p><strong>CVE-2026-35435</strong> hits the M365 "published agents" in <strong>Azure AI Foundry</strong>. Faulty access control (CWE-284) allows an unauthenticated attacker from the network to escalate privileges — from a low-privilege role up to control of AI resources and potentially the M365 environment behind it. Microsoft rates the bug as <strong>critical</strong> with <span class="stat">CVSS 8.6</span>.<sup>[3]</sup></p>
+        <p>Two things matter and are being conflated online. <strong>First:</strong> The bug has <em>not</em> been exploited in the wild — the ZDI review of the May patch day explicitly states "has not been exploited", and the CVSS vector carries <code>E:U</code> (exploit code unproven). But Microsoft's outlook is "Exploitation More Likely", the highest tier short of confirmed exploitation.<sup>[3]</sup> <strong>Second:</strong> Microsoft has fixed the hole in its own cloud infrastructure — <em>no</em> customer action required.<sup>[4]</sup></p>
+        <div class="callout warn">
+          <span class="callout-label">Source hygiene</span>
+          Some aggregators claim CVE-2026-35435 is "already actively exploited". That contradicts both ZDI and Sophos's patch day count ("Exploit detected: 0") and the <code>E:U</code> vector — and it's not on any primary source. We rate the flaw as serious, but <strong>not actively exploited</strong>.
+        </div>
+        <div class="footnotes"><ol start="3">
+          <li id="s3"><a href="https://www.thezdi.com/blog/2026/5/12/the-may-2026-security-update-review">thezdi.com</a> — May patch day review (CVSS 8.6, "not exploited"). Vector/CWE: <a href="https://radar.offseq.com/threat/cve-2026-35435-cwe-284-improper-access-control-in--a39ff77e">radar.offseq.com</a>.</li>
+          <li id="s4"><a href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-35435">msrc.microsoft.com</a> (JS-rendered) · Cloud-fix note via <a href="https://www.redpacketsecurity.com/cve-alert-cve-2026-35435-microsoft-azure-ai-foundry/">redpacketsecurity.com</a>.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>May patch day: 132 CVEs — and for the first time in years, no zero-day <span class="h2-refs">[5][6]</span></h2>
+        <p>Microsoft's May patch day brought <span class="stat">132 CVEs</span> (Sophos count including Edge/Mariner; CrowdStrike reports 130, ZDI reports 138 new CVEs — the difference is the usual question of whether Chromium/Mariner entries are counted), with 29 marked critical.<sup>[5]</sup> What was actually remarkable is what <em>wasn't</em> there: <strong>not a single actively exploited zero-day and nothing publicly known beforehand</strong> — the first exploit-free patch day since around June 2024.<sup>[6]</sup></p>
+        <p>That's a rare breathing room, not a reason to let your guard down: 14 CVEs are CVSS 9.0 or higher, many of them remote code execution through Office, SharePoint, Azure, and graphics components. But for once, the calendar is setting the patch pace, not an attacker.</p>
+        <div class="footnotes"><ol start="5">
+          <li id="s5"><a href="https://www.sophos.com/en-us/blog/may-patch-tuesday-hauls-out-132-cves">sophos.com</a> (132 CVEs, 29 critical) · Cross: <a href="https://www.crowdstrike.com/en-us/blog/patch-tuesday-analysis-may-2026/">crowdstrike.com</a> (130).</li>
+          <li id="s6"><a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-may-2026-patch-tuesday-fixes-120-flaws-no-zero-days/">bleepingcomputer.com</a> (counts 120 in narrower scope without Edge/Mariner entries — confirms zero-day-free status here; total 132 from Sophos, fn5) · <a href="https://www.computerweekly.com/news/366642908/Microsoft-releases-rare-zero-day-free-Patch-Tuesday-update">computerweekly.com</a> (no zero-day).</li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>npm supply chain: a worm with a genuine authenticity seal <span class="h2-refs">[7][8]</span></h2>
+        <div class="eli5">
+          <strong class="eli5-term">SLSA provenance:</strong> A cryptographically signed certificate of origin for a software package — "this package was built from exactly this repo, by exactly this build pipeline". Designed as an authenticity seal against tampering. Like a customs stamp on a package: confirms the supply chain, not the contents.
+        </div>
+        <p>The <strong>Mini-Shai-Hulud</strong> campaign (actor "TeamPCP") released <strong>84 malicious versions across 42 <code>@tanstack/*</code> packages</strong> on May 11 between 19:20 and 19:26 UTC — including <code>@tanstack/react-router</code> with over 12.7 million downloads per week.<sup>[7]</sup> The entry point was the GitHub Actions pipeline: a <code>pull_request_target</code> "pwn request", cache poisoning across the fork-to-base trust boundary, and reading an OIDC token directly from the runner process.<sup>[8]</sup></p>
+        <p>What's new and troubling: it's the <strong>first documented case where an npm worm has produced <em>validly attested</em> SLSA Build Level 3 provenance for malware packages</strong>. The Sigstore attestations are correct — they properly attest that the packages were built from `release.yml` on `refs/heads/main`. But SLSA doesn't attest that the workflow was authorized, ran on a protected branch, or was triggered by the right commit.<sup>[8]</sup></p>
+        <div class="callout warn">
+          <span class="callout-label">Lesson</span>
+          Provenance ≠ trustworthiness. Anyone writing "has valid SLSA attestation" as a free pass in their pipeline has moved the problem, not solved it. Consequence for your own repos: avoid `pull_request_target` or run it without secrets/write tokens, don't share GH Actions cache across fork boundaries, tie release workflows to protected branches + manual approval.
+        </div>
+        <div class="footnotes"><ol start="7">
+          <li id="s7"><a href="https://www.wiz.io/blog/mini-shai-hulud-strikes-again-tanstack-more-npm-packages-compromised">wiz.io</a> · <a href="https://snyk.io/blog/tanstack-npm-packages-compromised/">snyk.io</a> · <a href="https://www.infoq.com/news/2026/05/tanstack-supply-chain-attack/">infoq.com</a>.</li>
+          <li id="s8"><a href="https://tanstack.com/blog/npm-supply-chain-compromise-postmortem">tanstack.com</a> — postmortem (SLSA provenance detail, root cause).</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>node-ipc and 14 typosquat packages: the credential thieves are back <span class="h2-refs">[9][10]</span></h2>
+        <p>Two more waves frame the TanStack story. On <strong>May 14</strong>, three tampered versions of <code>node-ipc</code> appeared (9.1.6, 9.2.3, 12.0.1) — a foundation library with over 10 million weekly downloads — each carrying identical 80-KB credential-stealer payloads.<sup>[9]</sup> On <strong>May 28</strong>, a single actor under the fresh alias "vpmdhaj" published <strong>14 typosquat packages</strong> mimicking OpenSearch, Elasticsearch, DevOps, and env-config libraries in a four-hour window.<sup>[10]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Typosquatting:</strong> A malicious package with a name dangerously similar to a real one (`opensearch-setup` instead of the genuine package). Like a counterfeit bill that looks nearly identical to the real thing — hit one wrong key while typing or trust copy-paste, and you install the fake.
+        </div>
+        <p>The payload runs during `npm install` via lifecycle hooks and grabs AWS credentials (including EC2 Metadata Service and Secrets Manager across 16+ regions), HashiCorp Vault tokens, GitHub Actions tokens, and npm publish tokens.<sup>[10]</sup> Steal → move sideways into the cloud → compromise the next maintainer accounts: same worm mechanism.
+        </p>
+        <div class="footnotes"><ol start="9">
+          <li id="s9"><a href="https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack">stepsecurity.io</a> — node-ipc versions + payload.</li>
+          <li id="s10"><a href="https://www.microsoft.com/en-us/security/blog/2026/05/28/typosquatted-npm-packages-used-steal-cloud-ci-cd-secrets/">microsoft.com/security</a> — typosquat campaign (vpmdhaj, 14 packages).</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>PAN-OS GlobalProtect: VPN auth bypass actively exploited, now in KEV <span class="h2-refs">[11][12]</span></h2>
+        <p><strong>CVE-2026-0257</strong> lets a remote, unauthenticated attacker forge "authentication-override" cookies and slip into the VPN unauthorized through the GlobalProtect gateway. The flaw only triggers in a non-standard configuration (the override certificate is shared with the HTTPS service) — Palo Alto rates it as "medium".<sup>[11]</sup></p>
+        <p>In practice it's not: Rapid7 observed active exploitation <strong>since May 17</strong> (first wave from Vultr IPs, second on May 21), and a PoC script is public. <strong>CISA</strong> added it to the Known-Exploited-Vulnerabilities catalog on <strong>May 29</strong>, with <strong>remediation deadline June 1</strong> for federal systems.<sup>[12]</sup> An auth bypass on an internet-facing VPN appliance is exactly the kind of initial-access vector you don't leave on the table — regardless of what CVSS says.
+        </p>
+        <div class="footnotes"><ol start="11">
+          <li id="s11"><a href="https://security.paloaltonetworks.com/CVE-2026-0257">security.paloaltonetworks.com</a> — vendor advisory.</li>
+          <li id="s12"><a href="https://www.rapid7.com/blog/post/etr-rapid7-observed-exploitation-of-pan-os-globalprotect-authentication-bypass-vulnerability-cve-2026-0257/">rapid7.com</a> (exploit timeline + KEV) · <a href="https://www.bleepingcomputer.com/news/security/palo-alto-globalprotect-vpn-auth-bypass-flaw-now-exploited-in-attacks/">bleepingcomputer.com</a>.</li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PostgreSQL patch roundup: 11 CVEs, and a good reason to kill MD5 auth <span class="h2-refs">[13]</span></h2>
+        <p>On <strong>May 14</strong>, <strong>PostgreSQL 18.4, 17.10, 16.14, 15.18, and 14.23</strong> shipped — closing 11 security flaws and over 60 bugs.<sup>[13]</sup> Three deserve a closer look:</p>
+        <ul>
+          <li><strong>CVE-2026-6478</strong> — a <em>covert timing channel</em> when comparing MD5-hashed passwords lets attackers reconstruct credentials. <code>scram-sha-256</code> (default in all supported releases) is <em>not</em> affected — so if you're still running MD5 auth, you now have a solid reason to switch.
+          </li>
+          <li><strong>CVE-2026-6479</strong> — unbounded recursion in the SSL/GSS handshake permits sustained DoS for anyone reaching the AF_UNIX socket.</li>
+          <li><strong>CVE-2026-6476</strong> — SQL injection via subscription name in <code>pg_createsubscriber</code>.</li>
+        </ul>
+        <p>Standard patch roundup: roll it out when the maintenance window fits, no rush — but the MD5 story is the nudge you've been putting off for years.
+        </p>
+        <div class="footnotes"><ol start="13">
+          <li id="s13"><a href="https://www.postgresql.org/about/news/postgresql-184-1710-1614-1518-and-1423-released-3297/">postgresql.org</a> — release announcement + CVE list, May 14, 2026.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA reporting obligation kicks in September: the 24-hour timer starts ticking <span class="h2-refs">[14]</span></h2>
+        <p>Not a 7-day deadline, but it's drawing closer and affects anyone bringing connected products to the EU: from <strong>September 11, 2026</strong>, the reporting obligation of the <strong>Cyber Resilience Act</strong> takes effect. For actively exploited flaws and serious incidents: <strong>early warning within 24 hours</strong>, full report within 72 hours, final report within 14 days — reported once via the central CRA platform.<sup>[14]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">CRA (Cyber Resilience Act):</strong> EU regulation requiring "connected product" makers — from smart lightbulbs to commercially supported libraries — to meet minimum security and report flaws. Like product liability, but for cybersecurity.
+        </div>
+        <p>In Germany, the reporting goes to the <strong>BSI</strong> or CERT-Bund. For solo developers and small teams selling commercial components, that means: set up processes now, not in September — a 24-hour timer isn't a deadline you improvise.</p>
+        <div class="footnotes"><ol start="14">
+          <li id="s14"><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">digital-strategy.ec.europa.eu</a> — CRA reporting obligations (24h/72h/14d).</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Briefly noted</h2>
+        <p><strong>CISA-KEV additions (week):</strong> Along with PAN-OS, the month added <code>CVE-2026-48172</code> (LiteSpeed cPanel plugin privilege escalation, May 26) and earlier <code>CVE-2025-34291</code> (Langflow) and <code>CVE-2026-34926</code> (Trend Micro Apex One) — actively exploited, so patch them first.<sup>[15]</sup></p>
+        <p><strong>7-Zip:</strong> A heap overflow when processing compressed NTFS streams (<code>CVE-2026-48095</code>, CVSS 8.8) was closed in <strong>7-Zip 26.01</strong> (April 27) — if you still have 26.00 locally, update it.<sup>[16]</sup></p>
+        <p><strong>Web platform:</strong> Chrome 138 brings <code>abs()</code>/<code>sign()</code> as "Baseline newly available" and CSS functions <code>sibling-index()</code>/<code>sibling-count()</code> — finally sibling index without JS. Firefox holds steady at 151 (May 19).<sup>[17]</sup></p>
+        <div class="footnotes"><ol start="15">
+          <li id="s15"><a href="https://www.cisa.gov/news-events/alerts/2026/05/26/cisa-adds-one-known-exploited-vulnerability-catalog">cisa.gov</a> (KEV additions May 2026).</li>
+          <li id="s16"><a href="https://www.heise.de/en/news/7-Zip-Update-closes-code-smuggling-vulnerability-11308367.html">heise.de</a> — 7-Zip 26.01.</li>
+          <li id="s17"><a href="https://developer.chrome.com/release-notes/138">developer.chrome.com</a> — Chrome 138.</li>
+        </ol></div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Sunday, May thirty-first. The day itself is quiet, but the week before brought significant news — and the theme is clear: the software layer around AI models has become an attack surface. Not the model, but the server that packages it, and the package that ships it.</p>
+  <p>Start with PraisonAI, a framework for AI agents. Its bundled legacy API server had authentication completely disabled by default — anyone reaching it over the network could execute the stored workflows without a password. The flaw is called CVE two thousand twenty-six, forty-four thousand three hundred thirty-eight, rated seven point three. The really frightening part is the speed: within just under four hours after publication, the first scanner was already knocking on the open door.</p>
+  <p>A second AI flaw comes from Microsoft: Azure AI Foundry, a critical privilege escalation rated eight point six. Be careful with the headlines here — some aggregators say it's already being exploited. That's wrong. The Zero Day Initiative review explicitly says it hasn't been exploited, and Microsoft already fixed it in its own cloud anyway, no customer action needed.</p>
+  <p>Which flows seamlessly into Microsoft's patch day: May brought one hundred thirty-two flaws, twenty-nine of them critical — but for the first time in nearly two years, not a single actively exploited zero-day. A rare breathing room.</p>
+  <p>The loudest part of the week was npm's supply chain. TanStack attackers released eighty-four malicious versions across forty-two packages — and for the first time with valid SLSA provenance. That's the authenticity seal for software origin, and this time the seal was correct — for malware. The lesson, Bloomberg-style: origin doesn't prove trustworthiness. Add a tampered node-ipc version with ten million weekly downloads, plus fourteen misspelled packages on May twenty-eighth specifically hunting cloud and pipeline credentials.</p>
+  <p>And to concrete patching: the PAN-OS VPN flaw from Palo Alto has been actively exploited since mid-May, a working attack script is circulating, and US authorities CISA added it to their catalog on May twenty-ninth — with a deadline of June first. PostgreSQL released a patch roundup on the fourteenth with eleven flaws, including a reason to finally ditch old MD5 authentication.</p>
+  <p>In the background, the EU timer is ticking: starting September eleventh, the CRA reporting obligation takes effect, with twenty-four hours for early warning. Anyone bringing commercial software to the EU should set up the process now.</p>
+  <p>Tomorrow the CISA deadline for the Palo Alto flaw expires — that's the next date to watch. Otherwise things should stay quiet until the next npm wave arrives.</p>
+</div>
+
+</body>
+</html>

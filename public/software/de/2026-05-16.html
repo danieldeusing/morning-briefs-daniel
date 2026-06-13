@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-05-16</title>
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-05-16</span>
+  </div>
+  <h1 class="masthead-title">Exchange-Zero-Day in Ausnutzung, NGINX-Rift bekommt RCE-PoC, npm-Takeover über tote Maintainer-Domain</h1>
+</header>
+
+<main class="shell">
+
+  <!-- BAND 1: TL;DR -->
+  <section class="tldr">
+    <p class="lead">Der Samstag ist ruhig — aber drei der lauten Stories der Woche sind über Nacht weiter eskaliert, und eine neue Supply-Chain-Welle nutzt einen Vektor, den SBOM und SLSA bauartbedingt nicht sehen.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Exchange OWA CVE-2026-42897</strong>: aktive Ausnutzung, CISA-KEV-Add gestern. On-Prem Exchange 2016/2019/SE. Workaround per EMS/EOMT, dauerhafter Fix ist das Mai-Patch-Tuesday-Update.</li>
+      <li><span class="chip hot">Sec</span> <strong>NGINX-Rift Update</strong>: funktionierender RCE-PoC liegt öffentlich, nicht mehr nur DoS. Drei Companion-CVEs in derselben Welle (-42946, -40701, -42934).</li>
+      <li><span class="chip hot">Sec</span> <strong>Netlogon CVE-2026-41089</strong>: Exploitation in the wild seit 13.05. 06:00 UTC, CrowdStrike attribuiert an chinesischen APT-Cluster. Funktionierender Exploit-Code öffentlich.</li>
+      <li><span class="chip hot">Sec</span> <strong>node-ipc kompromittiert</strong> (14.05.): drei bösartige Versionen via Übernahme einer abgelaufenen Maintainer-E-Mail-Domain. 822k weekly downloads, ~2h live. Neue TTP — schlafende Accounts.</li>
+      <li><span class="chip">Sec</span> <strong>Cisco SD-WAN</strong>: Patches in 20.15.506 raus, FCEB-Deadline morgen Sonntag 17.05. UAT-8616 nutzt NETCONF-Pivot in den vmanage-admin-Account.</li>
+      <li><span class="chip good">Release</span> <strong>Postgres-Patches</strong>: vollständige CVE-Liste der Donnerstag-Drops jetzt sichtbar — neben RCE-2026-6473 auch <strong>CVE-2026-6637</strong> (SQL-Injection via refint-Trigger, betrifft auch unangetastete Instanzen).</li>
+      <li><span class="chip good">Release</span> <strong>Quarkus 3.36.0.CR1</strong> (13.05.): OIDC-SPIFFE, Flyway-Auto-Detect in Dev-Mode, SBOM-Hooks. Core Final 20.05., Platform GA 27.05. — Termin für Plattform-Bump.</li>
+      <li><span class="chip">OSS</span> <strong>Bun-Update</strong>: 1.3.14 ist das letzte Zig-Release, PR #30412 (1M LOC Rust, 9 Tage Claude-Pipeline) ist gestern in <code>main</code> gemerged. 13k unsafe-Blöcke bleiben das offene Thema.</li>
+      <li><span class="chip">EU</span> <strong>EU-Tech-Sovereignty-Paket</strong> wird am 27.05. erwartet — Restriktionen für US-Cloud in Healthcare/Finance/Justice der Mitgliedstaaten; EZB-Cloud-Deal an europäischen Anbieter (Fortune, 14.05.).</li>
+      <li><span class="chip">DE</span> <strong>BSI-Patchday-Welle 15.05.</strong>: vm2 (high), SAP April-Patchday (high), Apache HTTP Server (high), TeamViewer DEX. Alles operativ relevant für DACH-Stacks.</li>
+      <li><span class="chip">BR</span> <strong>PIX MED 2.0 in Produktion</strong> seit 11.05.: Graphen-Analyse verfolgt Fraud-Geldfluss bis zu fünf nachfolgende Konten. Zahlungs-Integrationen brauchen neue MED-Reporting-Felder.</li>
+      <li><span class="chip">EU</span> <strong>AI-Act Art. 50 Transparenz-Konsultation</strong> läuft bis 03.06. — Implementing Acts zu Wasserzeichen und Synthetik-Markierung.</li>
+    </ul>
+  </section>
+
+  <!-- BAND 2: Wochenausblick -->
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Patch-Fristen, Releases, Konferenzen, Konsultations-Stichtage</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Sa 16.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heute</span>
+          <span>Postgres-Cluster-Update-Wochenende — refint-Trigger (CVE-2026-6637) noch nicht gepatcht?</span>
+          <span>Exchange-OWA-Mitigation EMS/EOMT — wenn das Mai-Update nicht durchgekommen ist</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">So 17.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cisco-SD-WAN-Patch-Frist für FCEB-Behörden (CVE-2026-20182)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mo 18.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Open Source Summit NA, Minneapolis (bis 20.05.)</span>
+          <span>PyCon US 2026 — Schlussphase, Steering-Council-Beschlüsse erwartet</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 19.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Firefox 151 → Stable (Settings-Revamp, macOS-native <code>&lt;select&gt;</code>)</span>
+          <span>TC39 114. Plenary, Amsterdam (bis 21.05.) — Stage-Advancements erwartet</span>
+          <span>SAP Sapphire-Tag 2, Orlando (bis 21.05.)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 20.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Quarkus 3.36 Core Final</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Do 21.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>OpenSSF Community Day NA, Minneapolis — „Quantum Proofing Sigstore" (Red Hat)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 27.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quarkus 3.36 Platform GA</span>
+          <span>EU-Tech-Sovereignty-Paket angekündigt</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mo 01.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GitHub Copilot Token-Billing live</span>
+          <span>DMA-Apple-Interop-Deadline (Notifications, Audio-Switching, Proximity-Pairing)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 03.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>AI-Act-Art.-50-Transparenz-Konsultation: Frist</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <!-- COLUMN 1: Security & Supply Chain -->
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Sicherheit &amp; Lieferkette</h2>
+
+        <h3>Exchange OWA — Zero-Day, on-prem, in Ausnutzung</h3>
+        <p>Die wichtigste neue Geschichte über Nacht: <strong>CVE-2026-42897</strong>, ein Cross-Site-Scripting in Outlook Web Access auf on-prem Exchange Server 2016, 2019 und Subscription Edition. Microsoft hat aktive Ausnutzung am 14.05. bestätigt; CISA hat den Eintrag am 15.05. in den KEV-Katalog gepackt. CVSS 8,1, der Vektor ist erschreckend simpel: eine präparierte E-Mail wird über OWA geöffnet, eingebettetes JavaScript läuft im OWA-Origin und kann Sessions abgreifen oder weitere Mails im Namen des Opfers verschicken. Exchange Online ist nicht betroffen — das ist eine reine on-prem-Story, hauptsächlich Behörden, Konzerne und alles, was aus Compliance-Gründen Mail nicht in die Cloud verschiebt.</p>
+        <div class="eli5">
+          <strong class="eli5-term">EMS / EOMT:</strong> Der Exchange Emergency Mitigation Service ist ein Microsoft-Dienst, der über IIS-Regeln und PowerShell-Skripte CVE-spezifische Workarounds einspielt, ohne dass Du auf das nächste Cumulative Update warten musst. EOMT ist das gleiche als manuell ausführbares Skript für Setups ohne EMS. Praktisches Modell: ein Patch, der vor dem eigentlichen Patch eingespielt wird.
+        </div>
+        <p>Ohne on-prem Exchange-Touch ist das „lesen und merken". Mit Touch: Mai-Patch-Tuesday-Update ist der dauerhafte Fix, EMS/EOMT der Notnagel. Bekannte Nebenwirkungen der Mitigation — „Calendar drucken" in OWA bricht, Inline-Bilder rendern teilweise nicht mehr, OWA Light unbenutzbar.</p>
+        <p>Quellen: <a href="https://thehackernews.com/2026/05/on-prem-microsoft-exchange-server-cve.html">thehackernews.com (15.05.)</a> · <a href="https://www.helpnetsecurity.com/2026/05/15/exchange-server-cve-2026-42897-exploited/">helpnetsecurity.com (15.05.)</a> · <a href="https://securityaffairs.com/192204/security/cve-2026-42897-microsoft-confirms-active-exploitation-of-exchange-server-zero-day.html">securityaffairs.com (15.05.)</a></p>
+
+        <h3>node-ipc — die Maintainer-Domain ist tot, lang lebe der Angreifer</h3>
+        <p>Vor zwei Tagen erschienen drei bösartige Versionen von <code>node-ipc</code> (9.1.6, 9.2.3, 12.0.1) auf npm — jede mit einem identischen ~80 KB obfuskierten Payload, der Credentials für Cloud, Kubernetes, SSH und AI-Tools harvested und per DNS-TXT exfiltriert. Das Paket macht im Schnitt <strong>822k Downloads pro Woche</strong>. Versionen waren rund zwei Stunden live, bevor npm sie entfernt hat.</p>
+        <p>Der Punkt ist nicht der Schaden — der Punkt ist der Vektor. Die Maintainer-E-Mail-Domain <code>atlantis-software.net</code> war am 10.01.2025 abgelaufen, ist seitdem frei gewesen. Der Angreifer hat sie am 07.05.2026 bei Namecheap registriert, Mail-Infrastruktur hochgezogen, den npm-Password-Reset-Flow ausgelöst und Publish-Rechte geerbt. Kein Phishing, keine Token-Klau, keine 2FA-Umgehung — einfach „der ursprüngliche Eigentümer hat die Domain verfallen lassen".</p>
+        <div class="callout warn">
+          <span class="callout-label">Warum das wichtig ist</span>
+          SBOM, SLSA-Provenance und Sigstore beweisen, dass ein Artefakt aus einer bekannten Pipeline aus einem bekannten Commit kommt. Sie beweisen nicht, dass der Maintainer-Account, der diese Pipeline auslöst, noch der ursprüngliche Maintainer ist. Schlafende Maintainer-Accounts mit abgelaufenen Recovery-E-Mails sind eine ganze Klasse von Supply-Chain-Risiken, die der aktuelle Toolstack nicht sieht.
+        </div>
+        <p>Practical: <code>npm audit</code> hilft nicht — das Paket sieht „normal" aus. Socket, Snyk und StepSecurity haben den Payload per Behavioural-Analysis erwischt. Mini-Heuristik für Critical-Path-Deps: WHOIS auf die Maintainer-E-Mail-Domain; expired oder kürzlich neu registriert = Alarm.</p>
+        <p>Quellen: <a href="https://thehackernews.com/2026/05/stealer-backdoor-found-in-3-node-ipc.html">thehackernews.com (15.05.)</a> · <a href="https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack">stepsecurity.io (14./15.05.)</a> · <a href="https://socket.dev/blog/node-ipc-package-compromised">socket.dev</a></p>
+
+        <h3>NGINX-Rift — der RCE-PoC ist da</h3>
+        <p>Update zur Story vom Donnerstag. Der öffentliche PoC für CVE-2026-42945 reproduzierte gestern noch nur den Worker-Crash. Heute liegt ein funktionierender <strong>Remote-Code-Execution-PoC</strong> auf GitHub — dieselbe Disclosure-Gruppe, anderer Branch. Für Hosts ohne ASLR (Container-Workloads ohne explizit aktiviertes <code>kernel.randomize_va_space=2</code>, einige Embedded-Stacks) ist RCE jetzt realistisch, nicht mehr nur theoretisch. AlmaLinux hat seit 14.05. UTC Patches im Production-Repo; F5-OSS-Fix ist 1.30.1 / 1.31.0; F5-Plus-Fix ist R32 P6 / R36 P4.</p>
+        <p>Drei Companion-CVEs in derselben Disclosure-Welle, die untergehen, aber notiert werden sollten: <strong>CVE-2026-42946</strong> (CVSS 8,3, weiterer Pfad in derselben Rewrite-Mechanik), <strong>CVE-2026-40701</strong> (6,3, Info-Disclosure) und <strong>CVE-2026-42934</strong> (6,3, Stack-Overflow in einem Edge-Case-Pfad). Alle drei sind im selben Release-Train gefixt.</p>
+        <p>Quellen: <a href="https://almalinux.org/blog/2026-05-13-nginx-rift-cve-2026-42945/">almalinux.org (14.05.)</a> · <a href="https://socradar.io/blog/cve-2026-42945-nginx-rewrite-heap-overflow-dos-rce/">socradar.io (15.05.)</a> · <a href="https://dailysecurityreview.com/cyber-security/18-year-nginx-flaw-cve-2026-42945-enables-unauthenticated-rce/">dailysecurityreview.com</a></p>
+
+        <h3>Netlogon CVE-2026-41089 — in the wild seit Mittwoch</h3>
+        <p>Auch eine Eskalation zu gestern. CrowdStrike meldet seit Mittwoch 13.05. 06:00 UTC aktive Ausnutzung von Netlogon CVE-2026-41089 — pre-auth Heap-Overflow auf Domain-Controllern über MS-NRPC, erreichbar über RPC-Endpoint-Mapper (135) oder SMB (445). CVSS 9,8. Funktionierender Exploit-Code liegt öffentlich, die Attribution geht auf einen bekannten chinesischen APT-Cluster. Praktische Schlussfolgerung: Domain-Controller, die das Mai-Patch-Tuesday-Update noch nicht eingespielt haben, sollten als kompromittiert behandelt werden — Forensik vor Patch.</p>
+        <p>Quellen: <a href="https://thehackernews.com/2026/05/microsoft-patches-138-vulnerabilities.html">thehackernews.com</a> · <a href="https://windowsnews.ai/article/cve-2026-41089-netlogon-rce-why-windows-domain-controllers-must-patch-first.417861">windowsnews.ai</a></p>
+
+        <h3>Cisco SD-WAN — Patch-Frist morgen, Pivot-Pfad jetzt klar</h3>
+        <p>Auch hier Update: Cisco hat <strong>Version 20.15.506</strong> für SD-WAN Cloud (CDCS) ausgeliefert; on-prem-Controller/Manager-Fixes in den korrespondierenden Long-Lived-Branches. Talos und Rapid7 haben den Exploit-Pfad jetzt sauber dokumentiert: präparierter Peering-Auth-Request → Login als interner, hoch privilegierter Non-Root-User → Pivot via NETCONF zur Fabric-Config-Manipulation, typisch Injection eines SSH-Keys in <code>vmanage-admin/authorized_keys</code>. CISA-ED-26-03-Frist für FCEB-Agencies ist morgen <strong>Sonntag, 17.05.</strong> — Wenn ein Klient mit US-Federal-Touch eine vSmart/vManage-Instanz betreibt, ist heute der letzte ruhige Tag, das einzuplanen.</p>
+        <p>Quellen: <a href="https://www.rapid7.com/blog/post/ve-cve-2026-20182-critical-authentication-bypass-cisco-catalyst-sd-wan-controller-fixed/">rapid7.com (15.05.)</a> · <a href="https://www.helpnetsecurity.com/2026/05/15/cisco-sd-wan-zero-day-cve-2026-20182/">helpnetsecurity.com (15.05.)</a></p>
+
+        <h3>Shai-Hulud-Bilanz aktualisiert</h3>
+        <p>Stand 15.05.: Mini-Shai-Hulud-Welle (TeamPCP-Attribution durch Microsoft Security Research) jetzt bei <strong>172 npm-Paketen / ~404 malicious Versions</strong>; Socket-Security flaggt 416 Pakete inkl. Peripherer. PyPI-Seite bleibt erstaunlich klein — nur zwei definitive Kompromittierungen (<code>guardrails-ai 0.10.1</code>, <code>mistralai 2.4.6</code>). Keine neuen Pakete in den letzten 24h. Die Welle ist eingedämmt, die strukturelle Lehre (SLSA-Provenance beweist Pipeline, nicht Autorisierung) bleibt — und passt nahtlos zur node-ipc-Geschichte oben: zwei verschiedene Vektoren, derselbe blinde Fleck im Trust-Modell.</p>
+        <p>Quellen: <a href="https://securityboulevard.com/2026/05/mini-shai-hulud-is-back-172-npm-and-pypi-packages-compromised-in-latest-wave/">securityboulevard.com</a> · <a href="https://www.wiz.io/blog/mini-shai-hulud-strikes-again-tanstack-more-npm-packages-compromised">wiz.io</a></p>
+      </section>
+
+    </div>
+
+    <!-- COLUMN 2: Releases & Toolchain -->
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Releases &amp; Toolchain</h2>
+
+        <h3>Postgres — die volle CVE-Liste, nicht nur der RCE</h3>
+        <p>Gestern war die Story „CVE-2026-6473, patchen". Heute mit etwas Abstand zur vollständigen Advisory-Veröffentlichung wird sichtbar, dass die Quarterly-Drops vom Donnerstag insgesamt <strong>11 Sicherheits-Fixes und 60+ Bug-Fixes</strong> bringen. Drei davon verdienen einen zweiten Blick:</p>
+        <ul>
+          <li><strong>CVE-2026-6637</strong> — Stack-Buffer-Overflow plus SQL-Injection im <code>refint</code>-Modul. Das ist der wichtigere Teil heute, weil <code>refint</code> ein <em>contrib</em>-Modul ist (referenzielle Integrität via Trigger), das auf vielen Legacy-Schemas läuft, ohne dass jemand mehr weiß, wann es da reinkam. Sprich: auch unangetastete Instanzen sind im Scope.</li>
+          <li><strong>CVE-2026-6477</strong> — Path-Traversal in <code>pg_basebackup</code> / <code>pg_rewind</code>. Relevanz für Backup-Pipelines, die diese Tools gegen unkontrollierte Argumente fahren (selten, aber existent in Self-Hosted-Replication-Setups).</li>
+          <li><strong>CVE-2026-6479</strong> — Unbounded Recursion in der Startup-Packet-Verarbeitung. Pre-auth, DoS-Klasse — relevant für Postgres-Instanzen, die direkt im Internet hängen (was niemand tun sollte, aber).</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">refint:</strong> Ein Stück Contrib-Code, das vor Postgres 7.3 die Standard-Lösung war, Foreign-Key-ähnliche Constraints per Trigger nachzubauen. Seit Foreign Keys nativ sind, ist refint formal überflüssig — aber niemand räumt aus historischen Schemas Trigger raus, also läuft das Modul weiter, gerne unbemerkt.
+        </div>
+        <p>Binary-Swap reicht für alle, kein Dump/Reload nötig. Wochenend-Slot ist gut investiert.</p>
+        <p>Quellen: <a href="https://www.postgresql.org/about/news/postgresql-184-1710-1614-1518-and-1423-released-3297/">postgresql.org (14.05.)</a> · <a href="https://www.postgresql.org/support/security/CVE-2026-6637/">CVE-2026-6637 advisory</a></p>
+
+        <h3>Quarkus 3.36.0.CR1 — Release-Stretch zum 27.05.</h3>
+        <p>Am 13.05. ist parallel zum Maintenance-Drop 3.35.3 (gestern erwähnt) der <strong>3.36.0.CR1</strong> raus. Vier nennenswerte Things:</p>
+        <ul>
+          <li><strong>OIDC mit SPIFFE-Client-Auth</strong> — in Service-Mesh-Welten (Istio + SPIRE) ersetzt das das Client-Secret durch SPIFFE-IDs. Sauberer als Tokens, die rumfliegen.</li>
+          <li><strong>GraphQL-Client mit TLS-Reload</strong> — Cert-Rotation ohne Service-Restart.</li>
+          <li><strong>Flyway-Auto-Detect im Dev-Mode</strong> — Migrations-Skript reinfällt, Migration läuft automatisch.</li>
+          <li><strong>SBOM- und OpenTelemetry-Hooks</strong> erweitert — passend zur CRA-Welle ab 11.09.2026.</li>
+        </ul>
+        <p>Termin: <strong>Core Final 20.05., Platform GA 27.05.</strong> CR1 ist Test, kein Prod. Wer Plattformen pinnt, hat jetzt ein Datum.</p>
+        <p>Quelle: <a href="https://forum.devtalk.com/t/quarkus-3-36-0-cr1-and-3-35-3-released/244776">Quarkus team post (13.05.)</a></p>
+
+        <h3>Bun — 1.3.14 ist die letzte Zig-Version</h3>
+        <p>Zwei Bewegungen am Mittwoch / Donnerstag, die zusammenpassen. <strong>Bun 1.3.14</strong> ist am 13.05. rausgegangen — explizit als „letztes Zig-basiertes Release" markiert. Inhaltlich nicht uninteressant: eingebaute <code>Bun.Image</code>-API für Bildverarbeitung (sharp ohne Native-Dependency), 7× schnellere Warm-Installs durch isolated-Linker mit Global-Store, experimenteller HTTP/2- und HTTP/3-Fetch-Client und HTTP/3 in <code>Bun.serve()</code>. <code>fs.watch()</code> ist auf Linux und macOS neu geschrieben.</p>
+        <p>Am 14.05. ist dann PR <strong>#30412</strong> in <code>main</code> gemerged — der Rust-Port, den wir seit Donnerstag durchkauen. Endgültige Zahlen: <strong>1.009.257 Zeilen Rust in 6.755 Commits</strong>, generiert durch eine vierphasige Claude-Pipeline in neun Tagen, 99,8 % Test-Suite-Pass am Ende. Anthropic übernimmt Long-Term-Maintenance offiziell. Die offene Frage bleibt unverändert: <strong>~13.000 unsafe-Blöcke</strong> in der portierten Codebase gegenüber ~73 in einem vergleichbaren Rust-Projekt wie <code>uv</code>. Die Test-Pass-Rate sagt nichts über Korrektheit dieser <code>unsafe</code>-Blöcke — und genau das ist, was miri gestern in safe-Rust-Wrappern aufgedeckt hat (#30719).</p>
+        <p>Praktisch: 1.3.14 (Zig) ist der Stand für Produktion. Der Rust-Branch läuft via Canary-Channel — testbar in der Sandbox, nicht im Klienten-Build.</p>
+        <p>Quellen: <a href="https://bun.com/blog/bun-v1.3.14">bun.com/blog</a> · <a href="https://www.theregister.com/devops/2026/05/14/anthropics-bun-rust-rewrite-merged-at-speed-of-ai/5240381">theregister.com (14.05.)</a> · <a href="https://byteiota.com/bun-rust-rewrite-merged-the-13000-unsafe-block-problem/">byteiota.com</a></p>
+
+        <h3>Next.js — falls die Mai-Sicherheitsrelease durchgerutscht ist</h3>
+        <p>Knapp außerhalb des 24h-Fensters, aber Wochenend-relevant: das <strong>06./07.05.-Sicherheits-Release</strong> mit 16.2.6 und 15.5.18 schließt 13 Advisories — DoS, Middleware-/Proxy-Bypass, SSRF, Cache-Poisoning, XSS plus den upstream-RSC-Bug <strong>CVE-2026-23870</strong>. Bundle bringt <code>react-server-dom</code> 19.2.6 mit, separate React-Migration entfällt. Wer Next.js 15.x/16.x in Prod hat und das Mai-Update verpasst — heute der Slot.</p>
+        <p>Quellen: <a href="https://vercel.com/changelog/next-js-may-2026-security-release">vercel.com/changelog</a> · <a href="https://www.netlify.com/changelog/2026-05-08-react-nextjs-security-vulnerabilities/">netlify.com/changelog</a></p>
+
+        <h3>Ruff 0.15.13, Firefox-Vorlauf</h3>
+        <p><strong>Ruff 0.15.13</strong> am 14.05. via Astral — wöchentliche Kadenz seit der OpenAI-Akquisition, keine Breaking-Rules, Routine-Bump. <strong>Firefox 151</strong> bleibt auf Beta, Stable am <strong>Dienstag 19.05.</strong> — Settings-Redesign, macOS-natives <code>&lt;select&gt;</code>-Rendering, neue <code>CSSContainerRule.conditions</code>-Property. Chromium und WebKit heute ruhig.</p>
+        <p>Quellen: <a href="https://pypi.org/project/ruff/">pypi.org/project/ruff</a> · <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/151">developer.mozilla.org</a></p>
+      </section>
+
+    </div>
+
+    <!-- COLUMN 3: Europe, DE, BR + standing thread -->
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Standing Thread — EU-Regulierung</h2>
+
+        <h3>Tech-Sovereignty-Paket: das größere Bild zum 27.05.</h3>
+        <p>Vor-Berichterstattung diese Woche zum <strong>EU-Tech-Sovereignty-Paket</strong>, das am 27.05. offiziell angekündigt werden soll. Kern: Restriktionen für Mitgliedstaaten beim Einsatz von US-Cloud-Diensten in Healthcare, Finance und Justice — formal nicht „kein AWS/Azure/GCP", sondern „dokumentierte Sovereignty-Bewertung pflicht, Default zu europäischen Anbietern wo verfügbar". Passend kam am 14.05. der Fortune-Bericht, dass die <strong>EZB einen großen Cloud-Auftrag an einen europäischen (Nicht-US-)Provider</strong> vergeben hat — das ist mehr Signal als Zufall, und es zeigt, dass die politische Linie schon vor der formalen Ankündigung in den Beschaffungs-Entscheidungen sichtbar wird.</p>
+        <p>Für Dich relevant, wenn Du DACH-Public-Sector oder regulierte Branchen betreust — die Argumentation „warum nicht einfach AWS Frankfurt" wird in den nächsten Monaten schwerer. Genannte Alternativen: OVH, Scaleway, IONOS Sovereign, Stackit, T-Systems Sovereign Cloud.</p>
+        <p>Quellen: <a href="https://www.kiteworks.com/cybersecurity-risk-management/eu-tech-sovereignty-package-cloud-act/">kiteworks.com</a> · <a href="https://fortune.com/2026/05/14/european-central-bank-cloud-google-microsoft-amazon/">fortune.com (14.05.)</a></p>
+
+        <h3>AI-Act Art. 50 — Konsultation läuft bis 03.06.</h3>
+        <p>Am 08.05. hat die EU-Kommission die Konsultation zu den <strong>Implementing Acts für Art. 50</strong> eröffnet (Transparenz-Pflichten bei KI-generiertem Content). Konkret geht es um die technischen Anforderungen an Wasserzeichen und Markierung synthetischer Inhalte — Frist <strong>03.06.2026</strong>. Wenn Du in einem Klienten-Projekt LLM-Output in EU-Endkundenprodukten erzeugst (Marketing-Texte, Chat-UI, Bild-Generierung), brauchst Du bis Q4 2026 ein konkretes Markings-Konzept. Die Konsultation ist die Stelle, an der Hersteller-Feedback in die Form der Anforderungen einfließt.</p>
+        <p>Parallel: der <strong>AI-Act-Digital-Omnibus</strong> aus der politischen Einigung vom 07.05. läuft im formalen Adoptionsprozess. Kommission peilt Annahme vor dem 02.08.2026 an — das ist das Datum, an dem die High-Risk-Regeln sonst greifen würden. Status quo seit gestern unverändert.</p>
+        <p>Quellen: <a href="https://www.heise.de/en/news/AI-Transparency-EU-Commission-Specifies-Rules-Against-Digital-Deception-11290446.html">heise.de</a> · <a href="https://www.lw.com/en/insights/ai-act-update-eu-resolves-to-change-rules-and-extend-deadlines">lw.com (08.05.)</a></p>
+
+        <h3>DMA — Google-Konsultation abgelaufen, Apple-Frist nähert sich</h3>
+        <p>Diese Woche ist die <strong>Stellungnahme-Frist zu den Google-AI-Interop-Maßnahmen</strong> am 13.05. abgelaufen — Drittanbieter sollen denselben Feature-Zugang bekommen wie Googles eigene KI-Dienste. Ergebnisse kommen in den nächsten Wochen, hat Auswirkungen auf Android-Integrationen und Workspace-AI-Schnittstellen. Parallel rückt die <strong>Apple-Interop-Deadline 01.06.2026</strong> näher — Notifications, Proximity-Pairing, Audio-Switching müssen für Drittanbieter offen sein.</p>
+        <p>Quellen: <a href="https://digital-markets-act.ec.europa.eu/latest-news_en">digital-markets-act.ec.europa.eu</a> · <a href="https://digital-markets-act.ec.europa.eu/factsheet-how-dma-making-smartphones-better-interoperability-and-data-portability-case-studies-2026-05-11_en">dma factsheet (11.05.)</a></p>
+      </section>
+
+      <section class="news-item">
+        <h2>Deutschland — BSI-Patchday-Welle</h2>
+        <p>Eine substantielle BSI-Welle ist am 15.05. rausgegangen. Vier Advisories, die für DACH-Stacks operativ relevant sind:</p>
+        <ul>
+          <li><strong>vm2</strong> (high) — der vermeintliche Sandbox-Wrapper für Node.js, der historisch wiederholt Sandbox-Escapes hatte. Wer vm2 noch im Stack hat (selten, aber: einige ältere CMS- und Plugin-Systeme), sollte den Migrationspfad auf <code>isolated-vm</code> oder <code>vm</code> mit echter Isolation jetzt finden.</li>
+          <li><strong>SAP April-Patchday</strong> (high, Update) — die April-Notes haben nachgeschärfte Severity-Bewertungen bekommen. Für Klienten mit SAP-Touch (also: jeder DACH-Mid-Market in Manufacturing/Logistik) Rückfrage an den Basis-Admin lohnt.</li>
+          <li><strong>Apache HTTP Server</strong> (high) — Standard-Wartung, aber genug Severity, dass shared-Hosting-Setups zeitnah ziehen sollten.</li>
+          <li><strong>TeamViewer DEX</strong> — neue Mitteilung, betrifft die Enterprise-Variante. Wer TeamViewer in Klienten-Stacks hat (Remote-Support-Teams), prüfen.</li>
+        </ul>
+        <p>Übergeordneter Kontext: BSI ist seit Mai 2026 im operativen NIS2-Enforcement, ENISA hat die „where appropriate"-MFA-Klausel im Q1-2026-Guidance enger gezogen — pro Account-Klasse braucht es jetzt eine dokumentierte Risiko-Bewertung, die MFA-Präsenz oder -Abwesenheit begründet. Für regulierte DACH-Klienten ist das in den nächsten Audits ein Thema.</p>
+        <p>Quellen: <a href="https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Cyber-Sicherheitslage/Technische-Sicherheitshinweise-und-Warnungen/Cyber-Sicherheitswarnungen/cyber-sicherheitswarnungen_node.html">bsi.bund.de</a> · <a href="https://www.securitytoday.de/en/2026/04/25/adaptive-mfa-as-nis2-standard-2026-how-enisa-guidance-clarified-the-where-appropriate-clause/">securitytoday.de</a></p>
+      </section>
+
+      <section class="news-item">
+        <h2>Brasilien — PIX MED 2.0 ist live</h2>
+        <p>Seit <strong>11.05.2026</strong> ist die zweite Version des PIX-Mecanismo-Especial-de-Devolução in Produktion. MED ist der formale Rückerstattungs-Pfad bei Fraud-Transaktionen — Version 1 hat schlicht „Erstatte zurück" gemeldet, Version 2 macht <strong>Graphen-Analyse über bis zu fünf nachfolgende Konten</strong>, um den Geldfluss zu verfolgen, wenn der Empfänger sofort weiterüberweist. Das ist die Standardtaktik bei PIX-Scams: Geld kommt rein, geht innerhalb von Sekunden in zwei, drei Kontoebenen weiter, ist „weg".</p>
+        <div class="eli5">
+          <strong class="eli5-term">Graphen-Analyse:</strong> Statt nur „A hat an B überwiesen" zu sehen, baut das System einen Baum: A → B → C → D → E. Wenn der Fraud-Verdacht bei A bestätigt wird, kann die Engine auf jeder Ebene anhalten und die Zahlung partiell zurückrollen. Vorher musste der Empfänger das Geld noch auf dem Konto haben.
+        </div>
+        <p>Praktisch für Dich, falls Du in einem BR-Klienten-Projekt Payment-Integrationen baust: MED-2.0-Reporting-Felder sind jetzt Pflicht — Transaktions-ID, Fraud-Klassifikation, betroffene Kontoknoten. BACEN hat parallel mit Resolução 546/2026 die <strong>PIX-Fiscalisierung ab 10.05.</strong> auf Normalregelung zurückgesetzt (die letzte Phase der „warm boot"-Compliance-Schonzeit ist damit vorbei).</p>
+        <p>Sekundär: <strong>StoneCo</strong> Q1-2026-Earnings gestern (15.05.), Bank of America hat auf „Buy" upgegradet ($55 Kursziel). BR-Fintech-Konsolidierung läuft weiter — Nubank ist nicht der einzige Player, der aggressiv hiret.</p>
+        <p>Quellen: <a href="https://www.matera.com/br/blog/entenda-agenda-evolutiva-do-pix/">matera.com (PIX-Agenda)</a> · <a href="https://www.mixvale.com.br/2026/05/05/banco-central-suspende-abertura-de-processos-sobre-pix-ate-maio-de-2026/">mixvale.com.br</a> · <a href="https://www.investing.com/news/earnings/stoneco-earnings-on-deck-can-brazil-fintech-defend-market-share-93CH-4688924">investing.com (15.05.)</a></p>
+      </section>
+
+      <section class="news-item">
+        <h2>Kommentar — der gemeinsame Faden</h2>
+        <p>Drei Stories heute haben dieselbe Form: <strong>Exchange-OWA-Zero-Day</strong>, <strong>node-ipc-Takeover</strong>, <strong>NGINX-Rift-RCE-Eskalation</strong>. Schwachstelle bekannt, Schritt von „bekannt" zu „aktiv ausgenutzt" innerhalb von 24-72h, formaler Schutz (Patch-Pipeline, SBOM, SLSA) vorhanden — aber träger als der Angriff. Der nicht-automatisierbare Teil von Defense in Depth — KEV-Adds lesen, Mitigationen einspielen, Maintainer-Account-Hygiene — hat 2026 mehr Hebel als der automatisierbare. Morgen Cisco-FCEB-Frist, Montag startet die Konferenz-Woche, Dienstag Firefox 151 stable. Heute ist Patch-Wochenende, falls Du eines brauchst.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+</body>
+</html>

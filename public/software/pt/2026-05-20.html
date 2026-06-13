@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-05-20</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Edição 2026-05-20</span>
+  </div>
+  <h1 class="masthead-title">Um worm de npm forja, pela primeira vez, assinaturas SLSA válidas</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Quarta-feira, e é um dia denso — sobretudo na frente de segurança. A história mais consequente vem sem palco: um worm autorreplicante de npm/PyPI envenenou mais de <strong>172 pacotes</strong> e, ao fazê-lo, <strong>forjou pela primeira vez provenance SLSA válida</strong> — o comprovante de autenticidade que o setor passou cinco anos vendendo como a resposta aos ataques à cadeia de suprimentos. O truque: não quebrar a assinatura, mas sequestrar a pipeline de build legítima. Hoje à noite, entre 17h e 21h UTC, sai também um <strong>fix highly-critical do Drupal Core</strong> (20/25) — deixe a janela livre. Além disso, um dia cheio de patches: uma RCE no Postgres, endurecimento do admin-socket do Caddy, uma RCE no Apache OFBiz, um bug do kernel Linux sob exploração ativa. E em causa própria: o <strong>Quarkus 3.36 Final</strong> que prevíamos ontem <em>não</em> saiu — saiu o 3.35.4. Anunciado não é entregue.</p>
+    <ul>
+      <li><span class="chip hot">Cadeia de suprimentos</span> <strong>Mini Shai-Hulud</strong> (CVE-2026-45321, CVSS <span class="stat">9,6</span>): worm autorreplicante, 172 pacotes npm/PyPI em 403 versões. <strong>Primeiro ataque a npm com provenance SLSA Build L3 válida</strong> — pipeline de CI sequestrada, não cripto quebrada. Persiste via hooks do VS Code e do Claude Code.</li>
+      <li><span class="chip hot">Sec</span> <strong>Drupal Core highly critical</strong> (SA hoje 17h–21h UTC, risco <span class="stat">20/25</span>): auth „None", afeta todos os branches (11.3/11.2/10.6/10.5 + releases especiais EOL, patches manuais para 8.9/9.5). Detalhes embargados até o release — chegue antes ao patch mais recente.</li>
+      <li><span class="chip hot">Sec</span> <strong>Linux „Copy Fail"</strong> (CVE-2026-31431, CVSS <span class="stat">7,8</span>): bug de root local de 9 anos no template de cripto <code>authencesn</code>, bastam 4 bytes controlados no page cache. Quebra o isolamento de containers (Docker/K8s). No KEV desde 01/05, prazo FCEB de 15/05 já passou. Correção em 6.18.22 / 6.19.12 / 7.0.</li>
+      <li><span class="chip hot">Sec</span> <strong>Exchange CVE-2026-42897</strong> no KEV (14/05, prazo FCEB 29/05): disputa de score — NVD <span class="stat">6,1</span> MÉDIO vs. Microsoft <span class="stat">8,1</span> ALTO. Citar os dois valores.</li>
+      <li><span class="chip">Sec</span> <strong>Trimestre do PostgreSQL</strong> (14/05, 18.4 / 17.10 / 16.14 / 15.18 / 14.23): 11 CVEs. Destaque <strong>CVE-2026-6637</strong> (stack overflow no refint, RCE, CVSS <span class="stat">8,8</span>), além de SQL injection no <code>pg_createsubscriber</code> (6476) e stack-overwrite no libpq (6477).</li>
+      <li><span class="chip">Sec</span> <strong>Stack de web-app</strong>: Apache OFBiz fecha SSTI→RCE/SSRF/path-traversal (&lt; 24.09.06); MantisBT 2.28.2 fecha 15+ falhas; o escape da sandbox vm2 é corrigido de novo.</li>
+      <li><span class="chip">Infra</span> <strong>Caddy 2.11.3</strong> (12/05): quatro correções de segurança — bypass de exec no FastCGI, fix de vars-placeholder (GHSA-m2w3-8f23-hxxf), dois bypasses de auth no admin-socket. Direto no caminho do edge do Daniel.</li>
+      <li><span class="chip">JVM</span> <strong>Quarkus 3.36 Final NÃO saiu</strong> — o Stable mais novo é <strong>3.35.4</strong> (hoje, 20/05), o 3.36 segue em CR1 (13/05). Previsão de ontem furada.</li>
+      <li><span class="chip good">JVM</span> <strong>OpenJDK</strong>: JDK 27 EA (build ~17) com a <strong>JEP 527</strong> — troca de chaves híbrida pós-quântica para TLS 1.3 (X25519MLKEM768 e outras). RDP1 (feature freeze) em 04/06, GA em setembro.</li>
+      <li><span class="chip good">Release</span> <strong>Node.js 26.1.0</strong> (06/05) &amp; <strong>Angular 21.2.13</strong> (13/05) — ambos Stable atual; o Angular 21 encerra o suporte ativo, o 22 vem a seguir.</li>
+      <li><span class="chip good">Browser</span> <strong>Firefox 151</strong> (19/05): Container Queries com <code>style()</code>, <code>shadowrootslotassignment</code>, restrições de acesso à rede local em GA, backup de perfil entre SOs. <strong>Chrome 148</strong> Stable (05/05, 127 correções de segurança).</li>
+      <li><span class="chip">Web</span> <strong>TC39 #114 Amsterdã</strong>, dia 2 (sediado pela JetBrains, até qui 21/05): mudança normativa de Source Phase Imports, iterator helpers e cia. rumo ao avanço — resultados nas notas, em breve.</li>
+      <li><span class="chip">UE</span> <strong>CADA</strong> com anúncio previsto para <strong>27/05</strong> (pacote de soberania tecnológica); obrigações de reporte do <strong>CRA</strong> a partir de 11/09/2026 (alerta em 24h, retroativas a produtos já no mercado).</li>
+      <li><span class="chip">OSS</span> <strong>OpenSSF Community Day NA</strong> amanhã (qui 21/05, Minneapolis): "Quantum Proofing Sigstore" — o mesmo motivo de endurecimento da JEP 527.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Visão da semana</div>
+      <div class="timeline-sub">O que ainda vem nesta semana</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Qua 20/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Hoje</span>
+          <span><strong>Release highly-critical do Drupal Core</strong> 17h–21h UTC</span>
+          <span><strong>TC39 #114 dia 2</strong> Amsterdã</span>
+          <span>Quarkus 3.35.4 Stable (3.36 Final segue em aberto)</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Qui 21/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>OpenSSF Community Day NA</strong> Minneapolis · "Quantum Proofing Sigstore"</span>
+          <span>TC39 #114 dia de encerramento</span>
+          <span>Último dia do OSS Summit NA</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Seg 27/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>EU Cloud and AI Development Act</strong> · anúncio da Comissão (adiado 2×)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Qui 28/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quarkus 3.36 Platform-GA — data incerta após o atraso do CR1</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Seg 01/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>Spring Release Train</strong> · remarcado para 01–05/06 (Boot 4.1)</span>
+          <span><strong>Prazo de interop da Apple no DMA</strong> (notificações, pareamento por proximidade, troca de áudio)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Qui 04/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span><strong>JDK 27 RDP1</strong> · feature freeze faz fork</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Mini Shai-Hulud — o worm que forja assinaturas legítimas</h2>
+        <p>Esta é a história mais consequente da semana, e ela não faz keynote nenhuma. Em <strong>11/05</strong> (entre 19h20 e 19h26 UTC), um worm autorreplicante publicou 84 artefatos maliciosos em 42 pacotes npm <code>@tanstack/*</code> — publicados pela <em>própria pipeline de release legítima da TanStack</em>, sob sua identidade OIDC confiável, depois que o código do atacante sequestrou o runner no meio do workflow. Em 48 horas, a campanha cresceu para <strong>172 pacotes em 403 versões</strong> no npm e no PyPI — entre eles <strong>Mistral, Guardrails AI, UiPath, OpenSearch, Bitwarden CLI, SAP</strong>. <strong>CVE-2026-45321</strong>, CVSS <span class="stat">9,6</span>, confirmado pela NVD <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-45321">[1]</a><a href="https://thehackernews.com/2026/05/mini-shai-hulud-worm-compromises.html">[2]</a>.</p>
+        <div class="mechanism">
+          <span class="step">Pwn Request<br><small>pull_request_target</small></span>
+          <span class="arrow">→</span>
+          <span class="step">Cache do Actions<br>envenenado</span>
+          <span class="arrow">→</span>
+          <span class="step">Token OIDC<br>da RAM do runner</span>
+          <span class="arrow">→</span>
+          <span class="step">Publish com provenance<br>SLSA-L3 válida</span>
+          <span class="arrow">→</span>
+          <span class="step">Autopropagação<br>via repos das vítimas</span>
+        </div>
+        <div class="eli5">
+          <strong class="eli5-term">Provenance SLSA:</strong> Como uma nota de entrega lacrada que prova criptograficamente que um pacote foi mesmo construído pela pipeline de CI legítima — a resposta de praxe do setor a ataques à cadeia de suprimentos. O assustador: o worm não quebrou a assinatura, ele sequestrou a <em>própria pipeline</em>, de modo que ela assinou o malware. O Sigstore verificou o processo de build corretamente — o que o SLSA nunca garantiu é que o código construído fosse inofensivo. Primeiro ataque a npm com provenance SLSA Build L3 válida.
+        </div>
+        <p>O worm rouba PATs do GitHub, tokens de npm, chaves SSH, credenciais de cloud e K8s, além de arquivos <code>.env</code>, persiste via hooks do VS Code e do <strong>Claude Code</strong> e se propaga sozinho pelos repos das vítimas. Atribuído ao grupo "TeamPCP", que teria comprometido o scanner Trivy em março e a Bitwarden CLI em abril. <strong>Consequência:</strong> a TanStack tira a lição e estuda passar a aceitar PRs apenas por convite daqui pra frente — um estreitamento drástico da colaboração que mostra o quanto o incidente pesou <a href="https://snyk.io/blog/tanstack-npm-packages-compromised/">[3]</a><a href="https://venturebeat.com/security/shai-hulud-worm-172-npm-pypi-packages-valid-provenance-ci-cd-audit">[4]</a>.</p>
+        <div class="callout warn">
+          <span class="callout-label">O que checar hoje</span>
+          O stack do Daniel está exposto (GitHub Actions + npm + Claude Code). Três checagens: (1) dar grep nos workflows atrás de <code>pull_request_target</code> com checkout de código de PR e fixar as Actions por SHA em vez de por tag. (2) revisar os hooks de <code>~/.claude</code> e do VS Code atrás de entradas desconhecidas. (3) rodar <code>npm audit signatures</code> + cruzar os lockfiles contra as versões comprometidas, e depois rotacionar PATs/tokens de npm caso workflows tenham rodado dentro da janela. A verificação de SLSA sozinha <em>não</em> teria protegido aqui.
+        </div>
+        <div class="footnotes"><ol>
+          <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-45321">nvd.nist.gov/CVE-2026-45321</a></li>
+          <li><a href="https://thehackernews.com/2026/05/mini-shai-hulud-worm-compromises.html">thehackernews.com (12/05)</a></li>
+          <li><a href="https://snyk.io/blog/tanstack-npm-packages-compromised/">snyk.io (análise)</a></li>
+          <li><a href="https://venturebeat.com/security/shai-hulud-worm-172-npm-pypi-packages-valid-provenance-ci-cd-audit">venturebeat.com (12/05)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Drupal Core — highly critical, hoje à noite</h2>
+        <p>Compromisso obrigatório para quem opera Drupal: o time de segurança agendou um release de segurança do core em todos os branches suportados para <strong>hoje, 17h–21h UTC</strong> (PSA-2026-05-18). Risk score <strong>20 de 25</strong> — „highly critical", complexidade de acesso „None", autenticação „None", ou seja, atinge <strong>sem autenticação</strong> a confidencialidade e a integridade de todos os dados não-públicos. São atendidos 11.3/11.2/10.6/10.5, mais releases especiais para os branches EOL 11.1/10.4 e arquivos de patch manuais para 8.9/9.5. Detalhes técnicos seguem embargados até a publicação. Recomendação do time: chegar ao patch mais recente do seu branch <em>antes</em> da janela e, à noite, atualizar rápido — „exploits podem surgir em horas ou dias" <a href="https://www.drupal.org/psa-2026-05-18">[1]</a><a href="https://thehackernews.com/2026/05/drupal-to-release-urgent-core-security.html">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.drupal.org/psa-2026-05-18">drupal.org/psa-2026-05-18</a></li>
+          <li><a href="https://thehackernews.com/2026/05/drupal-to-release-urgent-core-security.html">thehackernews.com (prévia)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Linux „Copy Fail" — isolamento de containers quebra, prazo já foi</h2>
+        <p>Direto no caminho Docker/Linux do Daniel: o <strong>CVE-2026-31431</strong> („Copy Fail", CVSS <span class="stat">7,8</span>) fica no template de cripto <code>authencesn</code> do kernel — um usuário sem privilégios pode escrever quatro bytes controlados no page cache de qualquer arquivo legível e escalar isso até root. O inquietante é a trivialidade: um <strong>script Python de 732 bytes</strong>, rodando sem mudança em toda distribuição relevante desde 2017. O bug tem nove anos. Segundo a Theori, ele também funciona como <strong>primitiva de escape de container</strong> e atinge nós K8s, porque o page cache é compartilhado por todo o host. No KEV desde 01/05, o prazo FCEB (15/05) já passou. Correção no kernel 6.18.22 / 6.19.12 / 7.0 <a href="https://thehackernews.com/2026/05/cisa-adds-actively-exploited-linux-root.html">[1]</a><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-31431">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://thehackernews.com/2026/05/cisa-adds-actively-exploited-linux-root.html">thehackernews.com (entrada no KEV)</a> · <a href="https://www.theregister.com/2026/04/30/linux_cryptographic_code_flaw/">theregister.com (30/04)</a></li>
+          <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-31431">nvd.nist.gov/CVE-2026-31431</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Exchange CVE-2026-42897 — e a disputa de score</h2>
+        <p>A CISA incluiu em <strong>14/05</strong> um XSS de Exchange on-prem no catálogo KEV (prazo FCEB 29/05): por meio de um e-mail preparado, dá pra executar JavaScript arbitrário no contexto do browser do OWA. O interessante é o <strong>conflito de avaliação</strong>: a NVD classifica como <span class="stat">6,1</span> MÉDIO (Scope changed, C:L/I:L), e a própria Microsoft como <span class="stat">8,1</span> ALTO (C:H/I:H). Citar os dois valores, não afirmar nenhum como „o" score — exatamente o cross-check que a disciplina de pesquisa exige. Afetados o Exchange 2016/2019; Exchange on-prem ainda é numeroso no middle market da região DACH <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42897">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42897">nvd.nist.gov/CVE-2026-42897</a> · <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov/kev</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Trimestre do PostgreSQL — 11 CVEs, uma RCE de verdade</h2>
+        <p>A <strong>atualização trimestral do PostgreSQL</strong> de 14/05 (18.4 / 17.10 / 16.14 / 15.18 / 14.23) fechou <strong>11 CVEs</strong> e mais de 60 bugs. O destaque é de verdade: <strong>CVE-2026-6637</strong> (CVSS <span class="stat">8,8</span>) é um stack buffer overflow no módulo <code>refint</code> que permite execução de código. Além de duas coisas de injection/memória: <strong>CVE-2026-6476</strong> (SQL injection no <code>pg_createsubscriber</code> via nome da subscription, CVSS 7,2) e <strong>CVE-2026-6477</strong> (libpq: um servidor malicioso sobrescreve memória do stack do cliente). Atualização sem dump/reload, basta trocar os binários. O PG 14 chega ao fim de vida em 12/11/2026 <a href="https://www.postgresql.org/about/news/postgresql-184-1710-1614-1518-and-1423-released-3297/">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.postgresql.org/about/news/postgresql-184-1710-1614-1518-and-1423-released-3297/">postgresql.org/about/news (14/05)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Stack de web-app — OFBiz, MantisBT, vm2</h2>
+        <p>Uma onda mais quieta, mas ampla, em software web bastante usado. O <strong>Apache OFBiz</strong> fecha três falhas no content component em &lt; <strong>24.09.06</strong>: uma SSTI que leva a <strong>RCE</strong> (CVE-2026-29207), uma path traversal (CVE-2026-29220) e uma SSRF (CVE-2026-29226) — sistemas ERP são alvo valioso, não adie o upgrade. O bugtracker <strong>MantisBT 2.28.2</strong> fecha mais de 15 falhas e adiciona compatibilidade com PHP 8.5. E a sandbox Node.js <strong>vm2</strong> pode ser escapada de novo — quem ainda usa vm2 para isolar código de terceiros deveria repensar isso de qualquer forma (o projeto é considerado impossível de vedar desde 2023) e aplicar o update de segurança <a href="https://ofbiz.apache.org/security.html">[1]</a><a href="https://www.heise.de/security">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://ofbiz.apache.org/security.html">ofbiz.apache.org/security</a></li>
+          <li><a href="https://www.heise.de/security">heise.de/security</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Quarkus 3.36 — o Final não saiu</h2>
+        <p>Em causa própria, com correção: o brief de ontem dizia "Quarkus 3.36 Core Final esperado para qua 20/05". Até hoje, <strong>não há um 3.36.0 Final</strong>. Em vez disso, hoje (20/05) saiu o <strong>3.35.4</strong> como novo Stable; o artefato 3.36 mais recente continua o <strong>3.36.0.CR1</strong> (candidate, 13/05). Ou seja, a previsão furou ou o lançamento atrasou — e com isso a data de Platform-GA citada para 28/05 também fica incerta. Um brief que quer ser base de decisão precisa ser honesto assim: anunciado ≠ entregue <a href="https://github.com/quarkusio/quarkus/releases">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://github.com/quarkusio/quarkus/releases">github.com/quarkusio/quarkus/releases</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>OpenJDK — JDK 27 EA e pós-quântico para TLS</h2>
+        <p>A linha ativa de Early-Access é o <strong>JDK 27</strong> (build ~17); o RDP1 (feature freeze) faz fork em <strong>04/06</strong>, com GA em setembro. Única JEP oficialmente no alvo até agora: a <strong>JEP 527</strong> (troca de chaves híbrida pós-quântica para TLS 1.3) — três esquemas híbridos (X25519MLKEM768, SecP256r1MLKEM768, SecP384r1MLKEM1024), ativos desde o build 6 do EA. Baseia-se na JEP 496 (ML-KEM) do JDK 24 <a href="https://openjdk.org/jeps/527">[1]</a><a href="https://openjdk.org/projects/jdk/27/">[2]</a>.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Troca de chaves híbrida pós-quântica:</strong> No handshake TLS, browser e servidor combinam uma chave secreta de sessão. "Híbrida" quer dizer: eles usam <em>dois</em> métodos ao mesmo tempo — um clássico e um resistente a quântico. Mesmo que um futuro computador quântico quebre um deles, a conexão segue segura. O mesmo motivo do tema OpenSSF/Sigstore lá embaixo — o setor está endurecendo sua criptografia antes de a ameaça quântica virar real.
+        </div>
+        <div class="footnotes"><ol>
+          <li><a href="https://openjdk.org/jeps/527">openjdk.org/jeps/527</a></li>
+          <li><a href="https://openjdk.org/projects/jdk/27/">openjdk.org/projects/jdk/27</a> · <a href="https://jdk.java.net/27/">jdk.java.net/27</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Runtime JS &amp; frontend — Node 26, Angular 21</h2>
+        <p>No lado JavaScript, dois pontos calmos mas relevantes para o mundo TS/Angular/React do Daniel: o <strong>Node.js 26.1.0</strong> (06/05, depois do 26.0.0 em 05/05) é a linha Current; a próxima promoção a LTS sai no outono (hemisfério norte). O <strong>Angular 21.2.13</strong> (13/05) é o patch mais recente — o Angular 21 chega ao mesmo tempo ao fim do suporte ativo (19/05), e o <strong>Angular 22</strong> é esperado no ciclo habitual de seis meses. Quem ainda está em majors antigos de Node/Angular deveria planejar o caminho de upgrade agora, antes de as janelas de suporte fecharem <a href="https://nodejs.org/en/about/previous-releases">[1]</a><a href="https://angular.dev/reference/releases">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://nodejs.org/en/about/previous-releases">nodejs.org/previous-releases</a></li>
+          <li><a href="https://angular.dev/reference/releases">angular.dev/reference/releases</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Firefox 151 + Chrome 148 — situação dos browsers</h2>
+        <p>O <strong>Firefox 151</strong> está Stable desde 19/05. Relevante para dev: Container Queries com <code>style()</code> (o <code>@container</code> verifica uma declaração CSS) e <code>shadowrootslotassignment</code> declarativo em <code>&lt;template&gt;</code>. No lado de privacidade: restrições de acesso à rede local agora em GA, menos superfície de fingerprinting (~14% menos usuários unicamente identificáveis, ~49% no macOS), backup de perfil agora entre SOs (Linux/macOS). O <strong>Chrome 148</strong> está Stable desde 05/05 com <strong>127 correções de segurança</strong> (três críticas, incluindo a CVE-2026-7896, um integer overflow no Blink) e Container Queries „name-only" <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/151">[1]</a><a href="https://developer.chrome.com/release-notes/148">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/151">developer.mozilla.org/Firefox/151</a></li>
+          <li><a href="https://developer.chrome.com/release-notes/148">developer.chrome.com/release-notes/148</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>TC39 #114 Amsterdã — dia 2</h2>
+        <p>Três dias de plenary, sediado pela JetBrains, o dia 2 rola hoje, encerramento amanhã (21/05). Os <em>resultados</em> ainda não foram publicados (as notas vêm atrás da reunião). Na agenda, entre outros: uma mudança normativa para <strong>Source Phase Imports</strong> (resolvendo um bug ambíguo de spec de export), além de vários iterator helpers e desdobramentos de Decorators rumo ao avanço. Os detalhes virão nas notas <a href="https://github.com/tc39/agendas/blob/main/2026/05.md">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://github.com/tc39/agendas/blob/main/2026/05.md">github.com/tc39/agendas (2026/05)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Situação da infra — Caddy endurece, Tailscale faz patch</h2>
+        <p>Direto no caminho do edge do Daniel: o <strong>Caddy 2.11.3</strong> (12/05) traz quatro correções de segurança — um bypass de FastCGI (arquivos não-PHP executáveis via case-folding Unicode), o fix de vars-placeholder <strong>GHSA-m2w3-8f23-hxxf</strong> e dois bypasses de auth no admin-socket (normalização de índice de array e de prefixo de caminho). O <strong>Tailscale 1.98.2</strong> (15/05) é um patch de regressão: o MagicDNS volta a resolver hostnames do tailnet após uma troca de rede. Nos containers: o patch do <strong>containerd 2.2</strong> fechou a <strong>CVE-2026-35469</strong> (spdystream). Calmo no lado das linguagens: CPython 3.14 estável, Spring Boot 4.0.6 Stable (4.1 ainda em RC, train empurrado para 01–05/06) <a href="https://github.com/caddyserver/caddy/releases">[1]</a><a href="https://tailscale.com/changelog">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://github.com/caddyserver/caddy/releases">github.com/caddyserver/caddy/releases</a></li>
+          <li><a href="https://tailscale.com/changelog">tailscale.com/changelog</a> · <a href="https://github.com/containerd/containerd/releases">containerd/releases</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>CADA — anúncio em 27/05</h2>
+        <p><strong>Cloud and AI Development Act (CADA):</strong> a adoção pela Comissão, após dois adiamentos, está agora marcada para <strong>27/05</strong>, como parte do pacote de soberania tecnológica (CADA + Chips Act 2). Objetivo: triplicar a capacidade de data centers da UE, requisitos de elegibilidade em toda a UE para provedores de cloud, uma política única de cloud para a administração pública e compras. Possíveis limites para nuvem dos EUA em dados <em>governamentais</em> sensíveis são, por ora, mera cogitação (CNBC, 07/05), sem texto publicado <a href="https://www.europarl.europa.eu/legislative-train/theme-a-new-plan-for-europe-s-sustainable-prosperity-and-competitiveness/file-cloud-and-ai-development-act">[1]</a><a href="https://www.cnbc.com/2026/05/07/eu-commission-cloud-sensitive-data.html">[2]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.europarl.europa.eu/legislative-train/theme-a-new-plan-for-europe-s-sustainable-prosperity-and-competitiveness/file-cloud-and-ai-development-act">europarl.europa.eu/legislative-train</a></li>
+          <li><a href="https://www.cnbc.com/2026/05/07/eu-commission-cloud-sensitive-data.html">cnbc.com (07/05)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA — obrigações de reporte a partir de setembro, retroativas</h2>
+        <p>As obrigações de reporte do <strong>Cyber Resilience Act</strong> entram em vigor a partir de <strong>11/09/2026</strong>: falhas ativamente exploradas e incidentes graves precisam ser reportados — <strong>alerta inicial em até 24h</strong>, notificação completa em até 72h, relatório final no máximo 14 dias após a correção estar disponível. O detalhe para o Daniel e para qualquer um que entregue software: a obrigação vale <strong>retroativamente</strong> para todo produto colocado no mercado antes de 11/12/2027 (Art. 69(3)). Um produto entregue em 2019, ainda em uso e com uma falha ativamente explorada, está incluído. A vigência plena do CRA vem depois, em 11/12/2027 <a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">digital-strategy.ec.europa.eu/cra-reporting</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>OpenSSF Community Day NA — Sigstore pós-quântico</h2>
+        <p>Amanhã (qui 21/05) em Minneapolis, em paralelo ao OSS Summit NA. O fio condutor da agenda: SBOMs, assinaturas resistentes a quântico, remediação assistida por IA. No programa, a palestra <strong>"Quantum Proofing Sigstore: A Tale of Three Approaches"</strong> (Kevin Conner, Red Hat) — estratégias para preparar o Sigstore para um cenário pós-quântico. O mesmo motivo de endurecimento da JEP 527: tornar a criptografia de assinaturas resistente a quântico antes que ela possa ser quebrada. Depois do worm Shai-Hulud, isso ganha uma segunda pointe — assinaturas só protegem se a pipeline por trás delas estiver limpa <a href="https://openssf.org/blog/2026/04/20/secure-your-spot-the-openssf-community-day-north-america-2026-agenda-is-live/">[1]</a>.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://openssf.org/blog/2026/04/20/secure-your-spot-the-openssf-community-day-north-america-2026-agenda-is-live/">openssf.org (agenda)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Brasil em resumo — e um ponteiro de IA</h2>
+        <p>Da segunda casa do Daniel, pouca substância não-IA hoje; as grandes histórias de tech BR desta semana (produtividade com IA no Q1 do Nubank, GenAI on-device do Itaú) são primariamente histórias de IA e por isso rodam no brief de <strong>ai-usecases</strong>, não aqui. No lado puro de infra/OSS: nenhuma notícia BR fresca e sólida na janela de 24h — pular em vez de encher.</p>
+      </section>
+
+      <section class="news-item">
+        <h2>Comentário — confiança é a cadeia de suprimentos</h2>
+        <p>O worm Shai-Hulud é tão desagradável justamente porque não explorou uma brecha — ele forjou o <em>próprio comprovante de confiança</em>: provenance SLSA válida, o recibo criptográfico que cinco anos de supply-chain security venderam como resposta. A lição não é "o SLSA está quebrado", é mais sutil: o SLSA prova <em>que</em> a pipeline construiu, nunca <em>o que</em> ela construiu. Quem sequestra a pipeline herda a confiança dela. É exatamente por isso que o endurecimento quântico do Sigstore (amanhã, no OpenSSF) e a JEP 527 no JDK são só metade da batalha — eles protegem a assinatura, não o contexto de build ao redor.</p>
+        <p>Para o DNA do stack do Daniel — GitHub Actions, npm, Java/Spring, Postgres, Caddy/Tailscale, Claude Code — isso significa, na prática: aplicar ao CI o mesmo princípio de menor privilégio de todo o resto. Banir <code>pull_request_target</code> dos workflows ou cercá-lo com rigor, fixar Actions por SHA, versionar e revisar os diretórios de hooks, manter tokens de vida curta. Digno de nota: o worm persistiu via os mesmos hooks de tooling de agentes (VS Code, Claude Code) que deveriam trazer produtividade — a camada de tooling é também vetor de persistência. (Os próprios lançamentos de agentes de IA desta semana — Google I/O — pertencem tematicamente ao brief de <strong>ai-dev</strong>; aqui só conta o lado de superfície de ataque deles.) Três pontos de controle pra hoje: não perder a janela do Drupal hoje à noite, dar grep nos gatilhos dos workflows atrás de <code>pull_request_target</code>, e checar se os clusters Postgres estão no nível de patch de 14/05. Amanhã o OpenSSF Community Day entrega a sessão de Sigstore quântico e o TC39 suas notas de encerramento.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>É quarta-feira, vinte de maio, e é um dia denso — sobretudo na frente de segurança. A história mais consequente vem sem palco nenhum, e é sobre confiança.</p>
+  <p>Um worm autorreplicante, batizado de Mini Shai-Hulud, envenenou no dia onze de maio mais de cento e setenta e dois pacotes de npm e PyPI em quatrocentos e três versões — entre eles TanStack, Mistral, Guardrails, UiPath e SAP. O assustador: ele forjou pela primeira vez provenance SLSA válida — justamente o comprovante criptográfico de autenticidade que deveria impedir ataques à cadeia de suprimentos. O truque foi elegante e perturbador: ele não quebrou a assinatura, ele sequestrou a própria pipeline de build da TanStack no meio do processo, de modo que ela mesma assinou o malware. O Sigstore verificou o build corretamente — só que o código construído era malicioso. O worm rouba tokens, chaves SSH e credenciais de cloud, e persiste via hooks do VS Code e do Claude Code. A TanStack agora tira a lição e estuda passar a aceitar pull requests apenas por convite. O stack do Daniel está exposto. Três checagens hoje: vasculhar os workflows atrás de pull request target, fixar as Actions por hash de commit, e revisar os hooks.</p>
+  <p>E continua: hoje à noite, entre dezessete e vinte e uma horas UTC, sai um fix highly-critical do Drupal Core com um risk score de vinte de vinte e cinco. A falha atinge sem autenticação, os detalhes estão embargados até o release, e o time de segurança avisa que exploits podem surgir em horas. Quem opera Drupal deveria deixar a janela livre e chegar antes ao patch mais recente.</p>
+  <p>Foi um dia cheio de patches de qualquer forma. Uma falha de Linux chamada Copy Fail escala até root — um bug de nove anos no template de cripto do kernel, que precisa só de um script de setecentos e trinta e dois bytes. Ela quebra o isolamento de containers, e o prazo das autoridades venceu esta semana. Além disso, um belo momento de cross-check no Exchange: a CISA incluiu uma falha on-prem no catálogo KEV que o NIST avalia em seis vírgula um, ou seja, média, mas a própria Microsoft avalia em oito vírgula um, ou seja, alta. O Postgres fechou onze falhas, a mais séria uma execução de código de verdade no módulo refint. E na software web: o Apache OFBiz fecha uma template injection que leva a execução de código, o bugtracker MantisBT mais de quinze falhas, e a sandbox Node vm2 pode ser escapada de novo.</p>
+  <p>No lado dos releases, uma correção em causa própria: o brief de ontem dizia que o Quarkus três ponto trinta e seis sairia final hoje. Até hoje não há final — em vez disso, saiu o três ponto trinta e cinco ponto quatro como novo stable. Anunciado não é entregue. O JDK vinte e sete está em early-access com a JEP quinhentos e vinte e sete, uma troca de chaves pós-quântica para TLS. O Node ponto j-s vinte e seis e o Angular vinte e um ponto dois estão atuais, o Firefox cento e cinquenta e um saiu, o Chrome cento e quarenta e oito recebeu cento e vinte e sete correções de segurança, e o TC39 se reúne em Amsterdã.</p>
+  <p>No lado da regulação, duas datas: o Cloud and AI Development Act será anunciado no dia vinte e sete de maio, e as obrigações de reporte do Cyber Resilience Act entram em vigor no dia onze de setembro — com um alerta inicial de vinte e quatro horas e, importante, retroativas a produtos que já estão no mercado.</p>
+  <p>O fio que costura tudo: confiança é a cadeia de suprimentos. Um worm forja o comprovante de confiança enquanto o setor endurece a mesma criptografia contra a ameaça quântica — mas o SLSA só prova que a pipeline construiu, nunca o quê. Quem sequestra a pipeline herda a confiança dela. Amanhã o OpenSSF Community Day entrega a sessão de Sigstore quântico e o TC39 suas notas de encerramento. Até lá.</p>
+</div>
+
+</body>
+</html>

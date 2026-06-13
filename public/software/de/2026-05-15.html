@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-05-15</title>
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-05-15</span>
+  </div>
+  <h1 class="masthead-title">Postgres-RCE in allen Branches, Angular 22 wird selectorless, Copilot kippt auf Token-Billing</h1>
+</header>
+
+<main class="shell">
+
+  <!-- BAND 1: TL;DR — full-width scan strip -->
+  <section class="tldr">
+    <p class="lead">Drei Stories greifen Deinen Stack heute direkt an — eine davon ist patch-pflichtig.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Postgres CVE-2026-6473</strong>: jeder DB-User kann RCE auslösen — Quarterly-Minor heute eingespielt? Wenn nein: heute.</li>
+      <li><span class="chip hot">Sec</span> <strong>Cisco SD-WAN CVE-2026-20182</strong> (CVSS 10,0): aktiv ausgenutzt, CISA-KEV, FCEB-Frist 17.05.</li>
+      <li><span class="chip hot">Sec</span> <strong>NGINX-Rift-PoC</strong> öffentlich, Worker-Crash zuverlässig — Patch auf 1.31.0 / 1.30.1 jetzt.</li>
+      <li><span class="chip">Sec</span> <strong>MS Patch Tuesday 13.05.</strong>: Netlogon-RCE CVE-2026-41089 (9,8), wurmable auf DCs — keine 0-Days, aber AD-Plumbing.</li>
+      <li><span class="chip good">Release</span> <strong>Angular 22</strong>: Selectorless, Signal Forms stable, OnPush by default, TS 5.9.</li>
+      <li><span class="chip good">Release</span> <strong>Safari 26.5</strong>: <code>:open</code>-Pseudoklasse, Origin-API. <strong>Chrome 148</strong>: on-device Gemini Nano via Prompt API.</li>
+      <li><span class="chip good">Release</span> <strong>Quarkus 3.35.3</strong> (13.05.) — Wartungs-Patch der Tree-Shaking-/PGO-/Semeru-Linie.</li>
+      <li><span class="chip">Platform</span> <strong>GitHub Copilot</strong> ab 01.06. Token-Billing, Opus aus Pro raus, Code-Review zieht Actions-Minuten.</li>
+      <li><span class="chip">OSS</span> <strong>Bun Rust-Port</strong>: erste 24h-Regressionen — miri findet UB in <em>safe</em> Rust, FFI <code>dlopen()</code> in <code>--compile</code> kaputt.</li>
+      <li><span class="chip">DE</span> <strong>SAP investiert in n8n</strong> bei 5,2 Mrd $; Mercedes-Benz rollt n8n als Workflow-Layer aus.</li>
+      <li><span class="chip">EU</span> <strong>AI-Act-Omnibus-Deal</strong>: High-Risk-Frist auf 02.12.2027, Deepfake-Verbot ab 02.12.2026, Transparenz-Frist 6 → 3 Monate.</li>
+      <li><span class="chip">BR</span> <strong>ANPD</strong> wird per Lei 15.352/2026 vollwertige Regulierungsagentur; <strong>Nubank</strong> kündigt R$ 45 Mrd BR-Investition 2026 an.</li>
+    </ul>
+  </section>
+
+  <!-- BAND 2: Wochenausblick — full-width timeline -->
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Releases, Konferenzen, Patch-Fristen, Billing-Stichtage</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Fr 15.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heute</span>
+          <span>PG 18.4 / 17.10 / 16.14 / 15.18 / 14.23 — RCE-Fix CVE-2026-6473</span>
+          <span>NGINX-Rift-PoC: AlmaLinux / CloudLinux mit Patch-Paketen in Testing</span>
+          <span>CISA-ED 26-03: Cisco SD-WAN CVE-2026-20182 (CVSS 10,0) für FCEB-Behörden</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">So 17.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Cisco-SD-WAN-Patch-Frist für FCEB-Agencies</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mo 18.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Open Source Summit NA, Minneapolis (bis 20.05.)</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 19.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Firefox 151 → Stable (Settings-Revamp, Universal Clipboard macOS)</span>
+          <span>TC39-Plenary Amsterdam startet</span>
+          <span>SAP Sapphire eröffnet, Orlando (bis 21.05.)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Do 21.05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>OpenSSF Community Day NA — „Petra" SBOMs, Quantum-Sigstore, Trusted Publishing post-TanStack</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mo 01.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GitHub Copilot Token-Billing live</span>
+          <span>Copilot Code Review beginnt, Actions-Minuten zu verbrauchen</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Do 11.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CRA Chapter IV: Konformitätsbewertungsstellen-Notifizierung wird Pflicht</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <!-- COLUMN 1: Standing Threads -->
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Standing Thread — EU-Regulierung</h2>
+        <p>Zwei Bewegungen im AI-Act-Umfeld diese Woche, die jeder mit europäischen Klienten kennen sollte. Erstens der <strong>Digital-Omnibus-Deal</strong>, am 07.05. zwischen Rat und Parlament. Die High-Risk-AI-Regeln werden um ein Jahr verschoben — Standalone auf 02.12.2027, embedded auf 02.08.2028. Die Transparenz-Pflicht bei generierter Inhalte schrumpft von 6 auf 3 Monate Schonfrist, dafür kommt ein neues, hartes Verbot von non-consensual Deepfakes (inkl. „Nudifier"-Apps) ab 02.12.2026. SME-Privilegien werden auf „kleine Mid-Caps" ausgeweitet — kompromiss-typisch, nicht spektakulär.</p>
+        <div class="eli5">
+          <strong class="eli5-term">GPAI / „General-Purpose AI":</strong> Modelle wie GPT-5 oder Gemini, die nicht für eine spezifische Aufgabe trainiert wurden, sondern für „alles Mögliche". Die EU regelt sie seit 02.08.2025 — aber das AI Office darf erst ab 02.08.2026 wirklich Auskunft verlangen, Mitigations vorschreiben und Strafen verhängen. Das Omnibus-Paket soll vor diesem Datum durch sein.
+        </div>
+        <p>Zweitens: <strong>EDPB und EDPS</strong> haben ihre Stellungnahme zum Omnibus veröffentlicht — Unterstützung im Grundsatz, aber sie flaggen drei Punkte. Die Schwelle für Daten­schutz­vorfall-Meldungen würde steigen, die 72h-Frist auf 96h erweitert, und — kontroverser — personen­bezogene Daten dürften „im berechtigten Interesse" zum Modell-Training verarbeitet werden. Wenn Du Modelle auf Produktiv-Daten finetunest, ist das in Zukunft formell zulässig — aber die Diskussion ist nicht zu Ende.</p>
+        <p>Drittens, weniger sexy aber ticking: der <strong>CRA</strong>. Chapter IV (Konformitäts­bewertungs­stellen) wird am 11.06.2026 Pflicht, die Schwachstellen­melde­pflicht für Hersteller am 11.09.2026. Wer in der EU Software in Verkehr bringt — auch als Open-Source-Steward kommerziell genutzter Pakete — sollte VDP, SBOM-Pipeline und Reporting-Prozesse jetzt aufsetzen, nicht 2027.</p>
+        <span class="src"><a href="https://www.consilium.europa.eu/en/press/press-releases/2026/05/07/artificial-intelligence-council-and-parliament-agree-to-simplify-and-streamline-rules/">consilium.europa.eu</a> · <a href="https://www.edpb.europa.eu/news/news/2026/digital-omnibus-edpb-and-edps-support-simplification-and-competitiveness-while_en">edpb.europa.eu</a> · <a href="https://www.hoganlovells.com/en/publications/eu-cyber-resilience-act-getting-ready-for-cra-compliance-in-2026">hoganlovells.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Standing Thread — OSS-Lizenz-Politik</h2>
+        <p>Die Lizenz-Front ist ruhiger als letzte Woche, aber zwei Linien laufen weiter. <strong>HashiCorp vs. OpenTofu</strong> bleibt in aktiver Gerichts-Phase nach der IBM-Übernahme — der Chilling Effect auf BUSL-Forks ist das, was Du an den Corporate-Contributor-Statistiken siehst, nicht im Urteil. <strong>Redis und Elastic zurück auf AGPL</strong> — die SSPL/BSL-Experimente werden leise abgewickelt. RedMonk's Open-Source-Lizenz-Report 2026 fasst den Stand zusammen: das Pendel schwingt nicht zu „freier", sondern zu „weniger Streit, mehr Vertragsklarheit".</p>
+        <p>Daniels Praxis-Lehre: Wenn Du Production-Infrastructure auf einem einzigen Anbieter-OSS-Projekt aufbaust (Vault, Terraform, Elasticsearch, Redis), gehört der Lizenz-Status in den Tech-Radar — neben CVE-Status und Roadmap. Nicht weil die Lizenz Dich nachts angreift, sondern weil ein BUSL-Switch oder Anbieter-Fork mittelfristig Re-Architecting kostet.</p>
+        <span class="src"><a href="https://redmonk.com/sogrady/2026/03/25/open-source-licensing-2026/">redmonk.com</a> · <a href="https://thenewstack.io/forks-clouds-and-the-new-economics-of-open-source-licensing/">thenewstack.io</a></span>
+      </section>
+
+    </div>
+
+    <!-- COLUMN 2: Security + Platform -->
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Sicherheit &amp; Lieferkette</h2>
+
+        <h3>Postgres-RCE: wer betroffen ist, wer nicht</h3>
+        <p>Die Mechanik von CVE-2026-6473 ist die Sorte „eigentlich simpel, aber lebt seit Jahren im Code": eine Größen­berechnung läuft über die Integer-Grenze (Wraparound auf einen winzigen Wert), Postgres alloziert entsprechend wenig Speicher, schreibt dann aber die <em>tatsächlichen</em> Daten — die viel größer sind — hinein. Klassischer Heap-Overflow. Die Schwere ergibt sich daraus, dass ein <em>nicht-privilegierter</em> Datenbank-User reicht. Multi-Tenant-Stacks mit App-Usern pro Mandant sind die größte Sorge; Single-User-Setups (Du, Du selbst und Du) haben weniger Druck, sollten aber trotzdem patchen.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Integer-Wraparound:</strong> Stell Dir einen Tacho vor, der nur bis 999 zählt. Bei 1000 springt er auf 0. In C heißt das „Overflow", aber für vorzeichenlose Typen ist das definiert: aus einem riesigen Wert wird ein winziger. Wenn jemand dann „alloziere so viele Bytes" mit diesem winzigen Wert aufruft, liegt das Speicher-Loch perfekt für einen Buffer-Overflow bereit.
+        </div>
+        <p>Praktisch heute: <code>docker pull postgres:17.10</code> (oder Deine Branch), Restart, fertig. Wenn Du noch auf PG 14 fährst, ist das die richtige Stelle, den Migrations-Plan auf 17 oder 18 aufzusetzen — EOL ist 12.11.2026 und Postgres-Major-Migrationen sind nicht das, was man zwischen Tür und Angel macht.</p>
+        <span class="src"><a href="https://www.postgresql.org/support/security/">postgresql.org/security</a> · <a href="https://www.thehackerwire.com/postgresql-integer-wraparound-rce-cve-2026-6473/">thehackerwire.com</a></span>
+
+        <h3>Cisco SD-WAN — CVSS 10,0, aktiv ausgenutzt, KEV-Eintrag</h3>
+        <p>Die andere Hammer-Story heute: <strong>CVE-2026-20182</strong>, ein unauthentifizierter Peering-Auth-Bypass im Cisco Catalyst SD-WAN Controller (vSmart) und SD-WAN Manager (vManage). Trigger ist ein präparierter DTLS-Request auf UDP/12346. Cisco Talos bestätigt aktive Ausnutzung durch einen Akteur „UAT-8616", der dadurch hochprivilegierten Admin-Zugriff bekommt. CISA hat den Eintrag am 14.05. in den KEV-Katalog gepackt und Emergency Directive 26-03 erlassen — FCEB-Behörden müssen bis <strong>17.05.</strong> remediated sein. Für Dich praktisch nur relevant, wenn Du Cisco-SD-WAN-Infrastruktur betreust; aber als Lesehinweis: solche Auth-Bypass-Bugs in Enterprise-Network-Equipment landen oft in Lateral-Movement-Ketten, die später dann in andere Stacks rein­bluten.</p>
+        <span class="src"><a href="https://www.cisa.gov/news-events/alerts/2026/05/14/cisa-adds-one-known-exploited-vulnerability-catalog">cisa.gov</a> · <a href="https://blog.talosintelligence.com/sd-wan-ongoing-exploitation/">talosintelligence.com</a></span>
+
+        <h3>NGINX-Rift: PoC ist scharf, Distros patchen</h3>
+        <p>Update zur Story von gestern. Ein PoC für CVE-2026-42945 liegt seit gestern öffentlich auf GitHub (Repo <code>depthfirstdisclosures/nginx-rift</code>) und reproduziert den Worker-Crash zuverlässig. AlmaLinux und CloudLinux haben gepatchte Pakete in ihre Testing-Repos geschoben; F5 nennt als Workaround, unbenannte PCRE-Captures durch benannte zu ersetzen, falls Du nicht sofort patchen kannst. RCE ist mit aktiviertem ASLR weiterhin schwierig, aber DoS ist mit einer einzelnen Request trivial. Wenn Du NGINX im Edge betreibst (auf <code>ddmini</code> z.B. läuft der manufaktur-Caddy — also für Dich nicht direkt, aber wenn Klienten-Stacks NGINX haben: jetzt).</p>
+        <span class="src"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42945">nvd.nist.gov</a> · <a href="https://almalinux.org/blog/2026-05-13-nginx-rift-cve-2026-42945/">almalinux.org</a> · <a href="https://github.com/depthfirstdisclosures/nginx-rift">github.com/depthfirstdisclosures</a></span>
+
+        <h3>MS Patch Tuesday — Netlogon ist das Wormable, nicht DNS</h3>
+        <p>137 CVEs, 30 Critical, <strong>keine 0-Days</strong>. Der Headliner ist <strong>CVE-2026-41089</strong>: ein pre-auth Stack-Buffer-Overflow in Windows Netlogon auf Domain Controllern, CVSS 9,8, mit einem einzelnen präparierten Netzwerk­paket auslösbar. Das ist die Kategorie „wurmable AD-Compromise" — Conficker-Klasse. Runner-Up: <strong>CVE-2026-41096</strong>, Windows-DNS-Client-Heap-Overflow, 9,8, unauthenticated via DNS-Response. Plus ein interessanter Daten­punkt am Rand: 16 der gefixten Bugs sind von Microsofts internem KI-Bug-Hunter „MDASH" gefunden worden — die internen AI-fuzzer-Ergebnisse skalieren offensichtlich.</p>
+        <span class="src"><a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-may-2026-patch-tuesday-fixes-120-flaws-no-zero-days/">bleepingcomputer.com</a> · <a href="https://blog.talosintelligence.com/microsoft-patch-tuesday-may-2026/">talosintelligence.com</a></span>
+
+        <h3>Shai-Hulud-Aftermath: SLSA-Provenance ist <em>nicht</em> Vertrauen</h3>
+        <p>Stand 15.05.: 172 npm- und PyPI-Pakete in 403 malicious Versions, 518 Mio. kumulierte Downloads — die Welle ist eingedämmt, keine neuen Pakete in den letzten 24h. Die Attribution geht klar auf <em>TeamPCP</em>, der Vektor ist endgültig dokumentiert: GitHub-Actions-Cache-Vergiftung über <code>pull_request_target</code>, OIDC-Token-Klau aus dem Runner-RAM, Publish über das <em>legitime</em> Release-Pipeline. Das wichtigste Detail für die Industrie-Diskussion: <strong>die kompromittierten Pakete hatten gültige SLSA-Provenance</strong>. Provenance bewies, dass die Pipeline lief — nicht, dass sie autorisiert war.</p>
+        <div class="eli5">
+          <strong class="eli5-term">SLSA-Provenance:</strong> Eine digitale Quittung, die zu jedem Paket sagt „dieses Artefakt entstand in <em>genau dieser</em> CI-Pipeline aus <em>genau diesem</em> Commit". Schützt vor Side-Loading kompromittierter Artefakte. Aber: wenn der Angreifer die <em>legitime</em> Pipeline kapert, schreibt die Pipeline ihm eine korrekte Quittung aus.
+        </div>
+        <p>Konsequenz für jeden, der Trusted Publishing via OIDC nutzt (zunehmend Default, auch PyPI): die Workflow-Pinning- und Branch-Beschränkungen müssen <em>tighter</em> sein als bisher empfohlen. OpenAI hat sein Incident-Response-Memo veröffentlicht (zwei kompromittierte Mitarbeiter-Geräte, keine Production-Auswirkung). TanStack hat ein eigenes Postmortem mit Versions-Liste.</p>
+        <span class="src"><a href="https://openai.com/index/our-response-to-the-tanstack-npm-supply-chain-attack/">openai.com</a> · <a href="https://tanstack.com/blog/npm-supply-chain-compromise-postmortem">tanstack.com</a> · <a href="https://www.wiz.io/blog/mini-shai-hulud-strikes-again-tanstack-more-npm-packages-compromised">wiz.io</a></span>
+
+        <div class="callout warn">
+          <span class="callout-label">Achtung</span>
+          BSI/CERT-Bund hat am 14.05. die <strong>libxml2</strong>-Advisory aktualisiert (CVE-2026-0989, -0990, -0992). DoS-Conditions auf Amazon Linux 2, SUSE/openSUSE, NetApp ONTAP 9, Meinberg LANTIME. Risiko mittel, aber wenn Du XML-Parsing in CI/CD-Tooling hast (SOAP-, OPDS-, RSS-Wrapper), prüf' die System-Pakete.
+        </div>
+      </section>
+
+      <section class="news-item">
+        <h2>Plattform-Änderungen</h2>
+
+        <h3>Copilot-Billing: was sich für Dich rechnet, was nicht</h3>
+        <p>Das Modell wechselt von „premium requests" auf <strong>AI Credits</strong> — ein monatliches Budget in API-Token-Einheiten. Pro-Plan: $10/Monat, Credits werden nach API-Listenpreisen verbraucht. Pro+: $39/Monat mit Opus weiterhin im Paket. Für agentische Workflows (lange Kontexte, viele Tool-Calls) wird das spürbar teurer; für Klassik-Inline-Completion bleibt es vergleichbar. Wer Copilot auf Klienten-Projekten einsetzt, kann die Token-Granularität nutzen, um die KI-Kosten erstmals sauber Klienten-spezifisch zu rechnen — vorher war die Aufteilung pauschal.</p>
+        <p>Zweiter Teil: <strong>Copilot Code Review</strong> beginnt am 01.06., Actions-Minuten zu verbrauchen. Wenn Du Code-Review-Bots als Standard-Required-Check hast, läuft das ab Juni über Deinen Actions-Quota. Für kleine Teams meist trivial, für 30+ PRs/Tag spürbar — Eintrag im Cost-Dashboard prüfen lohnt.</p>
+        <span class="src"><a href="https://github.blog/news-insights/company-news/github-copilot-is-moving-to-usage-based-billing/">github.blog</a> · <a href="https://github.blog/changelog/2026-04-27-github-copilot-code-review-will-start-consuming-github-actions-minutes-on-june-1-2026/">github.blog/changelog</a></span>
+      </section>
+
+    </div>
+
+    <!-- COLUMN 3: Releases + DE/BR + Closing -->
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Releases &amp; Toolchain</h2>
+
+        <h3>Angular 22 — die selectorless Mechanik</h3>
+        <p>Worauf das hinausläuft: Du importierst eine Komponente per Symbol, das Template referenziert sie über den Symbol-Namen, der Compiler tut den Rest. Selector-Strings im Decorator (<code>app-foo</code>) sind nicht mehr Pflicht, sondern Opt-in für Backward-Compat oder dynamische DOM-Slots. Effektiv schließt das die letzte große konzeptuelle Lücke zu React/Solid/Svelte: dort ist die Komponente schon immer ein importiertes Symbol gewesen, nicht ein globaler Tag. Daniel-relevant: laufende Angular-Projekte können schrittweise migrieren, Standalone Components → Selectorless ist linear. <strong>Signal Forms</strong> stable bedeutet, dass <code>FormControl</code>/<code>FormGroup</code> jetzt einen modernen Pendant haben — reaktive Form-Validierung, ohne den alten <code>RxJS</code>-Schwanz.</p>
+        <span class="src"><a href="https://angular.dev/reference/releases">angular.dev</a></span>
+
+        <h3>Safari 26.5 + Chrome 148 — Web-Plattform-Konvergenz</h3>
+        <p>Safari schließt zwei lang offene Lücken. <strong><code>:open</code></strong> als Pseudo-Klasse funktioniert für <code>&lt;details&gt;</code>, <code>&lt;dialog&gt;</code>, <code>&lt;select&gt;</code>, <code>&lt;input type="date|color|file"&gt;</code> — endlich kann man Open-States CSS-only stylen, ohne JS-Hooks oder ARIA-Tricks. Dazu die neue <strong>Origin-API</strong>, die Origins als strukturierte Objekte statt Strings exponiert — die jahrelange „Parse die Public Suffix List selbst"-Tortur ist vorbei. Chrome 148 (05.05.) bringt <code>@supports at-rule()</code>, name-only Container Queries und — am bedeutendsten — <strong>die Prompt API mit on-device Gemini Nano</strong> für alle Chromes ab 148. Das ist die erste praktische lokale-LLM-Schnittstelle in einem Major-Browser. Firefox 151 → Stable am 19.05., mit Settings-Revamp und nativer macOS-<code>&lt;select&gt;</code>-Rendering.</p>
+        <span class="src"><a href="https://webkit.org/blog/17938/webkit-features-for-safari-26-5/">webkit.org</a> · <a href="https://developer.chrome.com/blog/new-in-chrome-148">developer.chrome.com</a> · <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/151">developer.mozilla.org</a></span>
+
+        <h3>Spring-Train verschoben, Quarkus 3.35.3 raus</h3>
+        <p>Michael Minella hat am 11.05. angekündigt, dass der Spring May-Release-Train (inkl. Spring Boot 4.1 GA) <strong>um ~2 Wochen verschoben</strong> wird — neuer Zielkorridor 01.–05.06. Aktueller Stand: Boot 4.1.0-M4. Für Migrations-Planung heißt das: kein Boot 4.1 GA diese Woche, der M5- oder RC1-Druck kommt nächste Woche. Parallel ist Quarkus 3.35.3 am 13.05. raus — reines Maintenance der 3.35-Linie, die JAR-Tree-Shaking, PGO für Native und Semeru-AOT eingeführt hat. Wer auf 3.35.x ist, sollte zügig hochziehen (CVE-2026-39852-Reihe vom 04.05. ist hier mit drin).</p>
+        <span class="src"><a href="https://spring.io/blog/2026/05/11/may-train-shift/">spring.io</a> · <a href="https://quarkus.io/blog/quarkus-3-35-3-released/">quarkus.io</a></span>
+
+        <h3>VS Code 1.120 + Rolldown 1.0</h3>
+        <p>VS Code 1.120 (13.05.) hebt das <strong>Agents-Window</strong> auf stable — der Multi-Projekt-Companion zum Editor, der Agent-First gedacht ist. Plus genauere Token-Usage-Anzeige und Thinking-Effort-Slider für BYOK-Reasoning-Modelle, plus eine Terminal-Command-Risk-Assessment-Stufe vor der Ausführung. Wer Cursor/Claude-Code parallel laufen lässt, hat jetzt eine ernsthafte Built-in-Alternative. <strong>Rolldown 1.0</strong> ist parallel stable geworden — der Rust-Bundler unter Vite 8. Linears Production-Build ging laut deren Post von 46s auf 6s, ein Synthie-Benchmark mit 19.000 Modulen läuft Rolldown 1,61s vs. Rollup 40,1s. Wenn Du einen großen Vite-Build hast, ist der 8er-Upgrade jetzt mehr als kosmetisch.</p>
+        <span class="src"><a href="https://code.visualstudio.com/updates/v1_120">code.visualstudio.com</a> · <a href="https://voidzero.dev/posts/announcing-rolldown-1-0">voidzero.dev</a></span>
+
+        <h3>Python 3.14.5, Docker Engine 29.3.1</h3>
+        <p>Python 3.14.5 ist am 10.05. raus — Standard-Wartung der 3.14-Linie, sicher hochzuziehen. Docker Engine 29.3.1 patcht <strong>CVE-2026-33990</strong> (SSRF im Docker Model Runner OCI Registry Client). Wenn Du Model Runner aktiv hast, jetzt patchen — wenn nicht, niedrige Priorität. Übergeordnet: Engine 29 hat den containerd-Image-Store als Default umgeschaltet, die jahrelange Migration ist Production.</p>
+        <span class="src"><a href="https://blog.python.org/2026/05/python-3145rc1/">blog.python.org</a> · <a href="https://docs.docker.com/engine/release-notes/29/">docs.docker.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Europa, Deutschland, Brasilien</h2>
+
+        <h3>SAP nimmt Strategic Stake in n8n bei 5,2 Mrd $</h3>
+        <p>Am 12.05. bestätigt: SAP investiert strategisch in das Berliner Workflow-Automation-Startup <strong>n8n</strong> bei einer Bewertung von 5,2 Mrd $, plus Multi-Year-Commercial-Deal. Mercedes-Benz rollt n8n parallel als <em>cloud-agnostischen, modularen</em> Workflow-Layer für KI-Use-Cases aus. Das ist die größte Single-Asset-DE-AI-Bet des Jahres bisher (n8n hat insgesamt €240 Mio. eingesammelt). Praktisch interessant, weil n8n Open-Core ist — Self-Host bleibt, der Enterprise-SaaS bekommt SAP-Integration. Für DACH-Mid-Market-Klienten, die Workflow-Tooling suchen, wird n8n damit zur „sicheren" Wahl im SAP-Kontext.</p>
+        <span class="src"><a href="https://futurride.com/2026/05/12/mercedes-benz-sap-get-ai-boost-from-n8n/">futurride.com</a> · <a href="https://www.automotiveworld.com/news-releases/mercedes-benz-and-sap-strengthen-partnership-with-future-proof-cloud-integration/">automotiveworld.com</a></span>
+
+        <h3>Brasilien: ANPD wird Regulierungsagentur, Nubank investiert R$ 45 Mrd</h3>
+        <p>Per <strong>Lei 15.352/2026</strong> ist die ANPD seit Februar formell eine vollwertige Regulierungs­agentur auf einer Stufe mit Anatel, Anac, Aneel — mit funktionaler, technischer, entscheidungs- und finanz­bezogener Autonomie. Sechs neue Superintendenzen sind aufgesetzt. Am 05.05. saßen ANPD, Anatel und Anac im Qualcomm-Innovation-Summit auf einem Panel zur AI-Politik — Signal, dass die LGPD-Praxis und KI-Regulierung in BR ein gemeinsames Spielfeld bekommen. <em>Daniel-relevant</em>: bei Klienten-Projekten in BR (egal ob aus DE oder lokal) sollte LGPD-Compliance jetzt mit der gleichen Ernsthaftigkeit wie DSGVO geplant werden — die Durchsetzungs-Hebel sind da.</p>
+        <p>Parallel: <strong>Nubank</strong> hat R$ 45 Mrd (~8,2 Mrd $) BR-Investitionen für 2026 angekündigt — AI, neue Produkte, Hiring, Filial-/Office-Ausbau. 113 Mio. Kunden, &gt;60 % der erwachsenen Bevölkerung Brasiliens. Das ist relevant für die BR-Dev-Hire-Front: Nubank zieht Engineering-Talent aggressiv. <strong>Q3-2025-LatAm-Funding</strong>: BR-Startups $692 Mio., +47 % YoY. Notable Deals: Arvo (Health-AI) $20M Series A, Enter (Legal-AI) $35M Series A bei $350M Bewertung.</p>
+        <span class="src"><a href="https://international.nubank.com.br/company/nubank-to-invest-r-45-billion-in-brazil-in-2026/">international.nubank.com.br</a> · <a href="https://tiinside.com.br/08/05/2026/anatel-anpd-e-anac-discutem-como-politicas-publicas-podem-acelerar-ia-no-brasil/">tiinside.com.br</a> · <a href="https://news.crunchbase.com/venture/latin-america-funding-brazil-leads-q3-2025-data/">crunchbase.com</a></span>
+
+        <h3>BSI: Ivanti-EPMM-Advisory hochgestuft</h3>
+        <p>BSI hat am 07.05. die Kritikalität der Ivanti-EPMM-Advisory hochgestuft und am 13.05. eine GIMP-Advisory rausgegeben. Hintergrund: seit 02.12.2025 ist das neue BSIG (NIS2-Umsetzung) in Kraft — die Zahl regulierter Entities ist von ~4.500 auf ~29.000 hochgesprungen. Wenn Du für DE-Klienten Software baust, die in „wesentlichen" oder „wichtigen" Sektoren landet, hat das jetzt klare Reporting- und Audit-Pflichten.</p>
+        <span class="src"><a href="https://www.bsi.bund.de/EN/Home/home_node.html">bsi.bund.de</a> · <a href="https://www.globalpolicywatch.com/2026/01/germany-transposes-nis-2-directive-increased-cybersecurity-requirements-for-businesses/">globalpolicywatch.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Bun-Aftermath &amp; Kommentar</h2>
+        <p>24h nach dem Rust-Merge ist die Story differenzierter als die „99,8 % grün"-Zahl glauben macht. Drei Issues, die in den ersten 24h auftauchten:</p>
+        <ul>
+          <li><strong>#30717</strong> — <code>bun:ffi</code>: <code>dlopen()</code> von embedded native libs ist in <code>bun build --compile</code> kaputt (Regression seit Commit 23427dbc12). Letztes funktionierendes Release: 1.3.13, der letzte Zig-Build.</li>
+          <li><strong>#30719</strong> — Die Rust-Codebase scheitert an <em>miri</em>-Checks: UB in <em>safe</em> Rust (invalid byte slices, dangling refs). Das validiert die Community-Skepsis gegenüber den &gt; 13.000 <code>unsafe</code>-Blocks in der portierten Codebase.</li>
+          <li><strong>#30693</strong> — Terminal-Rendering-Bug („ai" wird als „air" gerendert) in <code>bun update -i</code>. Kosmetisch, aber zeigt, dass das Terminal-Layer auch portiert wurde.</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">miri:</strong> Ein „Rust-Interpreter" für UB-Detection. Während der normale Rust-Compiler nur prüft, was <em>statisch</em> beweisbar ist, führt miri den Code Schritt für Schritt aus und meldet jeden Zugriff auf ungültigen Speicher — auch in <code>unsafe</code>-Blöcken. Wenn miri in <em>safe</em> Rust UB findet, heißt das: das <code>unsafe</code> darunter ist schlecht gekapselt.
+        </div>
+        <p>Simon Willison hat dazu am 14.05. einen interessanten Take publiziert: „<strong>Not so locked in any more</strong>" — Ausgang Mitchell Hashimotos Zitat zum Bun-Port. Seine These: Programmiersprachen waren früher Lock-in, sind es zunehmend weniger, weil LLM-assisted Porting die Rewrite-Kosten kollabieren lässt. Konkrete Zahl: ~770k LOC across 1.600 Files. Das ist die Sorte Thread, die in 5 Jahren rückblickend entweder offensichtlich oder offensichtlich falsch sein wird — beide Lesarten sind heute legitim, und genau das macht ihn lesenswert.</p>
+        <span class="src"><a href="https://simonwillison.net/2026/May/14/not-so-locked-in/">simonwillison.net</a> · <a href="https://github.com/oven-sh/bun/issues/30717">github.com/oven-sh/bun/issues</a> · <a href="https://www.theregister.com/devops/2026/05/14/anthropics-bun-rust-rewrite-merged-at-speed-of-ai/">theregister.com</a></span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+</body>
+</html>

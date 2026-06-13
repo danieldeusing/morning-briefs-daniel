@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-06-05</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-05</span>
+  </div>
+  <h1 class="masthead-title">An npm worm that signs itself</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Supply chain is the stage this week: the <strong>Miasma</strong> worm hops via <code>binding.gyp</code> from package to package, steals cloud tokens, and stamps itself with real SLSA provenance — a signature as camouflage, not as protection. Meanwhile, Microsoft Build 2026 happened, and the <em>non</em>-AI half is tangible for us developers: Linux kernel commands natively in Windows, WSL containers, Azure Linux 4.0. And CISA puts a two-year-old WebLogic hole on the exploited list.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>Miasma worm</strong>: 57 npm packages in under two hours, spreading via <code>binding.gyp</code> instead of lifecycle scripts.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">OSS</span> <strong>Red Hat npm</strong>: 96 versions across 32 packages compromised (RHSB-2026-006), ~117k downloads per week.</li>
+      <li><span class="chip">Sec</span> <span class="chip">OSS</span> <strong>SLSA as a weapon</strong>: The worm forges real Sigstore/Fulcio signatures — attestation no longer proves "clean".</li>
+      <li><span class="chip good">Infra</span> <span class="chip">USA</span> <strong>Build 2026</strong>: Coreutils for Windows GA — 75+ Unix tools natively, in Rust (uutils).</li>
+      <li><span class="chip">Infra</span> <span class="chip">USA</span> <strong>WSL containers</strong>: Linux containers directly from Windows, no Docker Desktop layer (Preview).</li>
+      <li><span class="chip good">OSS</span> <span class="chip">Global</span> <strong>Azure Linux 4.0</strong>: Microsoft's first general-purpose server distro, Fedora-based, public preview.</li>
+      <li><span class="chip">Infra</span> <span class="chip">USA</span> <strong>RTX Spark Dev Box</strong>: 128 GB unified memory, 1 petaflop — local dev workstation instead of cloud bills.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>CISA KEV</strong>: Oracle WebLogic CVE-2024-21182 (CVSS 7.5) now actively exploited, deadline was yesterday (Jun 4).</li>
+      <li><span class="chip">Regulation</span> <span class="chip">EU</span> <span class="chip">DE</span> <strong>CRA</strong>: Starting Jun 11, the BSI names the conformity assessors — the apparatus ramps up.</li>
+      <li><span class="chip good">Release</span> <span class="chip">Global</span> <strong>Node 24 &amp; PostgreSQL 18.4</strong>: fresh from May, briefly noted.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">CISA deadlines, EU regulation, supply chain aftershocks — what's on tap this week</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col hot">
+        <div class="tl-date">Thu Jun 4</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CISA deadline passed: WebLogic CVE-2024-21182 (federal agencies) — stragglers patch now</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Fri Jun 5</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Miasma wave 3 (binding.gyp) still under analysis — check token rotation</span>
+          <span>WebLogic deadline (Jun 4) missed — prioritize exposed servers</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat Jun 6</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Build 2026 sessions on-demand (Coreutils, WSL containers)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun Jun 7</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet — monitor npm advisories</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon Jun 8</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Week start: dependency audit post-Miasma makes sense</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu Jun 11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CRA: BSI procedure for naming conformity assessors takes effect</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Miasma: an npm worm that spreads via <code>binding.gyp</code></h2>
+        <p>The story of the week is not a model launch, but a supply chain incident — and one with new mechanics. A self-spreading npm worm called <strong>Miasma</strong> went on a rampage on June 3, compromising according to StepSecurity <strong>57 npm packages in over 286 malicious versions in under two hours</strong>. It hit <code>@vapi-ai/server-sdk</code> (over 408,000 downloads per month) first at 23:30 UTC, then among others <code>ai-sdk-ollama</code> (over 120,000 per month).<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">binding.gyp:</strong> A config file that lets npm packages build C/C++ components. Think of it like an assembly blueprint that a furniture package auto-executes when you unbox it — normally harmless. Miasma uses a 157-byte file with gyp command substitution to run code <em>during <code>npm install</code></em> — completely bypassing the usual <code>package.json</code> lifecycle scripts that every scanner watches. The blind spot is the concept itself.
+        </div>
+        <p>The payload harvests multi-cloud credentials broadly: AWS keys and IMDS tokens, GCP service accounts, Azure identities, GitHub Actions secrets (including runner storage scraping), npm tokens, Vault, and SSH credentials. With the stolen tokens, the worm then publishes further infected packages — hence "worm" and not just "theft".<sup>[1]</sup></p>
+        <p>Lineage: Miasma derives from <em>Mini-Shai-Hulud</em> malware, which an actor open-sourced to the net on May 12, according to Microsoft analysis — essentially a toolkit that multiple people are now rebuilding.<sup>[2]</sup> Who could be affected: check your lockfiles, block install scripts in CI with <code>--ignore-scripts</code>, rotate tokens.</p>
+        <div class="footnotes"><ol>
+          <li><a href="https://www.stepsecurity.io/blog/binding-gyp-npm-supply-chain-attack-spreads-like-worm">stepsecurity.io</a></li>
+          <li><a href="https://www.microsoft.com/en-us/security/blog/2026/06/02/preinstall-persistence-inside-red-hat-npm-miasma-credential-stealing-campaign/">microsoft.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Red Hat confirms: 32 compromised npm packages</h2>
+        <p>The first major Miasma wave hit Red Hat itself on June 1: under the <code>@redhat-cloud-services</code> namespace, <strong>96 versions across 32 packages</strong> were compromised — totaling around <strong>116,991 downloads per week</strong> (RHSB-2026-006).<sup>[3]</sup> These are frontend libraries for the Hybrid Cloud Console. The entry point was a hijacked GitHub account used to sneak malicious code past code review.</p>
+        <p>Red Hat's all-clear is instructive: no console release was published during the incident, and the publish process strips install scripts <em>before</em> deployment — the protective layer held. For end customers "no action needed". But anyone who pulled the packages directly from npm is not behind that same wall.<sup>[3]</sup></p>
+        <div class="callout info">
+          <span class="callout-label">Context</span>
+          In parallel, Microsoft reported a <em>separate</em> campaign: 33 npm packages using dependency confusion to profile developer environments.<sup>[4]</sup> Two independent attacks in one week — the registry layer is the hotspot right now, not the code inside it.
+        </div>
+        <div class="footnotes"><ol start="3">
+          <li><a href="https://access.redhat.com/security/vulnerabilities/RHSB-2026-006">access.redhat.com</a></li>
+          <li><a href="https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-npm-packages-abuse-dependency-confusion-profile-developer-environments/">microsoft.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>When the signature lies: SLSA provenance as camouflage</h2>
+        <p>The most uncomfortable part of Miasma is not the theft, but the disguise. The worm exchanges stolen tokens for real <strong>Sigstore signature certificates from Fulcio</strong> and puts entries in the Rekor transparency log — the re-infected packages thus look <em>legitimately built</em>, complete with valid SLSA provenance.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">SLSA provenance:</strong> A signed receipt proving "this package was built in this pipeline from this commit". Meant as an authenticity seal — like a notary stamp. Miasma shows: whoever robs the notary can set any stamp they want. The seal proves <em>origin</em>, not <em>goodness</em>.
+        </div>
+        <p>Practical consequence for us: "has provenance" is no free pass. The chain is only as strong as the weakest token holder in it. Depth remains more valuable — pinned hashes, install-script blocking, and distrust of packages carrying disproportionately large non-entry-point files.</p>
+        <div class="callout warn">
+          <span class="callout-label">Heads up</span>
+          Miasma also drops backdoor files into repos — <code>.claude/setup.mjs</code>, <code>.cursor/rules/setup.mdc</code>, <code>.vscode/tasks.json</code>. It poisons the tooling layer through which code is <em>generated</em>, not just the code itself. Audit these directories too.<sup>[1]</sup>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Build 2026, the non-AI half: Windows becomes a Linux-friendly dev box</h2>
+        <p>The keynote headlines belonged to the models — those run in the <a href="#">ai-dev brief</a>. More interesting for us is the platform half, and it's substantial this time.</p>
+        <h3>Coreutils for Windows (GA)</h3>
+        <p>Microsoft is making <strong>over 75 Unix-style command-line tools</strong> natively available on Windows — <code>ls</code>, <code>cat</code>, <code>cp</code> and friends without WSL, without Git Bash crutches. They come from the open-source <strong>uutils</strong> project, a Rust reimplementation of GNU Coreutils.<sup>[5]</sup> For cross-platform scripts, real friction reduction.</p>
+        <h3>WSL containers (Preview)</h3>
+        <p>Linux containers can now be created and run directly from WSL — with its own CLI/API and policy management for enterprises. It's openly aimed at reducing dependency on Docker Desktop and friends.<sup>[6]</sup> Since WSL open-sourced at Build 2025, Microsoft says over 200 pull requests a month are coming in — the project is alive.<sup>[5]</sup></p>
+        <h3>Intelligent Terminal (experimental)</h3>
+        <p>A terminal that detects failed commands, shows context, and suggests fixes — via an agent protocol (ACP). Interesting but experimental; noted here as a platform callout, the agent substance is ai-dev territory.<sup>[6]</sup></p>
+        <div class="footnotes"><ol start="5">
+          <li><a href="https://windowsreport.com/microsoft-announces-coreutils-for-windows-and-built-in-wsl-containers/">windowsreport.com</a></li>
+          <li><a href="https://blogs.windows.com/windowsdeveloper/2026/06/02/build-2026-furthering-windows-as-the-trusted-platform-for-development/">blogs.windows.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Azure Linux 4.0 &amp; Cobalt 200: Microsoft's Linux engine room</h2>
+        <p><strong>Azure Linux 4.0</strong> is in public preview — and it's Microsoft's <em>first</em> server distro declared general-purpose, no longer just a container host. It's now <strong>Fedora-based</strong>, open source on GitHub (<code>azurelinux</code>), with a smaller package footprint and tighter default-deny SELinux policy.<sup>[7]</sup></p>
+        <p>On the hardware side, the <strong>Cobalt 200</strong> VM generation entered early-access preview: Microsoft's second Arm server generation (SoC on Arm Neoverse V3), delivering according to Microsoft <strong>up to 50% more generation-over-generation performance</strong> than Cobalt 100.<sup>[8]</sup> For anyone running Arm workloads in the cloud, that's the number of the week.</p>
+        <div class="footnotes"><ol start="7">
+          <li><a href="https://www.infoq.com/news/2026/05/azure-linux-4-server/">infoq.com</a></li>
+          <li><a href="https://azure.microsoft.com/en-us/blog/new-azure-cobalt-200-vms-deliver-50-performance-improvement-fully-optimized-for-modern-agentic-ai-workloads/">azure.microsoft.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>RTX Spark Dev Box &amp; GitHub Enterprise Local</h2>
+        <p>Two hardware/infra announcements that matter for the local-vs-cloud debate. The <strong>Surface RTX Spark Dev Box</strong> is a compact dev workstation with NVIDIA RTX Spark silicon, <strong>1 petaflop</strong> compute and <strong>128 GB unified memory</strong> — enough to run models beyond 120 billion parameters locally, no API bill. Shipping later in 2026, initially US-only via Microsoft.com; price TBD.<sup>[6]</sup></p>
+        <p>More infrastructurally relevant is <strong>GitHub Enterprise Local</strong>: a GitHub Enterprise flavor that runs on Azure Local and can be operated <em>connected or air-gapped</em> — with on-prem inference via Foundry Local. For regulated or sovereignty-driven environments (think EU agencies), a signal; price and date TBD.<sup>[9]</sup></p>
+        <div class="footnotes"><ol start="9">
+          <li><a href="https://www.theregister.com/os-platforms/2026/06/03/microsoft-build-surface-rtx-spark-dev-box-coreutils-for-windows-air-gapped-github-and-more/5250501">theregister.com</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>CISA KEV: Two-year-old WebLogic hole goes hot</h2>
+        <p>CISA added <strong>CVE-2024-21182</strong> in Oracle WebLogic Server to the Known Exploited Vulnerabilities catalog on June 1 — the hole is being actively exploited. CVSS <strong>7.5 (HIGH)</strong>, unauthenticated network access via T3/IIOP, affects 12.2.1.4.0 and 14.1.1.0.0. Oracle patched it back in July 2024; it's being exploited now against stragglers.<sup>[10][11]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">KEV catalog:</strong> CISA's list of holes with <em>confirmed active exploitation</em> in the wild. Not "theoretically dangerous", but "being used right now". US federal agencies must close them within a deadline — here it was <strong>yesterday, Jun 4</strong>. A good prioritization signal for the rest of us, agency mandate or not.
+        </div>
+        <p>Exposure is real: over <strong>1,592</strong> WebLogic servers are reachable online and vulnerable, per Security Affairs (961 on 12.2.1.4.0, 631 on 14.1.1.0.0).<sup>[12]</sup> Anyone running Fusion Middleware: check your CPU level.</p>
+        <div class="footnotes"><ol start="10">
+          <li><a href="https://thehackernews.com/2026/06/oracle-weblogic-cve-2024-21182-added-to.html">thehackernews.com</a></li>
+          <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-21182">nvd.nist.gov</a></li>
+          <li><a href="https://securityaffairs.com/193027/security/u-s-cisa-adds-oracle-weblogic-flaw-to-its-known-exploited-vulnerabilities-catalog.html">securityaffairs.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>More KEV adds: Linux cgroups &amp; Android framework</h2>
+        <p>CISA added two more on June 2: <strong>CVE-2022-0492</strong> (Linux kernel, cgroups privilege escalation, CVSS 7.8 per NVD) — a local attacker can potentially break out of a container — and <strong>CVE-2025-48595</strong> (Android framework, integer overflow, CVSS 8.4, Android 14–16). On June 3 came <strong>CVE-2026-45247</strong> (Mirasvit Full Page Cache Warmer, unsafe deserialization).<sup>[13][14]</sup></p>
+        <p>The cgroups hole is the relevant one for us: if you're running containers on older kernels, align your patch level — container escape is no edge risk.</p>
+        <div class="callout info">
+          <span class="callout-label">Note</span>
+          CISA.gov is currently blocking crawlers with 403; add details come from CISA alert page titles and cross-checked against securityaffairs, thehackernews, and NVD (WebLogic CVSS directly from NVD).
+        </div>
+        <div class="footnotes"><ol start="13">
+          <li><a href="https://www.cisa.gov/news-events/alerts/2026/06/02/cisa-adds-two-known-exploited-vulnerabilities-catalog">cisa.gov</a></li>
+          <li><a href="https://www.cisa.gov/news-events/alerts/2026/06/03/cisa-adds-one-known-exploited-vulnerability-catalog">cisa.gov</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>EU/DE: The CRA apparatus ramps up</h2>
+        <p>Standing thread on regulation: on <strong>June 11</strong> the rules for naming conformity assessment bodies under the Cyber Resilience Act take effect — in Germany the <strong>BSI</strong> as the notifying body publishes the procedures for that.<sup>[15]</sup> Sounds bureaucratic, but it's the track on which CRA mandates become concrete for manufacturers of networked products starting in 2027.</p>
+        <p>The sharper deadline for developers comes in the fall: starting <strong>September 11</strong> the duty to report actively exploited vulnerabilities applies — <strong>within 24 hours</strong>.<sup>[15]</sup> Penalties for breach: up to EUR 15 million or 2.5% of global annual revenue; the BSI is hiring 141 positions by 2029 to staff it.<sup>[16]</sup></p>
+        <div class="footnotes"><ol start="15">
+          <li><a href="https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Cyber_Resilience_Act/cyber_resilience_act_node.html">bsi.bund.de</a></li>
+          <li><a href="https://www.heise.de/en/news/Cyber-Resilience-Act-BSI-becomes-digital-TUeV-for-networked-products-11278935.html">heise.de</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Releases in review: Node 24 &amp; PostgreSQL 18.4</h2>
+        <p>Quiet on the language/DB front, but two May releases are noteworthy. <strong>Node.js 24</strong> (May 21) brings the TC39 proposal <em>Explicit Resource Management</em> natively via V8 13.6 — the <code>using</code> keyword for deterministic resource cleanup, similar to <code>try-with-resources</code> in Java.<sup>[17]</sup></p>
+        <p><strong>PostgreSQL 18.4</strong> (May 14) is a pure security/maintenance update of the 18 line — 11 security fixes and over 60 bugfixes, no new features.<sup>[18]</sup> The real highlights came with <strong>PostgreSQL 18.0</strong> (Sep 2025): the async I/O subsystem (up to 3× on I/O-heavy workloads), virtual generated columns, and native <code>uuidv7()</code> — the latter saves many the custom generator for time-sortable IDs. If you're on 18, upgrade to 18.4 for the security fixes.</p>
+        <div class="footnotes"><ol start="17">
+          <li><a href="https://versionlog.com/nodejs/24/">versionlog.com</a></li>
+          <li><a href="https://www.postgresql.org/about/news/postgresql-184-1710-1614-1518-and-1423-released-3297/">postgresql.org</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Friday, June fifth. The software week centers on supply chain and a Microsoft Build conference whose most interesting parts have nothing to do with artificial intelligence.</p>
+  <p>At the center is an npm worm called Miasma. In a single wave on June third, according to StepSecurity, it compromised fifty-seven packages in under two hours. The novelty: it spreads via a build file called binding.gyp and executes its code during installation, completely circumventing the places security scanners normally watch. It steals cloud credentials from Amazon, Google, Azure, and GitHub and then uses those to publish the next batch of infected packages.</p>
+  <p>The first major wave hit Red Hat itself on June first: ninety-six versions across thirty-two packages, totaling around one hundred seventeen thousand downloads a week. Red Hat's protective layer did hold, but the incident shows how exposed the registry layer is right now.</p>
+  <p>Most uncomfortable is the disguise. The worm forges real signatures using Sigstore with stolen tokens and gives its packages valid SLSA provenance. The lesson for us: a signature proves where a package comes from, not that it's safe.</p>
+  <p>At Microsoft Build, the platform half was concrete. Windows gets over seventy-five Unix commands natively, written in Rust. WSL can now run Linux containers directly without Docker Desktop. And Azure Linux four point zero is Microsoft's first true general-purpose server distribution, now on a Fedora base.</p>
+  <p>On security, CISA put a two-year-old Oracle WebLogic hole on the list of actively exploited vulnerabilities, with a severity of seven point five. Over fifteen hundred servers are exposed online. The deadline for agencies was yesterday, June fourth — stragglers should patch now.</p>
+  <p>And in Europe the Cyber Resilience Act keeps moving forward: starting June eleventh, Germany's BSI names the assessment bodies. The sharper deadline for developers comes in September, when the twenty-four-hour reporting requirement for exploited holes kicks in.</p>
+  <p>Tomorrow will be quieter — Build sessions continue on-demand, and we're watching npm advisories to see if Miasma launches another wave. Back to the overview.</p>
+</div>
+
+</body>
+</html>

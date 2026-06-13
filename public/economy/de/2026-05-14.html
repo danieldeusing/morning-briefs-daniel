@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Wirtschaft · 2026-05-14</title>
+
+<link rel="stylesheet" href="../../lib/styles.css">
+
+<!-- Chart.js für fx-card-set + fx-detail-panel. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- Mermaid für causal-chain-Diagramm. -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-economy">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Wirtschaft</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-05-14</span>
+  </div>
+  <h1 class="masthead-title">Real-Rallye trotz heißer US-Inflation — und warum das mehr EZB-Geschichte ist als US-Geschichte</h1>
+</header>
+
+<main class="shell">
+
+  <!-- DASHBOARD -->
+  <section class="dashboard">
+
+    <!-- left: FX-Cards -->
+    <div class="fx-cards">
+      <article class="fx-card primary">
+        <div class="fx-pair">EUR / BRL · Kreuzkurs (Wise widget abweichend)</div>
+        <div class="fx-rate">5,82</div>
+        <div class="fx-delta down">▼ 1,10 % heute · −3,1 % 30 Tage</div>
+        <div class="fx-spark-wrap"><canvas id="spark-eurbrl"></canvas></div>
+        <div class="fx-note">USD/BRL × EUR/USD = 4,9874 × 1,16705. ECB-Referenz 5,77 (13.05). Wise-Widget zeigt 6,04 — wahrscheinlich Cache. · <a href="https://wise.com/us/currency-converter/eur-to-brl-rate">wise.com</a> · <a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-brl.pt.html">ECB</a></div>
+      </article>
+      <article class="fx-card">
+        <div class="fx-pair">USD / BRL · Spot</div>
+        <div class="fx-rate">4,99</div>
+        <div class="fx-delta down">▼ 0,76 % · 27-Monats-Tief in der Woche bei 4,88</div>
+        <div class="fx-spark-wrap"><canvas id="spark-usdbrl"></canvas></div>
+        <div class="fx-note">Real auf stärkstem Niveau seit Q1 2024. · <a href="https://tradingeconomics.com/brazil/currency">tradingeconomics.com</a></div>
+      </article>
+      <article class="fx-card">
+        <div class="fx-pair">DXY · USD gegen Weltkorb</div>
+        <div class="fx-rate">98,88</div>
+        <div class="fx-delta up">▲ 0,36 %</div>
+        <div class="fx-spark-wrap"><canvas id="spark-dxy"></canvas></div>
+        <div class="fx-note">Stagflations-Mini-Rally nach PPI-Schock, aber unter 100er-Marke. · <a href="https://tradingeconomics.com/brazil/currency">tradingeconomics.com</a></div>
+      </article>
+    </div>
+
+    <!-- right: Detail-Panel -->
+    <div class="detail-panel" data-component="fx-detail-panel">
+      <div class="detail-head">
+        <div>
+          <div class="detail-title">Verlauf · <span id="detail-pair-label">EUR/BRL</span></div>
+          <div class="detail-sub" id="detail-sub">Letzte Woche (tägliche Annäherung; Anker: Wise / TradingEconomics / ECB-Referenz).</div>
+        </div>
+        <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+          <div class="range-toggle" id="pair-toggle">
+            <button data-pair="eurbrl" class="active" type="button">EUR/BRL</button>
+            <button data-pair="usdbrl" type="button">USD/BRL</button>
+            <button data-pair="dxy" type="button">DXY</button>
+          </div>
+          <div class="range-toggle" id="range-toggle">
+            <button data-range="W" class="active" type="button">Woche</button>
+            <button data-range="M" type="button">Monat</button>
+            <button data-range="Y" type="button">Jahr</button>
+          </div>
+        </div>
+      </div>
+      <div class="detail-chart-wrap"><canvas id="detail-chart"></canvas></div>
+    </div>
+
+  </section>
+
+  <!-- STRIP -->
+  <section class="strip">
+    <div class="calc" data-component="r-hour-calc"
+         data-yday="5.87" data-base="6.00" data-eur-per-hour="100">
+      <div class="calc-header">
+        <div>
+          <div class="calc-title">R$/h-Rechner</div>
+          <div class="calc-sub">Fix-Stundensatz — schiebe den Kurs für Szenarien.</div>
+        </div>
+        <div class="calc-out"><span id="calc-out">R$600</span>/h</div>
+      </div>
+      <div class="calc-row">
+        <span class="calc-edge">5,50</span>
+        <input type="range" min="5.50" max="6.30" step="0.01" value="5.82">
+        <span class="calc-edge">6,30</span>
+        <span class="calc-value">5,820</span>
+      </div>
+      <div class="calc-detail">
+        <span>ggü. Vortag (5,87): <span class="calc-delta" id="calc-delta-yday">—</span></span>
+        <span>ggü. Ø 2025 (6,00): <span class="calc-delta" id="calc-delta-base">—</span></span>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-head">
+        <div class="timeline-title">Event-Horizont · was EUR/BRL bewegen kann</div>
+        <div class="timeline-sub">Sechs Stufen, nahegewichtet.</div>
+      </div>
+      <div class="tl-track">
+        <div class="tl-col today">
+          <div class="tl-date">Heute</div>
+          <div class="tl-dot"></div>
+          <div class="tl-events">
+            <span>US Retail Sales April (+0,5 %, in line)</span>
+            <span>Warsh-Ära Tag 1 (Powell-Term endet morgen)</span>
+          </div>
+        </div>
+        <div class="tl-col hot">
+          <div class="tl-date">Mi 20.05</div>
+          <div class="tl-dot"></div>
+          <div class="tl-events">
+            <span>FOMC-Protokoll Apr-Sitzung</span>
+            <span>Vier Dissenter — wer und warum? Hohe DXY-Vol erwartet.</span>
+          </div>
+        </div>
+        <div class="tl-col">
+          <div class="tl-date">Do 21.05</div>
+          <div class="tl-dot"></div>
+          <div class="tl-events"><span>US Initial Jobless Claims</span></div>
+        </div>
+        <div class="tl-col">
+          <div class="tl-date">30 Tage</div>
+          <div class="tl-dot"></div>
+          <div class="tl-events">
+            <span>PCE-Deflator 28.05 (USD-Katalysator)</span>
+            <span>BCB Copom 17./18.06 — Pause-Risiko</span>
+            <span>EZB-Sitzung 04.06 — Hike-Signal?</span>
+          </div>
+        </div>
+        <div class="tl-col">
+          <div class="tl-date">3 Monate</div>
+          <div class="tl-dot"></div>
+          <div class="tl-events">
+            <span>Jackson Hole (Aug.) — Warsh-Debüt</span>
+            <span>BR Fiskal-Halbjahresbericht</span>
+          </div>
+        </div>
+        <div class="tl-col">
+          <div class="tl-date">12 Monate</div>
+          <div class="tl-dot"></div>
+          <div class="tl-events">
+            <span>BR Wahlkampf-Vorlauf 2026 (Okt.)</span>
+            <span>EZB-Zyklus voll eingepreist</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BODY GRID -->
+  <div class="body-grid">
+
+    <!-- COL 1 -->
+    <div class="col">
+      <section class="tldr">
+    <p class="lead">EUR/BRL ≈ 5,82 (Kreuzkurs) · ~3 % unter 30-Tage-Schnitt · jede Stunde liefert heute ~R$600 statt R$618 (Ø 2025) — schlechtester Moment des Quartals zum Tauschen.</p>
+        <ul>
+          <li><span class="chip hot">FX</span> EUR/BRL ≈ <strong>5,82</strong> (Kreuzkurs, 14.05) — ~3 % unter 30-Tage-Schnitt 6,12 (Wise). Schlechtester Tausch-Moment des Quartals für Dich.</li>
+          <li><span class="chip hot">FX</span> USD/BRL <strong>4,99</strong>, intraday-Tief 4,88 am 11.05 — stärkster Real seit Januar 2024.</li>
+          <li><span class="chip">USA</span> US-PPI April <strong>+1,4 % m/m</strong> (Erwartung +0,5 %), CPI 3,8 % y/y. Fed-Cuts bis Jahresende faktisch ausgepreist (CME FedWatch ~0,9 % für Q4-Cut).</li>
+          <li><span class="chip">EU</span> EZB-OIS preist jetzt <strong>+50 bp Hikes</strong> bis Ende 2026 — Regime-Shift wegen Iran-/Öl-Inflations-Pass-Through. Erster Hike möglich im Juni.</li>
+          <li><span class="chip">BR</span> Selic <strong>14,50 %</strong> nach 25-bp-Cut am 07.05 — Communiqué hawkish, kurzer Zyklus. Focus-YE 2026: 13,00 %.</li>
+          <li><span class="chip">BR</span> IPCA April <strong>4,39 % y/y</strong> (April-Wert über 4,5 %-Ziel-Toleranz; XP revidiert 2026-IPCA auf 5,3 %).</li>
+          <li><span class="chip good">BR</span> CFTC: Spekulanten <strong>+20.354 Kontrakte net-long BRL</strong>, COT-Strength 89 % — extrem bullish, crowded.</li>
+          <li><span class="chip good">BR</span> EWZ-Zuflüsse 12 M: <strong>+US$4,96 Mrd.</strong> AUM $11,3 Mrd. Globales Geld kauft Brasilien.</li>
+          <li><span class="chip">Öl</span> Brent <strong>$106</strong>. Iran-Verhandlungen abgelehnt — Terms-of-Trade-Rückenwind für BRL.</li>
+          <li><span class="chip">USA</span> <strong>Kevin Warsh</strong> als Fed-Chair bestätigt (54-45). Powell-Term endet morgen. Hawkish-Hintergrund, KI-Disinflation-These offen.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Positionierung, Sentiment &amp; BR-Renten</h2>
+        <p>Brasilien ist gerade ein <strong>Consensus-Long</strong>. Hedgefonds (CFTC, Stand 05.05) halten netto +20.354 BRL-Future-Kontrakte — die COT-Strength von 89 % heißt: aggressiver als 9 von 10 historischen Wochen. EWZ (der größte US-ETF auf Brasilien) hat in den letzten 12 Monaten <strong>$4,96 Mrd.</strong> Netto-Zuflüsse gesammelt, AUM $11,3 Mrd. (<a href="https://www.etf.com/EWZ">etf.com, 14.05</a>). Das ist Geld, das zu hohen Real-Yields kommt und das tiefe Selic-Niveau einpreist.</p>
+
+        <div class="eli5"><strong class="eli5-term">CFTC-Net-Long:</strong> die US-Aufsicht zählt jede Woche, wer in Future-Märkten long und wer short ist. „Net-Long Real" heißt: mehr Spekulanten wetten, dass der Real steigt, als dagegen. Wenn die Zahl extrem hoch ist (89 %-Perzentil), läuft fast jeder im selben Boot — und ein kleiner Stoß kann viele gleichzeitig zum Schließen zwingen. Das nennt man <em>crowded trade</em>.</div>
+
+        <p><strong>BCB FX-Swap-Bestand &lt; US$100 Mrd.</strong> und weiter rückläufig — die Zentralbank rollt ihre USD-Verkaufs-Positionen nicht voll. Übersetzung: sie sieht keinen Stützungsbedarf, im Gegenteil. Wenn der Real zu stark wird, wird sie eher Dollar kaufen als verkaufen. <a href="https://bloomberglinea.com.br">bloomberglinea.com.br</a></p>
+
+        <p>Bei den Renten: NTN-B-10Y-Real-Yield bleibt bei <strong>~6,4–6,6 % über IPCA</strong> (ANBIMA-Tagesfix heute nicht abrufbar, letzter belastbarer Q1-Stand ~6,5 %). Das ist global Spitze — ein US-TIPS-10Y zahlt ~2 % real, ein Bund-Linker ~0,3 %. Diese Real-Yield-Prämie ist das Fundament des BRL-Carry-Trade.</p>
+
+        <div class="eli5"><strong class="eli5-term">NTN-B Real-Yield:</strong> brasilianische Inflations-geschützte Staatsanleihe. Du bekommst garantiert IPCA + X % drauf — egal wie hoch die Inflation springt. Der X-Wert zeigt, wie viel echten Wertzuwachs der Markt vom brasilianischen Staat verlangt. 6,5 % real = einmaliges Geschenk-Niveau bei einem Investment-Grade-nahen Land.</div>
+
+        <p>Focus-Survey (Stand 08.05, <a href="https://www.bcb.gov.br/content/focus/focus/R20260508.pdf">bcb.gov.br</a>):</p>
+        <ul>
+          <li>USD/BRL YE 2026: <strong>5,20</strong> (von 5,25 gesenkt)</li>
+          <li>USD/BRL YE 2027: 5,30</li>
+          <li>IPCA 2026: <strong>4,91 %</strong> (9. Anstieg in Folge)</li>
+          <li>Selic YE 2026: 13,00 % · YE 2027: 11,25 %</li>
+        </ul>
+        <p>Übersetzt in EUR/BRL bei EUR/USD ~1,17 ergibt das Focus-Base <strong>~6,08</strong> für Ende 2026 — d.&nbsp;h. der Markt erwartet vom aktuellen Niveau eine BRL-Schwäche von ~4–5 % bis Jahresende. Meine Sicht weiter unten.</p>
+      </section>
+    </div>
+
+    <!-- COL 2 -->
+    <div class="col">
+      <section>
+        <h2>Devisen im Detail</h2>
+
+        <h3>Wo stehen wir &amp; warum</h3>
+        <p>Der Real ist diese Woche durch zwei Marken gefallen, die letztes Quartal noch als Boden galten: USD/BRL touchierte am 11.05 ein <strong>27-Monats-Tief von 4,88</strong> und EUR/BRL den Kreuzkurs-Wert <strong>5,77</strong> (ECB-Referenz 13.05). Die Standard-Erzählung wäre: „heiße US-Inflation, Fed bleibt hawkish, DXY steigt, EM-FX leidet". Diese Woche hat genau <em>nicht</em> stattgefunden — und das ist der eigentliche Punkt.</p>
+
+        <p>Der US-PPI für April kam am 13.05 mit <strong>+1,4 % m/m</strong> rein (Erwartung +0,5 %; <a href="https://www.bls.gov/news.release/pdf/ppi.pdf">BLS</a>) — der größte Monatssprung seit März 2022. Headline-CPI 3,8 % y/y, höchster Stand seit Mai 2023. Fed-Cuts wurden vom Markt ausgepreist; CME FedWatch zeigt jetzt <strong>~77,5 % Wahrscheinlichkeit „Pause bis Jahresende"</strong> (<a href="https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html">cmegroup.com</a>, 13.05).</p>
+
+        <p>Trotzdem ist DXY nur um 0,36 % auf 98,88 gestiegen — weit weg vom 100er-Niveau, das das US-Tape rechtfertigen würde. Warum? <strong>Die EZB ist gleichzeitig hawkish gedreht.</strong> Bloomberg-Umfrage vom 04.–07.05 sieht jetzt zwei EZB-<em>Hikes</em> in 2026; OIS-Forward-Kurve preist +50 bp ein. Treiber ist der Iran-Konflikt und der dadurch ausgelöste Öl-/Energiepreis-Schock, der die Inflationsprognosen der EZB nach oben gezogen hat (Lagarde 30.04: „stop-start war complicates outlook").</p>
+
+        <p>Folge: EUR/USD bleibt bei 1,167 — der USD bekommt keinen Bonus aus dem PPI-Schock, weil der EUR parallel hawkish wird. Und weil USD relativ schwach ist, geben EM-Carry-Trades nicht nach. Der BRL wird zusätzlich von BR-spezifischen Faktoren getragen: Selic 14,50 %, Real-Yield 6,5 %, Brent $106 (Terms-of-Trade-Boost), $4,96 Mrd. EWZ-Zuflüsse 12 M.</p>
+
+        <h3>Kausalpfad — der eigentliche Mechanismus</h3>
+        <pre class="mermaid">
+graph LR
+  A[US PPI +1,4 % m/m] --> B[Fed-Cuts ausgepreist]
+  B --> C{DXY rallyt?}
+  D[Iran-Öl-Schock] --> E[EZB-OIS preist +50 bp Hikes]
+  E --> F[EUR/USD stabil 1,167]
+  C --> F
+  F --> G[USD-Stärke vs EM bleibt aus]
+  H[BR Selic 14,50 %] --> I[Real-Yield 6,5 %]
+  I --> J[Carry-Trade attraktiv]
+  K[Brent $106] --> L[BR Terms-of-Trade +]
+  J --> M[BRL rallyt]
+  L --> M
+  G --> M
+  M --> N[EUR/BRL fällt unter 5,80]
+        </pre>
+
+        <h3>Heute</h3>
+        <p>US Retail Sales April +0,5 % m/m, in line (<a href="https://invezz.com/news/2026/05/14/us-retail-sales-increase-0-5-despite-inflation-pressures/">invezz.com, 14.05</a>) — keine eigenständige FX-Bewegung. DXY-Drift hoch, EUR/BRL drift seitwärts erwartet. Warsh-Ära beginnt morgen (Powell-Chair-Term endet 15.05); kein Marktimpuls heute, aber die Headlines werden sich auf seine erste Sitzung 16./17.06 verlagern.</p>
+
+        <h3>Diese Woche</h3>
+        <p>Die Marquee ist <strong>Mittwoch 20.05, FOMC-Protokoll</strong> der April-Sitzung — vier Dissenter, erste so gespaltene Sitzung seit Oktober 1992. Die Frage: dissentieren die hawkish oder dovish? Wenn hawkish (= mindestens 2 wollten hiken), kann DXY auf 99,50+ und der Real bekommt seinen ersten ernsten Druck. Wenn dovish (= Cut-Befürworter), bestätigt sich der schwache USD und EUR/BRL kann weiter Richtung 5,70 testen. <span class="update-since">Update seit Mo</span> US-PPI hat das Risiko des hawkish-dissent-Szenarios konkretisiert.</p>
+
+        <h3>Nächster Monat (~30 Tage)</h3>
+        <p>Drei Termine, die das Bild kippen können:</p>
+        <ul>
+          <li><strong>28.05 PCE-Deflator</strong> — wenn der bestätigt, was PPI/CPI andeuten, ist der Fed-Cut für 2026 endgültig vom Tisch. USD-Stützung +.</li>
+          <li><strong>04.06 EZB-Sitzung</strong> — kommt der erste Hike-Hinweis im Statement? Lagarde-Pressekonferenz wird kritisch. EUR-Stützung möglich, würde EUR/BRL nach oben drücken auch ohne USD-Bewegung.</li>
+          <li><strong>17./18.06 BCB Copom</strong> — der Markt preist eine Pause ein. Wenn die kommt, Selic-Differential bleibt maximal hoch — BRL-positiv. Wenn der BCB doch nochmal cuttet, weil er IPCA-getrieben „commitment" zeigen will, leichter BRL-Druck.</li>
+        </ul>
+        <p>Mein Base für die nächsten 30 Tage: EUR/BRL bleibt in 5,75–5,95. Kein klarer Trigger nach oben, aber das Carry-Differential frisst Volatilität.</p>
+
+        <h3>Nächste 3 Monate</h3>
+        <p>Hier wird die <em>Crowded-Trade-These</em> relevant. CFTC-Net-Long auf 89 %-Perzentil + $4,96 Mrd. EWZ — wenn ein BR-spezifischer Schock kommt (Haddad-Fiskal-Pressekonferenz, Bovespa-Korrektur, plötzliche Selic-Senkung), kann der Unwind dramatisch werden. Historischer Vergleich: Februar 2024 lag CFTC-Strength ähnlich hoch, ein Steuer-Streit löste eine 6 %-Korrektur des Reals in 3 Wochen aus.</p>
+        <p>Wahrscheinlicher Pfad: leichte BRL-Schwäche zurück Richtung Focus-Konsens 5,20 USD/BRL bzw. EUR/BRL ~6,00–6,10 bis Ende Q3.</p>
+
+        <h3>Nächste 6 Monate</h3>
+        <p>EZB-Hike-Pfad ist hier entscheidend. Wenn EZB bis Q4 effektiv +50 bp liefert (was OIS einpreist), zieht EUR/USD Richtung 1,20+ — und das hebt EUR/BRL mechanisch, selbst bei stabilem USD/BRL. Eigene Sicht: ich glaube das EZB-Pricing ist <strong>zu aggressiv</strong>, weil der Iran-Inflations-Pass-Through schon halb durch ist und der Eurozonen-Wachstumsbild fragil bleibt. Wahrscheinlicher: EZB liefert +25 bp, der Rest wird wieder ausgepreist. Aber für EUR/BRL ist das immer noch leicht negativ (für Dich als EUR-Verkäufer).</p>
+
+        <h3>Nächste 12 Monate — Szenarien</h3>
+        <p>Siehe Szenario-Block rechts. <strong>Eigene Position:</strong> Ich gewichte das Bear-für-BRL-Szenario stärker als Itaús Bull-BRL-Konsens (5,15). Itaús implizite These — „strukturell schwacher USD" — unterschätzt das Fiskal-Risiko in Brasilien und das ECB-Hike-Re-Pricing. Robin Brooks' 4,50-Ziel ist mathematisch hübsch (Fair-Value-Modell), aber für die nächsten 12 Monate fehlen ihm die Trigger.</p>
+      </section>
+    </div>
+
+    <!-- COL 3 -->
+    <div class="col">
+      <section>
+        <h2>Makro / Wirtschaft</h2>
+
+        <article class="news-item">
+          <h3><span class="chip">USA</span> Warsh als Fed-Chair bestätigt (54-45)</h3>
+          <p>Kevin Warsh wurde am 13.05 mit 54-45 als Powell-Nachfolger bestätigt. Powell bleibt im Board, sein Chair-Term endet 15.05. Warsh war historisch hawkish (FOMC 2006–2011), hat aber zuletzt Offenheit für „KI-Disinflations-Cuts" signalisiert. Erste Sitzung als Chair: 16./17.06. Für EUR/BRL: bis dahin Politik-Vakuum; die echte Bewegung kommt mit dem ersten SEP und Pressekonferenz.</p>
+          <span class="src"><a href="https://www.cnbc.com/2026/05/13/kevin-warsh-wins-senate-confirmation-as-the-next-federal-reserve-chair.html">cnbc.com, 13.05</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3><span class="chip">BR</span> IPCA April 4,39 % y/y — Toleranzgrenze drückt</h3>
+          <p>IBGE veröffentlichte am 12.05 IPCA +0,67 % m/m, 12-Monats-Wert <strong>4,39 %</strong> (vom 4,14 %). Lebensmittel +1,34 %, Gesundheit +1,16 % trugen ~67 % des Anstiegs. Ziel-Toleranzband endet bei 4,5 %. XP revidierte 2026-IPCA auf 5,3 %, Itaú auf 5,2 %, Goldman auf 5,0 % — alle drei jetzt über Ziel.</p>
+          <span class="src"><a href="https://agenciadenoticias.ibge.gov.br/en/agencia-news/2184-news-agency/news/46686-influenced-by-rise-in-food-and-medicines-inflation-stays-at-0-67-in-april">IBGE, 12.05</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3><span class="chip hot">USA</span> PPI April +1,4 % m/m — Stagflations-Signal</h3>
+          <p>Erzeugerpreise April +1,4 % m/m (Erwartung +0,5 %), y/y +6,0 % — höchster Wert seit drei Jahren. Energie war Haupttreiber. PPI führt CPI mit 2–3 Monaten Vorlauf; impliziert IPC-Hochs im Sommer. Fed-Cuts für 2026 quasi raus.</p>
+          <span class="src"><a href="https://www.cnbc.com/2026/05/13/ppi-inflation-report-april-2026-.html">cnbc.com, 13.05</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3><span class="chip">EU</span> EZB-OIS preist Hikes — Regime-Shift</h3>
+          <p>BBVA-Research und Bloomberg-Umfrage (04.–07.05): Markt erwartet jetzt zwei EZB-Hikes 2026 (Juni + September), Deposit-Rate von 2,00 % auf 2,50 % bis Jahresende. Treiber: Iran-Öl-Schock + Lagardes April-Statement („risks to inflation up, risks to growth down"). Wenn das hält, ist EUR die Outperformerin der nächsten 6 Monate — gut für Dich, wenn Du erst in 2 Quartalen tauschen musst.</p>
+          <span class="src"><a href="https://www.bloomberg.com/news/articles/2026-05-11/ecb-to-hike-rates-twice-in-2026-as-inflation-jumps-survey-shows">bloomberg.com, 11.05</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3><span class="chip">Öl</span> Brent $106 — Iran-Verhandlungen abgelehnt</h3>
+          <p>Iran lehnte am Wochenende den US-Vorschlag zur Hormuz-Deeskalation ab; Brent hält $106. Für Brasilien doppelt positiv: Petrobras-Ergebnisse und Terms-of-Trade-Boost. Für EUR/BRL über die EZB-Inflations-Kette indirekt aufwärts (EZB hawkish), aber netto BRL-positiv durch direkten Commodity-Channel.</p>
+          <span class="src"><a href="https://tradingeconomics.com/commodity/brent-crude-oil">tradingeconomics.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3><span class="chip">BR</span> Selic 14,50 % nach hawkish-cut</h3>
+          <p>BCB hat am 07.05 einstimmig um 25 bp auf 14,50 % gesenkt. Communiqué hart: „Zyklus kürzer als der Markt vor Februar einpreiste"; 2027-Q4-Inflationsprognose von 3,3 % auf 3,5 % gehoben. Markt preist nun Pause am 17./18.06 ein. Focus-YE: 13,00 % (von 13,25 %).</p>
+          <span class="src"><a href="https://www.riotimesonline.com/brazil-copom-ata-hawkish-selic-14-50-iran-may-2026/">riotimesonline.com, 09.05</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3><span class="chip">BR</span> Bovespa konsolidiert nach April-ATH</h3>
+          <p>Bovespa bei ~177.000 nach Allzeithoch von 199.354 am 14.04 — Konsolidierung -11 % seit ATH. Aber Auslandsanteil bei 62 % stabil, was den Real stützt: jeder ausländische Aktien-Kauf erzeugt BRL-Nachfrage. PBR-ADR $20,60, PETR4 R$45,62 — Q1-Rekord-Produktion, aber Netto -7,2 % YoY (Steuerlast).</p>
+          <span class="src"><a href="https://tradingeconomics.com/brazil/stock-market">tradingeconomics.com</a></span>
+        </article>
+
+        <h2>12-Monats-Szenarien</h2>
+        <p><small>Wahrscheinlichkeitsgewichte sind meine Sicht, nicht Konsens. Ich bin bewusst skeptischer als Itaú/Focus.</small></p>
+        <div class="scenarios">
+          <div class="scenario base"><span class="scenario-prob">55 %</span><strong>Base:</strong> EUR/BRL <strong>6,00–6,30</strong> bis Q2 2027. Treiber: CFTC-Crowded-Unwind in Q3 + EZB liefert +25 bp + Focus-Konsens-Drift. BRL gibt 4–7 % nach, EUR steigt 2–3 %.</div>
+          <div class="scenario bear"><span class="scenario-prob">25 %</span><strong>Bear-für-BRL:</strong> &gt; <strong>6,50</strong>. Trigger: BR-Fiskal-Stumble (Haddad-Ziel verfehlt) ODER EZB +50 bp voll geliefert ODER Iran-Eskalation kippt zur Risiko-Aversion. Letzteres ist der gefährlichste Pfad — DXY-Spike + EM-Selloff gleichzeitig.</div>
+          <div class="scenario bull"><span class="scenario-prob">20 %</span><strong>Bull-für-BRL:</strong> &lt; <strong>5,70</strong>. Trigger: Commodities halten $100+, US-Daten kippen plötzlich zu Cuts, BR-Reform-Momentum (Tax-Framework-Erfolg). Robin Brooks' 4,50-USD/BRL-Szenario würde EUR/BRL Richtung 5,30 ziehen.</div>
+        </div>
+
+        <div class="callout info">
+          <span class="callout-label">Für Dein Timing</span>
+          Jetzt zu tauschen heißt: ~3 % schlechter als der 30-Tage-Schnitt und ~3 % schlechter als Ø 2025. Wenn die nächste Rechnung in 7–10 Tagen kommt, ist statistisch (nicht garantiert!) eine leichte BRL-Schwäche bis dahin wahrscheinlich — FOMC-Protokoll 20.05 könnte den Trigger liefern. Wenn die Rechnung sofort raus muss: nichts zu tun. Wenn ±1 Woche Spielraum: warten bis nach 20.05.
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- Inline JSON data für die Charts. Anker: Wise / TradingEconomics / ECB-Referenz am 14.05; zwischengelagerte Tagespunkte sind lineare Approximationen zwischen verifizierten Closes, nicht echte Tagesdaten. Quelle: Wise (30-Tage-Statistik), TradingEconomics /brazil/currency, ECB euro reference rate. -->
+<script type="application/json" id="fx-series">
+{
+  "eurbrl": { "label": "EUR/BRL",
+              "W": {"labels": ["Do 08","Fr 09","Mo 12","Di 13","Mi 14"], "data": [5.93, 5.89, 5.84, 5.77, 5.82]},
+              "M": {"labels": ["14.04","21.04","28.04","05.05","14.05"], "data": [6.20, 6.15, 6.08, 5.95, 5.82]},
+              "Y": {"labels": ["Mai 25","Aug 25","Nov 25","Feb 26","Mai 26"], "data": [5.65, 6.05, 6.35, 6.20, 5.82]} },
+  "usdbrl": { "label": "USD/BRL",
+              "W": {"labels": ["Do 08","Fr 09","Mo 12","Di 13","Mi 14"], "data": [5.05, 5.02, 4.88, 4.95, 4.99]},
+              "M": {"labels": ["14.04","21.04","28.04","05.05","14.05"], "data": [5.36, 5.25, 5.15, 5.05, 4.99]},
+              "Y": {"labels": ["Mai 25","Aug 25","Nov 25","Feb 26","Mai 26"], "data": [5.05, 5.40, 5.65, 5.45, 4.99]} },
+  "dxy":    { "label": "DXY",
+              "W": {"labels": ["Do 08","Fr 09","Mo 12","Di 13","Mi 14"], "data": [98.4, 98.6, 98.5, 98.9, 98.9]},
+              "M": {"labels": ["14.04","21.04","28.04","05.05","14.05"], "data": [101.2, 100.5, 99.8, 98.6, 98.9]},
+              "Y": {"labels": ["Mai 25","Aug 25","Nov 25","Feb 26","Mai 26"], "data": [104.5, 103.8, 105.2, 102.5, 98.9]} }
+}
+</script>
+
+</body>
+</html>
