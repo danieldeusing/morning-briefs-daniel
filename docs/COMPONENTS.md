@@ -164,7 +164,7 @@ Used by: economy · CDN: none · Slot: `.strip` (left)
 </div>
 ```
 
-`data-yday` = yesterday's rate · `data-base` = baseline (Ø 2025) · `data-eur-per-hour` = the personal fix rate (illustrative default 100).
+`data-yday` = yesterday's rate · `data-base` = baseline (Ø 2025) · `data-eur-per-hour` = the hourly rate the calculator multiplies by (illustrative default 100).
 
 ---
 
