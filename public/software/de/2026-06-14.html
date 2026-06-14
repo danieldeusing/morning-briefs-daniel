@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-06-14</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software &amp; IT</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-06-14</span>
+  </div>
+  <h1 class="masthead-title">Browser-Update fürs Wochenende — und der Juni-Patchday klingt nach</h1>
+  <div class="masthead-meta">Sonntag, 14.06.2026 · Ribeirão Claro/PR</div>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Ruhiger Release-Sonntag, eine klare To-do-Liste. Das dringendste Stück ist klein und schnell erledigt: eine aktiv ausgenutzte Lücke in der Chrome-/Edge-Engine ist seit dem 8. Juni gepatcht — Browser neu starten, fertig. Dahinter klingt der Rekord-Patch-Tuesday vom 9. Juni nach, diesmal mit Blick auf On-Prem-Exchange und einen HTTP/2-Denial-of-Service. Auf der erfreulichen Seite ist PostgreSQL 19 in die Beta gegangen, mit eingebauten Graph-Queries. Und der EU-Cyber-Resilience-Act hat am 11. Juni den nächsten Baustein scharf geschaltet.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Chrome/Edge-Zero-Day</strong>: CVE-2026-11645 in der V8-Engine (CVSS 8,8), aktiv ausgenutzt, seit 8.6. gepatcht. Browser updaten und neu starten.</li>
+      <li><span class="chip hot">Sec</span> <strong>Juni-Patch-Tuesday</strong>: Rekord-Stapel (rund 200 CVEs). Für Admins relevant: On-Prem-Exchange-OWA-XSS (CVE-2026-42897) und der HTTP.sys-„HTTP/2-Bomb"-DoS (CVE-2026-49160).</li>
+      <li><span class="chip good">Release</span> <strong>PostgreSQL 19 Beta 1</strong> (4.6.): Graph-Queries via SQL/PGQ, paralleles Autovacuum, ~2× schnellere FK-Inserts. GA-Ziel Sep/Okt.</li>
+      <li><span class="chip">Regulierung</span> <strong>EU CRA</strong>: Seit 11.6. gelten die Regeln für notifizierte Konformitätsstellen — Mitgliedsstaaten müssen ihre Behörden benennen.</li>
+      <li><span class="chip">Sec</span> <strong>npm/PyPI-Lieferkette</strong>: Shai-Hulud-/„Miasma"-Welle läuft weiter; u. a. 32 Pakete im <code>@redhat-cloud-services</code>-Scope. Lockfiles prüfen, CI-Tokens rotieren.</li>
+      <li><span class="chip good">Release</span> <strong>Azure Linux 4.0</strong> (Public Preview): Microsofts Container-Host-Distro im neuen Major; GA im 2. Halbjahr 2026 erwartet.</li>
+      <li><span class="chip">Infra</span> <strong>Ubuntu Pastebin</strong> wird Ende Juni abgeschaltet — alte Links in Skripten/Doku jetzt aufräumen.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Was an Patches, Releases und Fristen ansteht</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">So 14.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heute</span>
+          <span>Chrome/Edge auf den gepatchten Stand bringen (V8-Zero-Day)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mo 15.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Wochenstart</span>
+          <span>Juni-Windows-Updates einplanen (Exchange OWA, HTTP.sys)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 16.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>—</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 17.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>—</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Do 18.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>—</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Ende Juni</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Ubuntu Pastebin offline</span>
+          <span>Chrome 150 im Stable erwartet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Chrome- und Edge-Update fürs Wochenende: aktiv ausgenutzte V8-Lücke <span class="h2-refs">[1]</span></h2>
+        <p>Das eine Stück Wartung, das nicht aufs nächste Wartungsfenster warten sollte: Google hat am <strong>8. Juni</strong> ein Sicherheitsupdate für Chrome ausgeliefert, das <strong>CVE-2026-11645</strong> schließt — eine Speicher-Lücke (Out-of-bounds-Zugriff) in der JavaScript-Engine <strong>V8</strong> mit CVSS <span class="stat">8,8</span>. Google bestätigt, dass die Lücke <strong>bereits aktiv ausgenutzt</strong> wird; deshalb gilt sie als Zero-Day.<sup>[1]</sup> Gepatcht ist sie in den Chrome-Ständen <strong>149.0.7827.102/.103</strong>.</p>
+        <p>Weil Microsoft Edge auf derselben Chromium-/V8-Basis läuft, ist Edge ebenfalls betroffen und bekommt das Update über den eigenen Kanal.<sup>[1]</sup> Beide Browser aktualisieren sich normalerweise von selbst — aber das Update greift erst nach einem <strong>Neustart des Browsers</strong>. Genau das ist die Aufgabe für heute: einmal „Über Chrome" bzw. „Über Edge" öffnen, Version prüfen, neu starten.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Zero-Day &amp; Sandbox:</strong> Ein „Zero-Day" ist eine Lücke, die ausgenutzt wird, <em>bevor</em> ein Patch breit ausgerollt ist — die Verteidiger hatten null Tage Vorsprung. Browser kapseln jede Webseite normalerweise in eine „Sandbox", einen abgeschotteten Spielkasten, damit eine bösartige Seite nicht an den Rest des Rechners kommt. Eine Engine-Lücke wie diese ist gefährlich, weil sie der erste Schritt sein kann, aus diesem Kasten auszubrechen — weshalb ein bloßer Browser-Neustart hier so viel Wirkung hat.
+        </div>
+        <div class="footnotes"><ol>
+          <li id="fn1"><a href="https://www.helpnetsecurity.com/2026/06/09/google-chrome-zero-day-cve-2026-11645/">helpnetsecurity.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Der Juni-Patchday klingt nach: On-Prem-Exchange und ein HTTP/2-DoS <span class="h2-refs">[2][3]</span></h2>
+        <p>Microsofts Sammelpatch vom <strong>9. Juni</strong> war einer der umfangreichsten überhaupt — Tenable und BleepingComputer zählen rund <strong>200 CVEs</strong>.<sup>[2]</sup> Zwei Einträge daraus verdienen über das Wochenende noch einen Blick, weil sie typische Mittelstands-Infrastruktur treffen.</p>
+        <p>Erstens <strong>CVE-2026-42897</strong> in <strong>On-Prem-Microsoft-Exchange</strong> (CVSS 8,1 laut Microsoft; NVD: 6,1): eine XSS-Schwachstelle in Outlook on the Web, die bereits vor dem Patch in der KEV-Liste stand — also nachweislich ausgenutzt wurde.<sup>[3]</sup> Wer noch einen eigenen Exchange-Server betreibt, sollte den Juni-Stand zwingend eingespielt haben. Zweitens der „HTTP/2-Bomb"-Bug <strong>CVE-2026-49160</strong> in <strong>HTTP.sys</strong> (CVSS 7,5): ein Denial-of-Service, der den Windows-HTTP-Stack über präparierte HTTP/2-Verkehrsmuster lahmlegt — relevant für jeden IIS- oder Windows-gehosteten Dienst, der direkt am Netz hängt.<sup>[2]</sup> Dazu kommt eine Rechteausweitung in der Windows-Texteingabe (CTFMON, CVE-2026-45586, CVSS 7,8).</p>
+        <p>Für Daniels Linux-/Container-Welt keine direkte Stack-Berührung — aber das Muster bleibt: Windows-Hosts in Reichweite (und sei es eine Build-Runner-VM) gehören auf den Juni-Stand, bevor öffentliche Exploits den Aufwand für Angreifer senken.</p>
+        <div class="footnotes"><ol start="2">
+          <li id="fn2"><a href="https://www.tenable.com/blog/microsofts-june-2026-patch-tuesday-addresses-198-cves-cve-2026-49160-cve-2026-50507">tenable.com</a></li>
+          <li id="fn3"><a href="https://securityaffairs.com/192204/security/cve-2026-42897-microsoft-confirms-active-exploitation-of-exchange-server-zero-day.html">securityaffairs.com</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PostgreSQL 19 Beta 1: Graph-Queries kommen in den Kern <span class="h2-refs">[4]</span></h2>
+        <p>Die erfreuliche Release-Nachricht der Woche: <strong>PostgreSQL 19 Beta 1</strong> ist am <strong>4. Juni</strong> erschienen und steckt jetzt den Funktionsumfang ab, der zum GA-Ziel im <strong>September/Oktober</strong> kommt.<sup>[4]</sup> Drei Punkte stechen heraus.</p>
+        <p>Erstens <strong>SQL/PGQ</strong>: Property-Graph-Queries direkt in SQL — man kann Beziehungen („wer hängt mit wem zusammen") als Graph abfragen, ohne eine separate Graph-Datenbank danebenzustellen. Zweitens <strong>paralleles Autovacuum</strong>: Postgres' Aufräum-Mechanismus darf endlich mehrere Worker parallel laufen lassen, was große Tabellen spürbar schneller wartet. Drittens rund <strong>2× schnellere Inserts mit Fremdschlüsseln</strong> — ein Detail, das in schreibintensiven Anwendungen real durchschlägt.<sup>[4]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Autovacuum:</strong> Postgres markiert gelöschte/aktualisierte Zeilen nur als „tot" und räumt sie später im Hintergrund weg — das ist das Autovacuum. Bei großen Tabellen wurde dieser Hausputz bislang von <em>einem</em> Arbeiter erledigt; jetzt dürfen mehrere gleichzeitig wischen, also ist die Tabelle schneller wieder aufgeräumt.
+        </div>
+        <p>Für Daniels Stack noch nichts zum Produktiv-Schalten — eine Beta gehört nicht in Produktion. Aber wer ein neues Projekt plant, kann gegen die Beta schon die Graph-Features ausprobieren. Ergänzend gilt die <strong>Security-Release vom 14. Mai</strong> (11 CVEs, CVSS bis 8,8) weiter für alle unterstützten Zweige — die gehört, anders als die Beta, sehr wohl eingespielt.</p>
+        <div class="footnotes"><ol start="4">
+          <li id="fn4"><a href="https://www.postgresql.org/about/news/postgresql-19-beta-1-released-3313/">postgresql.org</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>npm/PyPI-Lieferkette: die Welle läuft weiter <span class="h2-refs">[5]</span></h2>
+        <div class="update-since">Fortsetzung von gestern: Die Shai-Hulud-/„Miasma"-Kampagne gegen npm und PyPI ist nicht abgeklungen.</div>
+        <p>Seit <strong>Anfang Juni</strong> sind über <strong>100 Pakete</strong> quer durch npm und PyPI von einer Lieferketten-Kampagne betroffen; der spektakulärste Einschlag bleiben die <strong>32 Pakete im <code>@redhat-cloud-services</code>-Scope</strong>, über deren bösartige Versionen zusammengerechnet etwa <strong>80.000–117.000 wöchentliche Downloads</strong> liefen.<sup>[5]</sup> Eine CVE ist bislang nicht vergeben — die Bedrohung läuft also über die Paket-Metadaten der Registries, nicht über eine klassische Software-Lücke.</p>
+        <p>Was zu tun ist, bleibt unverändert und gilt für jeden mit npm- oder pip-Lockfiles: die <strong>Lockfiles gegen die in den Advisories gemeldeten Versionen prüfen</strong>, in CI-Pipelines <code>npm install --ignore-scripts</code> erzwingen, und alle <strong>CI- und Cloud-Tokens rotieren</strong>, die seit Anfang Juni über frische Installs gelaufen sind. Quellen: Wiz und SecurityWeek führen die betroffenen Paketlisten.</p>
+        <div class="footnotes"><ol start="5">
+          <li id="fn5"><a href="https://www.wiz.io/blog/miasma-supply-chain-attack-targeting-redhat-npm-packages">wiz.io</a> · <a href="https://www.securityweek.com/over-100-npm-pypi-packages-hit-in-new-shai-hulud-supply-chain-attacks/">securityweek.com</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>EU Cyber Resilience Act: nächster Baustein scharf <span class="h2-refs">[6]</span></h2>
+        <p>Der CRA schaltet sich in Stufen scharf, und am <strong>11. Juni</strong> ist der nächste Block in Kraft getreten: die Regeln für <strong>notifizierte Konformitätsbewertungsstellen</strong>. Im Klartext heißt das, die Mitgliedsstaaten müssen jetzt ihre <strong>notifizierenden Behörden benennen</strong> — die Stellen, die später prüfen dürfen, ob ein „Produkt mit digitalen Elementen" CRA-konform ist.<sup>[6]</sup></p>
+        <p>Für einen Solo-Shop wie twiceD ist das noch kein Handlungsdruck, aber es ist der Vorlauf zum operativ härtesten Teil: der <strong>Meldepflicht ab dem 11. September 2026</strong>, also der Pflicht, aktiv ausgenutzte Lücken binnen enger Fristen zu melden. Wer Software in den EU-Markt bringt, sollte den eigenen Melde- und Konformitäts-Prozess jetzt durchdenken — die Infrastruktur dahinter wird gerade erst aufgebaut.</p>
+        <div class="footnotes"><ol start="6">
+          <li id="fn6"><a href="https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act">digital-strategy.ec.europa.eu</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert</h2>
+        <p><strong>Azure Linux 4.0</strong> ist in der <strong>Public Preview</strong>: Microsofts hauseigene Container-Host-Distribution (früher CBL-Mariner) hebt im neuen Major ihr Kernel- und Toolchain-Fundament an und ist als Node-Basis für AKS vorgesehen. GA wird fürs <strong>zweite Halbjahr 2026</strong> erwartet — die Preview lässt sich testen, der Sprung in Produktion sollte aber bis GA warten. <span class="src"><a href="https://www.infoq.com/news/2026/05/azure-linux-4-server/">infoq.com</a></span></p>
+        <p><strong>Ubuntu Pastebin</strong> (paste.ubuntu.com) wird <strong>Ende Juni</strong> abgeschaltet. Klein, aber praktisch relevant: alte Pastebin-Links in Skripten, Wikis und Support-Dokus laufen danach ins Leere — jetzt ist der Moment, sie zu finden und zu ersetzen. <span class="src"><a href="https://www.heise.de/en/news/End-of-Ubuntu-Pastebin-Shutdown-at-the-end-of-June-2026-11307139.html">heise.de</a></span></p>
+        <p><strong>Hardware-Kontext</strong>: TSMC dämpft die Erwartungen — die <strong>KI-Chip-Knappheit dürfte trotz Kapazitätsausbau noch Jahre anhalten</strong>. Für alle, die Hardware-Budgets oder GPU-Cloud-Kosten planen, der nüchterne Rahmen: Entspannung bei Preisen und Verfügbarkeit ist kurzfristig nicht in Sicht. <span class="src"><a href="https://bits-chips.com/article/tsmc-ai-chip-shortage-to-persist-for-years-despite-capacity-expansion/">bits-chips.com</a></span></p>
+        <p><strong>BR-Tech</strong> bleibt auf der Nicht-KI-Engineering-Seite ruhig; die substanziellen Brasilien-Meldungen drehen sich diese Woche um KI — das ist ai-usecases-Revier, nicht hier. Notiert, weitergegangen.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Sonntag, der vierzehnte Juni. Der Release-Kalender ist ruhig, und die wichtigste Aufgabe des Tages ist schnell erledigt.</p>
+  <p>Das dringendste Stück ist ein Browser-Update. Google hat am achten Juni ein Sicherheitsupdate für Chrome ausgeliefert, das eine Lücke in der JavaScript-Engine V8 schließt — Kennung CVE-zwanzigsechsundzwanzig-elftausendsechshundertfünfundvierzig, Schweregrad acht Komma acht. Google bestätigt, dass die Lücke bereits aktiv ausgenutzt wird, deshalb gilt sie als Zero-Day. Gepatcht ist sie in den Chrome-Ständen einhundertneunundvierzig Punkt sieben-acht-zwei-sieben. Weil Microsoft Edge auf derselben Chromium-Basis läuft, ist Edge ebenfalls betroffen. Beide Browser aktualisieren sich von selbst, aber das Update greift erst nach einem Neustart — also einmal neu starten, das ist die Aufgabe für heute.</p>
+  <p>Dahinter klingt der Juni-Patch-Tuesday vom neunten Juni nach, einer der umfangreichsten überhaupt mit rund zweihundert Lücken. Zwei Einträge verdienen noch einen Blick: eine Schwachstelle in On-Premises-Microsoft-Exchange in Outlook on the Web, die schon vor dem Patch nachweislich ausgenutzt wurde, und ein Denial-of-Service im Windows-HTTP-Stack über präparierten HTTP/2-Verkehr. Wer noch einen eigenen Exchange-Server betreibt oder Windows-Dienste direkt am Netz hat, sollte den Juni-Stand eingespielt haben.</p>
+  <p>Auf der erfreulichen Seite ist PostgreSQL neunzehn am vierten Juni in die erste Beta gegangen. Drei Dinge stechen heraus: Graph-Abfragen direkt in SQL, ein paralleles Autovacuum, das große Tabellen schneller aufräumt, und etwa doppelt so schnelle Einfüge-Operationen mit Fremdschlüsseln. Die finale Version wird für September oder Oktober erwartet. In Produktion gehört eine Beta noch nicht, aber für neue Projekte kann man die Graph-Features schon ausprobieren.</p>
+  <p>Beim europäischen Cyber Resilience Act ist am elften Juni der nächste Baustein in Kraft getreten: die Regeln für notifizierte Konformitätsstellen. Die Mitgliedsstaaten müssen jetzt ihre Behörden benennen. Der nächste große Schritt ist die Meldepflicht ab dem elften September.</p>
+  <p>Und die Lieferketten-Welle gegen npm und PyPI läuft weiter: über hundert betroffene Pakete, darunter zweiunddreißig in einem Red-Hat-Scope mit zusammen bis zu hundertsiebzehntausend wöchentlichen Downloads. Eine CVE gibt es bislang nicht. Wer npm- oder pip-Lockfiles pflegt, sollte sie gegen die gemeldeten Versionen prüfen und alle Tokens rotieren, die seit Anfang Juni über frische Installs gelaufen sind.</p>
+  <p>Kurz notiert zum Schluss: Azure Linux vier Punkt null ist in der Public Preview erschienen — die finale Version wird fürs zweite Halbjahr erwartet —, das Ubuntu-Pastebin wird Ende Juni abgeschaltet, also alte Links jetzt aufräumen, und TSMC dämpft die Erwartungen: Die KI-Chip-Knappheit dürfte trotz Ausbau noch Jahre anhalten.</p>
+</div>
+
+</body>
+</html>
