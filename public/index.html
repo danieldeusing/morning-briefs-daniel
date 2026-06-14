@@ -286,6 +286,64 @@
     display: block; margin-top: 0.1rem;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
+  /* Archive month-picker (revealed by the "Älteren Brief wählen" button) —
+     only days that have a brief are clickable; hovering one previews its title. */
+  .cat-cal {
+    margin: 0.4rem 0 0.2rem;
+    padding: 0.5rem;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: var(--rule-soft);
+  }
+  .cal-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 0.45rem;
+  }
+  .cal-title {
+    font-family: var(--font-mono); font-size: 0.74rem;
+    font-weight: 600; color: var(--fg);
+  }
+  .cal-nav {
+    width: 1.7rem; height: 1.7rem; line-height: 1;
+    background: transparent; border: 1px solid var(--rule); border-radius: 4px;
+    color: var(--muted); font-size: 0.95rem; cursor: pointer;
+    transition: color 120ms, border-color 120ms;
+  }
+  .cal-nav:hover:not(:disabled) { color: var(--fg); border-color: var(--soft); }
+  .cal-nav:focus-visible { outline: 2px solid var(--accent, var(--fg)); outline-offset: 2px; }
+  .cal-nav:disabled { opacity: 0.3; cursor: default; }
+  .cal-week, .cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
+  }
+  .cal-week { margin-bottom: 3px; }
+  .cal-week span {
+    text-align: center; font-family: var(--font-mono);
+    font-size: 0.58rem; color: var(--muted);
+  }
+  .cal-day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 0.7rem;
+    border-radius: 4px; color: var(--soft);
+    font-feature-settings: "tnum";
+  }
+  .cal-day.none { color: var(--rule); }
+  .cal-day.blank { visibility: hidden; }
+  .cal-day.has {
+    color: var(--fg); font-weight: 600; cursor: pointer; text-decoration: none;
+    background: var(--panel);
+    box-shadow: inset 0 0 0 1px var(--accent);
+    transition: background 100ms, color 100ms;
+  }
+  .cal-day.has:hover, .cal-day.has:focus-visible,
+  .cal-day.has.current {
+    background: var(--accent); color: #fff; outline: none;
+  }
+  .cal-preview {
+    margin-top: 0.5rem; padding-top: 0.45rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-body); font-size: 0.72rem;
+    color: var(--muted); line-height: 1.35; min-height: 1.7rem;
+  }
   /* Settings cluster at the bottom of the sidebar — single horizontal row
      with theme toggle and language picker side-by-side. Pinned via its own
      margin-top:auto so it always floats to the foot of the sidebar, while
@@ -5889,13 +5947,110 @@ window.__MANIFESTS = {
       const more = document.createElement('button');
       more.className = 'cat-more';
       more.type = 'button';
-      more.textContent = 'Mehr anzeigen (' + remaining + ' ' + (remaining === 1 ? 'weitere' : 'weitere') + ')';
+      more.setAttribute('aria-expanded', 'false');
+      more.textContent = '📅 Älteren Brief wählen (' + remaining + ' weitere)';
+      const cal = document.createElement('div');
+      cal.className = 'cat-cal';
+      cal.hidden = true;
       more.addEventListener('click', (e) => {
         e.stopPropagation();
-        renderDates(container, cat, cat.entries.length);
+        const show = cal.hidden;
+        cal.hidden = !show;
+        more.setAttribute('aria-expanded', String(show));
+        if (show && !cal.dataset.init) {
+          renderCalendar(cal, cat);
+          cal.dataset.init = '1';
+        }
       });
       container.appendChild(more);
+      container.appendChild(cal);
     }
+  }
+
+  // Month-calendar archive picker: only days that actually have a brief are
+  // clickable; hovering/focusing one previews its title, clicking opens it.
+  // Replaces the unbounded "show everything" list so the picker stays usable
+  // once a category has hundreds of back-issues.
+  const CAL_WEEKDAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+  const CAL_MONTHS = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+    'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+  const pad2 = n => String(n).padStart(2, '0');
+  const monthIndex = iso => {
+    const [y, m] = iso.split('-').map(Number);
+    return y * 12 + (m - 1);
+  };
+
+  function renderCalendar(calEl, cat) {
+    const byDate = new Map(cat.entries.map(e => [e.date, e]));
+    const newest = cat.entries[0].date;                       // manifest is newest-first
+    const oldest = cat.entries[cat.entries.length - 1].date;
+    const minMonth = monthIndex(oldest);
+    const maxMonth = monthIndex(newest);
+    let cur = maxMonth;                                        // open on the newest month
+
+    calEl.innerHTML = `
+      <div class="cal-bar">
+        <button class="cal-nav" type="button" data-dir="-1" aria-label="Vorheriger Monat">‹</button>
+        <span class="cal-title"></span>
+        <button class="cal-nav" type="button" data-dir="1" aria-label="Nächster Monat">›</button>
+      </div>
+      <div class="cal-week">${CAL_WEEKDAYS.map(w => '<span>' + w + '</span>').join('')}</div>
+      <div class="cal-grid"></div>
+      <div class="cal-preview" aria-live="polite"></div>`;
+
+    const title = calEl.querySelector('.cal-title');
+    const grid = calEl.querySelector('.cal-grid');
+    const preview = calEl.querySelector('.cal-preview');
+    const prevBtn = calEl.querySelector('.cal-nav[data-dir="-1"]');
+    const nextBtn = calEl.querySelector('.cal-nav[data-dir="1"]');
+    const hashParts = location.hash.replace(/^#/, '').split('/');
+    const activeDate = hashParts[0] === cat.id ? hashParts[1] : null;
+
+    function draw() {
+      const year = Math.floor(cur / 12);
+      const month = cur % 12;                                 // 0-based
+      title.textContent = CAL_MONTHS[month] + ' ' + year;
+      prevBtn.disabled = cur <= minMonth;
+      nextBtn.disabled = cur >= maxMonth;
+      grid.innerHTML = '';
+      const startCol = (new Date(year, month, 1).getDay() + 6) % 7;   // shift so Monday = 0
+      for (let i = 0; i < startCol; i++) {
+        const blank = document.createElement('span');
+        blank.className = 'cal-day blank';
+        grid.appendChild(blank);
+      }
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      for (let d = 1; d <= daysInMonth; d++) {
+        const iso = year + '-' + pad2(month + 1) + '-' + pad2(d);
+        const entry = byDate.get(iso);
+        const cell = document.createElement(entry ? 'a' : 'span');
+        cell.className = 'cal-day ' + (entry ? 'has' : 'none');
+        cell.textContent = d;
+        if (entry) {
+          cell.href = '#' + cat.id + '/' + iso;
+          if (iso === activeDate) cell.classList.add('current');
+          const show = () => {
+            preview.textContent = fmtDate(iso) + ' — ' + headlineFor(entry, currentLang);
+          };
+          cell.addEventListener('mouseenter', show);
+          cell.addEventListener('focus', show);
+          cell.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigate(cat.id, iso);
+          });
+        }
+        grid.appendChild(cell);
+      }
+      preview.textContent = 'Tag mit Brief wählen …';
+    }
+
+    [prevBtn, nextBtn].forEach(btn => btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      cur = Math.min(maxMonth, Math.max(minMonth, cur + Number(btn.dataset.dir)));
+      draw();
+    }));
+    draw();
   }
 
   // Render one category row (head + collapsible dates list) and append
