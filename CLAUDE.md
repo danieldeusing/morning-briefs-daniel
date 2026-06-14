@@ -308,12 +308,14 @@ deploy is only needed for an out-of-band change.
   so the stale-`index.html` problem of the old Caddy setup is gone — no per-file
   `Cache-Control` tuning needed.
 
-### Also: danieldeusing.de/news (pagr)
+### Note: this repo does NOT touch pagr / danieldeusing.de
 
-Independently, the **pagr** Astro site (`apps/pagr`, → danieldeusing.de) syncs the
-briefs into `public/news/` and is auto-published by a `post-commit` hook in this
-repo. That keeps `danieldeusing.de/news` current and is unrelated to the
-standalone `briefs.danieldeusing.de` deploy above — both happen on each commit.
+The **pagr** Astro site (`apps/pagr`, → danieldeusing.de) independently pulls the
+published briefs from this repo's **public GitHub tarball** at its own build time.
+This repo does **not** trigger, rebuild, or otherwise touch pagr — there is no
+`post-commit` hook here anymore. The morning routine's only publish actions are
+(1) commit + push to GitHub `main` and (2) deploy the standalone
+`briefs.danieldeusing.de` (above). Whatever rebuilds pagr is pagr's own concern.
 
 ### Leftover decommission (old news.twiced.de — twiced infra)
 
