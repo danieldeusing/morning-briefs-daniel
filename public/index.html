@@ -251,30 +251,14 @@
   .cat-dates { display: none; padding: 0.15rem 0.7rem 0.4rem 1.45rem; }
 
   .cat.open .cat-dates { display: block; }
-  .cat-date {
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 0.5rem 0.6rem;
-    font-family: var(--font-mono);
-    font-size: 0.74rem; color: var(--muted);
-    text-decoration: none; border-radius: var(--radius-inline);
-    font-feature-settings: "tnum";
-    cursor: pointer;
-    min-height: 2.25rem;
-  }
-  .cat-date:hover { background: var(--rule-soft); color: var(--fg); }
-  .cat-date.current { color: var(--fg); font-weight: 600; background: var(--quote); }
-  .cat-date .headline {
-    font-family: var(--font-body);
-    color: var(--soft); font-weight: 400; font-size: 0.78rem;
-    display: block; margin-top: 0.1rem;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
-  /* Archive month-picker (revealed by the "Älteren Brief wählen" button) —
-     only days that have a brief are clickable; hovering one previews its title. */
+  /* The category dropdown holds only the archive month-picker: days with a
+     brief are clickable (ringed in the category accent), the selected day is
+     filled, hovering one previews its title. Border + marks use the
+     per-category --accent scoped on the .cat row. */
   .cat-cal {
-    margin: 0.4rem 0 0.2rem;
+    margin: 0.2rem 0;
     padding: 0.5rem;
-    border: 1px solid var(--rule);
+    border: 1px solid var(--accent);
     border-radius: 6px;
     background: var(--rule-soft);
   }
@@ -808,6 +792,19 @@
   [data-cat="learn-language"] .cat-color { background: var(--c-learn-language); }
   [data-cat="motorsport"]     .cat-color { background: var(--c-motorsport); }
   [data-cat="stocks-crypto"]  .cat-color { background: var(--c-stocks-crypto); }
+
+  /* Sidebar rows scope their own --accent so the archive calendar's border,
+     day rings and selected-day fill match the category colour. */
+  .cat[data-cat="economy"]        { --accent: var(--c-economy); }
+  .cat[data-cat="software"]       { --accent: var(--c-software); }
+  .cat[data-cat="ai-dev"]         { --accent: var(--c-ai-dev); }
+  .cat[data-cat="ai-usecases"]    { --accent: var(--c-ai-usecases); }
+  .cat[data-cat="football"]       { --accent: var(--c-football); }
+  .cat[data-cat="family"]         { --accent: var(--c-family); }
+  .cat[data-cat="jobs"]           { --accent: var(--c-jobs); }
+  .cat[data-cat="learn-language"] { --accent: var(--c-learn-language); }
+  .cat[data-cat="motorsport"]     { --accent: var(--c-motorsport); }
+  .cat[data-cat="stocks-crypto"]  { --accent: var(--c-stocks-crypto); }
 
   /* Home button — mirrors the .cat-head structure below: black accent bar
      on the left (the dashboard's "house" colour, equivalent to the
@@ -5896,9 +5893,6 @@ window.__MANIFESTS = {
     });
   }
 
-  // Render the date dropdown for a category.
-  // Pagination: show `limit` entries, then a "Mehr anzeigen" button for the rest.
-  const INITIAL_LIMIT = 10;
   // Home-card TL;DR snapshot caps the bullet list at this many items — the
   // card is a scan teaser, the full set is one click away in the brief.
   const HOME_TLDR_BULLET_CAP = 5;
@@ -5908,7 +5902,10 @@ window.__MANIFESTS = {
     return { catId: parts[0] || null, date: parts[1] || null };
   }
 
-  function renderDates(container, cat, limit, activeDate) {
+  // The category dropdown holds only the month-calendar archive picker — no
+  // flat date list. The calendar marks the selected day, jumps to its month,
+  // and previews titles on hover.
+  function renderDates(container, cat, activeDate) {
     container.innerHTML = '';
     if (cat.entries.length === 0) {
       container.innerHTML = '<div class="cat-empty">Heute kein Brief</div>';
@@ -5918,28 +5915,6 @@ window.__MANIFESTS = {
       const r = currentRoute();
       activeDate = r.catId === cat.id ? r.date : null;
     }
-    const visible = cat.entries.slice(0, limit);
-    visible.forEach(entry => {
-      const isCurrent = entry.date === activeDate;
-      const a = document.createElement('a');
-      a.className = 'cat-date' + (isCurrent ? ' current' : '');
-      a.dataset.cat = cat.id;
-      a.dataset.date = entry.date;
-      a.href = '#' + cat.id + '/' + entry.date;   // real anchor — focusable + middle-click works
-      if (isCurrent) a.setAttribute('aria-current', 'page');
-      a.innerHTML = `
-        <strong>${fmtDate(entry.date)}</strong>
-        <span class="headline">${headlineFor(entry, currentLang)}</span>
-      `;
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        navigate(cat.id, entry.date);
-      });
-      container.appendChild(a);
-    });
-    // The month-calendar is always shown (no extra toggle): it's the archive
-    // picker AND it marks the selected day — jumping to that day's month even
-    // when the selection is older than the latest-N list above.
     const cal = document.createElement('div');
     cal.className = 'cat-cal';
     container.appendChild(cal);
@@ -6063,7 +6038,7 @@ window.__MANIFESTS = {
       if (e.target && e.target.closest && e.target.closest('.cat-toggle')) return;
       if (cat.entries.length === 0) {
         wrap.classList.toggle('open');
-        renderDates(dates, cat, INITIAL_LIMIT);
+        renderDates(dates, cat);
         return;
       }
       navigate(cat.id, cat.entries[0].date);
@@ -6077,7 +6052,7 @@ window.__MANIFESTS = {
       const willOpen = !wrap.classList.contains('open');
       wrap.classList.toggle('open');
       toggleBtn.setAttribute('aria-expanded', String(willOpen));
-      if (willOpen) renderDates(dates, cat, INITIAL_LIMIT);
+      if (willOpen) renderDates(dates, cat);
     });
 
     wrap.appendChild(head);
@@ -6418,7 +6393,7 @@ window.__MANIFESTS = {
       catEl.classList.add('active');
       catEl.querySelector('.cat-head')?.setAttribute('aria-current', 'true');
       if (cat && cat.entries.length && catEl.classList.contains('open')) {
-        renderDates(catEl.querySelector('.cat-dates'), cat, INITIAL_LIMIT, date);
+        renderDates(catEl.querySelector('.cat-dates'), cat, date);
       }
     }
     const hb = $('#home-btn');
