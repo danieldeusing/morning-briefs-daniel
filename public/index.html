@@ -6405,18 +6405,19 @@ window.__MANIFESTS = {
     frame.onload = () => { loading.classList.remove('show'); };
     frame.onerror = () => { loading.classList.remove('show'); };
 
-    // Update active state in sidebar. Auto-expand the active category and
-    // re-render its dates so the always-visible calendar jumps to the selected
-    // day's month and marks it — even when that day is older than the list.
+    // Update active state in sidebar. Expansion stays user-controlled (the
+    // chevron) — clicking a category just loads its latest brief, the list
+    // stays hidden. But if the dropdown is already open, re-render it so the
+    // calendar jumps to the selected day's month and marks it, and the list
+    // keeps its expanded state.
     $$('.cat').forEach(el => { el.classList.remove('active'); el.querySelector('.cat-head')?.removeAttribute('aria-current'); });
     $$('.cat-date').forEach(el => { el.classList.remove('current'); el.removeAttribute('aria-current'); });
+    $$('.cal-day.current').forEach(el => el.classList.remove('current'));
     const catEl = $('.cat[data-cat="' + catId + '"]');
     if (catEl) {
       catEl.classList.add('active');
       catEl.querySelector('.cat-head')?.setAttribute('aria-current', 'true');
-      if (cat && cat.entries.length) {
-        catEl.classList.add('open');
-        catEl.querySelector('.cat-toggle')?.setAttribute('aria-expanded', 'true');
+      if (cat && cat.entries.length && catEl.classList.contains('open')) {
         renderDates(catEl.querySelector('.cat-dates'), cat, INITIAL_LIMIT, date);
       }
     }
