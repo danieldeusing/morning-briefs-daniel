@@ -250,23 +250,6 @@
 
   .cat-dates { display: none; padding: 0.15rem 0.7rem 0.4rem 1.45rem; }
 
-  .cat-more {
-    display: block; margin: 0.4rem 0 0.1rem;
-    background: transparent;
-    border: 1px dashed var(--rule);
-    padding: 0.55rem 0.7rem; border-radius: 5px;
-    font-family: var(--font-mono);
-    font-size: 0.72rem; color: var(--muted);
-    cursor: pointer;
-    text-align: left; width: 100%;
-    transition: color 120ms, border-color 120ms, background 120ms;
-    min-height: 2.25rem;
-  }
-  .cat-more:focus-visible {
-    outline: 2px solid var(--accent, var(--fg));
-    outline-offset: 2px;
-  }
-  .cat-more:hover { color: var(--fg); border-color: var(--soft); background: var(--rule-soft); }
   .cat.open .cat-dates { display: block; }
   .cat-date {
     display: flex; flex-direction: column; justify-content: center;
@@ -5919,19 +5902,31 @@ window.__MANIFESTS = {
   // Home-card TL;DR snapshot caps the bullet list at this many items — the
   // card is a scan teaser, the full set is one click away in the brief.
   const HOME_TLDR_BULLET_CAP = 5;
-  function renderDates(container, cat, limit) {
+  // The active route as {catId, date}, parsed from the hash (#cat/date).
+  function currentRoute() {
+    const parts = location.hash.replace(/^#/, '').split('/');
+    return { catId: parts[0] || null, date: parts[1] || null };
+  }
+
+  function renderDates(container, cat, limit, activeDate) {
     container.innerHTML = '';
     if (cat.entries.length === 0) {
       container.innerHTML = '<div class="cat-empty">Heute kein Brief</div>';
       return;
     }
+    if (activeDate === undefined) {
+      const r = currentRoute();
+      activeDate = r.catId === cat.id ? r.date : null;
+    }
     const visible = cat.entries.slice(0, limit);
     visible.forEach(entry => {
+      const isCurrent = entry.date === activeDate;
       const a = document.createElement('a');
-      a.className = 'cat-date';
+      a.className = 'cat-date' + (isCurrent ? ' current' : '');
       a.dataset.cat = cat.id;
       a.dataset.date = entry.date;
       a.href = '#' + cat.id + '/' + entry.date;   // real anchor — focusable + middle-click works
+      if (isCurrent) a.setAttribute('aria-current', 'page');
       a.innerHTML = `
         <strong>${fmtDate(entry.date)}</strong>
         <span class="headline">${headlineFor(entry, currentLang)}</span>
@@ -5942,29 +5937,13 @@ window.__MANIFESTS = {
       });
       container.appendChild(a);
     });
-    const remaining = cat.entries.length - visible.length;
-    if (remaining > 0) {
-      const more = document.createElement('button');
-      more.className = 'cat-more';
-      more.type = 'button';
-      more.setAttribute('aria-expanded', 'false');
-      more.textContent = '📅 Älteren Brief wählen (' + remaining + ' weitere)';
-      const cal = document.createElement('div');
-      cal.className = 'cat-cal';
-      cal.hidden = true;
-      more.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const show = cal.hidden;
-        cal.hidden = !show;
-        more.setAttribute('aria-expanded', String(show));
-        if (show && !cal.dataset.init) {
-          renderCalendar(cal, cat);
-          cal.dataset.init = '1';
-        }
-      });
-      container.appendChild(more);
-      container.appendChild(cal);
-    }
+    // The month-calendar is always shown (no extra toggle): it's the archive
+    // picker AND it marks the selected day — jumping to that day's month even
+    // when the selection is older than the latest-N list above.
+    const cal = document.createElement('div');
+    cal.className = 'cat-cal';
+    container.appendChild(cal);
+    renderCalendar(cal, cat, activeDate);
   }
 
   // Month-calendar archive picker: only days that actually have a brief are
@@ -5980,13 +5959,16 @@ window.__MANIFESTS = {
     return y * 12 + (m - 1);
   };
 
-  function renderCalendar(calEl, cat) {
+  function renderCalendar(calEl, cat, activeDate) {
     const byDate = new Map(cat.entries.map(e => [e.date, e]));
     const newest = cat.entries[0].date;                       // manifest is newest-first
     const oldest = cat.entries[cat.entries.length - 1].date;
     const minMonth = monthIndex(oldest);
     const maxMonth = monthIndex(newest);
-    let cur = maxMonth;                                        // open on the newest month
+    const hasActive = activeDate && byDate.has(activeDate);
+    // Open on the selected day's month when one is selected, else the newest.
+    let cur = Math.min(maxMonth, Math.max(minMonth,
+      hasActive ? monthIndex(activeDate) : maxMonth));
 
     calEl.innerHTML = `
       <div class="cal-bar">
@@ -6003,8 +5985,6 @@ window.__MANIFESTS = {
     const preview = calEl.querySelector('.cal-preview');
     const prevBtn = calEl.querySelector('.cal-nav[data-dir="-1"]');
     const nextBtn = calEl.querySelector('.cal-nav[data-dir="1"]');
-    const hashParts = location.hash.replace(/^#/, '').split('/');
-    const activeDate = hashParts[0] === cat.id ? hashParts[1] : null;
 
     function draw() {
       const year = Math.floor(cur / 12);
@@ -6042,7 +6022,10 @@ window.__MANIFESTS = {
         }
         grid.appendChild(cell);
       }
-      preview.textContent = 'Tag mit Brief wählen …';
+      // Seed the preview line with the selected day's title (else a prompt).
+      preview.textContent = hasActive
+        ? fmtDate(activeDate) + ' — ' + headlineFor(byDate.get(activeDate), currentLang)
+        : 'Tag mit Brief wählen …';
     }
 
     [prevBtn, nextBtn].forEach(btn => btn.addEventListener('click', (e) => {
@@ -6422,15 +6405,20 @@ window.__MANIFESTS = {
     frame.onload = () => { loading.classList.remove('show'); };
     frame.onerror = () => { loading.classList.remove('show'); };
 
-    // Update active state in sidebar. Don't auto-expand — that's the chevron's job.
+    // Update active state in sidebar. Auto-expand the active category and
+    // re-render its dates so the always-visible calendar jumps to the selected
+    // day's month and marks it — even when that day is older than the list.
     $$('.cat').forEach(el => { el.classList.remove('active'); el.querySelector('.cat-head')?.removeAttribute('aria-current'); });
     $$('.cat-date').forEach(el => { el.classList.remove('current'); el.removeAttribute('aria-current'); });
     const catEl = $('.cat[data-cat="' + catId + '"]');
     if (catEl) {
       catEl.classList.add('active');
       catEl.querySelector('.cat-head')?.setAttribute('aria-current', 'true');
-      const dateEl = catEl.querySelector('.cat-date[data-date="' + date + '"]');
-      if (dateEl) { dateEl.classList.add('current'); dateEl.setAttribute('aria-current', 'page'); }
+      if (cat && cat.entries.length) {
+        catEl.classList.add('open');
+        catEl.querySelector('.cat-toggle')?.setAttribute('aria-expanded', 'true');
+        renderDates(catEl.querySelector('.cat-dates'), cat, INITIAL_LIMIT, date);
+      }
     }
     const hb = $('#home-btn');
     hb.classList.remove('active');
