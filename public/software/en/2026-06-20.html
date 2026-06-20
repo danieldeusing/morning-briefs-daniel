@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-06-20</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-20</span>
+  </div>
+  <h1 class="masthead-title">One weekend, three patch waves — and an Arch repo full of trojans</h1>
+  <div class="masthead-meta">Saturday, June 20, 2026 · Ribeirão Claro/PR</div>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">The week was a string of supply-chain and RCE scares. A coordinated campaign hit the Arch User Repository, poisoning over 1,500 packages with an infostealer plus rootkit — Arch has since shut down new registrations. F5 shipped two critical NGINX flaws out-of-band, Node.js delivered its quarterly batch with two HIGH CVEs, and Oracle patched 243 bugs. The silver lining: TypeScript 7.0 is in RC and, thanks to a Go compiler, runs roughly ten times faster.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">OSS</span> <strong>AUR "Atomic Arch":</strong> 1,500+ Arch packages compromised with infostealer + eBPF rootkit; Arch locked new account signups since 06-15.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Infra</span> <strong>NGINX:</strong> F5 patches two critical RCE vulnerabilities (CVSS v4 9.2) in HTTP/3 and HTTP/2+gRPC — out-of-band.</li>
+      <li><span class="chip hot">Sec</span> <strong>Node.js:</strong> Quarterly release on 06-18 with 12 CVEs (2 HIGH) — TLS wildcard bypass and WebCrypto crash.</li>
+      <li><span class="chip good">Release</span> <span class="chip">Web</span> <strong>TypeScript 7.0 RC:</strong> Go compiler, ~10× faster (VS Code: 89s → 8.74s); GA expected in July.</li>
+      <li><span class="chip">Sec</span> <span class="chip">EU</span> <strong>Spring:</strong> Statemachine RCE (CVE-2026-41862, HIGH) + Cloud Gateway header spoofing; 67 Spring CVEs in June.</li>
+      <li><span class="chip good">Release</span> <strong>PostgreSQL 19 Beta 1:</strong> 200+ changes — SQL/PGQ graphs, parallel autovacuum, 2× faster FK checks.</li>
+      <li><span class="chip">Sec</span> <strong>Oracle CPU:</strong> 243 CVEs across 11 product families, nearly half critical — Java SE included.</li>
+      <li><span class="chip">Regulation</span> <span class="chip">EU</span> <strong>CRA:</strong> 06-11 milestone passed — next, mandatory reporting of actively exploited vulnerabilities kicks in on 09-11.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">What happened this week — and what comes next</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Fri 06-12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>AUR attack first confirmed</span>
+          <span>Spring AI 2.0 GA</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mon 06-15</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Arch locks AUR new registrations</span>
+          <span>1,500+ packages compromised</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 06-16</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Oracle CPU: 243 CVEs</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Wed 06-17</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>F5 NGINX: two critical RCEs (out-of-band)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu 06-18</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Node.js Security Release (12 CVEs)</span>
+          <span>TypeScript 7.0 RC</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Sat 06-20</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Weekend cleanup: check your patch status</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">~July</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>TypeScript 7.0 GA expected</span>
+          <span>Oracle July CPU on 07-21</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Arch User Repository: "Atomic Arch" poisons 1,500+ packages</h2>
+        <p>This week's biggest software story is a supply-chain attack on the <strong>Arch User Repository (AUR)</strong>. Over the weekend, the tally of compromised packages climbed from an initial 400+ to over <strong>1,500</strong>, and Arch Linux locked new account registrations on 06-15 while cleaning house.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">AUR:</strong> a community shelf for Arch Linux. Picture a massive self-service rack next to the official, vetted supermarket — anyone can drop their own software build recipes there, over 107,000 of them. Fast and handy, but no one systematically checks what each person puts in. That's exactly what the attacker exploited.
+        </div>
+        <p>The trick was devilishly simple: the attackers deliberately <strong>adopted orphaned AUR packages</strong> (unclaimed packages can be taken over) and slipped in a malicious npm dependency called <code>atomic-lockfile</code>. Anyone building an affected package would install a Rust-written <strong>infostealer plus eBPF rootkit</strong> — malicious code that harvests credentials and hides deep in the kernel layer instead of running as a mere process.<sup>[2]</sup></p>
+        <div class="callout warn">
+          <span class="callout-label">Heads up:</span> The <strong>core Arch distribution</strong> (official repos, Pacman) is unaffected — only the community-maintained AUR. If you built AUR packages in the past ten days (especially formerly orphaned ones), review the PKGBUILDs and search for <code>atomic-lockfile</code>. First confirmed on 06-12, a second, more sophisticated wave hit on 06-14.
+        </div>
+        <p>The bigger lesson: the AUR has always been "use at your own risk" — but this campaign shows how cheap adoption takeover is as a persistence vector. The same mechanism applies to any ecosystem with claimable orphaned packages.</p>
+        <div class="footnotes"><ol>
+          <li id="s1"><a href="https://www.theregister.com/security/2026/06/15/arch-linux-locks-down-aur-signups-amid-wave-of-malicious-commits/5255511">theregister.com</a> — 06-15-2026</li>
+          <li id="s2"><a href="https://www.rescana.com/post/atomic-arch-supply-chain-attack-compromises-1-500-arch-user-repository-packages-credential-stealing-malware-targets-arch">rescana.com</a> — 06-13-2026</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>F5 patches two critical NGINX RCE flaws — out-of-band</h2>
+        <p>On 06-17, F5 issued an out-of-cycle alert for two <strong>critical</strong> NGINX vulnerabilities, both rated <span class="stat">CVSS v4.0 = 9.2</span>. This is a genuine "don't leave your reverse proxy unpatched" case, because NGINX sits in front of everything at many shops.<sup>[3]</sup></p>
+        <ul>
+          <li><strong>CVE-2026-42530</strong> — Use-after-free in the HTTP/3 module (<code>ngx_http_v3_module</code>). Affects NGINX Open Source 1.31.0–1.31.1. Only relevant if HTTP/3/QUIC is enabled.</li>
+          <li><strong>CVE-2026-42055</strong> — Heap buffer overflow in HTTP/2 and gRPC proxy paths (<code>ngx_http_proxy_v2_module</code> / <code>ngx_http_grpc_module</code>). Affects the broad range 1.13.10–1.31.1.</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">Use-after-free / Heap overflow:</strong> both are memory errors. In use-after-free, the program accesses memory it just freed — like continuing to use an address where someone else has moved in. In heap overflow, the program writes past its reserved space into foreign memory. Both can often be leveraged into code execution.
+        </div>
+        <div class="callout warn">
+          <span class="callout-label">Heads up:</span> Fixed in <strong>NGINX Open Source 1.31.2 and 1.30.3</strong> plus <strong>NGINX Plus 37.0.2.1 and R36 P6</strong>; Gateway Fabric and Ingress Controller also affected. Note on scoring: CVE-2026-42055 rates only 7.3 under the older CVSS v3.1 — the v4.0 score of 9.2 is higher because v4.0 weights the attack context more heavily.
+        </div>
+        <div class="footnotes"><ol>
+          <li id="s3"><a href="https://socradar.io/blog/cve-2026-42530-cve-2026-42055-f5-nginx/">socradar.io</a> · <a href="https://cybersecuritynews.com/nginx-vulnerability-patched/amp/">cybersecuritynews.com</a> — 06-17-2026</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Oracle June CPU: 243 CVEs, nearly half critical</h2>
+        <p>Oracle's quarterly Critical Patch Update from 06-16 is another hefty batch: <strong>243 individual CVEs in 245 patches</strong> across 11 product families, with roughly <span class="stat">49.8%</span> rated critical.<sup>[4]</sup> Java SE is in the mix — if you live on the JVM, move to the current builds (JDK 21.0.11, 26.0.1, 11.0.31); older versions are end-of-life starting with the next CPU on 07-21. A specific top-CVSS value for Java SE alone wasn't confirmed from the primary source — Oracle's Security Alerts page was unreachable (403) at fetch time, so only the aggregate figures here.</p>
+        <div class="footnotes"><ol>
+          <li id="s4"><a href="https://securityboulevard.com/2026/06/oracle-june-2026-critical-security-patch-update-addresses-243-cves-cve-2026-35273/">securityboulevard.com</a> — 06-16-2026</li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Node.js: quarterly security release with 12 CVEs</h2>
+        <p>Node.js shipped its coordinated security batch across all active lines (22.x, 24.x, 26.x) on 06-18: <strong>12 CVEs</strong> (2 HIGH, 6 MEDIUM, 4 LOW). Fixed versions: <strong>22.23.0, 24.17.0, 26.3.1</strong>.<sup>[5]</sup> The two HIGH flaws warrant a closer look:</p>
+        <ul>
+          <li><strong>CVE-2026-48618</strong> (HIGH) — TLS hostname bypass: a Unicode dot separator causes a normalization gap that bypasses <strong>wildcard certificate validation</strong>. In other words, a cert for <code>*.example.com</code> will be accepted for a host it should not cover.</li>
+          <li><strong>CVE-2026-48933</strong> (HIGH) — WebCrypto integer overflow: calling <code>subtle.encrypt()</code> with input that is an exact multiple of 2 GiB crashes the process.</li>
+        </ul>
+        <p>From the MEDIUM pile, two that sting in practice: an HTTP/2 DoS via unbounded memory growth from malformed ORIGIN frames (CVE-2026-48619) and a leak of proxy credentials in <code>ERR_PROXY_TUNNEL</code> error messages (CVE-2026-48615). Updated bundles also shipped: llhttp 9.4.2, nghttp2 1.69.0, OpenSSL 3.5.7.</p>
+        <div class="footnotes"><ol>
+          <li id="s5"><a href="https://nodejs.org/en/blog/vulnerability/june-2026-security-releases">nodejs.org</a> — 06-18-2026</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Spring: statemachine RCE and a CVE-heavy June</h2>
+        <p>The Spring ecosystem had a June to forget: <strong>67 CVEs</strong> total, per HeroDevs.<sup>[6]</sup> The headliner for Java folks is <strong>CVE-2026-41862</strong> in <strong>Spring Statemachine</strong> (HIGH): persisted state-machine contexts are deserialized via Kryo <strong>without enforcing a class allowlist</strong> — the classic deserialization door to remote code execution, here in the JPA/MongoDB/Redis/ZooKeeper backends. Fixed in 4.0.2 and later.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Unsafe deserialization:</strong> reassembling an object from bytes without checking what classes are allowed to be created. Like accepting and unwrapping every package with your name on it — including the one with a bomb inside. An allowlist says in advance: only these senders, only these contents.
+        </div>
+        <p>Also relevant: <strong>CVE-2026-47825</strong> (Spring Cloud Gateway, HIGH) forwards <code>X-Forwarded-For</code> / <code>Forwarded</code> headers from untrusted proxies — IP spoofing risk in both WebMVC and WebFlux. Plus three Spring GraphQL flaws (unsafe deserialization, cross-site WebSocket hijacking, authorization bypass on type hierarchies) and path traversal in Spring Integration (CVE-2026-40987). If you're still on an older Spring Boot line: the April-reported CVE-2026-40976 (security filter chain bypass, CVSS 9.1) remains the biggest issue — fixed in 4.0.6 / 3.5.14.</p>
+        <div class="footnotes"><ol>
+          <li id="s6"><a href="https://spring.io/security/">spring.io/security</a> · <a href="https://www.herodevs.com/blog-posts/spring-cves-didnt-slow-down-june-2026-brought-67">herodevs.com</a> — June 2026</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: next compliance deadline in September</h2>
+        <p>The <strong>EU Cyber Resilience Act</strong> hit a milestone on 06-11: member states must now have named their notifying authorities, and conformity assessment procedures are active.<sup>[7]</sup> More pressing for day-to-day operations is the <strong>next</strong> deadline, <strong>09-11-2026</strong>: from then on, manufacturers must <strong>report actively exploited vulnerabilities and severe incidents to ENISA and national CSIRTs</strong>. Full compliance deadline remains 12-11-2027. For anyone shipping products with digital components into the EU, September is the cutoff for having a reporting process in place.</p>
+        <div class="footnotes"><ol>
+          <li id="s7"><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-summary">digital-strategy.ec.europa.eu</a> · <a href="https://www.hoganlovells.com/en/publications/eu-cyber-resilience-act-getting-ready-for-cra-compliance-in-2026">hoganlovells.com</a> — 06-11-2026</li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>TypeScript 7.0 RC: the Go compiler is here</h2>
+        <p>The good news of the week: <strong>TypeScript 7.0</strong> entered Release Candidate on 06-18. This is the version with the <strong>native Go compiler</strong> — and the speed jump is real: TypeScript builds often run roughly <strong>ten times faster</strong>.<sup>[8]</sup> Microsoft's own example: the VS Code codebase (1.5 million lines) compiles in <span class="stat">8.74 seconds</span> instead of 89 seconds.<sup>[9]</sup> Stable GA is expected "within the next month" — roughly July.</p>
+        <div class="callout info">
+          <span class="callout-label">Breaking changes in RC</span> When upgrading, watch out: <code>target: es5</code> and AMD/UMD/SystemJS modules are now hard errors. <code>baseUrl</code> is gone (use <code>paths</code> instead), <code>rootDir</code> defaults to <code>./</code>, and <code>types</code> defaults to <code>[]</code>. Try it with <code>npm install -D typescript@rc</code>.
+        </div>
+        <p>Beyond speed, the RC brings semantic highlighting, import sorting, and automatic unused-import removal over the Beta — and the language-server command failure rate has dropped over twenty-fold versus TS 6.0. TS 6.0 (03-23) was the last JavaScript-based compiler; 7.0 is the watershed.</p>
+        <div class="footnotes"><ol>
+          <li id="s8"><a href="https://devblogs.microsoft.com/typescript/announcing-typescript-7-0-rc/">devblogs.microsoft.com</a> — 06-18-2026</li>
+          <li id="s9"><a href="https://devblogs.microsoft.com/typescript/progress-on-typescript-7-december-2025/">devblogs.microsoft.com</a> — Dec. 2025</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL 19 Beta 1: SQL graphs and parallel autovacuum</h2>
+        <p>On 06-04, <strong>PostgreSQL 19 Beta 1</strong> arrived — over <strong>200 changes</strong> versus PG 18, with GA expected September/October.<sup>[9]</sup> The highlights that matter for Daniel's stack:</p>
+        <ul>
+          <li><strong>SQL/PGQ</strong> — property graph queries directly in SQL, no separate graph database.</li>
+          <li><strong><code>ON CONFLICT DO SELECT</code></strong> and a new <code>REPACK</code> command.</li>
+          <li><strong>Parallel autovacuum</strong> and up to <strong>2× faster foreign key checks</strong>.</li>
+          <li>MultiXactOffset widened from 32 to 64 bits — goodbye to an old wraparound cliff.</li>
+        </ul>
+        <p>Security-wise, there's SNI support via <code>pg_hosts.conf</code>, password expiration warnings, and MD5 deprecation notices. Watch upgrade behavior: JIT is now <strong>off</strong> by default in PG 19, <code>default_toast_compression</code> is now <code>lz4</code>, and RADIUS authentication has been removed. Beta means: for testing, not production.</p>
+        <div class="footnotes"><ol>
+          <li id="s9"><a href="https://www.postgresql.org/about/news/postgresql-19-beta-1-released-3313/">postgresql.org</a> — 06-04-2026</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Quick notes</h2>
+        <p><strong>CISA KEV:</strong> on 06-09, three actively exploited vulnerabilities entered the catalog (CVE-2026-7473 Arista EOS, CVE-2026-11645 Chromium V8 OOB R/W, CVE-2026-20245 Cisco Catalyst SD-WAN Manager); on 06-02, two more (CVE-2022-0492 Linux kernel, CVE-2025-48595 Android Framework). No new KEV entries were found for 06-19/06-20.<sup>[10]</sup></p>
+        <p><strong>Spring AI 2.0 GA:</strong> shipped to Maven Central on 06-12, built on Spring Boot 4.0 + Framework 7. Watch out: the <code>ChatModel</code> tool-execution loop is broken — tool execution now runs via <code>ChatClient</code> + <code>ToolCallingAdvisor</code>.<sup>[11]</sup> (The AI model integrations behind it are ai-dev territory — here we just flag the Spring release milestone.)</p>
+        <p><strong>Linux 7.1</strong> shipped on 06-14, with the 7.2 merge window opening right after — expected additions include (limited) Apple M3 boot, cache-aware scheduling, and removal of various x86 legacy CPUs.<sup>[12]</sup></p>
+        <p><strong>Stack Overflow for Agents</strong> entered beta on 06-10 — an API-first knowledge base for AI coding agents. This is primarily an ai-dev story: details in the <strong>ai-dev</strong> brief, just flagged here.<sup>[13]</sup></p>
+        <div class="footnotes"><ol>
+          <li id="s10"><a href="https://www.cisa.gov/news-events/alerts/2026/06/09/cisa-adds-three-known-exploited-vulnerabilities-catalog">cisa.gov</a> — 06-09-2026</li>
+          <li id="s11"><a href="https://spring.io/blog/2026/06/12/spring-ai-2-0-0-GA-available-now/">spring.io/blog</a> — 06-12-2026</li>
+          <li id="s12"><a href="https://9to5linux.com/linux-kernel-7-1-officially-released-heres-whats-new">9to5linux.com</a> — 06-14-2026</li>
+          <li id="s13"><a href="https://stackoverflow.blog/2026/06/10/announcing-stack-overflow-for-agents/">stackoverflow.blog</a> — 06-10-2026</li>
+        </ol></div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Saturday, June twentieth. The week was nothing but patch waves, and don't worry — you can cruise through most of it over the weekend, nothing's on fire right now.</p>
+  <p>The biggest story is playing out in the Arch User Repository, the community shelf for Arch Linux. A coordinated campaign poisoned over fifteen hundred packages with malware — a data stealer and a deeply hidden rootkit. The attackers deliberately took over orphaned packages and slipped in a malicious npm dependency called atomic-lockfile. Arch locked new account signups on June fifteenth to clean house. Important: the official Arch distribution itself is untouched — only the community-maintained AUR.</p>
+  <p>On the infrastructure side, F5 patched two critical NGINX vulnerabilities out-of-cycle, both with a severity of nine point two. One sits in the HTTP-three module, the other in the HTTP-two and gRPC paths. If you're running NGINX as a reverse proxy, you should upgrade to versions one thirty-one point two or one thirty point three.</p>
+  <p>Node.js released its quarterly security batch: twelve CVEs, two of them rated high. One lets you bypass wildcard certificate validation using a Unicode trick, the other crashes WebCrypto. The fixes are in versions twenty-two point twenty-three, twenty-four point seventeen, and twenty-six point three-one.</p>
+  <p>And Oracle dropped its big quarterly update: two hundred forty-three vulnerabilities across eleven product families, nearly half of them critical. Java SE is in there — if you live on the JVM, move to the latest builds.</p>
+  <p>On the bright side: TypeScript seven point zero is in release candidate. This is the version with the native Go compiler, and it's roughly ten times faster. Microsoft's own VS Code codebase compiles in under nine seconds instead of eighty-nine. The finished version is expected around July. Watch out when upgrading: older module formats and a few compiler options are gone.</p>
+  <p>PostgreSQL nineteen also came out as a first beta — with over two hundred changes, graph queries right in SQL, and parallel autovacuum. And the EU Cyber Resilience Act has its next deadline coming: starting September eleventh, manufacturers must report actively exploited vulnerabilities to regulators.</p>
+  <p>Next week we'll see if TypeScript seven makes the leap to final, and whether the Arch story gets a second wave. Until then: check your patches, and enjoy your weekend.</p>
+</div>
+
+</body>
+</html>
