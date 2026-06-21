@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-06-21</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-21</span>
+  </div>
+  <h1 class="masthead-title">The BSI calls at night: a 10.0 in Windchill</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">It wasn't a quiet week. Within four days, a 10.0 vulnerability in PLM software, an out-of-band patch for NGINX, a Defender zero-day out of spite, and the largest Patch Tuesday in Microsoft's history all converged. Little of it is "patch today!" panic — but all of it is news you should know before someone asks about it in standup.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">DE</span> <strong>PTC Windchill</strong>: CVSS 10.0, unauthenticated RCE, active backdoors. The BSI called admins at 2:30 a.m. Patch available since 06/15.</li>
+      <li><span class="chip hot">Infra</span> <strong>NGINX</strong>: Out-of-band patch (06/17) for use-after-free in HTTP/3 (CVSS v3.1 8.1) plus heap overflow in HTTP/2+gRPC (CVSS v3.1 7.3). No confirmed exploits in the wild yet.</li>
+      <li><span class="chip hot">Sec</span> <strong>Fortinet FortiSandbox</strong>: three critical CVEs (up to 9.8) actively exploited since 06/09 — unauthenticated, root, no click required.</li>
+      <li><span class="chip">Sec</span> <strong>Microsoft Patch Tuesday</strong>: record 198 CVEs, 32 critical, three known zero-days in advance. Plus "RoguePlanet" — a Defender zero-day, published unpatched out of frustration.</li>
+      <li><span class="chip">Browser</span> <strong>Chrome V8</strong>: zero-day CVE-2026-11645 (8.8) being exploited; CISA-KEV deadline 06/23. Affects every Electron app.</li>
+      <li><span class="chip">Web</span> <strong>Joomla JCE</strong>: CVSS-10.0 PHP execution in the KEV list; automated attacks underway. Patch available since 06/03.</li>
+      <li><span class="chip good">Release</span> <strong>PostgreSQL 19 Beta 1</strong> is here: parallel autovacuum, SQL/PGQ graph queries, <code>ON CONFLICT DO SELECT</code>. GA in fall.</li>
+      <li><span class="chip">Regulation</span> <span class="chip">EU</span> <strong>CRA</strong>: notification rules take effect as of 06/11; starting 09/11, ENISA reporting requirement for exploited vulnerabilities kicks in.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Weekly outlook</div>
+      <div class="timeline-sub">What's due this week — KEV deadlines, open patches</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Sun 06/21</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>RoguePlanet (Defender) still unpatched — Microsoft working on fix</span>
+          <span>Check Windchill patch status (BSI call ongoing)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 06/22</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet week start — no hard deadlines</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue 06/23</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CISA-KEV deadline: Chrome V8 CVE-2026-11645 (US agencies)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 06/24</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>—</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu 06/25</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>—</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 06/26</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>—</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Sat 06/27</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heads up: Cisco SD-WAN KEV deadline 06/29 (Mon) approaching</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>PTC Windchill: a perfect 10.0, and the BSI picked up the phone <span class="h2-refs">[1]</span></h2>
+        <p>This week's headline story doesn't directly affect Daniel — Windchill is <strong>PLM software</strong> (Product Lifecycle Management: the system where industrial firms manage CAD models, bills of materials, and product data) — but it shows how a critical vulnerability escalates today. CVE-2026-12569 is an <strong>unauthenticated remote code execution via unsafe deserialization</strong>, affecting Windchill PDMLink and FlexPLM, and carries a perfect <span class="stat">10.0</span> under CVSS 3.1 (still 9.3 under CVSS 4.0).</p>
+        <div class="eli5">
+          <strong class="eli5-term">Unsafe deserialization:</strong> A program receives data from outside and "unpacks" it back into live objects — like an IKEA box that assembles itself. If no one checks what's in the box, it also assembles what the attacker put in: executable code here. No login needed, directly from the network — so easily automated.</div>
+        <p>That's exactly what's happening now: attackers are actively installing backdoors and web shells. The BSI flags the HTTP header <code>X-windchill-req: ?x8Fmgow</code> as an indicator. Notably, the response: the BSI called affected admins overnight — reports cite calls around 2:30 a.m. on 06/17 — to push on patch status. A government agency doesn't make calls like that over a 7-score vulnerability.</p>
+        <div class="callout warn">
+          <span class="callout-label">Status</span> Patched as of 06/15 (Windchill 13.1.2.8, 13.1.3.4, 13.0.2.12, 12.1.2.27). Versions ≤ 11.0 M030 get no fix and must be isolated from the network.
+        </div>
+        <div class="footnotes"><ol>
+          <li id="fn1"><a href="https://www.heise.de/en/news/PTC-Windchill-BSI-calls-admins-at-night-due-to-critical-security-vulnerability-11338329.html">heise.de</a> — BSI warning, 06/17/2026</li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>NGINX: out-of-band patch for HTTP/3 and gRPC <span class="h2-refs">[2]</span></h2>
+        <p>This is the story that touches Daniel. F5 patched NGINX out of cycle on 06/17 — two vulnerabilities in the newer mainline versions:</p>
+        <p><strong>CVE-2026-42530</strong>: a <strong>use-after-free</strong> in HTTP/3/QUIC handling (<code>ngx_http_v3_module</code>), CVSS v3.1 = 8.1, even 9.2 under v4.0. <strong>CVE-2026-42055</strong>: a <strong>heap buffer overflow</strong> in HTTP/2 and gRPC proxying, CVSS v3.1 7.3.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Use-after-free:</strong> The program frees a memory region ("I don't need this anymore") and then accesses it anyway — like ending your lease, returning the key, and walking back in. Whoever moved in next controls what you find there. In a web server, this can lead to code execution.</div>
+        <p>Only the young mainline releases <strong>1.31.0–1.31.1</strong> are affected (for 42055 the broader range from 1.13.10 too); the fix ships in <strong>1.31.2</strong> and 1.30.3. If you run the stable branch, you're clear on 42530 — classic NGINX, new protocol features come with rough edges. Good news: <em>no</em> confirmed exploitation in the wild yet. HTTP/3 is still sparse; by the time it becomes a mass target, patches should be out.</p>
+        <div class="footnotes"><ol>
+          <li id="fn2"><a href="https://socradar.io/blog/cve-2026-42530-cve-2026-42055-f5-nginx/">socradar.io</a> — NGINX patch analysis, 06/17/2026</li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Fortinet FortiSandbox: three critical flaws, all three under active attack <span class="h2-refs">[3][4]</span></h2>
+        <p>FortiSandbox — Fortinet's malware analysis appliance — is seeing <strong>three critical CVEs exploited simultaneously</strong>. This is the worst category: unauthenticated, no user interaction, root.</p>
+        <ul>
+          <li><strong>CVE-2026-39808</strong> (OS command injection): CVSS <span class="stat">9.8</span>. An unauthenticated attacker executes code with root privileges. Affects 4.4.0–4.4.8, patched in 4.4.9+ (April 2026).</li>
+          <li><strong>CVE-2026-39813</strong> (path traversal in JRPC API): CVSS 9.1, auth bypass via crafted HTTP request. Also patched in April.</li>
+          <li><strong>CVE-2026-25089</strong> (command injection in web UI): CVSS <span class="stat">9.8</span>; patched 06/09. Oddly: the circulating exploit shows signs of AI-generated development and contains functional bugs.</li>
+        </ul>
+        <p>VulnCheck saw the first exploitation of 39808 on 06/09; Defused Cyber reported attacks on all three within 24 hours by 06/16. Fortinet hasn't officially confirmed this. Lesson for operations thinking: a <em>security</em> appliance that's unauthenticated-RCE-able is not protection, it's a door with a "protection" sign.</p>
+        <div class="footnotes"><ol>
+          <li id="fn3"><a href="https://securityaffairs.com/193709/ai/fortinet-warned-as-three-critical-fortisandbox-bugs-come-under-attack.html">securityaffairs.com</a> — three FortiSandbox bugs under attack, 06/16/2026</li>
+          <li id="fn4"><a href="https://www.bleepingcomputer.com/news/security/critical-fortinet-fortisandbox-flaws-now-exploited-in-attacks/">bleepingcomputer.com</a> — exploitation timeline, 06/16/2026</li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>Microsoft Patch Tuesday: 198 CVEs — and a zero-day out of spite <span class="h2-refs">[5][6]</span></h2>
+        <p>June's Patch Tuesday was Microsoft's largest ever on a single Tuesday, with <span class="stat">198 CVEs</span> — 32 critical, 166 important. Three were <strong>known zero-days disclosed in advance</strong>, all rated "Exploitation More Likely": <strong>CVE-2026-50507</strong> (BitLocker bypass), <strong>CVE-2026-49160</strong> (HTTP.sys DoS), and <strong>CVE-2026-45586</strong> (CTFMON privilege escalation).</p>
+        <p>But the oddest story came from outside: <strong>"RoguePlanet"</strong> (CVE-2026-50656), a race condition in Microsoft Defender that spawns a shell with SYSTEM privileges. A researcher named "Nightmare Eclipse" published the PoC on GitHub on 06/10 — hours after Patch Tuesday, by their own account out of frustration over a dispute with Microsoft. Affects fully patched Windows 10 and 11 systems. Microsoft says they're working on a "high-quality" fix; as of 06/17 there was no patch and no observed exploitation.</p>
+        <div class="callout info">
+          <span class="callout-label">Source note</span> Multiple secondary sources cite RoguePlanet's CVSS value (~7.8); the MSRC primary source was not directly checked — so treat as a secondary value.
+        </div>
+        <div class="footnotes"><ol>
+          <li id="fn5"><a href="https://www.tenable.com/blog/microsofts-june-2026-patch-tuesday-addresses-198-cves-cve-2026-49160-cve-2026-50507">tenable.com</a> — Patch Tuesday analysis, 06/10/2026</li>
+          <li id="fn6"><a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-working-on-defender-patch-for-rogueplanet-zero-day/">bleepingcomputer.com</a> — RoguePlanet, 06/17/2026</li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Chrome V8 zero-day — and why your Electron apps should care <span class="h2-refs">[7]</span></h2>
+        <p><strong>CVE-2026-11645</strong> is an out-of-bounds read/write in V8, Chrome's JavaScript engine — CVSS 8.8, actively exploited, patched in Chrome 149.0.7827.103 on 06/08. A crafted HTML page can execute code (within the sandbox). The anonymous reporter earned $55,000 bounty. CISA added it to the KEV list; US agencies' deadline is <strong>06/23</strong>.</p>
+        <p>Why this sits here instead of just "browser news": V8 powers <strong>every Electron app</strong> — VS Code, Slack, Discord, Postman. A V8 flaw is de facto a desktop-app flaw. If you build or ship Electron apps, watch the Chromium version, not just the browser update.</p>
+        <div class="footnotes"><ol>
+          <li id="fn7"><a href="https://www.helpnetsecurity.com/2026/06/09/google-chrome-zero-day-cve-2026-11645/">helpnetsecurity.com</a> — Chrome zero-day, 06/09/2026</li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>KEV roundup: Joomla, Cisco SD-WAN, Android <span class="h2-refs">[8][9][10]</span></h2>
+        <p><strong>Joomla JCE</strong> — CVE-2026-48907, a perfect 10.0: unauthenticated PHP code execution via creating new editor profiles. Affects JCE 1.0.0–2.9.99.4; patched in 2.9.99.5 (06/03). CISA added it to KEV on 06/16, automated attacks running. If you have any Joomla with the JCE editor anywhere: that's the patch entry you check today.</p>
+        <p><strong>Cisco Catalyst SD-WAN</strong> — CVE-2026-20262 (path traversal, CVSS 6.5, arbitrary file write) entered the KEV list; agency deadline 06/29. Attackers drop a malicious <code>.war</code> file via vManage's WildFly server, which deploys as a Java web app. Alongside it sits CVE-2026-20245, a root escalation unpatched at time of warning.</p>
+        <p><strong>Android June bulletin</strong> — 121 flaws, 13 critical. CVE-2025-48595 (CVSS 8.4, integer overflow → local privilege escalation in framework, no user interaction) is being exploited by Google "in a limited and targeted manner"; affects Android 14 through 16. In KEV early June.</p>
+        <div class="callout info">
+          <span class="callout-label">Note</span> KEV add data for Joomla come from secondary sources (THN, Security Affairs) — the CISA alert page itself returned 403 on fetch. Cross-checked multiple times, but not primary-confirmed.
+        </div>
+        <div class="footnotes"><ol>
+          <li id="fn8"><a href="https://thehackernews.com/2026/06/cisa-warns-of-actively-exploited-joomla.html">thehackernews.com</a> — Joomla JCE in KEV, 06/16/2026</li>
+          <li id="fn9"><a href="https://www.helpnetsecurity.com/2026/06/16/cisco-sd-wan-cve-2026-20262-exploited/">helpnetsecurity.com</a> — Cisco SD-WAN, 06/16/2026</li>
+          <li id="fn10"><a href="https://source.android.com/docs/security/bulletin/2026/2026-06-01">source.android.com</a> — Android bulletin June 2026</li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>PostgreSQL 19 Beta 1 is here <span class="h2-refs">[11]</span></h2>
+        <p>On 06/04, the first beta of <strong>PostgreSQL 19</strong> shipped — for Daniel's stack (Postgres is the house database), the most welcome entry today. Highlights:</p>
+        <ul>
+          <li><strong>Parallel autovacuum</strong> (<code>autovacuum_max_parallel_workers</code>) — vacuuming dead table rows now runs multi-threaded instead of blocking a single worker.</li>
+          <li><strong>SQL/PGQ</strong> — property graph queries directly in SQL: graph operations without a separate graph database.</li>
+          <li><strong>ON CONFLICT DO SELECT</strong> — on upsert, get the conflicting row back directly instead of fetching it again later.</li>
+          <li>Also: REPACK CONCURRENTLY, ~2× faster inserts with FK checks, online checksum toggling.</li>
+        </ul>
+        <p>GA targeted for Sep/Oct 2026. Beta means: test, give feedback — don't run production on it. But <code>ON CONFLICT DO SELECT</code> alone saves a roundtrip query in many FastAPI endpoints.</p>
+        <div class="footnotes"><ol>
+          <li id="fn11"><a href="https://www.postgresql.org/about/news/postgresql-19-beta-1-released-3313/">postgresql.org</a> — Beta 1 announcement, 06/04/2026</li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>EU CRA + NIS2: two deadlines drawing closer <span class="h2-refs">[12][13]</span></h2>
+        <p>The <strong>EU Cyber Resilience Act</strong> hit a milestone on 06/11: notification rules for conformity assessment bodies now apply — member states need designated authorities. The developer-relevant deadline is <strong>09/11/2026</strong>: as of then, vendors must actively report exploited vulnerabilities and serious incidents to ENISA and national CSIRTs. Full CE marking requirement kicks in December 2027.</p>
+        <div class="eli5">
+          <strong class="eli5-term">CRA:</strong> An EU regulation that mandates basic cybersecurity for "products with digital elements" — from IoT gadgets to software libraries — with CE marks like a toaster. OSS maintenance has exceptions, but commercial distribution puts you in scope.
+        </div>
+        <p>Parallel in Germany: the <strong>NIS2 registration deadline</strong> with the BSI was 03/06 — already passed. Late registration is possible but counts as its own violation; fines reach €10 million or 2% of annual turnover.</p>
+        <div class="footnotes"><ol>
+          <li id="fn12"><a href="https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act">ec.europa.eu</a> — CRA timeline</li>
+          <li id="fn13"><a href="https://www.perfomynd.com/blog/cyber-resilience/nis2-registration-deadline-germany-bsi/">perfomynd.com</a> — NIS2 registration DE/BSI</li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Briefly noted: Kubernetes, more KEV adds</h2>
+        <p><strong>Kubernetes v1.37</strong> is in development — v1.37.0-alpha.1 landed 06/11, enhancement freeze was 06/17. The release feels like a cleanup cycle; requires containerd 2.0+, and DRA "partitionable devices" (GPU slicing) keep rolling. Nothing urgent today — but the containerd 2.0 requirement is the note to keep on the upgrade checklist.<sup><a href="#fn14">[14]</a></sup></p>
+        <p>Two more CISA KEV adds from the week: the <strong>LiteSpeed cPanel plugin</strong> (CVE-2026-54420, symlink following, added 06/15) and <strong>Arista EOS</strong> (CVE-2026-7473, incomplete comparison, added 06/09).<sup><a href="#fn15">[15]</a></sup></p>
+        <div class="footnotes"><ol>
+          <li id="fn14"><a href="https://www.kubernetes.dev/resources/release/">kubernetes.dev</a> — release status v1.37</li>
+          <li id="fn15"><a href="https://www.cisa.gov/news-events/alerts/2026/06/15/cisa-adds-two-known-exploited-vulnerabilities-catalog">cisa.gov</a> — KEV add 06/15/2026</li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Newsroom note: what's running elsewhere today</h2>
+        <p>To avoid duplication: this week's AI-coding stories — Anthropic export-control suspension, Fable 5 on terminal bench, and the Gemini CLI/code-assist shift — live in the <strong>ai-dev</strong> brief. The Cognizant–ServiceNow deal as applied enterprise AI belongs in <strong>ai-usecases</strong>. Here we stick to non-AI software, security, and infrastructure.</p>
+      </article>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Sunday, June twenty-first. Last week was anything but quiet in the software world — four major security stories converged in just four days, plus a very welcome database beta.</p>
+  <p>The standout story: a flaw in P-T-C's Windchill industrial software earns a perfect ten. An attacker can execute code from the network without a login, and it's already happening — backdoors are being actively installed. Germany's B-S-I called affected system administrators in the middle of the night, around two thirty a.m., to push for patches. A government agency doesn't make calls like that unless it matters. The patch has been available since June fifteenth.</p>
+  <p>Closer to Daniel's day-to-day is NGINX. F-5 patched the web server outside the normal release cycle — a use-after-free in H-T-T-P-three handling with high severity, plus a heap overflow in gRPC proxying. Only the young mainline versions are affected; if you run the stable line, you're clear. Nothing being exploited yet.</p>
+  <p>At Fortinet, though, it's already burning. In the Sandbox appliance, three critical flaws are being attacked simultaneously — unauthenticated, with root privileges, without any user clicking anything. The most severe scores nine point eight. Bitter irony: a security appliance that becomes an open door itself.</p>
+  <p>Microsoft delivered a record on Patch Tuesday — one hundred ninety-eight flaws in a single Tuesday, more than ever before. Three were known zero-days in advance. And then a researcher, frustrated by a dispute with Microsoft, published another Defender zero-day just hours after Patch Tuesday, named RoguePlanet, still without a fix. It runs on fully patched systems too.</p>
+  <p>A Chrome zero-day in the JavaScript V-8 engine is also being exploited. That's more than browser news, because V-8 powers every Electron app — so VS Code, Slack, or Postman too. If you build those apps, you should watch the Chromium version, not just update the browser.</p>
+  <p>On a brighter note: PostgreSQL Nineteen is out as the first beta. Parallel autovacuum, graph queries right in S-Q-L, and a new ON CONFLICT DO SELECT that saves an extra query on upserts. The final version arrives in the fall.</p>
+  <p>On the regulatory side, the E-U Cyber Resilience Act is drawing near: as of June eleventh, the first rules take effect, and starting September eleventh, vendors must report exploited flaws to E-N-I-S-A. Germany is running N-I-S-Two in parallel, with fines up to ten million euros.</p>
+  <p>Next week should be quieter — the only hard deadline is Tuesday, when U-S agencies must have the Chrome zero-day closed. Talk tomorrow.</p>
+</div>
+
+</body>
+</html>
