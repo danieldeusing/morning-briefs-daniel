@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software — 2026-06-23</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-23</span>
+  </div>
+  <h1 class="masthead-title">Splunk 9.8 under active exploitation — KEV deadline already passed</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Not exactly a quiet weekend: an unauthenticated RCE in Splunk Enterprise (CVSS 9.8) has been actively exploited since mid-June, and the CISA KEV deadline for US agencies expired on Sunday. Plus a critical libssh2 vulnerability with no official fix, AWS gives Lambda an 8-hour MicroVM variant, Spring Boot 4.1 is here — and AMD silently removes memory encryption from consumer Ryzens.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>Splunk CVE-2026-20253</strong>: unauth RCE via PostgreSQL Sidecar, CVSS 9.8, actively exploited, CISA KEV deadline 06.21 passed — update to 10.2.4 / 10.0.7.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">OSS</span> <strong>libssh2 CVE-2026-55200</strong>: critical RCE (9.2), affects all versions ≤ 1.11.1 — fix only as Git commit so far, no release.</li>
+      <li><span class="chip hot">Sec</span> <strong>Oracle PeopleSoft CVE-2026-35273</strong>: ~300 installations compromised by ShinyHunters, 68% in higher education; part of a 243-CVE quarterly patch.</li>
+      <li><span class="chip good">Infra</span> <span class="chip">USA</span> <strong>AWS Lambda MicroVMs</strong>: up to 8 hours runtime, 16 vCPU / 32 GB, Firecracker — built for sandboxing AI/user code.</li>
+      <li><span class="chip good">Release</span> <strong>Spring Boot 4.1.0</strong>: gRPC auto-config, SSRF protection (InetAddressFilter), OTel, Kotlin 2.3 — Spring Boot 3.5 EOL on 06.30.</li>
+      <li><span class="chip hot">Sec</span> <strong>AMD strips TSME</strong> silently from Ryzen 9000 consumer CPUs (AGESA 1.2.7.0) — restoration via July BIOS update.</li>
+      <li><span class="chip hot">Sec</span> <strong>Patch Tuesday June</strong>: record-breaking ~198–209 CVEs, six zero-days (one actively exploited), plus AKS RCE (8.8).</li>
+      <li><span class="chip hot">Sec</span> <strong>WordPress supply chain</strong>: OptinMonster CDN hijack (1.2M sites) + ShapedPlugin backdoor in premium plugins.</li>
+      <li><span class="chip">Regulation</span> <span class="chip">EU</span> <strong>CRA milestone 06.11</strong> reached; 24-hour reporting requirement starting 09.11 — and Five Eyes warn: AI attacks "months, not years" away.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">Deadlines, EOLs, and what's coming this week</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Mon 06.23</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Splunk KEV deadline passed as of 06.21 — patch if still unpatched</span>
+          <span>libssh2 fix still only as Git commit, no release</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 06.24</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>AWS Lambda MicroVMs (since 06.22) evaluate in five regions</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mon 06.30</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Spring Boot 3.5 EOL — plan migration to 4.1.0</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">July</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>AMD BIOS update expected to restore TSME on Ryzen 9000</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 09.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CRA: 24-hour early warning for actively exploited vulnerabilities takes effect</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>Splunk: unauth RCE, actively exploited, KEV deadline already passed <span class="h2-refs">[1][2]</span></h2>
+        <p>The vulnerability of the weekend: <strong>CVE-2026-20253</strong> in Splunk Enterprise allows unauthenticated remote code execution via the bundled <strong>PostgreSQL Sidecar</strong> — <span class="stat">CVSS 9.8</span>. Affected are versions <strong>&lt; 10.2.4</strong> and <strong>&lt; 10.0.7</strong>; fixed in 10.2.4 and 10.0.7 respectively. According to helpnetsecurity, it has been actively attacked since around June 15. CISA added it to the KEV catalog — the <strong>remediation deadline for US federal agencies was Sunday, June 21</strong>, so it has already passed.</p>
+        <p>Splunk often sits at the heart of a security stack as a SIEM; an unauthenticated RCE there is exactly the kind of vulnerability an attacker uses to pivot from the monitoring layer deeper into infrastructure. If you run an on-premises instance: the update is not optional, and "internally accessible" is no protection if the telemetry pipeline reaches far into the network.</p>
+        <div class="footnotes"><ol>
+          <li id="fn1"><a href="https://www.helpnetsecurity.com/2026/06/19/splunk-vulnerability-cve-2026-20253-exploited/">helpnetsecurity.com</a></li>
+          <li id="fn2"><a href="https://www.bleepingcomputer.com/news/security/cisa-splunk-enterprise-flaw-actively-exploited-patch-by-sunday/">bleepingcomputer.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>libssh2: critical RCE — and still no release <span class="h2-refs">[3]</span></h2>
+        <p><strong>CVE-2026-55200</strong> in libssh2 (CVSS 9.2) can be triggered via malformed SSH packets: memory errors leading to code execution, including DoS. Affected are <strong>all versions ≤ 1.11.1</strong> — and the inconvenient part: there's no official release yet. The fix exists only as a <strong>GitHub commit 7acf3df</strong>; Debian has pushed 1.11.1-3 to Testing. A second vulnerability (CVE-2026-55199, High) comes along with it.</p>
+        <p>libssh2 is everywhere SSH gets embedded: routers, IoT devices, server management tools, Git clients. If you link libssh2 statically, you should apply the commit or wait for the distro package rather than hoping for an upstream tag that isn't there yet.</p>
+        <div class="footnotes"><ol>
+          <li id="fn3"><a href="https://www.heise.de/en/news/Security-vulnerabilities-endanger-connections-via-libssh2-11339594.html">heise.de</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Oracle CPU: PeopleSoft RCE actively exploited <span class="h2-refs">[4][5]</span></h2>
+        <p>Oracle's second monthly security update brought <strong>243 CVEs in 245 patches</strong>, with 122 rated as critical. The sharp entry: <strong>CVE-2026-35273</strong>, an unauthenticated RCE in PeopleTools 8.61 and 8.62. According to Tenable, ShinyHunters (UNC6240) have compromised <strong>~300 installations</strong>, with <span class="stat">68% in higher education</span>. Oracle delivered an out-of-band fix on 06.10, and CISA added the vulnerability to the KEV catalog on 06.12.</p>
+        <p>PeopleSoft is campus ERP — student data, personnel records, finances. That a ransomware group is specifically targeting universities fits the pattern: older enterprise stacks, stretched IT teams, sensitive data.</p>
+        <div class="footnotes"><ol>
+          <li id="fn4"><a href="https://www.tenable.com/blog/oracle-june-2026-critical-security-patch-update-addresses-243-cves-cve-2026-35273">tenable.com</a></li>
+          <li id="fn5"><a href="https://www.securityweek.com/oracles-second-monthly-security-updates-deliver-245-patches/">securityweek.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>WordPress supply chain hit twice <span class="h2-refs">[6][7]</span></h2>
+        <p>Two supply-chain incidents in the WordPress ecosystem. First: at <strong>Awesome Motive</strong> (OptinMonster), attackers stole a <strong>CDN API key</strong> via an UpdraftPlus vulnerability and injected malicious JavaScript into OptinMonster, TrustPulse, and PushEngage — <strong>1.2 million sites</strong> affected, according to Sansec. Second: at <strong>ShapedPlugin</strong>, attackers compromised the build and distribution chain via Easy Digital Downloads; the malware stole admin credentials plus 2FA secrets and set up remote access — vulnerable window April through June 2026.</p>
+        <p>In both cases the target was not the individual site but the <strong>update channel</strong>. That's the uncomfortable lesson for anyone who auto-updates plugins: auto-update also automatically distributes a poisoned version.</p>
+        <div class="callout warn"><span class="callout-label">Heads up</span> If you run affected plugins: check for CDN-injected scripts and unexpected admin accounts, rotate 2FA secrets.</div>
+        <div class="footnotes"><ol>
+          <li id="fn6"><a href="https://sansec.io/research/optinmonster-supply-chain-attack">sansec.io</a></li>
+          <li id="fn7"><a href="https://thehackernews.com/2026/06/shapedplugin-wordpress-pro-plugins.html">thehackernews.com</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>AWS Lambda gets MicroVMs — up to 8 hours <span class="h2-refs">[8]</span></h2>
+        <p>AWS announced <strong>Lambda MicroVMs</strong> on 06.22: isolated, <em>stateful</em> execution environments with runtime <strong>up to 8 hours</strong> (vs. the old 15-minute limit), up to <span class="stat">16 vCPU, 32 GB RAM, 32 GB disk</span>, ARM64, built on <strong>Firecracker</strong>, with suspend/resume. Initially in five AWS regions (N. Virginia, Ohio, Oregon, Ireland, Tokyo). (Beta / Current Channel Preview, Version 2607, from ~July 21 2026).</p>
+        <p>The stated intent is clear: <strong>run code generated by users or AI in a sandbox</strong>. AWS is following the pattern others sell as "code interpreter sandbox" — only directly in the Lambda platform with longer runtime and state. For agent workloads that need more than a few minutes and execute untrusted code, this closes a real gap.</p>
+        <div class="eli5"><strong class="eli5-term">MicroVM:</strong> a minimal virtual machine that starts in milliseconds (Firecracker is the technology behind it). Heavier isolation than a container, lighter than a classical VM — ideal for safely locking down third-party code.</div>
+        <div class="footnotes"><ol>
+          <li id="fn8"><a href="https://aws.amazon.com/blogs/aws/run-isolated-sandboxes-with-full-lifecycle-control-aws-lambda-introduces-microvms/">aws.amazon.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Spring Boot 4.1.0 is here — and 3.5 is ending <span class="h2-refs">[9][10]</span></h2>
+        <p><strong>Spring Boot 4.1.0</strong> has been available since 06.10. Highlights: <strong>Spring gRPC auto-configuration</strong>, <strong>SSRF protection for the HTTP client</strong> (new <code>InetAddressFilter</code>), updated OpenTelemetry integration, Log4j file rotation, Jackson config properties, and <strong>Kotlin 2.3 support</strong>. Mark your calendar: <strong>Spring Boot 3.5 reaches EOL on 06.30</strong> — after that there are no free fixes in the OSS branch.</p>
+        <p>For Java/Spring shops, that's the migration announcement of the month. The SSRF filter is more than cosmetic: it addresses exactly the class of server-side request forgery through which internal metadata endpoints are often scraped.</p>
+        <div class="footnotes"><ol>
+          <li id="fn9"><a href="https://spring.io/blog/2026/06/10/spring-boot-4/">spring.io</a></li>
+          <li id="fn10"><a href="https://www.infoq.com/news/2026/06/spring-boot-4-1/">infoq.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>AMD removes memory encryption — quietly <span class="h2-refs">[11]</span></h2>
+        <p>Odd and unappealing story: AMD removed <strong>Transparent Secure Memory Encryption (TSME)</strong> from <strong>Ryzen 9000 consumer CPUs</strong> (non-Pro) with firmware <strong>AGESA 1.2.7.0</strong> — without any announcement. A Linux user discovered it in April via HSI audit; AMD confirmed the removal was intentional but remained quiet on further questions. A <strong>BIOS update in July</strong> is supposed to restore TSME.</p>
+        <p>TSME encrypts RAM transparently against physical attacks (cold boot, DMA sniffing). Turning it off quietly means devices lose a security feature without their owners knowing — the worst kind of security regression.</p>
+        <div class="eli5"><strong class="eli5-term">TSME:</strong> encrypts the entire memory automatically in hardware. Protects against attackers with physical access who want to read RAM contents directly — especially relevant for laptops and kiosk systems.</div>
+        <div class="footnotes"><ol>
+          <li id="fn11"><a href="https://www.tomshardware.com/pc-components/cpus/amd-silently-removes-memory-encryption-from-consumer-ryzen-cpus-leaving-users-unaware-that-they-may-be-vulnerable-security-feature-vanishes-after-newer-agesa-firmware-amd-engineers-go-radio-silent-when-pressed-about-the-change">tomshardware.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>FastAPI 0.138.0 now serves frontends <span class="h2-refs">[12]</span></h2>
+        <p>Small but practical for the Python crowd: <strong>FastAPI 0.138.0</strong> (June 20) brings <code>app.frontend()</code> / <code>router.frontend()</code> to serve a built <code>dist/</code> directory directly from the framework — plus Pydantic v2 deprecation fixes and a bump to <strong>Starlette 1.0.0</strong>. Saves a separate static server for small SPA-plus-API setups; especially for a FastAPI backend with Angular or React frontend that you want to ship as a single container, this is a welcome simplification. The Starlette 1.0 jump is the part that deserves a closer look — a 1.0 major usually means some behavioral changes under the hood.</p>
+        <div class="footnotes"><ol>
+          <li id="fn12"><a href="https://fastapi.tiangolo.com/release-notes/">fastapi.tiangolo.com</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>Patch Tuesday: Record CVE count, six zero-days <span class="h2-refs">[13][14]</span></h2>
+        <p>Microsoft's June patch day (June 9) was unusually large: depending on how you count, <strong>198 to 209 CVEs</strong>, 32–33 of them critical, 28 critical RCEs. Plus <strong>six zero-days</strong> — but only <strong>one actively exploited</strong>: <strong>CVE-2026-42897</strong> (Exchange Server spoofing). The other five were publicly known but not yet attacked, including <strong>CVE-2026-45585</strong> (BitLocker bypass "YellowKey"), <strong>CVE-2020-17103</strong> (Cloud Files EoP), <strong>CVE-2026-45586</strong> (CTFMON EoP, 7.8 — SYSTEM privileges via speech recognition processes) and <strong>CVE-2026-49160</strong> (HTTP.sys DoS, 7.5 — HTTP/2 "bomb", mitigated via new <code>MaxHeadersCount</code> registry value). Separately, <strong>CVE-2026-32193</strong> stands out: a critical <strong>Azure Kubernetes Service RCE</strong> with <span class="stat">CVSS 8.8</span>.</p>
+        <p>The HTTP.sys DoS is the most interesting for web developers: an HTTP/2 header flood that can overwhelm the Windows HTTP stack — relevant for anything behind IIS or HTTP.sys. But the one already actively exploited is the Exchange Server spoofing (CVE-2026-42897) — exactly the kind of flaw an attacker reaches for first in a phishing or identity chain. Six zero-days in one patch day is unusually high; in sum, this is one of Microsoft's largest patch days ever.</p>
+        <div class="footnotes"><ol>
+          <li id="fn13"><a href="https://www.tenable.com/blog/microsofts-june-2026-patch-tuesday-addresses-198-cves-cve-2026-49160-cve-2026-50507">tenable.com</a></li>
+          <li id="fn14"><a href="https://arcticwolf.com/resources/blog/microsoft-patch-tuesday-security-recap-june-2026-edition/">arcticwolf.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Android June: zero-day in active use <span class="h2-refs">[15][16]</span></h2>
+        <p>Google's June patch for Android closes <strong>124 CVEs</strong> via patch levels 2026-06-01 and 2026-06-05, including 18 critical. Sharp: <strong>CVE-2025-48595</strong>, an integer overflow in the Android Framework and <strong>EoP zero-day under active, targeted exploitation</strong> — affects Android 14, 15, 16, and 16 QPR2. "Targeted" usually means commercial spyware, not mass exploit. Still: check your patch level.</p>
+        <div class="footnotes"><ol>
+          <li id="fn15"><a href="https://www.techrepublic.com/article/news-google-june-2026-android-security-update/">techrepublic.com</a></li>
+          <li id="fn16"><a href="https://android.gadgethacks.com/news/android-june-2026-security-update-zero-day-fix-124-vulnerabilities-patched/">gadgethacks.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>EU CRA & Five Eyes: Regulation meets reality <span class="h2-refs">[17][18]</span></h2>
+        <p>Standing thread on EU regulation: with the <strong>Cyber Resilience Act</strong>, the framework for designating notified bodies became effective on <strong>06.11</strong> — member states had to designate their notifying authorities. The next hard deadline is <strong>09.11.2026</strong>: manufacturers must then report actively exploited vulnerabilities within <strong>24 hours (early warning) or 72 hours (full report)</strong>.</p>
+        <p>In parallel, a joint <strong>Five Eyes advisory</strong> warns that AI-driven cyberattacks are "months, not years" away, and boards should treat cyber risk as core to business continuity. Rhetoric with lead time — but the tone aligns with what the supply-chain incidents above practically demonstrate.</p>
+        <div class="footnotes"><ol>
+          <li id="fn17"><a href="https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act">digital-strategy.ec.europa.eu</a></li>
+          <li id="fn18"><a href="https://www.csoonline.com/article/4188049/change-your-cyber-risk-strategy-to-meet-ai-threats-five-eyes-countries-warn-csos.html">csoonline.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Brief Notes <span class="h2-refs">[19][20][21]</span></h2>
+        <p><strong>Azure Linux 4.0</strong> (formerly CBL-Mariner) is Microsoft's first universal server Linux distribution for Azure VMs — Fedora-based; the Flatcar-based Azure Container Linux is also GA <a href="https://www.infoq.com/news/2026/05/azure-linux-4-server/">[19]</a>. — <strong>OpenAI "Patch the Planet"</strong> (GPT-5.5-Cyber + Trail of Bits) is scanning OSS projects like cURL, Python, Go, aiohttp, and Sigstore for bugs; hundreds found, dozens patched — the AI side belongs in the ai-usecases brief, here we note the OSS supply-chain effect <a href="https://techcrunch.com/2026/06/22/openai-launches-new-initiative-to-help-find-and-patch-open-source-bugs/">[20]</a>. — And a smile: Microsoft <strong>Access</strong> begins to lift the 34-year-old limit of 22 inches of form width — the CRT era is over in Access too <a href="https://techcommunity.microsoft.com/blog/accessblog/access-begins-rollout-of-big-forms-for-modern-monitors-feature/4529559">[21]</a>.</p>
+        <div class="footnotes"><ol>
+          <li id="fn19"><a href="https://www.infoq.com/news/2026/05/azure-linux-4-server/">infoq.com</a></li>
+          <li id="fn20"><a href="https://techcrunch.com/2026/06/22/openai-launches-new-initiative-to-help-find-and-patch-open-source-bugs/">techcrunch.com</a></li>
+          <li id="fn21"><a href="https://www.theregister.com/devops/2026/06/23/aws-debuts-lambda-microvms-with-up-to-8-hours-runtime/5260035">theregister.com</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Monday, June 23. The weekend was anything but quiet in the software world — security dominates the day.</p>
+  <p>The top story: Splunk Enterprise has a critical vulnerability, unauthenticated code execution via the bundled PostgreSQL service, with the highest possible severity of nine point eight. It's been actively exploited since mid-June, and the deadline set by CISA, the US federal cybersecurity agency, already expired on Sunday. Anyone running a Splunk instance should update to versions ten point two point four or ten point zero point seven. That's according to helpnetsecurity and bleepingcomputer.</p>
+  <p>Nearly as serious: the widely deployed libssh2 library has a critical vulnerability with a severity of nine point two. It affects all versions up to and including one point eleven point one — and the inconvenient part is there's still no official release, just a single commit on GitHub. As heise reports, libssh2 is found in routers, IoT devices, and management tools.</p>
+  <p>Oracle had a vulnerability in the campus software PeopleSoft actively exploited; the group ShinyHunters compromised around three hundred installations, nearly seventy percent of them at universities. And in the WordPress ecosystem there were two supply-chain attacks: one via a stolen CDN key at Awesome Motive affecting one point two million sites, and one via compromised premium plugins from ShapedPlugin.</p>
+  <p>But there was also good news. AWS gave its Lambda service a new option called MicroVMs: isolated environments running up to eight hours with up to sixteen virtual cores and thirty-two gigabytes of memory. They're explicitly designed to safely lock down code generated by users or AI.</p>
+  <p>For the Java world, Spring Boot four point one arrived with gRPC support, new protection against server-side request forgery, and Kotlin two point three. Important: Spring Boot three point five reaches end of support on June thirtieth. And AMD quietly removed memory encryption from consumer Ryzen processors — a BIOS update in July should restore it.</p>
+  <p>Microsoft's patch day was record-breakingly large with around two hundred vulnerabilities and six zero-days (one actively exploited), plus a critical vulnerability in the Azure Kubernetes service. Android patched an actively exploited zero-day along with one hundred twenty-four vulnerabilities total.</p>
+  <p>On the regulation side, a milestone was reached with the European Cyber Resilience Act; starting September eleventh, there's a twenty-four-hour reporting requirement. And the Five Eyes nations warn that AI-powered attacks are only months away.</p>
+  <p>Tomorrow we'll see if new versions come from Angular, React, or Postgres and whether there are fresh CISA KEV entries. Until then: keep an eye on the open Splunk and libssh2 fronts.</p>
+</div>
+
+</body>
+</html>

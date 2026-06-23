@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software — 2026-06-23</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-06-23</span>
+  </div>
+  <h1 class="masthead-title">Splunk 9.8 wird ausgenutzt — KEV-Frist schon verstrichen</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Ein ruhiges Wochenende war das nicht: Eine unauthentifizierte RCE in Splunk Enterprise (CVSS 9.8) wird seit Mitte Juni aktiv ausgenutzt, die CISA-KEV-Frist für US-Behörden ist seit Sonntag abgelaufen. Dazu eine kritische libssh2-Lücke ganz ohne offiziellen Fix, AWS spendiert Lambda eine 8-Stunden-MicroVM-Variante, Spring Boot 4.1 ist da — und AMD entfernt klammheimlich die Speicherverschlüsselung aus Consumer-Ryzens.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>Splunk CVE-2026-20253</strong>: unauth RCE über PostgreSQL-Sidecar, CVSS 9.8, aktiv ausgenutzt, CISA-KEV-Frist 21.06. verstrichen — auf 10.2.4 / 10.0.7.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">OSS</span> <strong>libssh2 CVE-2026-55200</strong>: kritische RCE (9.2), betrifft alle Versionen ≤ 1.11.1 — Fix bislang nur als Git-Commit, kein Release.</li>
+      <li><span class="chip hot">Sec</span> <strong>Oracle PeopleSoft CVE-2026-35273</strong>: ~300 Installationen von ShinyHunters kompromittiert, 68 % im Hochschulbereich; Teil eines 243-CVE-Quartals-Patches.</li>
+      <li><span class="chip good">Infra</span> <span class="chip">USA</span> <strong>AWS Lambda MicroVMs</strong>: bis 8 h Laufzeit, 16 vCPU / 32 GB, Firecracker — gebaut fürs Sandboxen von KI-/User-Code.</li>
+      <li><span class="chip good">Release</span> <strong>Spring Boot 4.1.0</strong>: gRPC-Auto-Config, SSRF-Schutz (InetAddressFilter), OTel, Kotlin 2.3 — Spring Boot 3.5 EOL am 30.06.</li>
+      <li><span class="chip hot">Sec</span> <strong>AMD streicht TSME</strong> still aus Ryzen-9000-Consumer-CPUs (AGESA 1.2.7.0) — Reaktivierung erst im Juli-BIOS.</li>
+      <li><span class="chip hot">Sec</span> <strong>Patch Tuesday Juni</strong>: rekordverdächtige ~198–209 CVEs, sechs Zero-Days (nur einer aktiv ausgenutzt), dazu eine AKS-RCE (8.8).</li>
+      <li><span class="chip hot">Sec</span> <strong>WordPress-Lieferkette</strong>: OptinMonster-CDN-Hijack (1,2 Mio. Seiten) + ShapedPlugin-Backdoor in Premium-Plugins.</li>
+      <li><span class="chip">Regulierung</span> <span class="chip">EU</span> <strong>CRA-Meilenstein 11.06.</strong> erreicht; 24-h-Meldepflicht ab 11.09. — und Five Eyes warnt: KI-Angriffe „Monate, nicht Jahre" weg.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Fristen, EOLs und was diese Woche ansteht</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Mo 23.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heute</span>
+          <span>Splunk-KEV-Frist seit 21.06. verstrichen — patchen, falls noch offen</span>
+          <span>libssh2-Fix weiterhin nur als Git-Commit, kein Release</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 24.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>AWS Lambda MicroVMs (seit 22.06.) in fünf Regionen evaluieren</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mo 30.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Spring Boot 3.5 EOL — Migration auf 4.1.0 planen</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Juli</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>AMD-BIOS-Update soll TSME auf Ryzen 9000 wiederherstellen</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fr 11.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CRA: 24-h-Frühwarnung für aktiv ausgenutzte Lücken greift</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>Splunk: unauth RCE, aktiv ausgenutzt, KEV-Frist schon vorbei <span class="h2-refs">[1][2]</span></h2>
+        <p>Die Lücke des Wochenendes: <strong>CVE-2026-20253</strong> in Splunk Enterprise erlaubt unauthentifizierte Remote-Code-Execution über den mitgelieferten <strong>PostgreSQL-Sidecar</strong> — <span class="stat">CVSS 9,8</span>. Betroffen sind Versionen <strong>&lt; 10.2.4</strong> und <strong>&lt; 10.0.7</strong>; gefixt in 10.2.4 bzw. 10.0.7. Sie wird laut helpnetsecurity seit etwa dem 15. Juni aktiv angegriffen, CISA hat sie in den KEV-Katalog aufgenommen — die <strong>Remediation-Frist für US-Bundesbehörden war Sonntag, der 21.06.</strong>, also bereits verstrichen.</p>
+        <p>Splunk sitzt als SIEM oft mittendrin im Security-Stack; eine unauth-RCE dort ist genau die Sorte Lücke, mit der ein Angreifer von der Überwachungsschicht aus in die Tiefe geht. Wenn ihr eine On-Prem-Instanz fahrt: das Update ist nicht optional, und „intern erreichbar" ist kein Schutz, wenn die Telemetrie-Pipeline weit ins Netz reicht.</p>
+        <div class="footnotes"><ol>
+          <li id="fn1"><a href="https://www.helpnetsecurity.com/2026/06/19/splunk-vulnerability-cve-2026-20253-exploited/">helpnetsecurity.com</a></li>
+          <li id="fn2"><a href="https://www.bleepingcomputer.com/news/security/cisa-splunk-enterprise-flaw-actively-exploited-patch-by-sunday/">bleepingcomputer.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>libssh2: kritische RCE — und noch kein Release <span class="h2-refs">[3]</span></h2>
+        <p><strong>CVE-2026-55200</strong> in libssh2 (CVSS 9,2) lässt sich über präparierte SSH-Pakete auslösen: Speicherfehler bis hin zur Code-Ausführung, DoS inklusive. Betroffen sind <strong>alle Versionen ≤ 1.11.1</strong> — und das Unangenehme: einen offiziellen Release gibt es noch nicht. Der Fix existiert bisher nur als <strong>GitHub-Commit 7acf3df</strong>; Debian hat 1.11.1-3 in Testing geschoben. Eine zweite Lücke (CVE-2026-55199, High) kommt dazu.</p>
+        <p>libssh2 steckt überall, wo SSH eingebettet wird: Router, IoT-Geräte, Server-Management-Tools, Git-Clients. Wer libssh2 statisch linkt, sollte den Commit nachziehen oder auf das Distro-Paket warten, statt auf einen Upstream-Tag zu hoffen, der noch nicht da ist.</p>
+        <div class="footnotes"><ol>
+          <li id="fn3"><a href="https://www.heise.de/en/news/Security-vulnerabilities-endanger-connections-via-libssh2-11339594.html">heise.de</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Oracle-CPU: PeopleSoft-RCE aktiv ausgenutzt <span class="h2-refs">[4][5]</span></h2>
+        <p>Oracles zweites monatliches Sicherheits-Update brachte <strong>243 CVEs in 245 Patches</strong>, davon 122 als kritisch eingestuft. Der scharfe Eintrag: <strong>CVE-2026-35273</strong>, eine unauthentifizierte RCE in PeopleTools 8.61 und 8.62. ShinyHunters (UNC6240) haben laut Tenable <strong>~300 Installationen kompromittiert</strong>, <span class="stat">68 % davon im Hochschulbereich</span>. Oracle lieferte am 10.06. einen Out-of-Band-Fix, CISA nahm die Lücke am 12.06. in den KEV-Katalog auf.</p>
+        <p>PeopleSoft ist Campus-ERP — Studierendendaten, Personalakten, Finanzen. Dass eine Erpresser-Gruppe gezielt Hochschulen abräumt, passt ins Muster: ältere Enterprise-Stacks, knappe IT-Teams, sensible Daten.</p>
+        <div class="footnotes"><ol>
+          <li id="fn4"><a href="https://www.tenable.com/blog/oracle-june-2026-critical-security-patch-update-addresses-243-cves-cve-2026-35273">tenable.com</a></li>
+          <li id="fn5"><a href="https://www.securityweek.com/oracles-second-monthly-security-updates-deliver-245-patches/">securityweek.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>WordPress-Lieferkette gleich zweifach getroffen <span class="h2-refs">[6][7]</span></h2>
+        <p>Zwei Supply-Chain-Vorfälle im WordPress-Ökosystem. Erstens: bei <strong>Awesome Motive</strong> (OptinMonster) wurde über eine UpdraftPlus-Lücke ein <strong>CDN-API-Key gestohlen</strong> und bösartiges JavaScript in OptinMonster, TrustPulse und PushEngage eingeschleust — <strong>1,2 Millionen Seiten</strong> betroffen, so Sansec. Zweitens: bei <strong>ShapedPlugin</strong> kompromittierten Angreifer über Easy Digital Downloads die Build- und Distributionskette; die Malware stahl Admin-Zugänge plus 2FA-Secrets und richtete Fernzugriff ein — gefährdetes Fenster April bis Juni 2026.</p>
+        <p>Beide Male war nicht die einzelne Seite das Ziel, sondern der <strong>Update-Kanal</strong>. Das ist die unbequeme Lehre für jeden, der Plugins automatisch aktualisieren lässt: Auto-Update verteilt eben auch eine vergiftete Version automatisch.</p>
+        <div class="callout warn"><span class="callout-label">Achtung</span> Wer betroffene Plugins fährt: CDN-injizierte Skripte und unerwartete Admin-Accounts prüfen, 2FA-Secrets rotieren.</div>
+        <div class="footnotes"><ol>
+          <li id="fn6"><a href="https://sansec.io/research/optinmonster-supply-chain-attack">sansec.io</a></li>
+          <li id="fn7"><a href="https://thehackernews.com/2026/06/shapedplugin-wordpress-pro-plugins.html">thehackernews.com</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>AWS Lambda bekommt MicroVMs — bis zu 8 Stunden <span class="h2-refs">[8]</span></h2>
+        <p>AWS hat am 22.06. <strong>Lambda MicroVMs</strong> vorgestellt: isolierte, <em>stateful</em> Ausführungsumgebungen mit Laufzeit <strong>bis zu 8 Stunden</strong> (gegen das alte 15-Minuten-Limit), bis zu <span class="stat">16 vCPU, 32 GB RAM, 32 GB Disk</span>, ARM64, auf <strong>Firecracker</strong> aufgebaut, mit Suspend/Resume. Zunächst in fünf AWS-Regionen (N. Virginia, Ohio, Oregon, Irland, Tokio).</p>
+        <p>Das Zielbild ist klar genannt: <strong>von Nutzern oder KI generierten Code in einer Sandbox laufen lassen</strong>. AWS zieht hier mit dem Muster nach, das andere als „Code-Interpreter-Sandbox" verkaufen — nur direkt in der Lambda-Plattform und mit langer Laufzeit plus Zustand. Für Agenten-Workloads, die mehr als ein paar Minuten brauchen und untrusted Code ausführen, schließt das eine echte Lücke.</p>
+        <div class="eli5"><strong class="eli5-term">MicroVM:</strong> eine minimal abgespeckte virtuelle Maschine, die in Millisekunden startet (Firecracker ist die Technik dahinter). Schwerere Isolation als ein Container, leichter als eine klassische VM — ideal, um fremden Code sicher einzusperren.</div>
+        <div class="footnotes"><ol>
+          <li id="fn8"><a href="https://aws.amazon.com/blogs/aws/run-isolated-sandboxes-with-full-lifecycle-control-aws-lambda-introduces-microvms/">aws.amazon.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Spring Boot 4.1.0 ist da — und 3.5 läuft aus <span class="h2-refs">[9][10]</span></h2>
+        <p><strong>Spring Boot 4.1.0</strong> ist seit dem 10.06. verfügbar. Highlights: <strong>Spring-gRPC-Auto-Konfiguration</strong>, ein <strong>SSRF-Schutz für den HTTP-Client</strong> (neuer <code>InetAddressFilter</code>), aktualisierte OpenTelemetry-Integration, Log4j-File-Rotation, Jackson-Config-Properties und <strong>Kotlin-2.3-Support</strong>. Termin im Kalender: <strong>Spring Boot 3.5 erreicht am 30.06. sein EOL</strong> — danach gibt es im OSS-Zweig keine kostenlosen Fixes mehr.</p>
+        <p>Für Java/Spring-Shops ist das die Migrations-Ansage des Monats. Der SSRF-Filter ist dabei mehr als Kosmetik: er adressiert genau die Klasse von Server-Side-Request-Forgery, über die interne Metadaten-Endpunkte gern abgegriffen werden.</p>
+        <div class="footnotes"><ol>
+          <li id="fn9"><a href="https://spring.io/blog/2026/06/10/spring-boot-4/">spring.io</a></li>
+          <li id="fn10"><a href="https://www.infoq.com/news/2026/06/spring-boot-4-1/">infoq.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>AMD entfernt Speicherverschlüsselung — leise <span class="h2-refs">[11]</span></h2>
+        <p>Kuriose und unschöne Geschichte: AMD hat mit der Firmware <strong>AGESA 1.2.7.0</strong> die <strong>Transparent Secure Memory Encryption (TSME)</strong> aus den <strong>Ryzen-9000-Consumer-CPUs</strong> (non-Pro) entfernt — ohne jede Ankündigung. Aufgefallen ist es einem Linux-Nutzer im April per HSI-Audit; AMD bestätigte die Entfernung als beabsichtigt, blieb auf Nachfragen aber wortkarg. Ein <strong>BIOS-Update im Juli</strong> soll TSME wiederherstellen.</p>
+        <p>TSME verschlüsselt den RAM transparent gegen physische Angriffe (Cold-Boot, DMA-Sniffing). Es still abzuschalten heißt: Geräte verlieren ein Sicherheitsmerkmal, ohne dass der Besitzer es merkt — die schlechteste Variante einer Sicherheits-Regression.</p>
+        <div class="eli5"><strong class="eli5-term">TSME:</strong> verschlüsselt den kompletten Arbeitsspeicher automatisch in Hardware. Schützt vor Angreifern mit physischem Zugriff, die RAM-Inhalte direkt auslesen wollen — relevant vor allem für Laptops und Kiosk-Systeme.</div>
+        <div class="footnotes"><ol>
+          <li id="fn11"><a href="https://www.tomshardware.com/pc-components/cpus/amd-silently-removes-memory-encryption-from-consumer-ryzen-cpus-leaving-users-unaware-that-they-may-be-vulnerable-security-feature-vanishes-after-newer-agesa-firmware-amd-engineers-go-radio-silent-when-pressed-about-the-change">tomshardware.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>FastAPI 0.138.0 serviert jetzt Frontends <span class="h2-refs">[12]</span></h2>
+        <p>Kleiner, aber praktischer Punkt für die Python-Fraktion: <strong>FastAPI 0.138.0</strong> (20.06.) bringt <code>app.frontend()</code> / <code>router.frontend()</code>, um ein gebautes <code>dist/</code>-Verzeichnis direkt aus dem Framework auszuliefern — plus Pydantic-v2-Deprecation-Fixes und einen Sprung auf <strong>Starlette 1.0.0</strong>. Spart bei kleinen SPA-plus-API-Setups einen separaten Static-Server; gerade für ein FastAPI-Backend mit Angular- oder React-Frontend, das man als einen Container ausliefern will, ist das eine willkommene Vereinfachung. Der Starlette-1.0-Sprung ist dabei der Teil, der einen genaueren Blick verdient — ein 1.0er-Major heißt erfahrungsgemäß ein paar Verhaltensänderungen unter der Haube.</p>
+        <div class="footnotes"><ol>
+          <li id="fn12"><a href="https://fastapi.tiangolo.com/release-notes/">fastapi.tiangolo.com</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>Patch Tuesday: Rekord-CVE-Zahl, sechs Zero-Days <span class="h2-refs">[13][14]</span></h2>
+        <p>Microsofts Juni-Patchday (09.06.) fiel ungewöhnlich dick aus: je nach Zählweise <strong>198 bis 209 CVEs</strong>, 32–33 davon kritisch, 28 kritische RCEs. Dazu <strong>sechs Zero-Days</strong> — aber nur <strong>einer aktiv ausgenutzt</strong>: <strong>CVE-2026-42897</strong> (Exchange-Server-Spoofing). Die übrigen fünf waren öffentlich bekannt, aber noch nicht angegriffen, darunter <strong>CVE-2026-45585</strong> (BitLocker-Bypass „YellowKey"), <strong>CVE-2020-17103</strong> (Cloud-Files-EoP), <strong>CVE-2026-45586</strong> (CTFMON-EoP, 7,8 — SYSTEM-Rechte über Spracherkennungs-Prozesse) und <strong>CVE-2026-49160</strong> (HTTP.sys-DoS, 7,5 — HTTP/2-„Bomb", entschärft per neuem <code>MaxHeadersCount</code>-Registry-Wert). Separat sticht <strong>CVE-2026-32193</strong> heraus: eine kritische <strong>Azure-Kubernetes-Service-RCE</strong> mit <span class="stat">CVSS 8,8</span>.</p>
+        <p>Der HTTP.sys-DoS ist der für Web-Devs interessanteste: eine HTTP/2-Header-Flut, die den Windows-HTTP-Stack lahmlegt — relevant für alles, was hinter IIS oder HTTP.sys hängt. Der einzige bereits aktiv ausgenutzte ist aber das Exchange-Server-Spoofing (CVE-2026-42897) — genau die Sorte Lücke, die ein Angreifer in einer Phishing- oder Identitäts-Kette zuerst greift. Sechs Zero-Days in einem Patchday sind ungewöhnlich viel; in Summe ist das einer der dicksten Microsoft-Patchdays überhaupt.</p>
+        <div class="footnotes"><ol>
+          <li id="fn13"><a href="https://www.tenable.com/blog/microsofts-june-2026-patch-tuesday-addresses-198-cves-cve-2026-49160-cve-2026-50507">tenable.com</a></li>
+          <li id="fn14"><a href="https://arcticwolf.com/resources/blog/microsoft-patch-tuesday-security-recap-june-2026-edition/">arcticwolf.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Android-Juni: Zero-Day aktiv im Einsatz <span class="h2-refs">[15][16]</span></h2>
+        <p>Googles Juni-Patch für Android schließt <strong>124 CVEs</strong> über die Patch-Level 2026-06-01 und 2026-06-05, darunter 18 kritische. Scharf: <strong>CVE-2025-48595</strong>, ein Integer-Overflow im Android-Framework und <strong>EoP-Zero-Day unter aktiver, gezielter Ausnutzung</strong> — betroffen Android 14, 15, 16 und 16 QPR2. „Gezielt" heißt hier in der Regel: kommerzielle Spyware, kein Massen-Exploit. Trotzdem: Patch-Level prüfen.</p>
+        <div class="footnotes"><ol>
+          <li id="fn15"><a href="https://www.techrepublic.com/article/news-google-june-2026-android-security-update/">techrepublic.com</a></li>
+          <li id="fn16"><a href="https://android.gadgethacks.com/news/android-june-2026-security-update-zero-day-fix-124-vulnerabilities-patched/">gadgethacks.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>EU CRA & Five Eyes: Regulierung trifft Realität <span class="h2-refs">[17][18]</span></h2>
+        <p>Standing-Thread EU-Regulierung: Beim <strong>Cyber Resilience Act</strong> ist seit dem <strong>11.06.</strong> der Rahmen zur Benennung der Konformitätsbewertungsstellen wirksam — die Mitgliedstaaten mussten ihre notifizierenden Behörden bestimmen. Der nächste harte Termin ist der <strong>11.09.2026</strong>: ab dann müssen Hersteller aktiv ausgenutzte Schwachstellen binnen <strong>24 h (Frühwarnung) bzw. 72 h (volle Meldung)</strong> melden.</p>
+        <p>Parallel warnt ein gemeinsames <strong>Five-Eyes-Advisory</strong>: KI-gestützte Cyberangriffe seien „Monate, nicht Jahre" entfernt, Vorstände sollen Cyber-Risiko als Kern der Geschäftskontinuität behandeln. Rhetorik mit Vorlauf — aber der Tenor deckt sich mit dem, was die Supply-Chain-Vorfälle oben praktisch zeigen.</p>
+        <div class="footnotes"><ol>
+          <li id="fn17"><a href="https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act">digital-strategy.ec.europa.eu</a></li>
+          <li id="fn18"><a href="https://www.csoonline.com/article/4188049/change-your-cyber-risk-strategy-to-meet-ai-threats-five-eyes-countries-warn-csos.html">csoonline.com</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Kurz notiert <span class="h2-refs">[19][20][21]</span></h2>
+        <p><strong>Azure Linux 4.0</strong> (vormals CBL-Mariner) ist Microsofts erste universelle Server-Linux-Distribution für Azure-VMs — Fedora-basiert; das Flatcar-basierte Azure Container Linux ist ebenfalls GA <a href="https://www.infoq.com/news/2026/05/azure-linux-4-server/">[19]</a>. — <strong>OpenAI „Patch the Planet"</strong> (GPT-5.5-Cyber + Trail of Bits) durchforstet OSS-Projekte wie cURL, Python, Go, aiohttp und Sigstore nach Bugs; Hunderte gefunden, Dutzende gepatcht — die KI-Seite gehört in den ai-usecases-Brief, hier zählt nur der OSS-Lieferketten-Effekt <a href="https://techcrunch.com/2026/06/22/openai-launches-new-initiative-to-help-find-and-patch-open-source-bugs/">[20]</a>. — Und ein Schmunzler: Microsoft <strong>Access</strong> beginnt, das 34 Jahre alte Limit von 22 Zoll Formularbreite aufzuheben — der Rollout läuft (Beta / Current Channel Preview, Version 2607, ab ~21.07.2026), die CRT-Ära ist damit auch in Access vorbei <a href="https://techcommunity.microsoft.com/blog/accessblog/access-begins-rollout-of-big-forms-for-modern-monitors-feature/4529559">[21]</a>.</p>
+        <div class="footnotes"><ol>
+          <li id="fn19"><a href="https://www.infoq.com/news/2026/05/azure-linux-4-server/">infoq.com</a></li>
+          <li id="fn20"><a href="https://techcrunch.com/2026/06/22/openai-launches-new-initiative-to-help-find-and-patch-open-source-bugs/">techcrunch.com</a></li>
+          <li id="fn21"><a href="https://techcommunity.microsoft.com/blog/accessblog/access-begins-rollout-of-big-forms-for-modern-monitors-feature/4529559">techcommunity.microsoft.com</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Montag, der 23. Juni. Das Wochenende war im Software-Umfeld alles andere als ruhig — die Sicherheitslage dominiert den Tag.</p>
+  <p>Die wichtigste Geschichte: In Splunk Enterprise steckt eine kritische Lücke, eine unauthentifizierte Code-Ausführung über den mitgelieferten PostgreSQL-Dienst, mit dem höchstmöglichen Schweregrad von neun Komma acht. Sie wird seit Mitte Juni aktiv ausgenutzt, und die Frist, die die US-Behörde CISA gesetzt hatte, ist am Sonntag bereits abgelaufen. Wer eine eigene Splunk-Instanz betreibt, sollte auf die Versionen zehn Punkt zwei Punkt vier oder zehn Punkt null Punkt sieben aktualisieren. Das berichten helpnetsecurity und bleepingcomputer.</p>
+  <p>Fast genauso heikel: In der weit verbreiteten Bibliothek libssh2 gibt es eine kritische Lücke mit dem Schweregrad neun Komma zwei. Sie betrifft alle Versionen bis einschließlich eins Punkt elf Punkt eins — und das Unangenehme ist, dass es noch gar keinen offiziellen Release gibt, nur einen einzelnen Commit auf GitHub. libssh2 steckt in Routern, IoT-Geräten und Management-Tools, wie heise schreibt.</p>
+  <p>Bei Oracle wurde eine Lücke in der Campus-Software PeopleSoft aktiv ausgenutzt; die Gruppe ShinyHunters hat rund dreihundert Installationen kompromittiert, fast siebzig Prozent davon an Hochschulen. Und im WordPress-Ökosystem gab es gleich zwei Lieferketten-Angriffe: einmal über einen gestohlenen CDN-Schlüssel bei Awesome Motive, der eine Komma zwei Millionen Seiten betraf, und einmal über kompromittierte Premium-Plugins von ShapedPlugin.</p>
+  <p>Es gab aber auch Erfreuliches. AWS hat seinem Lambda-Dienst eine neue Variante spendiert, sogenannte MicroVMs: isolierte Umgebungen, die bis zu acht Stunden laufen, mit bis zu sechzehn virtuellen Kernen und zweiunddreißig Gigabyte Speicher. Gebaut sind sie ausdrücklich dafür, von Nutzern oder von KI erzeugten Code sicher einzusperren.</p>
+  <p>Für die Java-Welt ist Spring Boot vier Punkt eins erschienen, mit gRPC-Unterstützung, einem neuen Schutz gegen Server-Side-Request-Forgery und Kotlin zwei Punkt drei. Wichtig dabei: Spring Boot drei Punkt fünf erreicht am dreißigsten Juni das Ende seiner Unterstützung. Und AMD hat still und leise die Speicherverschlüsselung aus den Consumer-Ryzen-Prozessoren entfernt — ein BIOS-Update im Juli soll sie wiederherstellen.</p>
+  <p>Microsofts Patchday war rekordverdächtig groß mit rund zweihundert Lücken und sechs Zero-Days, von denen aber nur einer aktiv ausgenutzt wurde, ein Exchange-Server-Spoofing. Dazu kam eine kritische Lücke im Azure-Kubernetes-Dienst. Android schloss einen aktiv ausgenutzten Zero-Day unter insgesamt hundertvierundzwanzig Lücken.</p>
+  <p>Auf der Regulierungsseite ist beim europäischen Cyber Resilience Act ein Meilenstein erreicht; ab dem elften September gilt eine Vierundzwanzig-Stunden-Meldepflicht. Und die Five-Eyes-Staaten warnen, KI-gestützte Angriffe seien nur noch Monate entfernt.</p>
+  <p>Morgen schauen wir, ob neue Versionen bei Angular, React oder Postgres nachkommen und ob es frische CISA-KEV-Einträge gibt. Bis dahin: die offenen Splunk- und libssh2-Fronten im Blick behalten.</p>
+</div>
+
+</body>
+</html>
