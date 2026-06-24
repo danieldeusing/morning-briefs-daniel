@@ -36,11 +36,21 @@ if [[ -z "$OP_SERVICE_ACCOUNT_TOKEN" ]]; then
 fi
 
 # Cloudflare Pages-Edit token + Account ID from the danieldeusing-agents vault.
-CLOUDFLARE_API_TOKEN="$(op item get 'cloudflare - daniedeusing - api token' --vault danieldeusing-agents --fields password --reveal 2>/dev/null)"
-CLOUDFLARE_ACCOUNT_ID="$(op item get 'cloudflare - daniedeusing - api token' --vault danieldeusing-agents --fields 'Account ID' --reveal 2>/dev/null)"
+# Wrap `op` in a hard 60s timeout: it intermittently HANGS in headless/cron runs,
+# which used to silently stall the entire deploy (git push had already succeeded,
+# so the failure went unnoticed and the live site went stale). macOS has no
+# timeout(1), so use perl's alarm — the timer survives exec and SIGALRM kills op
+# on expiry. A hang now fails fast (empty output) → the guard below exits 1.
+op_field() {
+  perl -e 'alarm shift @ARGV; exec @ARGV' 60 \
+    op item get 'cloudflare - daniedeusing - api token' \
+    --vault danieldeusing-agents --fields "$1" --reveal 2>/dev/null
+}
+CLOUDFLARE_API_TOKEN="$(op_field password)" || true
+CLOUDFLARE_ACCOUNT_ID="$(op_field 'Account ID')" || true
 export CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID
 if [[ -z "$CLOUDFLARE_API_TOKEN" || -z "$CLOUDFLARE_ACCOUNT_ID" ]]; then
-  echo "deploy-cloudflare: could not read Cloudflare token/account from 1Password" >&2
+  echo "deploy-cloudflare: could not read Cloudflare token/account from 1Password (op timed out or failed)" >&2
   exit 1
 fi
 
