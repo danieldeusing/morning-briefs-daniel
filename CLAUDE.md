@@ -310,12 +310,13 @@ deploy is only needed for an out-of-band change.
 
 ### Note: this repo does NOT touch pagr / danieldeusing.de
 
-The **pagr** Astro site (`apps/pagr`, → danieldeusing.de) independently pulls the
-published briefs from this repo's **public GitHub tarball** at its own build time.
-This repo does **not** trigger, rebuild, or otherwise touch pagr — there is no
-`post-commit` hook here anymore. The morning routine's only publish actions are
-(1) commit + push to GitHub `main` and (2) deploy the standalone
-`briefs.danieldeusing.de` (above). Whatever rebuilds pagr is pagr's own concern.
+The **pagr** Astro site (`apps/pagr`, → danieldeusing.de) does **not** host the
+briefs at all: `danieldeusing.de/news` **redirects** to `briefs.danieldeusing.de`
+(the canonical site this routine deploys), so pagr needs no rebuild when new
+briefs publish. This repo does not trigger, rebuild, or otherwise touch pagr —
+there is no `post-commit` hook here anymore. The morning routine's only publish
+actions are (1) commit + push to GitHub `main` and (2) deploy the standalone
+`briefs.danieldeusing.de` (above).
 
 ### Leftover decommission (old news.twiced.de — twiced infra)
 
