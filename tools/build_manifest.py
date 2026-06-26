@@ -10,6 +10,10 @@ from datetime import date
 # Script lives in tools/, served content lives in ../public/.
 BASE = Path(__file__).resolve().parent.parent / "public"
 INDEX = BASE / "index.html"
+# Standalone machine-readable manifest for OTHER sites (e.g. danieldeusing.de /briefs),
+# committed to GitHub + deployed alongside the dashboard so they fetch structured data
+# instead of scraping window.__MANIFESTS out of index.html.
+MANIFEST_JSON = BASE / "manifest.json"
 
 # Order mirrors the dashboard's grouped nav (Wirtschaft / IT / jobs / Sport /
 # Freizeit / Sprachen). The grouping itself lives in index.html (NAV_GROUPS);
@@ -151,6 +155,31 @@ def build_manifest():
     return {"generated": today, "categories": categories}
 
 
+def build_external_manifest(manifest: dict) -> dict:
+    """A slim, stable manifest for external consumers (danieldeusing.de /briefs and
+    anyone else): per-category id/label/icon, the latest issue date, the entry count,
+    and the latest headline per language — no embedded TL;DR HTML, so it stays small
+    enough to fetch on every page load. Written to public/manifest.json."""
+    all_dates = sorted({e["date"] for c in manifest["categories"] for e in c["entries"]})
+    return {
+        "generated": manifest["generated"],
+        "since": all_dates[0] if all_dates else None,
+        "latest": all_dates[-1] if all_dates else None,
+        "languages": LANGS,
+        "categories": [
+            {
+                "id": c["id"],
+                "label": c["label"],
+                "icon": c["icon"],
+                "latest": c["entries"][0]["date"] if c["entries"] else None,
+                "count": len(c["entries"]),
+                "headline": c["entries"][0]["headlines"] if c["entries"] else {},
+            }
+            for c in manifest["categories"]
+        ],
+    }
+
+
 def render_js_literal(obj) -> str:
     """JSON is valid JS — emit pretty JSON for window.__MANIFESTS."""
     return json.dumps(obj, ensure_ascii=False, indent=2)
@@ -259,6 +288,11 @@ def main():
     manifest = build_manifest()
     js_literal = render_js_literal(manifest)
     splice_into_index(js_literal)
+    # Standalone manifest for external consumers (committed + deployed with the site).
+    MANIFEST_JSON.write_text(
+        json.dumps(build_external_manifest(manifest), ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     n_total = sum(len(c["entries"]) for c in manifest["categories"])
     today = manifest["generated"]
     new_today = sum(
