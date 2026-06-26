@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-06-26</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-26</span>
+  </div>
+  <h1 class="masthead-title">UniFi patch deadline today, a Red Hat worm in the npm index, and Apple acquires the Swift Package Index</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">A security-heavy Friday. Today marks the CISA deadline for three UniFi vulnerabilities with max severity 10, already being actively exploited — if you run a UniFi OS server, that's your only priority today. Beyond that: a compromised Red Hat account poisoned 32 npm packages, Apple acquires the Swift Package Index, and Spring Framework 6.2 reaches end-of-life on Tuesday.</p>
+    <ul>
+      <li><span class="chip hot">Sec · Global</span> <strong>UniFi Triple-KEV</strong>: CVE-2026-34908/09/10, CVSS 10, actively exploited — CISA patch deadline is <em>today</em>.</li>
+      <li><span class="chip hot">Sec · OSS</span> <strong>"Miasma"</strong>: 32 <code>@redhat-cloud-services</code> npm packages trojanned, ~80k downloads/week, credential theft.</li>
+      <li><span class="chip">M&amp;A · OSS</span> <strong>Apple acquires Swift Package Index</strong> — stays open source, plans package signing + own registry.</li>
+      <li><span class="chip hot">Sec</span> <strong>Check Point VPN</strong> CVE-2026-50751 (CVSS 9.3): IKEv1 auth bypass, Qilin ransomware confirmed, KEV.</li>
+      <li><span class="chip hot">Sec</span> <strong>Oracle PeopleSoft</strong> CVE-2026-35273 (CVSS 9.8): ShinyHunters campaign, 100+ orgs, 68% higher education.</li>
+      <li><span class="chip">Sec</span> <strong>June Patch Tuesday</strong>: 200 flaws, 3–6 zero-days including Exchange XSS (actively exploited).</li>
+      <li><span class="chip good">Release · Web</span> <strong>Angular 22</strong> is here: Signal Forms stable, OnPush as default, Fetch HTTP client.</li>
+      <li><span class="chip good">Release</span> <strong>Spring Framework 7.0.8</strong> hardens JMS deserialization + SpEL — 6.2.x EOL <em>Tuesday</em>.</li>
+      <li><span class="chip good">Release</span> <strong>PostgreSQL</strong> rollup update (11 CVEs), PG19 Beta 1, PG14 EOL in November.</li>
+      <li><span class="chip">Infra</span> <strong>Microsoft Azure Linux 4.0</strong> (Preview) + Azure Container Linux GA — first real server distro.</li>
+      <li><span class="chip">Regulation · EU</span> <strong>CRA Chapter IV</strong> in effect since 06-11 — conformity body notification is live.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Deadlines, releases, and EOL dates for the coming days</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Tue 06-23</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CISA KEV</span>
+          <span>UniFi trio + PeopleSoft added to catalog</span>
+          <span>Apple announces Swift Package Index acquisition</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu 06-25</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Collabora CODE 26.04</span>
+          <span>FOSS cloud office release</span>
+        </div>
+      </div>
+      <div class="tl-col today hot">
+        <div class="tl-date">Fri 06-26</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>UniFi KEV patch deadline expires</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 06-27</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Weekend — quiet expected</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue 06-30</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Spring Framework 6.2.x EOL</span>
+          <span>last day of free-tier support</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>UniFi: three CVSS-10 flaws, exploited — and the deadline is today</h2>
+        <p>The one thing that really matters today. On 06-23, CISA added three Ubiquiti UniFi OS flaws to the <strong>KEV catalog</strong> — all with max severity 10.0 and all already actively exploited — and gave federal agencies three days to patch. Those three days end <em>today</em>.<sup>[1][4]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">KEV Catalog:</strong> The U.S. agency CISA maintains a list of vulnerabilities that aren't just theoretically dangerous but are <em>actively being used by attackers</em> — like a wanted list for burglary tools that are already in circulation. Once a flaw lands on that list, the "wait or patch?" conversation is over.
+        </div>
+        <p>The chain: <strong>CVE-2026-34908</strong> allows unauthorized remote changes, <strong>-34909</strong> is a path traversal flaw (file access + account manipulation), and <strong>-34910</strong> is an input validation weakness that leads to remote code execution via command injection. Chained together, they give complete network takeover without authentication. The patch shipped on 05-21 in <strong>UniFi OS Server 5.0.8</strong> — if you run a UDM/Cloud Key/UniFi OS instance and aren't on 5.0.8 yet, this is your Friday afternoon.<sup>[1][2]</sup></p>
+        <div class="callout warn">
+          <span class="callout-label">Source Note</span> CISA.gov returned a 403 on direct access; KEV addition date and CVSS 10 are cross-checked via BleepingComputer and GBHackers, individual CVE scores from NVD are not in our primary sources. The thrust — three max-severity flaws, actively exploited, deadline today — is clear.
+        </div>
+        <div class="footnotes"><ol>
+          <li id="s1"><a href="https://www.bleepingcomputer.com/news/security/cisa-warns-of-max-severity-ubiquiti-flaws-exploited-in-attacks/">bleepingcomputer.com</a> — CVSS 10, KEV add 06-23.</li>
+          <li id="s2"><a href="https://gbhackers.com/cisa-adds-ubiquiti-unifi-os-flaws/">gbhackers.com</a> — Patch in UniFi OS Server 5.0.8 (05-21).</li>
+          <li id="s4"><a href="https://www.cisa.gov/news-events/alerts/2026/06/23/cisa-adds-four-known-exploited-vulnerabilities-catalog">cisa.gov</a> — KEV alert, three-day deadline.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>"Miasma": a Red Hat account poisons 32 npm packages</h2>
+        <p>Exactly the kind of story this brief exists for: no AI headline, but supply chain as an attack surface. On 06-01, Wiz disclosed a campaign called <strong>Miasma</strong> — a compromised GitHub account belonging to a Red Hat employee was used to inject malware into <strong>32 <code>@redhat-cloud-services</code> npm packages</strong>. Together they added up to roughly <strong>80,000 downloads per week</strong>.<sup>[5]</sup></p>
+        <p>The trick is what's alarming. The attacker requested OIDC tokens via GitHub Actions and published the trojanned packages with <em>valid SLSA provenance</em> — so the packages carried exactly the supply-chain authenticity credentials that are supposed to build trust.<sup>[5]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">SLSA Provenance / OIDC:</strong> SLSA provenance is like a sealed proof of origin, showing "this package was actually built by this pipeline." OIDC is the ID card the pipeline uses when publishing. Here, the attacker forged the ID card and thus affixed a genuine seal to a fake package — the seal checks out, the contents don't.
+        </div>
+        <p>On install, a <code>preinstall</code> hook fired a 4.29 MB obfuscated dropper, fetched the Bun runtime, and harvested GitHub, npm, AWS, Azure, and GCP credentials — each infection individually encrypted so one signature doesn't catch all of them. Red Hat has an advisory (RHSB-2026-006) out; remediation is ongoing.<sup>[6]</sup></p>
+        <div class="callout info">
+          <span class="callout-label">Not alone</span> It's busy season: on 06-17, a typosquatted <code>easy-day-js</code> (dayjs lookalike) poisoned 140+ packages in the Mastra AI framework ecosystem via <code>postinstall</code> dropper. The hook here is also npm supply chain, not the model.<sup>[7]</sup>
+        </div>
+        <div class="footnotes"><ol>
+          <li id="s5"><a href="https://www.wiz.io/blog/miasma-supply-chain-attack-targeting-redhat-npm-packages">wiz.io</a> — 32 packages, 80k downloads/week, OIDC/SLSA abuse.</li>
+          <li id="s6"><a href="https://access.redhat.com/security/vulnerabilities/RHSB-2026-006">access.redhat.com</a> — Payload details, advisory.</li>
+          <li id="s7"><a href="https://www.upwind.io/feed/large-scale-npm-pypi-supply-chain-campaign-suspected-across-multiple-popular-packages">upwind.io</a> — Mastra AI, easy-day-js.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Apple acquires the Swift Package Index</h2>
+        <p>Announced on 06-23: Apple is acquiring the <strong>Swift Package Index</strong>, built by Dave Verwer and Sven A. Schmidt — the de-facto catalog for Swift packages with over <strong>10,000 indexed packages</strong>. It stays open source, and the stated plan is <strong>package signing plus its own registry</strong> to "move away entirely from the GitHub model".<sup>[8]</sup></p>
+        <p>For non-Swift folks, still relevant: it's the same shift we're seeing everywhere right now — after the npm incidents, ecosystems are moving away from "GitHub account = trust" toward signed, self-hosted registries. Apple can pull this off for Swift because it owns the platform. For everyone else, it's a data point on where package security is heading.</p>
+        <div class="footnotes"><ol>
+          <li id="s8"><a href="https://swiftpackageindex.com/blog/swift-package-index-joins-apple">swiftpackageindex.com</a> — Acquisition, 10k+ packages, signing + registry.</li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Check Point VPN: IKEv1 auth bypass, exploited by Qilin</h2>
+        <p><strong>CVE-2026-50751</strong> (CVSS 9.3) is a logic flaw in certificate validation for the <em>legacy</em> IKEv1 key exchange: an unauthenticated attacker can bypass user authentication and establish a remote-access VPN connection without a valid password. Affected are Quantum Security Gateway (R80.40–R82.10), Spark Firewalls, and various Gaia OS versions.<sup>[9]</sup></p>
+        <p>This isn't theoretical risk: exploitation began on 05-07, and post-compromise activity by a <strong>Qilin ransomware</strong> affiliate has been confirmed in at least one case. CISA added the flaw to the KEV catalog (deadline was 06-11); the patch shipped on 06-08. If you still have IKEv1 active: disable or patch.<sup>[10]</sup></p>
+        <div class="footnotes"><ol>
+          <li id="s9"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-50751">nvd.nist.gov</a> — CVSS 9.3, IKEv1 auth bypass, affected products.</li>
+          <li id="s10"><a href="https://www.helpnetsecurity.com/2026/06/08/check-point-cve-2026-50751-qilin-ransomware/">helpnetsecurity.com</a> — Qilin affiliate, exploit from 05-07.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Oracle PeopleSoft: zero-day RCE, ShinyHunters in 100+ orgs</h2>
+        <p><strong>CVE-2026-35273</strong> (CVSS 9.8) hits the PSEMHUB component of PeopleSoft — easily exploitable, no authentication, plain HTTP access is enough for complete compromise. The <strong>ShinyHunters</strong> group exploited this as a zero-day from 05-27 until the patch on 06-10 and claims <strong>300 instances across 100+ organizations</strong>, of which 68% are in higher education.<sup>[11]</sup></p>
+        <p>For Daniel, no direct stack hit (PeopleSoft is enterprise HR/ERP), but an instructive pattern: a weeks-long exploit window before the patch, targeted at a sector with lean IT teams. Anyone running PeopleSoft should have patched long ago and reviewed May logs.<sup>[11]</sup></p>
+        <div class="footnotes"><ol>
+          <li id="s11"><a href="https://thehackernews.com/2026/06/shinyhunters-exploits-oracle-peoplesoft.html">thehackernews.com</a> — ShinyHunters, 300 instances, 68% higher education.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>June Patch Tuesday: 200 flaws, 3–6 zero-days</h2>
+        <p>Microsoft's June round on 06-09 set a record: <strong>200 vulnerabilities</strong>, of which 33 are critical (28 RCE) and <strong>3–6 zero-days</strong>. The most important is <strong>CVE-2026-42897</strong> — an Exchange Server XSS: a crafted email, when opened in OWA, executes arbitrary JavaScript in the recipient's browser without the attacker needing privileges. Actively exploited.<sup>[12][13]</sup></p>
+        <p>The remaining zero-days range from a Windows CTFMON privilege escalation (GreenPlasma exploit) to an HTTP.sys DoS via "HTTP/2 bomb". Sources disagree on how many were <em>actively exploited</em> vs. just publicly known (BleepingComputer counts 6, Tenable 3–4) — we follow BleepingComputer's detailed list.<sup>[12]</sup></p>
+        <div class="footnotes"><ol>
+          <li id="s12"><a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-june-2026-patch-tuesday-fixes-6-zero-days-200-flaws/">bleepingcomputer.com</a> — 200 flaws, 33 critical, 6 zero-days.</li>
+          <li id="s13"><a href="https://techcommunity.microsoft.com/blog/exchange/addressing-exchange-server-may-2026-vulnerability-cve-2026-42897/4518498">techcommunity.microsoft.com</a> — Exchange XSS CVE-2026-42897.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>EU CRA: Chapter IV live since 06-11</h2>
+        <p>Quiet but relevant compliance milestone: since 06-11, <strong>Chapter IV of the Cyber Resilience Act</strong> is in effect — notification of conformity assessment bodies. Member states must now designate notifying authorities; this is the infrastructure through which products will later earn security CE marking. Next milestone: reporting obligations starting 09-11-2026, full enforcement then on 12-11-2027.<sup>[14]</sup></p>
+        <div class="footnotes"><ol>
+          <li id="s14"><a href="https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act">digital-strategy.ec.europa.eu</a> — Chapter IV from 06-11-2026, next deadlines.</li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Angular 22 is here — and consolidating hard</h2>
+        <p>Angular 22.0 landed on 06-03, patch 22.0.2 on 06-17. It's a big consolidation release: <strong>Signal Forms</strong>, Angular Aria, and the async reactivity APIs (<code>resource</code>/<code>httpResource</code>) are now stable, <strong>OnPush is the new default</strong>, there are selectorless components, and the HTTP client now uses the Fetch API by default.<sup>[15]</sup></p>
+        <p>For Daniel's Angular code, two things matter: <code>strictTemplates</code> is now on by default (expect new build errors on migration), and the Angular CLI brings stable MCP support for AI tooling — the latter is more of an ai-dev topic, just a note here.<sup>[16]</sup></p>
+        <div class="footnotes"><ol>
+          <li id="s15"><a href="https://angular.dev/reference/releases">angular.dev</a> — 22.0 (06-03), 22.0.2 (06-17), stable APIs.</li>
+          <li id="s16"><a href="https://blog.ninja-squad.com/2026/06/03/what-is-new-angular-22.0">blog.ninja-squad.com</a> — strictTemplates default, CLI MCP.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Spring Framework 7.0.8: hardening, and 6.2 dies Tuesday</h2>
+        <p>The 7.0.8 release on 06-08 is more security hardening than feature drop, and exactly why it matters: Jackson deserialization in JMS converters can now be restricted to whitelisted packages via <code>setTrustedPackages(...)</code>, and SpEL evaluation is now capped at ten thousand operations by default.<sup>[17]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Deserialization Trustlist / SpEL Cap:</strong> Deserialization turns incoming data back into objects — without a whitelist, an attacker can force classes that execute code. SpEL is Spring's mini-language for dynamic expressions; a limit stops a malicious expression from locking the CPU in an infinite loop. Both make common RCE/DoS classics much harder.
+        </div>
+        <p>And the calendar note: <strong>Spring Framework 6.2.x reaches end-of-life on 06-30 — next Tuesday</strong>. If you're still on 6.2, you should be planning the jump to 7.0 now.<sup>[18]</sup></p>
+        <div class="footnotes"><ol>
+          <li id="s17"><a href="https://endoflife.date/spring-framework">endoflife.date</a> — 7.0.8 (06-08), JMS trustlist + SpEL cap.</li>
+          <li id="s18"><a href="https://endoflife.date/spring-framework">endoflife.date</a> — 6.2.x EOL 06-30-2026.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL: rollup update, PG19 Beta 1, PG14 winding down</h2>
+        <p>The rollup from 05-14 (18.4 / 17.10 / 16.14 / 15.18 / 14.23) closes <strong>11 CVEs</strong> and over 60 bugs — including three CVSS 8.8 flaws: an integer wraparound (CVE-2026-6473), a symlink issue in <code>pg_basebackup</code> (-6475), and a libpq stack overwrite (-6477). If you're not yet on the latest minor for your version, plan for it.<sup>[19]</sup></p>
+        <p>Looking ahead: <strong>PG19 Beta 1</strong> is out (final expected Sept/Oct), and <strong>PostgreSQL 14 reaches end-of-life on 11-12-2026</strong>. For Daniel's PG stack, that means moving 14 instances onto an upgrade path over the summer.<sup>[19][20]</sup></p>
+        <div class="footnotes"><ol>
+          <li id="s19"><a href="https://www.postgresql.org/about/news/postgresql-184-1710-1614-1518-and-1423-released-3297/">postgresql.org</a> — 11 CVEs, PG14 EOL 11-12-2026.</li>
+          <li id="s20"><a href="https://releasebot.io/updates/postgresql">releasebot.io</a> — PG19 Beta 1.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Microsoft builds a real server distro: Azure Linux 4.0</h2>
+        <p>Unveiled at the OSS Summit NA (mid-May): <strong>Azure Linux 4.0</strong> (Preview) — a Fedora-derived, RPM-based distribution that Microsoft builds and maintains for Azure VMs. The remarkable thing is the "first time": it's Microsoft's first supported Linux distro <em>beyond</em> pure container hosting.<sup>[21]</sup></p>
+        <p>In parallel, <strong>Azure Container Linux</strong> went GA (announced mid-May at OSS Summit; broader rollout on 06-02 at Build) — an immutable, container-optimized host OS based on the acquired Flatcar project. Together, this is Microsoft's Linux confidence as a platform, not just a guest.<sup>[22]</sup></p>
+        <div class="footnotes"><ol>
+          <li id="s21"><a href="https://www.infoq.com/news/2026/05/azure-linux-4-server/">infoq.com</a> — Azure Linux 4.0, Fedora-derived, first server distro.</li>
+          <li id="s22"><a href="https://opensource.microsoft.com/blog/2026/05/18/from-open-source-to-agentic-systems-microsoft-at-open-source-summit-north-america-2026/">opensource.microsoft.com</a> — Azure Container Linux GA, Flatcar.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief: containers, Tailscale, FOSS office</h2>
+        <p><strong>containerd v2.3.2</strong> (06-18) brings security patches and fixes container-start errors from concurrent RPC timeouts.<sup>[23]</sup> <strong>Kubernetes 1.36.2</strong> (06-09) is a patch release alongside 1.33–1.35 patches.<sup>[24]</sup> <strong>Tailscale</strong> has been streaming network flow and audit logs to Azure Blob Storage since 06-18 and has a new Kubernetes operator with workload identity.<sup>[25]</sup> And <strong>Collabora CODE 26.04</strong> shipped yesterday (06-25) — the FOSS cloud office suite is pushing the competition with OnlyOffice/Nextcloud.<sup>[26]</sup></p>
+        <div class="footnotes"><ol>
+          <li id="s23"><a href="https://github.com/containerd/containerd/releases">github.com/containerd</a> — v2.3.2 (06-18).</li>
+          <li id="s24"><a href="https://kubernetes.io/releases/">kubernetes.io</a> — 1.36.2 (06-09).</li>
+          <li id="s25"><a href="https://tailscale.com/changelog">tailscale.com</a> — Azure Blob logs, K8s operator (06-18).</li>
+          <li id="s26"><a href="https://www.theregister.com/software/2026/06/25/">theregister.com</a> — Collabora CODE 26.04 (06-25).</li>
+        </ol></div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Friday, the twenty-sixth of June, and it's a security-heavy day with a hard deadline. If you take one thing from this brief, let it be this: Three flaws in Ubiquiti's UniFi operating system each carry maximum severity ten, are already being actively exploited, and the U.S. agency CISA gave agencies three days to patch. Those three days end today. Chained together, the flaws deliver complete network takeover with no login required. The patch has been available since May twenty-first in UniFi OS Server version five point zero point eight. If you run one of these devices, that's your Friday afternoon.</p>
+  <p>The second major story is exactly why this brief exists: no AI topic, but supply chain as an attack surface. The security firm Wiz disclosed a campaign called Miasma. A hijacked GitHub account belonging to a Red Hat employee was used to poison thirty-two npm packages, together totaling around eighty thousand downloads per week. What's alarming: the attacker forged valid authenticity tokens via GitHub Actions and published the poisoned packages with a genuine proof of origin. The seal was real, but the contents weren't. On install, a hidden dropper collected credentials for GitHub, AWS, Azure, and Google Cloud.</p>
+  <p>Apple acquired the Swift Package Index on June twenty-third, the de-facto catalog for Swift packages with over ten thousand entries. It remains open source, and the plan is package signing plus its own registry to move away from the pure GitHub model. Even if you don't write Swift: it's the same shift happening everywhere right now — after npm incidents, ecosystems are moving from "GitHub account means trust" to signed, self-hosted registries.</p>
+  <p>On the CVE front, there were two more severe cases. A flaw in Check Point VPN allows complete bypass of authentication in the legacy IKEv1 key exchange — in at least one case, a Qilin ransomware group is confirmed. And a zero-day in Oracle PeopleSoft was exploited for weeks by the ShinyHunters group before the patch arrived — over one hundred organizations hit, two-thirds of them universities. Microsoft's June patch day was record volume: two hundred flaws and six zero-days, the most critical being an actively exploited cross-site scripting flaw in Exchange Server.</p>
+  <p>On the releases side, there's reason to look at Daniel's stack. Angular twenty-two is here and consolidating hard: Signal Forms are stable, OnPush is the new standard. Spring Framework seven point zero point eight hardens deserialization and caps expression evaluation — heads up: Spring Framework six point two dies next Tuesday. PostgreSQL shipped a rollup with eleven flaws, version nineteen is in beta, and version fourteen winds down in November.</p>
+  <p>On the infrastructure side, Microsoft is building with Azure Linux four point zero its first real, general-purpose server distribution beyond container hosting. And in Europe, since June eleventh, Chapter Four of the Cyber Resilience Act is live — member states must now name their conformity authorities. Tomorrow will probably be quieter; the next hard deadline is Tuesday with the Spring end-of-life. Until then: UniFi devices first, then the weekend.</p>
+</div>
+
+</body>
+</html>
