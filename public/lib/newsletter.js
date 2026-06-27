@@ -56,10 +56,10 @@
     const s = getComputedStyle(document.documentElement);
     return {
       fg:      s.getPropertyValue('--fg').trim(),
-      muted:   s.getPropertyValue('--muted').trim(),
+      muted:   s.getPropertyValue('--muted-ink').trim(),
       rule:    s.getPropertyValue('--rule').trim(),
-      accent:  s.getPropertyValue('--accent').trim(),
-      accent2: s.getPropertyValue('--accent-2').trim(),
+      accent:  s.getPropertyValue('--cat-accent').trim(),
+      accent2: s.getPropertyValue('--cat-accent-2').trim(),
       warn:    s.getPropertyValue('--warn').trim(),
       good:    s.getPropertyValue('--good').trim(),
     };
@@ -142,7 +142,7 @@
     const C = cssColors();
     Chart.defaults.color = C.muted;
     Chart.defaults.borderColor = C.rule;
-    Chart.defaults.font.family = '"Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
+    Chart.defaults.font.family = '"JetBrains Mono Variable", "JetBrains Mono", "Menlo", monospace';
     Chart.defaults.font.size = 10;
   }
 
@@ -1121,7 +1121,7 @@
     if (typeof mermaid === 'undefined') return;
     mermaid.initialize({
       startOnLoad: true,
-      theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default'
+      theme: ['green','mono'].includes(document.documentElement.dataset.theme) ? 'dark' : 'default'
     });
   });
 
