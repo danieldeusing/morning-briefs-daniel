@@ -7,6 +7,20 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="favicon.svg">
 <link rel="stylesheet" href="lib/tokens.css">
+<script>
+  // Pre-paint animation policy (mirrors the terminal core / pagr): an explicit
+  // "off" in localStorage — or no pick while the OS prefers reduced motion —
+  // marks html.anim-off so components.css kills keyframes (incl. the brand
+  // cursor blink) with no flash. The footer anim toggle persists "on"/"off".
+  (function () {
+    let pref = null;
+    try { pref = localStorage.getItem('anim'); } catch (_) {}
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (pref === 'off' || (pref === null && reduced)) {
+      document.documentElement.classList.add('anim-off');
+    }
+  })();
+</script>
 <style>
   /* Dashboard chrome styles. Design tokens (colours, shadow, typography vars)
      come from lib/tokens.css — keep them there so the dashboard and the
@@ -43,13 +57,6 @@
     html::before { display: none; }
   }
   body > *, header.app { position: relative; z-index: 1; }
-  /* .app-shell must NOT create a stacking context — otherwise its fixed-
-     positioned .sidebar (z-index: 100) is trapped inside that context and
-     gets covered on mobile by .mobile-backdrop (z-index: 99 at body level).
-     Sidebar must compete directly with the backdrop at the root level, so
-     z-index: auto here keeps app-shell positioned (for grid layout +
-     responsive padding) but transparent to stacking. */
-  .app-shell { z-index: auto; }
   body {
     font-family: var(--font-body);
     line-height: 1.5;
@@ -58,168 +65,128 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Top masthead — broadsheet flag. The title colour follows whichever
-     newsletter is currently loaded: navigate() sets --current-accent-text
-     to the right --c-X-text token; showHome() unsets it so the title
-     reverts to the :root default (economy red, the house colour). */
+  /* Terminal header bar — mirrors the pagr/seedr chrome: a single row on a
+     --card surface with a --border bottom rule. LEFT: the brand wordmark
+     (mono + .glow) and a blinking .cursor-block, then a `visitor@briefs:~`
+     breadcrumb. RIGHT: the `$ ls -l ▾` nav dropdown. */
   header.app {
-    border-top: 3px double var(--fg);
-    border-bottom: 1px solid var(--fg);
-    padding: 0.85rem 1.5rem;
-    display: flex; align-items: baseline; justify-content: center; gap: 1rem;
-    text-align: center;
-    /* Header shares the sidebar's panel tint so chrome (header + sidebar)
-       reads as one surface, distinct from the content surface in .main /
-       iframe (which uses --bg). */
-    background: var(--panel);
-  }
-  header.app .title {
-    font-family: var(--font-display);
-    font-variation-settings: "opsz" 60, "SOFT" 50;
-    font-size: 1.7rem; font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--current-accent-text, var(--cat-accent-text));
-    transition: color 220ms ease;
-  }
-
-  /* Layout: sidebar + main.
-     --sidebar-w is the variable the grid reads. Toggling body.sidebar-collapsed
-     swaps it to the narrow width (icons + accent bar only). */
-  :root { --sidebar-w: 320px; }
-  body.sidebar-collapsed { --sidebar-w: 60px; }
-  .app-shell {
-    display: grid;
-    grid-template-columns: var(--sidebar-w) 1fr;
-    height: calc(100vh - 56px);
-    transition: grid-template-columns 220ms ease;
-  }
-  /* While the user is actively dragging the resize handle, kill the grid transition
-     so the sidebar tracks the cursor 1:1 instead of lagging by 220ms.
-     Also disable pointer-events on the iframe so mousemove keeps reaching the document
-     while the cursor crosses it, and pause the paper-grain background pseudo-element so
-     it doesn't have to re-composite on every frame. */
-  body.sidebar-resizing .app-shell { transition: none; }
-  body.sidebar-resizing { cursor: col-resize; user-select: none; }
-  body.sidebar-resizing .iframe-host { pointer-events: none; }
-  body.sidebar-resizing html::before { display: none; }
-  @media (max-width: 720px) {
-    .app-shell { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: calc(100vh - 70px); }
-    .sidebar { border-right: none !important; border-bottom: 1px solid var(--rule); max-height: 220px; }
-  }
-
-  .sidebar {
-    position: relative;
-    background: var(--panel);
-    border-right: 1px solid var(--rule);
-    overflow-y: auto;
-    padding: 0.8rem 0.5rem 1rem;
-  }
-
-  /* Drag-to-resize handle on the sidebar's right edge. Desktop only.
-     Hidden when the sidebar is collapsed (60px icon strip) or on mobile (drawer mode).
-     Hover and active states tint with the accent so it's discoverable on first hover. */
-  .sidebar-resize {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 4px;
-    height: 100%;
-    cursor: col-resize;
-    background: transparent;
-    z-index: 50;
-    transition: background 120ms;
-  }
-  .sidebar-resize:hover {
-    background: color-mix(in srgb, var(--cat-accent) 40%, transparent);
-  }
-  body.sidebar-resizing .sidebar-resize {
-    background: color-mix(in srgb, var(--cat-accent) 65%, transparent);
-  }
-  @media (max-width: 720px)   { .sidebar-resize { display: none; } }
-  body.sidebar-collapsed .sidebar-resize { display: none; }
-
-  /* Sidebar collapse toggle — small pill button pinned to the top of the sidebar.
-     Click to fold the sidebar to icon-only (60px) or unfold back to full width. */
-  .sidebar-toggle-row {
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+    font-family: var(--font-mono); /* chrome is terminal mono; the content stays serif */
+    padding: 0 1rem;
     display: flex;
-    justify-content: flex-end;
-    padding: 0 0.2rem 0.4rem;
-    margin-bottom: 0.2rem;
-    position: sticky;
-    top: -0.8rem;
-    background: var(--panel);
-    z-index: 2;
-    padding-top: 0.2rem;
+    align-items: center;
+    gap: 1rem;
+    min-height: 3rem;
+    flex-wrap: wrap;
   }
-  body.sidebar-collapsed .sidebar-toggle-row { justify-content: center; }
-  .sidebar-toggle {
-    background: transparent;
-    border: 1px solid var(--rule);
-    color: var(--soft);
-    width: 2.25rem; height: 2.25rem;
-    min-width: 2.25rem;
-    border-radius: 50%;
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .header-brand {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+    text-decoration: none;
     cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    line-height: 1;
-    padding: 0;
-    display: inline-flex; align-items: center; justify-content: center;
-    transition: background 120ms, color 120ms, transform 200ms ease;
   }
-  .sidebar-toggle:hover { background: var(--rule-soft); color: var(--fg); }
-  body.sidebar-collapsed .sidebar-toggle { transform: rotate(180deg); }
-  @media (max-width: 720px) { .sidebar-toggle-row { display: none; } }
+  .header-brand .brand-word {
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+  }
+  /* Breadcrumb: `visitor@briefs:~/path`. The host part is muted, `~` is the
+     accent, the active path segment is --foreground. Truncates on overflow. */
+  .header-crumb {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.72rem;
+    color: var(--muted-foreground);
+  }
+  .header-crumb .crumb-host { color: var(--muted-foreground); }
+  .header-crumb .crumb-root {
+    color: var(--primary);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .header-crumb .crumb-root:hover { text-decoration: underline; }
+  .header-crumb .crumb-sep { color: var(--muted-foreground); }
+  .header-crumb .crumb-seg {
+    color: var(--muted-foreground);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s ease;
+  }
+  .header-crumb .crumb-seg:hover { color: var(--primary); }
+  .header-crumb .crumb-seg.current { color: var(--foreground); cursor: default; }
+  .header-nav { flex: none; display: flex; align-items: center; }
 
-  /* Collapsed-state visibility rules — desktop only. */
-  @media (min-width: 721px) {
-    body.sidebar-collapsed .nav-label { display: none; }
-    body.sidebar-collapsed .home-btn {
-      justify-content: center;
-      padding: 0.55rem 0.3rem;
-      gap: 0;
-    }
-    body.sidebar-collapsed .home-btn > span:not(.icon) { display: none; }
-    body.sidebar-collapsed .cat { margin: 0.2rem 0.25rem; }
-    body.sidebar-collapsed .cat-head {
-      padding: 0.45rem 0.3rem;
-      justify-content: center;
-      gap: 0.4rem;
-    }
-    body.sidebar-collapsed .cat-name,
-    body.sidebar-collapsed .cat-latest,
-    body.sidebar-collapsed .cat-toggle { display: none; }
-    body.sidebar-collapsed .cat-dates,
-    body.sidebar-collapsed .cat.open .cat-dates { display: none; }
-    body.sidebar-collapsed .cat-color { height: 20px; }
+  /* `$ ls -l ▾` nav trigger — terminal directory listing dropped flush-right
+     below the summary. */
+  .ls-summary { white-space: nowrap; }
+  .ls-summary .ls-cmd { color: inherit; }
+  .ls-panel {
+    top: calc(100% + 8px);
+    bottom: auto;
+    right: 0;
+    left: auto;
+    min-width: max-content;
+    max-width: min(86vw, 360px);
+    max-height: min(72vh, 560px);
+    overflow-y: auto;
+    padding: 6px 0;
   }
+
+  /* Layout: single full-width column. The fixed footer is 2rem tall, so the
+     shell is the viewport minus the header (3rem) and the footer (2rem). */
+  .app-shell {
+    display: block;
+    height: calc(100vh - 3rem - 2rem);
+    height: calc(100dvh - 3rem - 2rem);
+  }
+
+  /* The nav lives inside the header's `$ ls -l ▾` dropdown panel. The panel
+     holds the Übersicht control (#home-btn) and #nav-groups (the grouped
+     category nav, populated by JS). */
   .nav-label {
     font-family: var(--font-mono);
-    font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em;
-    color: var(--soft); padding: 0.4rem 0.8rem 0.2rem; font-weight: 600;
+    font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--muted-foreground); padding: 0.5rem 0.85rem 0.2rem; font-weight: 600;
   }
+  #nav-groups { padding-bottom: 0.2rem; }
 
   .cat {
-    margin: 0.2rem 0.4rem;
-    border-radius: 7px;
+    margin: 0;
+    border-radius: 0;
     overflow: hidden;
-    border: 1px solid transparent;
+    border: 0;
   }
   .cat-head {
     display: flex; align-items: center; gap: 0.55rem;
-    padding: 0.6rem 0.7rem;
+    padding: 0.45rem 0.85rem;
     cursor: pointer;
-    border-radius: 7px;
+    border-radius: 0;
     transition: background 120ms;
-    min-height: 2.5rem;
+    min-height: 2.1rem;
   }
-  .cat-head:hover { background: var(--rule-soft); }
-  .cat.active .cat-head { background: var(--rule-soft); }
-  .cat-color { width: 6px; height: 22px; border-radius: 2px; flex: none; }
+  .cat-head:hover { background: var(--muted); }
+  .cat-head:hover .cat-name { color: var(--primary); }
+  .cat.active .cat-head { background: var(--muted); }
+  .cat.active .cat-name { color: var(--primary); }
+  .cat-color { width: 6px; height: 18px; border-radius: 0; flex: none; }
   .cat-name {
-    font-family: var(--font-display);
+    font-family: var(--font-mono);
     font-weight: 600;
-    font-size: 0.92rem;
+    font-size: 0.8rem;
+    color: var(--foreground);
+    transition: color 0.15s ease;
     flex: 1;
     /* Single-line; ellipsise rather than wrap to two lines. */
     white-space: nowrap;
@@ -311,106 +278,87 @@
     font-family: var(--font-body); font-size: 0.72rem;
     color: var(--muted-ink); line-height: 1.35; min-height: 1.7rem;
   }
-  /* Settings cluster at the bottom of the sidebar — single horizontal row
-     with theme toggle and language picker side-by-side. Pinned via its own
-     margin-top:auto so it always floats to the foot of the sidebar, while
-     the category groups (Newsletter, Lernen, …) stack flush from the top. */
-  .settings-row {
-    margin: auto 0.4rem 0;   /* auto = push to bottom of flex column */
-    padding: 0.6rem 0;
-    border-top: 1px solid var(--rule);
+  /* ────────────────────────────────────────────────────────────────────
+     Fixed footer status bar — mirrors the pagr/seedr StatusBar: a 2rem bar
+     pinned to the viewport bottom on a --card surface with a --border top
+     rule. LEFT: `[briefs] visitor@briefs:~/path` status line. RIGHT: the
+     relocated controls (theme menu, print, language menu) + an anim toggle.
+     ──────────────────────────────────────────────────────────────────── */
+  footer.status-bar {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 60;
+    height: 2rem;
+    border-top: 1px solid var(--border);
+    background: var(--card);
+    font-family: var(--font-mono); /* chrome is terminal mono */
+    font-size: 11px;
+  }
+  .status-inner {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    justify-content: space-between;
+    gap: 1rem;
+    height: 100%;
+    padding: 0 0.85rem;
   }
-  .settings-btn {
+  .status-path {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--muted-foreground);
+  }
+  .status-path .status-tag { color: var(--primary); }
+  .status-path .status-loc { color: var(--foreground); }
+  .status-controls {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    flex: none;
+  }
+  .status-sep { height: 0.9rem; width: 1px; background: var(--border); flex: none; }
+
+  /* Footer control buttons — flat, muted, warm to --primary on hover. No
+     boxes, no shadows; terminal-plain. */
+  .status-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.45rem 0.6rem;
-    border-radius: 7px;
-    border: 1px solid var(--rule);
-    background: transparent;
-    color: var(--fg);
+    gap: 6px;
+    font: inherit;
+    line-height: 1;
+    color: var(--muted-foreground);
+    background: none;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
     cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    min-height: 2.1rem;
-    transition: background 120ms, border-color 120ms;
+    transition: color 0.15s ease;
   }
-  .settings-btn:hover { background: var(--rule-soft); border-color: var(--soft); }
-  .settings-btn:focus-visible {
-    outline: 2px solid var(--cat-accent, var(--fg));
-    outline-offset: 2px;
-  }
-  .theme-toggle { flex: 1 1 auto; }
-  .theme-icon { font-size: 1rem; line-height: 1; }
+  .status-btn:hover { color: var(--primary); }
 
-  /* Language picker — single trigger button showing the current flag
-     (and short label). Click opens an upward-anchored dropdown with all
-     four locale options. Each option carries its flag + native name. */
-  .lang-picker { position: relative; flex: 0 0 auto; }
-  .lang-trigger { padding: 0.45rem 0.55rem; }
-  .lang-flag { font-size: 1.05rem; line-height: 1; }
-  .lang-caret { font-size: 0.6rem; color: var(--soft); margin-left: 0.1rem; }
-  .lang-menu {
-    position: absolute;
-    bottom: calc(100% + 0.35rem);
-    right: 0;
-    min-width: 9.5rem;
-    background: var(--panel);
-    border: 1px solid var(--rule);
-    border-radius: 7px;
-    box-shadow: var(--shadow-lift);
-    padding: 0.3rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    z-index: 50;
-  }
+  /* Theme + language dropdowns reuse the core .dropdown / .dropdown-panel /
+     .dropdown-item primitives. The summary mirrors .status-btn. */
+  .status-controls .dropdown > summary { font: inherit; }
+  .theme-dot { width: 11px; height: 11px; flex: none; }
+  .lang-flag { font-size: 1rem; line-height: 1; }
+  .dropdown-item .lang-flag { font-size: 1.05rem; }
+
+  /* Anim toggle — `[x] anim` / `[ ] anim`, mirroring pagr's footer toggle. */
+  .anim-toggle { white-space: nowrap; }
+  .anim-toggle[aria-pressed="true"] .anim-box { color: var(--primary); }
+
+  /* Language picker — the trigger anchors the upward dropdown menu. The menu
+     reuses the core .dropdown-panel (absolute, opens above, right-aligned),
+     toggled open/closed via the [hidden] attribute by the existing JS. */
+  .lang-picker { position: relative; }
+  .lang-caret { font-size: 0.6rem; margin-left: 0.1rem; }
   .lang-menu[hidden] { display: none; }
-  .lang-option {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-    padding: 0.45rem 0.55rem;
-    border: 1px solid transparent;
-    background: transparent;
-    color: var(--fg);
-    cursor: pointer;
-    border-radius: 5px;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    text-align: left;
-    transition: background 120ms, color 120ms;
-  }
-  .lang-option:hover { background: var(--rule-soft); }
-  .lang-option:focus-visible {
-    outline: 2px solid var(--cat-accent, var(--fg));
-    outline-offset: 2px;
-  }
   .lang-option[aria-selected="true"] {
-    background: var(--cat-accent-text);
-    color: var(--bg);
+    color: var(--primary);
+    text-shadow: 0 0 8px var(--glow);
   }
-  .lang-option .lang-flag { font-size: 1.15rem; }
-
-  /* Collapsed sidebar: hide the text labels, keep icons + flag visible. */
-  body.sidebar-collapsed .theme-label,
-  body.sidebar-collapsed .lang-label-short,
-  body.sidebar-collapsed .lang-caret { display: none; }
-  body.sidebar-collapsed .settings-row { flex-direction: column; gap: 0.25rem; }
-  body.sidebar-collapsed .settings-btn { width: 100%; justify-content: center; padding: 0.45rem 0.3rem; }
-  body.sidebar-collapsed .lang-menu { right: auto; left: calc(100% + 0.35rem); bottom: 0; }
-
-  .sidebar { display: flex; flex-direction: column; }
-  /* Category groups (Newsletter, Lernen, future ones) stack flush from
-     the top — no flex-grow on the lists. .settings-row has margin-top:auto,
-     so it consumes the leftover space and stays pinned to the foot. */
 
   .cat-empty {
     font-family: var(--font-mono);
@@ -419,11 +367,12 @@
     padding: 0.5rem 0.6rem;
   }
 
-  /* Main area */
+  /* Main area — full width, fills the shell (viewport minus header + footer). */
   .main {
     overflow: hidden;
     background: var(--bg);
     position: relative;
+    height: 100%;
   }
   .iframe-host { width: 100%; height: 100%; border: none; background: var(--bg); }
 
@@ -631,7 +580,16 @@
     margin: 0 0 var(--space-3);
     max-width: none;
   }
-  /* drop cap removed for the terminal look — the first letter renders inline */
+  .tldr-card-body .tldr > .lead::first-letter {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+    font-size: 2.7rem;
+    float: left;
+    line-height: 0.85;
+    padding: 0.25rem 0.45rem 0 0;
+    color: var(--cat-accent);
+    font-weight: 700;
+  }
   .tldr-card-body .tldr ul {
     padding-left: 1rem;
     margin: 0;
@@ -797,221 +755,79 @@
   .cat[data-cat="motorsport"]     { --cat-accent: var(--c-motorsport); }
   .cat[data-cat="stocks-crypto"]  { --cat-accent: var(--c-stocks-crypto); }
 
-  /* Home button — mirrors the .cat-head structure below: black accent bar
-     on the left (the dashboard's "house" colour, equivalent to the
-     coloured bars on categories), then a small favicon-style M brand
-     mark in the icon slot, then "Übersicht" label. Same baseline grid as
-     the categories, just with the dashboard's own identity. */
+  /* Home button — the "Übersicht" control at the top of the nav dropdown
+     panel. Black accent bar (the dashboard's "house" colour) + favicon-style
+     M brand mark + label, styled like a terminal .dropdown-item row. */
   .home-btn {
     display: flex; align-items: center; gap: 0.55rem;
-    padding: 0.55rem 0.75rem;
-    margin: 0 0.4rem 0.5rem; border-radius: 7px;
-    cursor: pointer; font-weight: 600; font-size: 0.9rem;
-    color: var(--fg);
-    transition: background 120ms;
-    min-height: 2.25rem;
+    padding: 0.45rem 0.85rem;
+    margin: 0;
+    border-radius: 0;
+    cursor: pointer; font-weight: 600; font-size: 0.8rem;
+    color: var(--foreground);
+    transition: background 120ms, color 0.15s ease;
+    min-height: 2.1rem;
   }
-  .home-btn:hover { background: var(--rule-soft); }
-  .home-btn.active { background: var(--quote); }
-  .home-btn .cat-color { background: var(--fg); }   /* dashboard's "black accent" */
-  /* Brand mark = the favicon design at category-icon size: dark frame,
-     cream page, red double-rule masthead, dark serif M. Reads as the
-     "house newspaper" tile next to the label. Same width as .cat-icon
-     emojis so all sidebar rows align on identical icon footprints. */
+  .home-btn:hover { background: var(--muted); color: var(--primary); }
+  .home-btn.active { background: var(--muted); color: var(--primary); }
+  .home-btn .cat-color {
+    width: 6px; height: 18px; border-radius: 0; flex: none;
+    background: var(--foreground);
+  }
+  /* Brand mark = the favicon design at category-icon size. */
   .home-btn .brand-mark {
-    width: 1.15rem;
-    height: 1.15rem;
+    width: 1.1rem;
+    height: 1.1rem;
     flex: none;
   }
   .home-btn:focus-visible,
   .cat-head:focus-visible,
   .cat-toggle:focus-visible,
-  .cat-date:focus-visible,
-  .sidebar-toggle:focus-visible {
-    outline: 2px solid var(--cat-accent, var(--fg));
-    outline-offset: 2px;
+  .cat-date:focus-visible {
+    outline: 2px solid var(--ring, var(--primary));
+    outline-offset: -2px;
   }
 
-  /* Mobile breadcrumb bar — only visible under 720px. Replaces the full sidebar
-     with a compact "where am I" indicator plus a hamburger to open the drawer. */
-  .mobile-nav-bar { display: none; }
-  .mobile-backdrop { display: none; }
-
   /* ────────────────────────────────────────────────────────────────────
-     Mobile / tablet responsiveness for the dashboard chrome itself
+     Mobile / narrow responsiveness — the header nav dropdown serves mobile
+     too (no separate drawer), so only a few layout tweaks are needed.
      ──────────────────────────────────────────────────────────────────── */
   @media (max-width: 720px) {
-    header.app {
-      padding: 0.55rem 1rem;
-      flex-direction: row;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 0.6rem;
-    }
-    header.app .title { font-size: 1.2rem; }
-    header.app .sub { font-size: 0.7rem; }
-
-    /* Sticky breadcrumb — pinned to the top of the viewport so the user
-       always knows which section + date they're in, even after scrolling
-       into a long brief. Translucent + backdrop-blur for a native feel. */
-    .mobile-nav-bar {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.5rem 0.85rem;
-      background: color-mix(in srgb, var(--panel) 88%, transparent);
-      -webkit-backdrop-filter: blur(14px) saturate(140%);
-      backdrop-filter: blur(14px) saturate(140%);
-      border-bottom: 1px solid var(--rule);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-    /* Fall back to opaque background for browsers without backdrop-filter
-       (mainly older Firefox builds) so the breadcrumb never sits over
-       unreadable content. */
-    @supports not (backdrop-filter: blur(2px)) {
-      .mobile-nav-bar { background: var(--panel); }
-    }
-    .mobile-nav-burger {
-      background: transparent;
-      border: 1px solid var(--rule);
-      width: 2.4rem; height: 2.4rem;
-      border-radius: 999px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      color: var(--fg);
-      display: inline-flex; align-items: center; justify-content: center;
-      flex: none;
-    }
-    .mobile-nav-burger:hover { background: var(--rule-soft); }
-    .mobile-nav-burger:focus-visible {
-      outline: 2px solid var(--fg);
-      outline-offset: 2px;
-    }
-    .mobile-breadcrumb {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-family: var(--font-display);
-      font-variation-settings: "opsz" 24, "SOFT" 50;
-      font-size: 0.98rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .mobile-breadcrumb .crumb {
-      cursor: pointer;
-      color: var(--fg);
-      text-decoration: none;
-      flex-shrink: 0;
-    }
-    .mobile-breadcrumb .crumb.muted { color: var(--soft); }
-    .mobile-breadcrumb .crumb.current {
-      font-weight: 700;
-      flex-shrink: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .mobile-breadcrumb .sep {
-      color: var(--rule);
-      flex: none;
-    }
-
-    .app-shell {
-      grid-template-columns: 1fr;
-      grid-template-rows: 1fr;
-      /* dvh = dynamic viewport height — shrinks when mobile browser chrome
-         appears so content + iframe never hide behind the URL/toolbar.
-         Static `100vh` fallback for browsers without dvh support. */
-      height: calc(100vh - 96px);
-      height: calc(100dvh - 96px);
-    }
-
-    /* Sidebar becomes an overlay drawer.
-       Height: 100dvh (dynamic viewport height) so the drawer shrinks when
-       mobile browser chrome (URL bar, bottom toolbar) appears — otherwise
-       `100vh` (largest viewport) puts the settings-row below the browser
-       toolbar and the user can't reach it. `100vh` is the fallback for
-       browsers that don't yet support dvh.
-       Padding-bottom: env(safe-area-inset-bottom) leaves room for the iOS
-       home-indicator gesture area on iPhones without a hardware button.
-       overflow-y: auto: when content (e.g., many categories + Lernen group
-       + settings) exceeds the available height, the sidebar scrolls. */
-    .sidebar {
-      position: fixed;
-      top: 0; bottom: 0;
-      left: -88%;
-      z-index: 100;
-      width: 84%;
-      max-width: 320px;
-      max-height: none;
-      height: 100vh;
-      height: 100dvh;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      padding-bottom: env(safe-area-inset-bottom, 0);
-      border-right: 1px solid var(--rule) !important;
-      border-bottom: none !important;
-      transition: left 220ms ease;
-      box-shadow: none;
-      padding-top: 0.85rem;
-    }
-    .sidebar.open {
-      left: 0;
-      box-shadow: 8px 0 30px rgba(0,0,0,.35);
-    }
-
-    .mobile-backdrop {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,.45);
-      z-index: 99;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 220ms ease;
-    }
-    .mobile-backdrop.show {
-      opacity: 1;
-      pointer-events: auto;
-      display: block;
-    }
-
+    header.app { padding: 0 0.75rem; gap: 0.6rem; }
+    .header-brand .brand-word { font-size: 0.92rem; }
     .home { padding: 1rem 1rem 1.5rem; }
     .tldr-grid { grid-template-columns: 1fr; gap: 0.85rem; }
     .home h2 { font-size: 1.2rem; }
+    /* Drop the breadcrumb on the smallest widths — the brand + nav dropdown
+       carry the chrome; the path would otherwise crowd the row. */
+    .header-crumb { display: none; }
+    .status-controls { gap: 0.9rem; }
   }
   @media (max-width: 400px) {
-    header.app { padding: 0.5rem 0.75rem; }
-    header.app .title { font-size: 1.05rem; }
-    header.app .sub { font-size: 0.66rem; }
-    .mobile-nav-bar { padding: 0.45rem 0.7rem; }
-    .mobile-breadcrumb { font-size: 0.85rem; }
-    .sidebar { padding: 0.6rem 0.4rem 0.7rem; }
+    header.app { padding: 0 0.6rem; }
+    .header-brand .brand-word { font-size: 0.85rem; }
     .home { padding: 0.85rem 0.85rem 1.2rem; }
     .tldr-card { padding: 0.8rem 0.9rem 0.7rem; }
     .tldr-card-body .tldr li { font-size: 0.8rem; }
   }
 
   /* ────────────────────────────────────────────────────────────────────
-     Print — when the user prints the dashboard, hide all chrome (top
-     bar, sidebar, mobile drawer) and let the iframe content (or home
-     grid) take the full page. Same-origin iframes print their content
-     natively in Chromium/Firefox/Safari, so the visible newsletter
-     prints with its own @media print rules from lib/styles.css.
+     Print — hide the header + footer chrome and let the iframe content (or
+     home grid) take the full page. Same-origin iframes print their content
+     natively, so the visible newsletter prints with its own @media print
+     rules from lib/styles.css.
      ──────────────────────────────────────────────────────────────────── */
   @media print {
     /* Print styling now lives in lib/styles.css (no-cache), loaded on demand by
        the Drucken flow before window.print(). This fallback only hides chrome
        for a stray browser-menu print before lib has loaded. */
-    header.app, .mobile-nav-bar, .mobile-backdrop, .sidebar, .loading, .print-dialog {
+    header.app, footer.status-bar, .loading, .print-dialog {
       display: none !important;
     }
     /* Let body grow past the viewport so a long print isn't clipped to one
        page (screen layout pins html/body to 100% with overflow:hidden). */
     html, body { height: auto !important; overflow: visible !important; }
-    .app-shell { display: block !important; height: auto !important; grid-template-columns: none !important; }
+    .app-shell { display: block !important; height: auto !important; }
   }
 
   /* ──────────────────────────────────────────────────────────────────
@@ -1120,83 +936,53 @@
 </head>
 <body>
 
+<!-- Terminal header bar: brand wordmark + cursor + breadcrumb (left), the
+     `$ ls -l ▾` nav dropdown (right). The nav dropdown holds the Übersicht
+     control (#home-btn) and the grouped category nav (#nav-groups), serving
+     desktop and mobile alike (no separate drawer). -->
 <header class="app">
-  <span class="title">Daniels Morning Briefs</span>
+  <div class="header-left">
+    <a class="header-brand" id="brand-home" href="#home" title="Übersicht">
+      <span class="glow brand-word">Daniels Morning Briefs</span>
+      <span class="cursor-block" aria-hidden="true"></span>
+    </a>
+    <span class="header-crumb" id="header-crumb" aria-live="polite">
+      <span class="crumb-host">visitor@briefs:</span><a class="crumb-root" href="#home">~</a>
+    </span>
+  </div>
+
+  <div class="header-nav">
+    <details class="dropdown" id="nav-dropdown">
+      <summary class="ls-summary" aria-label="Navigation">
+        <span aria-hidden="true">$</span>
+        <span class="ls-cmd">ls -l</span>
+        <span aria-hidden="true">▾</span>
+      </summary>
+      <div class="dropdown-panel ls-panel">
+        <div class="home-btn active" id="home-btn" role="button" tabindex="0" title="Übersicht">
+          <span class="cat-color"></span>
+          <!-- Full favicon design inline: dark frame + cream page + red
+               double-rule + serif M. Identical SVG to favicon.svg so the
+               browser tab and the home control read as the same "house" mark. -->
+          <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+            <rect width="64" height="64" rx="9" fill="#221a13"/>
+            <rect x="2.5" y="2.5" width="59" height="59" rx="7" fill="#f1e7d3"/>
+            <rect x="9" y="12" width="46" height="2.5" fill="#b9462a"/>
+            <rect x="9" y="17" width="46" height="2" fill="#b9462a"/>
+            <text x="32" y="52" font-family="Georgia, 'Times New Roman', serif"
+                  font-weight="800" font-size="38" text-anchor="middle" fill="#1f1812">M</text>
+          </svg>
+          <span>Übersicht</span>
+        </div>
+        <div id="nav-groups"><!-- populated by JS from NAV_GROUPS: grouped category
+             nav (Wirtschaft / IT / jobs / Sport / Freizeit / Sprachen), each group
+             with its own .nav-label header (standalone groups render headerless). --></div>
+      </div>
+    </details>
+  </div>
 </header>
 
-<!-- Mobile-only nav bar with hamburger + breadcrumb. Hidden on desktop. -->
-<nav class="mobile-nav-bar" aria-label="Mobile-Navigation">
-  <button class="mobile-nav-burger" id="mobile-burger" type="button" aria-label="Menü öffnen">☰</button>
-  <div class="mobile-breadcrumb" id="mobile-breadcrumb">
-    <span class="crumb current">🏠 Übersicht</span>
-  </div>
-</nav>
-
-<div class="mobile-backdrop" id="mobile-backdrop"></div>
-
 <div class="app-shell">
-
-  <aside class="sidebar">
-    <div class="sidebar-toggle-row">
-      <button class="sidebar-toggle" id="sidebar-toggle" type="button"
-              aria-label="Seitenleiste einklappen" title="Seitenleiste einklappen">«</button>
-    </div>
-    <div class="home-btn active" id="home-btn" role="button" tabindex="0" title="Übersicht">
-      <span class="cat-color"></span>
-      <!-- Full favicon design inline: dark frame + cream page + red
-           double-rule + serif M. Identical SVG to favicon.svg so the
-           browser tab and the home button read as the same "house" mark. -->
-      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-        <rect width="64" height="64" rx="9" fill="#221a13"/>
-        <rect x="2.5" y="2.5" width="59" height="59" rx="7" fill="#f1e7d3"/>
-        <rect x="9" y="12" width="46" height="2.5" fill="#b9462a"/>
-        <rect x="9" y="17" width="46" height="2" fill="#b9462a"/>
-        <text x="32" y="52" font-family="Georgia, 'Times New Roman', serif"
-              font-weight="800" font-size="38" text-anchor="middle" fill="#1f1812">M</text>
-      </svg>
-      <span>Übersicht</span>
-    </div>
-    <div id="nav-groups"><!-- populated by JS from NAV_GROUPS: grouped category
-         nav (Wirtschaft / IT / jobs / Sport / Freizeit / Sprachen), each group
-         with its own .nav-label header (standalone groups render headerless). --></div>
-
-    <div class="settings-row">
-      <button class="settings-btn theme-toggle" id="theme-toggle" type="button"
-              aria-label="Hell/Dunkel umschalten" title="Hell/Dunkel umschalten"
-              data-theme-state="warm">
-        <span class="theme-icon" aria-hidden="true">◐</span>
-        <span class="theme-label">Warm</span>
-      </button>
-      <button class="settings-btn print-btn" id="print-btn" type="button"
-              aria-label="Drucken" title="Drucken">
-        <span aria-hidden="true">🖨</span>
-      </button>
-      <div class="lang-picker">
-        <button class="settings-btn lang-trigger" id="lang-trigger" type="button"
-                aria-haspopup="listbox" aria-expanded="false"
-                aria-label="Sprache wählen" title="Sprache wählen">
-          <span class="lang-flag" aria-hidden="true">🇩🇪</span>
-          <span class="lang-label-short">DE</span>
-          <span class="lang-caret" aria-hidden="true">▾</span>
-        </button>
-        <div class="lang-menu" id="lang-menu" role="listbox" hidden>
-          <button class="lang-option" type="button" role="option" data-lang="de" aria-selected="true">
-            <span class="lang-flag" aria-hidden="true">🇩🇪</span><span>Deutsch</span>
-          </button>
-          <button class="lang-option" type="button" role="option" data-lang="en" aria-selected="false">
-            <span class="lang-flag" aria-hidden="true">🇺🇸</span><span>English</span>
-          </button>
-          <button class="lang-option" type="button" role="option" data-lang="pt" aria-selected="false">
-            <span class="lang-flag" aria-hidden="true">🇧🇷</span><span>Português</span>
-          </button>
-          <button class="lang-option" type="button" role="option" data-lang="es" aria-selected="false">
-            <span class="lang-flag" aria-hidden="true">🇲🇽</span><span>Español</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </aside>
-
   <main class="main">
     <div class="loading" id="loading">lädt…</div>
 
@@ -1208,6 +994,59 @@
     <iframe class="iframe-host" id="frame" style="display:none;" title="Newsletter"></iframe>
   </main>
 </div>
+
+<!-- Fixed footer status bar: status path (left), relocated controls + anim
+     toggle (right). Controls keep their original ids so the existing handlers
+     (theme cycle, print, language switch) work unchanged. -->
+<footer class="status-bar">
+  <div class="status-inner">
+    <span class="status-path" id="status-path">
+      <span class="status-tag">[briefs]</span> <span class="status-host">visitor@briefs:</span><span class="status-loc" id="status-loc">~</span>
+    </span>
+    <nav class="status-controls" aria-label="Einstellungen">
+      <button class="status-btn theme-toggle" id="theme-toggle" type="button"
+              aria-label="Theme umschalten" title="Theme umschalten"
+              data-theme-state="warm">
+        <span class="theme-icon" aria-hidden="true">◐</span>
+        <span class="theme-label">warm</span>
+      </button>
+      <button class="status-btn print-btn" id="print-btn" type="button"
+              aria-label="Drucken" title="Drucken">
+        <span aria-hidden="true">🖨</span>
+      </button>
+      <span class="status-sep" aria-hidden="true"></span>
+      <div class="lang-picker">
+        <button class="status-btn lang-trigger" id="lang-trigger" type="button"
+                aria-haspopup="listbox" aria-expanded="false"
+                aria-label="Sprache wählen" title="Sprache wählen">
+          <span class="lang-flag" aria-hidden="true">🇩🇪</span>
+          <span class="lang-label-short">DE</span>
+          <span class="lang-caret" aria-hidden="true">▾</span>
+        </button>
+        <div class="lang-menu dropdown-panel" id="lang-menu" role="listbox" hidden>
+          <button class="dropdown-item lang-option" type="button" role="option" data-lang="de" aria-selected="true">
+            <span class="lang-flag" aria-hidden="true">🇩🇪</span><span>Deutsch</span>
+          </button>
+          <button class="dropdown-item lang-option" type="button" role="option" data-lang="en" aria-selected="false">
+            <span class="lang-flag" aria-hidden="true">🇺🇸</span><span>English</span>
+          </button>
+          <button class="dropdown-item lang-option" type="button" role="option" data-lang="pt" aria-selected="false">
+            <span class="lang-flag" aria-hidden="true">🇧🇷</span><span>Português</span>
+          </button>
+          <button class="dropdown-item lang-option" type="button" role="option" data-lang="es" aria-selected="false">
+            <span class="lang-flag" aria-hidden="true">🇲🇽</span><span>Español</span>
+          </button>
+        </div>
+      </div>
+      <span class="status-sep" aria-hidden="true"></span>
+      <button class="status-btn anim-toggle" id="anim-toggle" type="button"
+              aria-pressed="true" title="Animationen umschalten">
+        <span class="anim-box" aria-hidden="true">[x]</span>
+        <span>anim</span>
+      </button>
+    </nav>
+  </div>
+</footer>
 
 <!-- Print picker dialog. Native <dialog> with showModal() gives focus
      trap, Escape-close, and backdrop click-out for free. The options
@@ -8701,158 +8540,96 @@ window.__MANIFESTS = {
     });
   }
 
-  // ── Sidebar resize (desktop) ─────────────────────────────────────────
-  // The grid column reads --sidebar-w. We mutate that on <html> during drag and
-  // persist the final width to localStorage so it survives reloads.
-  const sidebarEl = $('.sidebar');
-  if (sidebarEl) {
-    // Restore previously-saved width.
-    const SAVED = parseInt(localStorage.getItem('mb-sidebar-w') || '0', 10);
-    if (Number.isFinite(SAVED) && SAVED >= 220 && SAVED <= 600) {
-      document.documentElement.style.setProperty('--sidebar-w', SAVED + 'px');
-    }
-
-    // Inject the drag handle (kept in JS so older HTML without it still works).
-    const resizeHandle = document.createElement('div');
-    resizeHandle.className = 'sidebar-resize';
-    resizeHandle.setAttribute('role', 'separator');
-    resizeHandle.setAttribute('aria-orientation', 'vertical');
-    resizeHandle.title = 'Sidebar-Breite ziehen';
-    sidebarEl.appendChild(resizeHandle);
-
-    let dragging = false;
-    let startX = 0;
-    let startW = 0;
-    let pendingX = null;
-    let rafId = 0;
-    const MIN_W = 220, MAX_W = 600;
-
-    function applyMove() {
-      rafId = 0;
-      if (!dragging || pendingX === null) return;
-      const w = Math.max(MIN_W, Math.min(MAX_W, startW + (pendingX - startX)));
-      document.documentElement.style.setProperty('--sidebar-w', w + 'px');
-      pendingX = null;
-    }
-
-    function onDown(clientX) {
-      // Don't allow resize on mobile (sidebar is a drawer there) or when collapsed.
-      if (window.matchMedia('(max-width: 720px)').matches) return;
-      if (document.body.classList.contains('sidebar-collapsed')) return;
-      dragging = true;
-      startX = clientX;
-      startW = sidebarEl.offsetWidth;
-      document.body.classList.add('sidebar-resizing');
-    }
-    function onMove(clientX) {
-      if (!dragging) return;
-      // Coalesce: store the latest x and schedule a single rAF-paced update.
-      // mousemove can fire faster than the display refreshes; without this throttle,
-      // we'd trigger redundant layout passes (and the iframe re-flow) per event.
-      pendingX = clientX;
-      if (!rafId) rafId = requestAnimationFrame(applyMove);
-    }
-    function onUp() {
-      if (!dragging) return;
-      dragging = false;
-      if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
-      // Flush any pending move so the final position lands exactly where the cursor left it.
-      if (pendingX !== null) {
-        const w = Math.max(MIN_W, Math.min(MAX_W, startW + (pendingX - startX)));
-        document.documentElement.style.setProperty('--sidebar-w', w + 'px');
-        pendingX = null;
+  // ── Chrome dropdowns (header nav + footer language) ──────────────────
+  // The header nav lives in a <details class="dropdown">; the footer language
+  // menu is a button-toggled .lang-menu. Close the nav dropdown after a nav
+  // click; click-outside + Escape close it too. (The lang menu has its own
+  // close logic further below; this handler also force-closes the nav.)
+  const navDropdown = $('#nav-dropdown');
+  function closeNav() {
+    if (navDropdown) navDropdown.removeAttribute('open');
+  }
+  if (navDropdown) {
+    document.addEventListener('click', (e) => {
+      if (navDropdown.open && !navDropdown.contains(e.target)) closeNav();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navDropdown.open) {
+        closeNav();
+        navDropdown.querySelector('summary')?.focus();
       }
-      document.body.classList.remove('sidebar-resizing');
-      try { localStorage.setItem('mb-sidebar-w', String(sidebarEl.offsetWidth)); } catch (_) {}
-    }
-
-    resizeHandle.addEventListener('mousedown', (e) => { e.preventDefault(); onDown(e.clientX); });
-    document.addEventListener('mousemove', (e) => onMove(e.clientX));
-    document.addEventListener('mouseup',   onUp);
-
-    // Touch support (some tablets / hybrid devices).
-    resizeHandle.addEventListener('touchstart', (e) => { onDown(e.touches[0].clientX); }, { passive: true });
-    document.addEventListener('touchmove',  (e) => { if (dragging) onMove(e.touches[0].clientX); }, { passive: true });
-    document.addEventListener('touchend',   onUp);
-    document.addEventListener('touchcancel', onUp);
-
-    // Double-click the handle to reset to default width.
-    resizeHandle.addEventListener('dblclick', () => {
-      document.documentElement.style.removeProperty('--sidebar-w');
-      try { localStorage.removeItem('mb-sidebar-w'); } catch (_) {}
     });
   }
 
-  // Mobile drawer state
-  const sidebar = $('.sidebar');
-  const burger = $('#mobile-burger');
-  const backdrop = $('#mobile-backdrop');
-  const breadcrumb = $('#mobile-breadcrumb');
-  const isMobile = () => window.matchMedia('(max-width: 720px)').matches;
+  // Brand wordmark → back to the dashboard.
+  const brandHome = $('#brand-home');
+  if (brandHome) brandHome.addEventListener('click', (e) => { e.preventDefault(); showHome(); });
 
-  function openDrawer() {
-    sidebar.classList.add('open');
-    backdrop.classList.add('show');
-  }
-  function closeDrawer() {
-    sidebar.classList.remove('open');
-    backdrop.classList.remove('show');
-  }
-  if (burger) burger.addEventListener('click', () => {
-    if (sidebar.classList.contains('open')) closeDrawer(); else openDrawer();
-  });
-  if (backdrop) backdrop.addEventListener('click', closeDrawer);
+  // ── Breadcrumb / status path ─────────────────────────────────────────
+  // Terminal path shown in both the header crumb (`visitor@briefs:~/section…`)
+  // and the footer status line (`~/section…`). `~` returns to the dashboard;
+  // the section segment links to its latest brief; the date segment is current.
+  const headerCrumb = $('#header-crumb');
+  const statusLoc   = $('#status-loc');
 
   function updateBreadcrumb(catId, date) {
-    if (!breadcrumb) return;
-    breadcrumb.innerHTML = '';
-    if (!catId) {
-      const span = document.createElement('span');
-      span.className = 'crumb current';
-      span.textContent = '🏠 Übersicht';
-      breadcrumb.appendChild(span);
-      return;
+    // Footer status path: plain text `~` or `~/section[/date]`.
+    if (statusLoc) {
+      const cat = catId ? M.categories.find(c => c.id === catId) : null;
+      let path = '~';
+      if (cat) path += '/' + cat.label + (date ? '/' + fmtDate(date) : '');
+      statusLoc.textContent = path;
     }
+
+    // Header crumb: linked segments. Rebuilt each navigation.
+    if (!headerCrumb) return;
+    headerCrumb.innerHTML = '';
+    const host = document.createElement('span');
+    host.className = 'crumb-host';
+    host.textContent = 'visitor@briefs:';
+    headerCrumb.appendChild(host);
+
+    const root = document.createElement('a');
+    root.className = 'crumb-root';
+    root.href = '#home';
+    root.textContent = '~';
+    root.setAttribute('aria-label', 'Zurück zur Übersicht');
+    root.addEventListener('click', (e) => { e.preventDefault(); showHome(); });
+    headerCrumb.appendChild(root);
+
+    if (!catId) return;
     const cat = M.categories.find(c => c.id === catId);
     if (!cat) return;
 
-    const home = document.createElement('a');
-    home.className = 'crumb muted';
-    home.href = '#home';
-    home.setAttribute('aria-label', 'Zurück zur Übersicht');
-    home.textContent = '🏠';
-    home.addEventListener('click', (e) => { e.preventDefault(); showHome(); });
-    breadcrumb.appendChild(home);
-
     const sep1 = document.createElement('span');
-    sep1.className = 'sep'; sep1.textContent = '›';
+    sep1.className = 'crumb-sep'; sep1.textContent = '/';
     sep1.setAttribute('aria-hidden', 'true');
-    breadcrumb.appendChild(sep1);
+    headerCrumb.appendChild(sep1);
 
-    const catCrumb = document.createElement('a');
-    catCrumb.className = 'crumb' + (date ? ' muted' : ' current');
-    catCrumb.textContent = cat.icon + ' ' + cat.label;
-    if (cat.entries.length) {
-      catCrumb.href = '#' + cat.id + '/' + cat.entries[0].date;
+    const catSeg = document.createElement('a');
+    catSeg.className = 'crumb-seg' + (date ? '' : ' current');
+    catSeg.textContent = cat.label;
+    if (cat.entries.length && date) {
+      catSeg.href = '#' + cat.id + '/' + cat.entries[0].date;
+      catSeg.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigate(cat.id, cat.entries[0].date);
+      });
     } else {
-      catCrumb.setAttribute('aria-current', 'page');
+      catSeg.setAttribute('aria-current', 'page');
     }
-    catCrumb.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (cat.entries.length) navigate(cat.id, cat.entries[0].date);
-    });
-    breadcrumb.appendChild(catCrumb);
+    headerCrumb.appendChild(catSeg);
 
     if (date) {
       const sep2 = document.createElement('span');
-      sep2.className = 'sep'; sep2.textContent = '·';
+      sep2.className = 'crumb-sep'; sep2.textContent = '/';
       sep2.setAttribute('aria-hidden', 'true');
-      breadcrumb.appendChild(sep2);
-      const dateCrumb = document.createElement('span');
-      dateCrumb.className = 'crumb current';
-      dateCrumb.setAttribute('aria-current', 'page');
-      dateCrumb.textContent = fmtDate(date);
-      breadcrumb.appendChild(dateCrumb);
+      headerCrumb.appendChild(sep2);
+      const dateSeg = document.createElement('span');
+      dateSeg.className = 'crumb-seg current';
+      dateSeg.setAttribute('aria-current', 'page');
+      dateSeg.textContent = fmtDate(date);
+      headerCrumb.appendChild(dateSeg);
     }
   }
 
@@ -8894,7 +8671,7 @@ window.__MANIFESTS = {
     document.documentElement.style.setProperty('--current-accent-text', 'var(--c-' + catId + '-text)');
 
     updateBreadcrumb(catId, date);
-    if (isMobile()) closeDrawer();
+    closeNav();
 
     // Push a real history entry so the browser back button returns to the
     // previous view. Skip when we're already at this URL (handleHash got here
@@ -8919,7 +8696,7 @@ window.__MANIFESTS = {
      // home is its own thing, not a borrowed accent.
     document.documentElement.style.setProperty('--current-accent-text', 'var(--fg)');
     updateBreadcrumb(null);
-    if (isMobile()) closeDrawer();
+    closeNav();
     // Same back-button logic as navigate(): only push when this is a fresh
     // transition, not when handleHash got here from back/forward.
     if (location.hash !== '#home' && location.hash !== '') {
@@ -8949,28 +8726,32 @@ window.__MANIFESTS = {
     }
   }
 
-  // Sidebar collapse — persisted in localStorage so it sticks across reloads.
-  // Mobile uses the drawer pattern instead; the toggle button is hidden there via CSS.
-  const SIDEBAR_KEY = 'mb-sidebar-collapsed';
-  const sidebarToggle = $('#sidebar-toggle');
-  function setSidebarCollapsed(collapsed) {
-    document.body.classList.toggle('sidebar-collapsed', collapsed);
-    if (sidebarToggle) {
-      const label = collapsed ? 'Seitenleiste ausklappen' : 'Seitenleiste einklappen';
-      sidebarToggle.setAttribute('aria-label', label);
-      sidebarToggle.title = label;
-    }
-    try { localStorage.setItem(SIDEBAR_KEY, collapsed ? '1' : '0'); } catch (_) {}
+  // Animations toggle (footer) — default on; turning off adds html.anim-off
+  // (components.css then kills every keyframe + the brand cursor blink) and
+  // removes term-anim, persisting "anim"=off/on (read pre-paint in <head>).
+  const animToggle = $('#anim-toggle');
+  function syncAnim() {
+    if (!animToggle) return;
+    const on = !document.documentElement.classList.contains('anim-off');
+    animToggle.setAttribute('aria-pressed', String(on));
+    const box = animToggle.querySelector('.anim-box');
+    if (box) box.textContent = on ? '[x]' : '[ ]';
   }
-  if (sidebarToggle) {
-    sidebarToggle.addEventListener('click', () => {
-      setSidebarCollapsed(!document.body.classList.contains('sidebar-collapsed'));
+  if (animToggle) {
+    syncAnim();
+    animToggle.addEventListener('click', () => {
+      const html = document.documentElement;
+      const turningOff = !html.classList.contains('anim-off');
+      if (turningOff) {
+        html.classList.add('anim-off');
+        html.classList.remove('term-anim');
+      } else {
+        html.classList.remove('anim-off');
+      }
+      try { localStorage.setItem('anim', turningOff ? 'off' : 'on'); } catch (_) {}
+      syncAnim();
     });
   }
-  // Restore saved state on load.
-  try {
-    if (localStorage.getItem(SIDEBAR_KEY) === '1') setSidebarCollapsed(true);
-  } catch (_) {}
 
   /* ──────────────────────────────────────────────────────────────────
      Language picker — single trigger button with flag + native short
@@ -9059,7 +8840,7 @@ window.__MANIFESTS = {
   const themeToggle = $('#theme-toggle');
   const themeOrder = ['warm', 'green', 'mono', 'paper'];
   const themeIcon  = { warm: '◐', green: '◉', mono: '◑', paper: '○' };
-  const themeLabel = { warm: 'Warm', green: 'Grün', mono: 'Mono', paper: 'Paper' };
+  const themeLabel = { warm: 'warm', green: 'grün', mono: 'mono', paper: 'paper' };
   function applyTheme(state) {
     document.documentElement.setAttribute('data-theme', state);
     if (themeToggle) {
