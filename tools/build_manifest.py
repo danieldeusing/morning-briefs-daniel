@@ -6,6 +6,7 @@ import json
 import sys
 from pathlib import Path
 from datetime import date
+from html import unescape
 
 # Script lives in tools/, served content lives in ../public/.
 BASE = Path(__file__).resolve().parent.parent / "public"
@@ -53,6 +54,13 @@ TITLE_RE = re.compile(
 )
 HTML_TAG_RE = re.compile(r'<[^>]+>')
 WS_RE = re.compile(r'\s+')
+# Standfirst paragraph (<p class="lead">…</p>) — the brief's opening summary,
+# used as the short teaser in the external manifest. "lead" must be a whole
+# class token (not a substring of "leading" etc.).
+LEAD_RE = re.compile(
+    r'<p\b[^>]*\bclass\s*=\s*"[^"]*(?<![\w-])lead(?![\w-])[^"]*"[^>]*>(.*?)</p>',
+    re.DOTALL | re.IGNORECASE,
+)
 
 
 def list_entries(cat_id: str):
@@ -108,6 +116,24 @@ def extract_tldr_html(html: str) -> str:
     return ""
 
 
+def extract_summary(html: str, max_chars: int = 200) -> str:
+    """Plain-text teaser from the brief's <p class="lead"> standfirst, trimmed
+    to a clean ~2-line length: prefer a sentence boundary, else a word boundary
+    with an ellipsis. Returns "" when the brief has no lead paragraph."""
+    m = LEAD_RE.search(html)
+    if not m:
+        return ""
+    text = unescape(WS_RE.sub(' ', HTML_TAG_RE.sub('', m.group(1))).strip())
+    if len(text) <= max_chars:
+        return text
+    head = text[:max_chars]
+    for sep in ('. ', '! ', '? '):
+        idx = head.rfind(sep)
+        if idx > max_chars * 0.5:
+            return head[:idx + 1].strip()
+    return head.rsplit(' ', 1)[0].rstrip(' ,;:—-') + '…'
+
+
 def build_manifest():
     categories = []
     for cat_id, label, icon, color in CATEGORIES:
@@ -120,6 +146,9 @@ def build_manifest():
             # dashboard list can show the chosen language's headline (falling
             # back to DE in JS when a translation is missing).
             entry_headlines: dict[str, str] = {}
+            # Standfirst teasers, captured only for the latest issue (i == 0) —
+            # the external manifest only surfaces the newest one per category.
+            entry_summaries: dict[str, str] = {}
             for lang, path in lang_files.items():
                 try:
                     html = path.read_text(encoding="utf-8")
@@ -129,12 +158,14 @@ def build_manifest():
                 if i == 0:
                     latest_tldr_by_lang[lang] = extract_tldr_html(html)
                     headline_by_lang_latest[lang] = entry_headlines[lang]
+                    entry_summaries[lang] = extract_summary(html)
             entries.append({
                 "date": datestr,
                 # canonical fallback used by the dashboard when the active
                 # language has no translation for this date
                 "headline": entry_headlines.get("de", next(iter(entry_headlines.values()), "")),
                 "headlines": entry_headlines,
+                "summaries": entry_summaries,
                 "langs": sorted(lang_files.keys()),
             })
         cat_obj = {
@@ -174,6 +205,7 @@ def build_external_manifest(manifest: dict) -> dict:
                 "latest": c["entries"][0]["date"] if c["entries"] else None,
                 "count": len(c["entries"]),
                 "headline": c["entries"][0]["headlines"] if c["entries"] else {},
+                "summary": c["entries"][0].get("summaries", {}) if c["entries"] else {},
             }
             for c in manifest["categories"]
         ],

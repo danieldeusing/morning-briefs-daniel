@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI-Dev · 2026-06-27</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI-Dev</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-06-27</span>
+  </div>
+  <h1 class="masthead-title">Anthropic's top models offline worldwide — open-weights fills the gap</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Quiet Saturday on the tooling side, loud month in the model stack. The short version: Anthropic's two strongest coding models have been unreachable for two weeks — a US export directive, not a bug. Anyone building on a frontier model should question that dependency right now. And it's the open-weights world that delivers the most plausible bridge.</p>
+    <ul>
+      <li><span class="chip hot">Claude</span> <strong>Fable 5 + Mythos 5 shut down worldwide</strong>: Anthropic disabled both models on 12.06. for <em>all</em> customers to comply with a US export directive. Other Claude models continue to run.</li>
+      <li><span class="chip good">OSS</span> <strong>GLM-5.2 (Zhipu, MIT)</strong>: 753B-MoE, 1M-context, self-hostable, #1 open-weights on the Artificial-Analysis Index. The most obvious vendor-independent alternative.</li>
+      <li><span class="chip">Tool</span> <strong>MAI-Code-1-Flash for Copilot GA</strong>: Microsoft's in-house 5B coding model is available as of 26.06. for Copilot Business + Enterprise.</li>
+      <li><span class="chip">Tool</span> <strong>Cursor acquires Continue</strong>: Continue is being shut down, repo read-only — users must export their data by 15.07.</li>
+      <li><span class="chip good">OSS</span> <strong>Kimi K2.7-Code (Moonshot)</strong>: 1T/32B-active, Modified MIT — but only vendor benchmarks, no independent SWE-Bench entry. Read skeptically.</li>
+      <li><span class="chip">Claude</span> <strong>ID requirement starting 08.07.</strong>: Anthropic requires ID verification + selfie for flagged consumer accounts. Enterprise untouched.</li>
+      <li><span class="chip">Bench</span> <strong>Benchmark caution</strong>: all fresh coding scores below are marked as <em>vendor</em> vs. <em>independent</em> — many new models lack a third-party entry yet.</li>
+      <li><span class="chip">Tool</span> <strong>Quiet in the shadows</strong>: Aider still v0.86.2 (12.02.), Roo Code archived (forks Zoo/Kilo Code), OpenHands without new release.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">What moves the model and tool stack this month</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col hot">
+        <div class="tl-date">Fri 12.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Anthropic shuts down Fable 5 + Mythos 5 (US directive)</span>
+          <span>Kimi K2.7-Code launches (Moonshot)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 13.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GLM-5.2 live as API (Zhipu/Z.ai)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 17.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GLM-5.2 weights on HuggingFace (MIT)</span>
+          <span>GitHub Copilot Desktop App GA</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 22.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cursor acquisition of Continue announced</span>
+          <span>Cursor 3.9 (Plugins, Skills, MCPs)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 26.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>MAI-Code-1-Flash GA for Copilot Business + Enterprise</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Sat 27.06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Quiet on the tooling side — model stack in flux</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 08.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Anthropic ID verification starts (flagged consumer accounts)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 15.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Continue data export deadline</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>Anthropic shuts down Fable 5 + Mythos 5 worldwide <span class="h2-refs">[1][2]</span></h2>
+        <p>The biggest move this month isn't a release — it's a withdrawal. On 12.06. at 17:21 ET, Anthropic received a US export directive and reacted immediately: both top models, <strong>Fable 5</strong> and <strong>Mythos 5</strong>, were disabled <em>for all customers</em> — "to ensure compliance," in Anthropic's own words.<sup>[1]</sup> This is Anthropic's own product; I'm reporting it as neutrally as possible because the scope is independent of ownership.</p>
+        <p>The directive targets use "by any foreign national, whether within or outside the US, including foreign Anthropic employees," according to Anthropic.<sup>[2]</sup> Since model access can't be cleanly filtered by nationality, the only compliance answer was: global shutdown. Anthropic cites a "narrow, non-universal jailbreak" — getting the model to read a codebase and fix vulnerabilities — as the trigger and publicly disputes whether that justifies a recall of a commercial model.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Export-control directive:</strong> A government order that prohibits the export of certain technology to certain recipients — like a ban on shipping advanced tech. Here it hit software that isn't physically shipped but accessed via API — so all access had to go offline.
+        </div>
+        <p><strong>What this means for you:</strong> All other Claude models (Opus 4.8, Sonnet, Haiku, Claude Code) continue running unchanged — Anthropic emphasizes this explicitly.<sup>[3]</sup> But it's the sharpest possible lesson in vendor lock-in: the two models at the very top of the independent SWE-Bench Verified list (Mythos 5 95.5 %, Fable 5 95.0 %) are inaccessible overnight — not from a bug or price, but from a government order.<sup>[4]</sup> If you've pinned your agent workflow to a frontier model, you should have a fallback path by now.</p>
+        <div class="footnotes"><ol>
+          <li id="fn1"><a href="https://www.anthropic.com/news/fable-mythos-access">anthropic.com</a> — Statement "Fable 5 + Mythos 5 access", 12.06.2026.</li>
+          <li id="fn2"><a href="https://www.anthropic.com/news/fable-mythos-access">anthropic.com</a> — Directive scope (foreign nationals).</li>
+          <li id="fn3"><a href="https://www.anthropic.com/news/fable-mythos-access">anthropic.com</a> — "Access to all other Anthropic models will not be affected."</li>
+          <li id="fn4"><a href="https://presenc.ai/research/swe-bench-verified-leaderboard-june-2026">presenc.ai</a> — SWE-Bench Verified Leaderboard summary, ~18.06.2026 (secondary source).</li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>GLM-5.2: the self-hostable bridge <span class="h2-refs">[5][6][7]</span></h2>
+        <p>When a frontier model can disappear overnight, vendor independence shifts from a nice idea to insurance. That's exactly where <strong>GLM-5.2</strong> from Zhipu/Z.ai lands at the right moment: API since 13.06., weights since ~17.06. on HuggingFace — under <strong>MIT license with no regional restrictions</strong>.<sup>[5]</sup> You can self-host it without anyone pulling the plug.</p>
+        <p>Architecture: 753B parameters total, ~40B active per token (MoE), with 1M-token context window.<sup>[5]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">MoE (Mixture of Experts):</strong> Instead of running the whole giant model for every word, it's split into many "experts" and only a small fraction activates per token — like a large office where each task only brings the two relevant colleagues to their feet instead of all hundred. Result: the punch of a 753B model with the compute cost closer to ~40B.
+        </div>
+        <p>On benchmarks, GLM-5.2 is surprisingly close to Opus 4.8, per Z.ai's blog: SWE-Bench Pro 62.1, FrontierSWE 74.4 (Opus 4.8: 75.1), Terminal-Bench 2.1 81.0 (Opus 4.8: 85.0).<sup>[5]</sup> Important caveat: the Opus comparison numbers come from Z.ai's own blog. Independently confirmed is the <strong>#1 ranking among open-weights on the Artificial-Analysis-Intelligence Index (score 51)</strong> — that's a vendor-neutral measurement.<sup>[6]</sup> Day-1 integration into Claude Code, Cline, OpenCode, Roo Code, Goose, Crush, and Kilo Code.<sup>[7]</sup> <span class="chip good">Try this</span> Want a frontier fallback with zero vendor risk: GLM-5.2 is today's most plausible self-hostable choice — worth the read.</p>
+        <div class="footnotes"><ol start="5">
+          <li id="fn5"><a href="https://huggingface.co/blog/zai-org/glm-52-blog">huggingface.co/blog (Z.ai)</a> — GLM-5.2 blog: license, architecture, benchmarks, 17.06.2026.</li>
+          <li id="fn6"><a href="https://artificialanalysis.ai/articles/glm-5-2-is-the-new-leading-open-weights-model-on-the-artificial-analysis-intelligence-index">artificialanalysis.ai</a> — GLM-5.2 #1 open-weights, index score 51, 16.06.2026.</li>
+          <li id="fn7"><a href="https://www.eigent.ai/blog/glm-5-2">eigent.ai</a> — Day-1 tool integrations (secondary source).</li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>MAI-Code-1-Flash for Copilot is GA <span class="h2-refs">[8][9]</span></h2>
+        <p>As of 26.06., <strong>MAI-Code-1-Flash</strong> — Microsoft's in-house coding model — is generally available for <strong>GitHub Copilot Business + Enterprise</strong>.<sup>[8]</sup> It's not positioned as a new frontier heavyweight, but as a cheap, fast workhorse for Copilot's agentic workflows, metered by consumption.</p>
+        <p>Microsoft positions it explicitly against Claude Haiku 4.5: vendor numbers cite +16 points on SWE-Bench Pro (51.2 % vs. 35.2 %), +28.9 on IF Bench, and "up to 60 % fewer tokens" on SWE-Bench Verified — at just 5B parameters by secondary sources.<sup>[9]</sup> All these numbers are <em>Microsoft-reported</em>; an independent SWE-Bench Verified entry is missing. The token efficiency is the real pitch: if you run large agent sweeps, you pay per token, not per score.</p>
+        <p><strong>Context:</strong> Microsoft now controls another standard model within its own stack — as with Copilot's shift from Premium Request Units to "GitHub AI Credits" on 01.06., platform-pricing lock-in grows, not shrinks.</p>
+        <div class="footnotes"><ol start="8">
+          <li id="fn8"><a href="https://github.blog/changelog/2026-06-26-mai-code-1-flash-for-copilot-business-and-copilot-enterprise/">github.blog</a> — MAI-Code-1-Flash GA, 26.06.2026.</li>
+          <li id="fn9"><a href="https://microsoft.ai/news/introducingmai-code-1-flash/">microsoft.ai</a> — Vendor benchmarks (SWE-Bench Pro, IF Bench, token efficiency), 02.06.2026; 5B params via <a href="https://chatforest.com/builders-log/microsoft-mai-code-1-flash-github-copilot-coding-model-build-2026/">chatforest.com</a> (secondary).</li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Cursor swallows Continue — export data by 15.07. <span class="h2-refs">[10][11]</span></h2>
+        <p>Cursor has acquired <strong>Continue</strong> (announced ~22.06.) — and shut the product down. It's an acqui-hire: the team moves to Cursor, the open-source repo (`continuedev/continue`, 34K stars) goes read-only with final release <strong>v2.0.0</strong>.<sup>[10]</sup> <strong>Continue users have until 15.07. to export their data</strong> — then it's over.<sup>[11]</sup></p>
+        <p>Quirky detail: Cursor itself is set to be acquired by SpaceX in an announced ~60B$ deal (expected to close Q3 2026) — so Continue would pass to SpaceX too.<sup>[10]</sup> For developers: if Continue is wired into a workflow, export now and migrate to an actively maintained path — Cline and Kilo Code are the obvious open-source successors.</p>
+        <div class="callout info">
+          <span class="callout-label">Pattern of the week</span> Three of the four big stories are consolidation or withdrawal — Anthropic pulls models, Microsoft builds its own stack, Cursor/SpaceX buys out an open-source competitor. The only movement toward <em>more</em> options comes from China (GLM-5.2, Kimi). That's the real story of the month.
+        </div>
+        <div class="footnotes"><ol start="10">
+          <li id="fn10"><a href="https://thenewstack.io/cursor-acquires-continue-coding/">thenewstack.io</a> — Cursor acquires Continue, SpaceX context, 22.06.2026.</li>
+          <li id="fn11"><a href="https://cicd.deployment.to/cursor-acquires-continue-coding/">deployment.to</a> — Export deadline 15.07. (secondary source).</li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>Kimi K2.7-Code: strong claims, independent unconfirmed <span class="h2-refs">[12][13]</span></h2>
+        <p>Moonshot AI released <strong>Kimi K2.7-Code</strong> on 12.06.: 1T parameters total, 32B active per token (384 experts, 256K context), under <strong>Modified MIT</strong> on HuggingFace (~595 GB weights).<sup>[12]</sup> On vendor-owned benchmarks it jumps significantly over K2.6: +21.8 % on Kimi Code Bench v2, +31.5 % on MLS Bench Lite; vendor-reported SWE-Bench Pro 58.6.<sup>[13]</sup></p>
+        <div class="callout warn">
+          <span class="callout-label">Benchmark caution</span> For Kimi K2.7-Code, there is (as of ~14.06.) <strong>no independent third-party entry</strong> on standard suites — SWE-Bench Verified, SWE-Bench Pro, Terminal-Bench, LiveCodeBench. The jumps cited are all self-measured. On vendor benchmarks (Kimi Code Bench, MLS Bench), training contamination is the standard risk. Treat the numbers as hypothesis, not measurement — until an independent entry surfaces.
+        </div>
+        <div class="footnotes"><ol start="12">
+          <li id="fn12"><a href="https://www.marktechpost.com/2026/06/12/moonshot-ai-releases-kimi-k2-7-code-a-coding-model-reporting-21-8-on-kimi-code-bench-v2-over-k2-6/">marktechpost.com</a> — Kimi K2.7-Code, architecture + vendor benchmarks, 12.06.2026.</li>
+          <li id="fn13"><a href="https://www.vm0.ai/en/models/kimi-k2-7-code">vm0.ai</a> — no independent third-party entry (as of ~14.06., secondary); SWE-Bench Pro 58.6 vendor via <a href="https://www.totalum.app/blog/kimi-k2-7-code-vs-claude-2026">totalum.app</a>.</li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Coding scores: what's actually measured</h2>
+        <p>A table is more honest here than a bar chart, since you can't mix vendor and third-party numbers in the same column:</p>
+        <table class="mini-table">
+          <thead><tr><th>Model</th><th>Score</th><th>Benchmark</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>GLM-5.2</td><td>62.1</td><td>SWE-Bench Pro</td><td>Vendor (Z.ai)</td></tr>
+            <tr><td>GLM-5.2</td><td>#1 / 51</td><td>AA Intelligence Index</td><td>Independent (AA)</td></tr>
+            <tr><td>Kimi K2.7-Code</td><td>58.6</td><td>SWE-Bench Pro</td><td>Vendor (no third-party entry)</td></tr>
+            <tr><td>MAI-Code-1-Flash</td><td>51.2</td><td>SWE-Bench Pro</td><td>Vendor (MS)</td></tr>
+            <tr><td>Claude Mythos 5*</td><td>95.5 %</td><td>SWE-Bench Verified</td><td>Independent (list)</td></tr>
+            <tr><td>Claude Opus 4.8</td><td>88.6 %</td><td>SWE-Bench Verified</td><td>Independent (list)</td></tr>
+          </tbody>
+        </table>
+        <p class="byline">*Mythos 5 + Fable 5 rank at the top of the Verified list but have been shut down since 12.06. SWE-Bench Pro and Verified are different suites — columns are not directly comparable. Data as of 16.–18.06.2026.</p>
+      </article>
+
+      <article class="news-item">
+        <h2>Quiet in the shadows + must-know notes</h2>
+        <p>The silent roll call, even on a quiet day:</p>
+        <ul>
+          <li><strong>Aider</strong> still v0.86.2 (12.02.) — no release since February, effectively dormant.</li>
+          <li><strong>Roo Code</strong> archived 15.05.; active forks: <strong>Zoo Code</strong> (v3.54.0, 16.05.) and <strong>Kilo Code</strong>.</li>
+          <li><strong>OpenHands</strong>: no confirmed new release (last major 1.16.0 from 08.05.); activity in SDK/Canvas repos but no version number.</li>
+          <li><strong>Cursor 3.9</strong> (22.06.): Plugins, Skills, MCP customization, new Customize page.</li>
+          <li><strong>GitHub Copilot Desktop App</strong> GA (17.06.) for macOS/Windows/Linux as an agent-native program.</li>
+        </ul>
+        <div class="callout info">
+          <span class="callout-label">Heads up</span> Starting <strong>08.07.</strong>, Anthropic requires ID verification (government ID + selfie via Persona) for <em>flagged</em> consumer accounts. It doesn't apply to all users and enterprise accounts are unaffected — but if your account gets flagged, no login without an ID check.<sup>[14]</sup>
+        </div>
+        <div class="footnotes"><ol start="14">
+          <li id="fn14"><a href="https://techcrunch.com/2026/06/22/anthropic-says-claude-may-want-to-see-your-id/">techcrunch.com</a> — Anthropic ID requirement starting 08.07., 22.06.2026.</li>
+        </ol></div>
+      </article>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Saturday, June twenty-seventh. The tooling side is quiet, but the model stack is in the middle of upheaval — and the biggest story of the month isn't a new model, it's a disappearing one.</p>
+  <p>On June twelfth, Anthropic shut down its two strongest coding models, Fable five and Mythos five, worldwide for all customers. The trigger wasn't a crash, but a US export directive that couldn't be filtered by nationality — so the only answer was to take both models completely offline. Anthropic disputes the order publicly but shut down for safety anyway. All other Claude models keep running. Still, it's the sharpest lesson in vendor lock-in you can imagine: the two models that ranked independently at the very top of the SWE-Bench list became unusable overnight.</p>
+  <p>The open-weights world provides the bridge. G-L-M five point two from Zhipu has been available with weights under MIT license on HuggingFace since mid-June — self-hostable, with no one able to pull the plug. It's a Mixture-of-Experts model with over seven hundred billion parameters, but only around forty billion of them work per token. On the independent Artificial-Analysis Index, it's number one among open models. If you're looking for a fallback with zero vendor risk, you should look at it.</p>
+  <p>At Microsoft, the in-house coding model M-A-I-Code-one-Flash went generally available for Copilot Business and Enterprise on June twenty-sixth. It's not a frontier heavyweight but a cheap, fast workhorse with supposedly just five billion parameters. Microsoft's benchmark numbers look good, but they're all self-measured — an independent entry is missing.</p>
+  <p>Cursor has acquired the open-source competitor Continue and shut it down. The repo goes read-only, and users have until July fifteenth to export their data. Cursor itself is being acquired by SpaceX (deal announced, expected to close Q3 2026) — so Continue would pass to SpaceX too.</p>
+  <p>From China also comes Kimi K-two-point-seven-Code from Moonshot, a trillion-parameter model under an open license. The benchmark jumps sound impressive, but there's not a single independent third-party entry — so treat it as hypothesis, not measurement.</p>
+  <p>Much stays quiet in the shadows: Aider has been stuck at version zero point eighty-six point two since February, Roo Code is archived and lives on only in the forks Zoo Code and Kilo Code. And mark your calendar for July eighth: starting then, Anthropic requires ID verification for flagged consumer accounts.</p>
+  <p>Next week the brief will watch mainly for whether an independent benchmark entry appears for Kimi or new Microsoft numbers surface — and whether the situation around Anthropic's shut-down models shifts.</p>
+</div>
+
+</body>
+</html>
