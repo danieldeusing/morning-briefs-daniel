@@ -38,6 +38,17 @@
  *     • Requires Mermaid loaded via CDN. Auto-init only fires if Mermaid global exists.
  */
 (function () {
+  // Resolution-independent zoom (mirrors pagr): scale the whole layout up past a
+  // 1920px reference. Only when the brief is viewed STANDALONE — inside the dashboard
+  // iframe the parent already zooms, so skip to avoid double-scaling.
+  if (window.self === window.top) {
+    const applyZoom = () => {
+      document.documentElement.style.zoom = String(Math.max(1, window.innerWidth / 1920));
+    };
+    applyZoom();
+    window.addEventListener('resize', applyZoom);
+  }
+
   /* ──────────────────────────────────────────────────────────────────
      Component registry — Strategy pattern.
      Each interactive component registers an init() function. On

@@ -20,6 +20,16 @@
       document.documentElement.classList.add('anim-off');
     }
   })();
+  // Resolution-independent zoom (mirrors pagr): lay out at a 1920px reference, then
+  // scale the whole view up on wider screens — a true zoom of everything, never below
+  // 1×. Pre-paint to avoid a flash.
+  (function () {
+    var applyZoom = function () {
+      document.documentElement.style.zoom = String(Math.max(1, window.innerWidth / 1920));
+    };
+    applyZoom();
+    window.addEventListener('resize', applyZoom);
+  })();
 </script>
 <style>
   /* Dashboard chrome styles. Design tokens (colours, shadow, typography vars)
@@ -66,28 +76,28 @@
   }
 
   /* Terminal header bar — mirrors the pagr/seedr chrome: a single row on a
-     --card surface with a --border bottom rule. LEFT: the brand wordmark
-     (mono + .glow) and a blinking .cursor-block, then a `visitor@briefs:~`
-     breadcrumb. RIGHT: the `$ ls -l ▾` nav dropdown. */
+     --card surface with a --border bottom rule, in three zones. LEFT: the
+     brand wordmark (mono + .glow) and a blinking .cursor-block. CENTER: the
+     back/forward/history controls then a `reader@briefs:~` breadcrumb
+     (flexible, truncating). RIGHT: the nav-rail minimize toggle. */
   header.app {
     border-bottom: 1px solid var(--border);
     background: var(--card);
     font-family: var(--font-mono); /* chrome is terminal mono; the content stays serif */
-    /* Lift the header (and its open nav dropdown) above the content, which is also a
-       positioned body child at z-index 1 and would otherwise paint over the panel. */
+    /* Lift the header (and its open history dropdown) above the content, which is
+       also a positioned body child at z-index 1 and would otherwise paint over it. */
     z-index: 50;
     padding: 0 1rem;
     display: flex;
     align-items: center;
     gap: 1rem;
     min-height: 3rem;
-    flex-wrap: wrap;
   }
+  /* LEFT zone — brand only. */
   .header-left {
     display: flex;
     align-items: center;
-    gap: 0.9rem;
-    flex: 1 1 auto;
+    flex: none;
     min-width: 0;
   }
   .header-brand {
@@ -102,16 +112,70 @@
     font-size: 1rem;
     letter-spacing: -0.01em;
   }
-  /* Breadcrumb: `visitor@briefs:~/path`. The host part is muted, `~` is the
-     accent, the active path segment is --foreground. Truncates on overflow. */
+
+  /* CENTER zone — history controls then the breadcrumb. Takes the remaining
+     width and centers; the breadcrumb truncates on overflow. */
+  .header-center {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+  }
+
+  /* RIGHT zone — the nav-rail minimize toggle (or nothing). */
+  .header-right {
+    flex: none;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Back / forward / history controls — 28px square, muted, warm to --primary on
+     hover, dimmed when disabled (mirrors pagr's .nav-ctrl). */
+  .nav-ctrl {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex: none;
+    list-style: none;
+    cursor: pointer;
+    color: var(--muted-foreground);
+    background: none;
+    border: 0;
+    border-radius: 0;
+    transition: color 0.15s ease;
+  }
+  .nav-ctrl::-webkit-details-marker { display: none; }
+  .nav-ctrl:hover:not(:disabled) { color: var(--primary); }
+  .nav-ctrl:disabled { opacity: 0.35; cursor: default; }
+
+  /* The history dropdown sits at the top of the page, so it opens downward. */
+  .nav-history { flex: none; }
+  .nav-history-panel {
+    min-width: 200px;
+    max-width: min(80vw, 320px);
+    max-height: min(60vh, 420px);
+    overflow-y: auto;
+  }
+  .nav-history-panel .dropdown-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Breadcrumb: `reader@briefs:~/path`. The host part is muted, `~` is the
+     accent, the active path segment is --foreground. Truncates on overflow.
+     A left margin separates it from the history controls (mirrors pagr). */
   .header-crumb {
     min-width: 0;
-    flex: 1 1 auto;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: 0.72rem;
     color: var(--muted-foreground);
+    margin-left: 0.6rem;
   }
   .header-crumb .crumb-host { color: var(--muted-foreground); }
   .header-crumb .crumb-root {
@@ -129,35 +193,22 @@
   }
   .header-crumb .crumb-seg:hover { color: var(--primary); }
   .header-crumb .crumb-seg.current { color: var(--foreground); cursor: default; }
-  .header-nav { flex: none; display: flex; align-items: center; }
 
-  /* `$ ls -l ▾` nav trigger — terminal directory listing dropped flush-right
-     below the summary. */
-  .ls-summary { white-space: nowrap; }
-  .ls-summary .ls-cmd { color: inherit; }
-  .ls-panel {
-    top: calc(100% + 8px);
-    bottom: auto;
-    right: 0;
-    left: auto;
-    min-width: max-content;
-    max-width: min(86vw, 360px);
-    max-height: min(72vh, 560px);
-    overflow-y: auto;
-    padding: 6px 0;
-  }
-
-  /* Layout: single full-width column. The fixed footer is 2rem tall, so the
-     shell is the viewport minus the header (3rem) and the footer (2rem). */
+  /* Layout: two columns — flexible main + a fixed-width nav-rail on the right.
+     The fixed footer is 2rem tall, so the shell is the viewport minus the
+     header (3rem) and the footer (2rem). When the rail is collapsed the
+     --rail-w track narrows to the icon-only strip. */
   .app-shell {
-    display: block;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--rail-w, 16rem);
     height: calc(100vh - 3rem - 2rem);
     height: calc(100dvh - 3rem - 2rem);
   }
+  .app-shell.rail-collapsed { --rail-w: 3rem; }
 
-  /* The nav lives inside the header's `$ ls -l ▾` dropdown panel. The panel
-     holds the Übersicht control (#home-btn) and #nav-groups (the grouped
-     category nav, populated by JS). */
+  /* The nav lives in the sticky right sidebar (.nav-rail). It holds the
+     Übersicht control (#home-btn) and #nav-groups (the grouped category nav,
+     populated by JS). */
   .nav-label {
     font-family: var(--font-mono);
     font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.14em;
@@ -284,7 +335,7 @@
   /* ────────────────────────────────────────────────────────────────────
      Fixed footer status bar — mirrors the pagr/seedr StatusBar: a 2rem bar
      pinned to the viewport bottom on a --card surface with a --border top
-     rule. LEFT: `[briefs] visitor@briefs:~/path` status line. RIGHT: the
+     rule. LEFT: `[briefs] reader@briefs:~/path` status line. RIGHT: the
      relocated controls (theme menu, print, language menu) + an anim toggle.
      ──────────────────────────────────────────────────────────────────── */
   footer.status-bar {
@@ -332,6 +383,7 @@
     font: inherit;
     line-height: 1;
     color: var(--muted-foreground);
+    text-decoration: none;
     background: none;
     border: 0;
     border-radius: 0;
@@ -378,6 +430,125 @@
     height: 100%;
   }
   .iframe-host { width: 100%; height: 100%; border: none; background: var(--bg); }
+
+  /* ────────────────────────────────────────────────────────────────────
+     Sticky right sidebar (.nav-rail) — terminal mono, --card surface with a
+     --border left rule, full shell height with its own scroll. Holds the
+     Übersicht control + the grouped category nav. Collapses to a 3rem icon-
+     only strip; the width animates via the grid track on .app-shell.
+     ──────────────────────────────────────────────────────────────────── */
+  .nav-rail {
+    grid-column: 2;
+    font-family: var(--font-mono);
+    background: var(--card);
+    border-left: 1px solid var(--border);
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+  }
+  .nav-rail-head {
+    display: flex;
+    align-items: center;
+    min-height: 2.1rem;
+    padding: 0.4rem 0.85rem;
+    border-bottom: 1px solid var(--border);
+    flex: none;
+  }
+  .nav-rail-title {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav-rail-body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.3rem 0 0.4rem;
+  }
+
+  /* Minimize toggle — the `»`/`«` chevron in the header right zone. Flat, muted,
+     warm to --primary on hover (terminal-plain, no box). */
+  .rail-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex: none;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    line-height: 1;
+    transition: color 0.15s ease;
+  }
+  .rail-toggle:hover { color: var(--primary); }
+  /* Expanded → `»` (collapse-to-right); collapsed → `«` (re-open). The button's
+     aria-expanded drives the glyph; JS rewrites the text content too as a fallback. */
+  .rail-toggle[aria-expanded="false"] .rail-toggle-glyph::before { content: "«"; }
+  .rail-toggle[aria-expanded="true"]  .rail-toggle-glyph::before { content: "»"; }
+  .rail-toggle-glyph { font-size: 0; }
+  .rail-toggle-glyph::before { font-size: 1rem; }
+
+  /* Collapsed strip — keep only the per-category accent bar + icon, hide labels,
+     calendars and the home wordmark. The 3rem track clips the rest. */
+  .app-shell.rail-collapsed .nav-rail-title,
+  .app-shell.rail-collapsed .nav-label,
+  .app-shell.rail-collapsed .cat-name,
+  .app-shell.rail-collapsed .cat-latest,
+  .app-shell.rail-collapsed .cat-toggle,
+  .app-shell.rail-collapsed .cat-dates,
+  .app-shell.rail-collapsed .home-btn .nav-label-text,
+  .app-shell.rail-collapsed .home-btn .brand-mark {
+    display: none;
+  }
+  .app-shell.rail-collapsed .nav-rail-head { justify-content: center; padding: 0.4rem 0; }
+  .app-shell.rail-collapsed .cat-head,
+  .app-shell.rail-collapsed .home-btn {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    gap: 0;
+  }
+  .app-shell.rail-collapsed .cat-color,
+  .app-shell.rail-collapsed .home-btn .cat-color { margin-right: 0.4rem; }
+
+  /* The width transition reads off the grid track; animate it. */
+  .app-shell { transition: grid-template-columns 0.18s ease; }
+  @media (prefers-reduced-motion: reduce) {
+    .app-shell { transition: none; }
+  }
+
+  /* Mobile re-open button (a floating ☰); shown only when the rail is an
+     off-canvas drawer (≤720px). Hidden on desktop. */
+  .rail-fab {
+    display: none;
+    position: fixed;
+    right: 0.75rem;
+    bottom: 2.6rem;
+    z-index: 55;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--foreground);
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 0 18px var(--glow-soft);
+  }
 
   /* Home view */
   .home {
@@ -792,8 +963,9 @@
   }
 
   /* ────────────────────────────────────────────────────────────────────
-     Mobile / narrow responsiveness — the header nav dropdown serves mobile
-     too (no separate drawer), so only a few layout tweaks are needed.
+     Mobile / narrow responsiveness — the nav-rail becomes an off-canvas
+     drawer (the .app-shell collapses to a single main column), toggled by
+     the floating .rail-fab. The header keeps brand + history controls.
      ──────────────────────────────────────────────────────────────────── */
   @media (max-width: 720px) {
     header.app { padding: 0 0.75rem; gap: 0.6rem; }
@@ -801,10 +973,44 @@
     .home { padding: 1rem 1rem 1.5rem; }
     .tldr-grid { grid-template-columns: 1fr; gap: 0.85rem; }
     .home h2 { font-size: 1.2rem; }
-    /* Drop the breadcrumb on the smallest widths — the brand + nav dropdown
-       carry the chrome; the path would otherwise crowd the row. */
+    /* Drop the breadcrumb on the smallest widths — the brand + history
+       controls carry the chrome; the path would otherwise crowd the row. */
     .header-crumb { display: none; }
     .status-controls { gap: 0.9rem; }
+
+    /* Single main column; the rail floats as an off-canvas drawer pinned
+       under the header / above the footer, slid off to the right until opened. */
+    .app-shell,
+    .app-shell.rail-collapsed { grid-template-columns: 1fr; }
+    .nav-rail {
+      position: fixed;
+      top: 3rem;
+      right: 0;
+      bottom: 2rem;
+      width: min(80vw, 18rem);
+      transform: translateX(100%);
+      transition: transform 0.2s ease;
+      z-index: 56;
+      box-shadow: -8px 0 24px var(--glow-soft);
+    }
+    .app-shell.rail-open .nav-rail { transform: translateX(0); }
+    /* On mobile the drawer always shows full labels — never the icon strip. */
+    .app-shell.rail-collapsed .nav-rail-title,
+    .app-shell.rail-collapsed .nav-label,
+    .app-shell.rail-collapsed .cat-name,
+    .app-shell.rail-collapsed .cat-latest,
+    .app-shell.rail-collapsed .cat-toggle,
+    .app-shell.rail-collapsed .cat-dates,
+    .app-shell.rail-collapsed .home-btn .nav-label-text,
+    .app-shell.rail-collapsed .home-btn .brand-mark { display: revert; }
+    .app-shell.rail-collapsed .nav-rail-head { justify-content: flex-start; padding: 0.4rem 0.85rem; }
+    .app-shell.rail-collapsed .cat-head,
+    .app-shell.rail-collapsed .home-btn {
+      justify-content: flex-start; padding-left: 0.85rem; padding-right: 0.85rem; gap: 0.55rem;
+    }
+    /* The header chevron toggle is meaningless on mobile (drawer uses the FAB). */
+    .rail-toggle--header { display: none; }
+    .rail-fab { display: inline-flex; align-items: center; justify-content: center; }
   }
   @media (max-width: 400px) {
     header.app { padding: 0 0.6rem; }
@@ -824,7 +1030,7 @@
     /* Print styling now lives in lib/styles.css (no-cache), loaded on demand by
        the Drucken flow before window.print(). This fallback only hides chrome
        for a stray browser-menu print before lib has loaded. */
-    header.app, footer.status-bar, .loading, .print-dialog {
+    header.app, footer.status-bar, .loading, .print-dialog, .nav-rail, .rail-fab {
       display: none !important;
     }
     /* Let body grow past the viewport so a long print isn't clipped to one
@@ -939,49 +1145,50 @@
 </head>
 <body>
 
-<!-- Terminal header bar: brand wordmark + cursor + breadcrumb (left), the
-     `$ ls -l ▾` nav dropdown (right). The nav dropdown holds the Übersicht
-     control (#home-btn) and the grouped category nav (#nav-groups), serving
-     desktop and mobile alike (no separate drawer). -->
+<!-- Terminal header bar, three zones (mirrors pagr): LEFT brand wordmark +
+     cursor; CENTER back/forward/history controls then the `reader@briefs:~`
+     breadcrumb (flexible, truncating); RIGHT the nav-rail minimize toggle.
+     The grouped category nav now lives in the sticky right sidebar (.nav-rail). -->
 <header class="app">
   <div class="header-left">
     <a class="header-brand" id="brand-home" href="#home" title="Übersicht">
       <span class="glow brand-word">Daniels Morning Briefs</span>
       <span class="cursor-block" aria-hidden="true"></span>
     </a>
+  </div>
+
+  <div class="header-center">
+    <button class="nav-ctrl" id="nav-back" type="button" aria-label="Zurück" disabled>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m15 18-6-6 6-6"></path>
+      </svg>
+    </button>
+    <button class="nav-ctrl" id="nav-forward" type="button" aria-label="Vorwärts" disabled>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m9 18 6-6-6-6"></path>
+      </svg>
+    </button>
+    <details class="dropdown nav-history" id="nav-history" hidden>
+      <summary class="nav-ctrl" aria-label="Verlauf">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+          <path d="M12 7v5l4 2"></path>
+        </svg>
+      </summary>
+      <ul class="dropdown-panel dropdown-panel--down nav-history-panel" id="nav-history-list"><!-- populated by JS --></ul>
+    </details>
     <span class="header-crumb" id="header-crumb" aria-live="polite">
-      <span class="crumb-host">visitor@briefs:</span><a class="crumb-root" href="#home">~</a>
+      <span class="crumb-host">reader@briefs:</span><a class="crumb-root" href="#home">~</a>
     </span>
   </div>
 
-  <div class="header-nav">
-    <details class="dropdown" id="nav-dropdown">
-      <summary class="ls-summary" aria-label="Navigation">
-        <span aria-hidden="true">$</span>
-        <span class="ls-cmd">ls -l</span>
-        <span aria-hidden="true">▾</span>
-      </summary>
-      <div class="dropdown-panel ls-panel">
-        <div class="home-btn active" id="home-btn" role="button" tabindex="0" title="Übersicht">
-          <span class="cat-color"></span>
-          <!-- Full favicon design inline: dark frame + cream page + red
-               double-rule + serif M. Identical SVG to favicon.svg so the
-               browser tab and the home control read as the same "house" mark. -->
-          <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-            <rect width="64" height="64" rx="9" fill="#221a13"/>
-            <rect x="2.5" y="2.5" width="59" height="59" rx="7" fill="#f1e7d3"/>
-            <rect x="9" y="12" width="46" height="2.5" fill="#b9462a"/>
-            <rect x="9" y="17" width="46" height="2" fill="#b9462a"/>
-            <text x="32" y="52" font-family="Georgia, 'Times New Roman', serif"
-                  font-weight="800" font-size="38" text-anchor="middle" fill="#1f1812">M</text>
-          </svg>
-          <span>Übersicht</span>
-        </div>
-        <div id="nav-groups"><!-- populated by JS from NAV_GROUPS: grouped category
-             nav (Wirtschaft / IT / jobs / Sport / Freizeit / Sprachen), each group
-             with its own .nav-label header (standalone groups render headerless). --></div>
-      </div>
-    </details>
+  <div class="header-right">
+    <button class="rail-toggle rail-toggle--header" id="rail-toggle" type="button"
+            aria-controls="nav-rail" aria-expanded="true" aria-label="Navigation ein-/ausblenden"
+            title="Navigation ein-/ausblenden">
+      <span class="rail-toggle-glyph" aria-hidden="true">»</span>
+    </button>
   </div>
 </header>
 
@@ -996,7 +1203,40 @@
 
     <iframe class="iframe-host" id="frame" style="display:none;" title="Newsletter"></iframe>
   </main>
+
+  <!-- Sticky right sidebar: the relocated Übersicht control (#home-btn) and the
+       grouped category nav (#nav-groups, populated by JS from NAV_GROUPS). Can be
+       minimized to an icon-only strip; collapsed state persists in localStorage. -->
+  <aside class="nav-rail" id="nav-rail" aria-label="Navigation">
+    <div class="nav-rail-head">
+      <span class="nav-rail-title">~/briefs</span>
+    </div>
+    <div class="nav-rail-body">
+      <div class="home-btn active" id="home-btn" role="button" tabindex="0" title="Übersicht">
+        <span class="cat-color"></span>
+        <!-- Full favicon design inline: dark frame + cream page + red
+             double-rule + serif M. Identical SVG to favicon.svg so the
+             browser tab and the home control read as the same "house" mark. -->
+        <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <rect width="64" height="64" rx="9" fill="#221a13"/>
+          <rect x="2.5" y="2.5" width="59" height="59" rx="7" fill="#f1e7d3"/>
+          <rect x="9" y="12" width="46" height="2.5" fill="#b9462a"/>
+          <rect x="9" y="17" width="46" height="2" fill="#b9462a"/>
+          <text x="32" y="52" font-family="Georgia, 'Times New Roman', serif"
+                font-weight="800" font-size="38" text-anchor="middle" fill="#1f1812">M</text>
+        </svg>
+        <span class="nav-label-text">Übersicht</span>
+      </div>
+      <div id="nav-groups"><!-- populated by JS from NAV_GROUPS: grouped category
+           nav (Wirtschaft / IT / jobs / Sport / Freizeit / Sprachen), each group
+           with its own .nav-label header (standalone groups render headerless). --></div>
+    </div>
+  </aside>
 </div>
+
+<!-- Mobile: floating button re-opens the nav-rail drawer (≤720px it overlays). -->
+<button class="rail-fab" id="rail-fab" type="button" aria-controls="nav-rail"
+        aria-label="Navigation öffnen" title="Navigation">☰</button>
 
 <!-- Fixed footer status bar: status path (left), relocated controls + anim
      toggle (right). Controls keep their original ids so the existing handlers
@@ -1004,15 +1244,11 @@
 <footer class="status-bar">
   <div class="status-inner">
     <span class="status-path" id="status-path">
-      <span class="status-tag">[briefs]</span> <span class="status-host">visitor@briefs:</span><span class="status-loc" id="status-loc">~</span>
+      <span class="status-tag">[briefs]</span> <span class="status-host">reader@briefs:</span><span class="status-loc" id="status-loc">~</span>
     </span>
     <nav class="status-controls" aria-label="Einstellungen">
-      <button class="status-btn theme-toggle" id="theme-toggle" type="button"
-              aria-label="Theme umschalten" title="Theme umschalten"
-              data-theme-state="warm">
-        <span class="theme-icon" aria-hidden="true">◐</span>
-        <span class="theme-label">warm</span>
-      </button>
+      <a class="status-btn status-link" href="/datenschutz.html">datenschutz</a>
+      <a class="status-btn status-link" href="/impressum.html">impressum</a>
       <button class="status-btn print-btn" id="print-btn" type="button"
               aria-label="Drucken" title="Drucken">
         <span aria-hidden="true">🖨</span>
@@ -1041,7 +1277,19 @@
           </button>
         </div>
       </div>
-      <span class="status-sep" aria-hidden="true"></span>
+      <details class="dropdown theme-dropdown" id="theme-dropdown">
+        <summary class="status-btn" aria-label="Theme wählen" title="Theme wählen">
+          <span class="theme-icon" aria-hidden="true">◐</span>
+          <span class="theme-label">warm</span>
+          <span aria-hidden="true">▾</span>
+        </summary>
+        <ul class="dropdown-panel" role="list">
+          <li><button type="button" class="dropdown-item" data-theme-value="warm">warm</button></li>
+          <li><button type="button" class="dropdown-item" data-theme-value="green">grün</button></li>
+          <li><button type="button" class="dropdown-item" data-theme-value="mono">mono</button></li>
+          <li><button type="button" class="dropdown-item" data-theme-value="paper">paper</button></li>
+        </ul>
+      </details>
       <button class="status-btn anim-toggle" id="anim-toggle" type="button"
               aria-pressed="true" title="Animationen umschalten">
         <span class="anim-box" aria-hidden="true">[x]</span>
@@ -8543,33 +8791,12 @@ window.__MANIFESTS = {
     });
   }
 
-  // ── Chrome dropdowns (header nav + footer language) ──────────────────
-  // The header nav lives in a <details class="dropdown">; the footer language
-  // menu is a button-toggled .lang-menu. Close the nav dropdown after a nav
-  // click; click-outside + Escape close it too. (The lang menu has its own
-  // close logic further below; this handler also force-closes the nav.)
-  const navDropdown = $('#nav-dropdown');
-  function closeNav() {
-    if (navDropdown) navDropdown.removeAttribute('open');
-  }
-  if (navDropdown) {
-    document.addEventListener('click', (e) => {
-      if (navDropdown.open && !navDropdown.contains(e.target)) closeNav();
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && navDropdown.open) {
-        closeNav();
-        navDropdown.querySelector('summary')?.focus();
-      }
-    });
-  }
-
   // Brand wordmark → back to the dashboard.
   const brandHome = $('#brand-home');
   if (brandHome) brandHome.addEventListener('click', (e) => { e.preventDefault(); showHome(); });
 
   // ── Breadcrumb / status path ─────────────────────────────────────────
-  // Terminal path shown in both the header crumb (`visitor@briefs:~/section…`)
+  // Terminal path shown in both the header crumb (`reader@briefs:~/section…`)
   // and the footer status line (`~/section…`). `~` returns to the dashboard;
   // the section segment links to its latest brief; the date segment is current.
   const headerCrumb = $('#header-crumb');
@@ -8589,7 +8816,7 @@ window.__MANIFESTS = {
     headerCrumb.innerHTML = '';
     const host = document.createElement('span');
     host.className = 'crumb-host';
-    host.textContent = 'visitor@briefs:';
+    host.textContent = 'reader@briefs:';
     headerCrumb.appendChild(host);
 
     const root = document.createElement('a');
@@ -8674,7 +8901,6 @@ window.__MANIFESTS = {
     document.documentElement.style.setProperty('--current-accent-text', 'var(--c-' + catId + '-text)');
 
     updateBreadcrumb(catId, date);
-    closeNav();
 
     // Push a real history entry so the browser back button returns to the
     // previous view. Skip when we're already at this URL (handleHash got here
@@ -8683,6 +8909,7 @@ window.__MANIFESTS = {
     if (location.hash !== targetHash) {
       history.pushState(null, '', targetHash);
     }
+    settleHistory();
   }
 
   function showHome() {
@@ -8699,12 +8926,12 @@ window.__MANIFESTS = {
      // home is its own thing, not a borrowed accent.
     document.documentElement.style.setProperty('--current-accent-text', 'var(--fg)');
     updateBreadcrumb(null);
-    closeNav();
     // Same back-button logic as navigate(): only push when this is a fresh
     // transition, not when handleHash got here from back/forward.
     if (location.hash !== '#home' && location.hash !== '') {
       history.pushState(null, '', '#home');
     }
+    settleHistory();
   }
 
   addClickAndKey($('#home-btn'), showHome);
@@ -8840,17 +9067,20 @@ window.__MANIFESTS = {
      of the system setting. Persisted in localStorage.
      ────────────────────────────────────────────────────────────────── */
   const THEME_KEY = 'mb-theme';
-  const themeToggle = $('#theme-toggle');
+  const themeDropdown = $('#theme-dropdown');
   const themeOrder = ['warm', 'green', 'mono', 'paper'];
   const themeIcon  = { warm: '◐', green: '◉', mono: '◑', paper: '○' };
   const themeLabel = { warm: 'warm', green: 'grün', mono: 'mono', paper: 'paper' };
   function applyTheme(state) {
     document.documentElement.setAttribute('data-theme', state);
-    if (themeToggle) {
-      themeToggle.dataset.themeState = state;
-      themeToggle.querySelector('.theme-icon').textContent = themeIcon[state];
-      themeToggle.querySelector('.theme-label').textContent = themeLabel[state];
-      themeToggle.title = 'Theme: ' + themeLabel[state] + ' (klicken zum Wechseln)';
+    if (themeDropdown) {
+      const icon = themeDropdown.querySelector('.theme-icon');
+      const label = themeDropdown.querySelector('.theme-label');
+      if (icon) icon.textContent = themeIcon[state];
+      if (label) label.textContent = themeLabel[state];
+      themeDropdown.querySelectorAll('.dropdown-item[data-theme-value]').forEach((item) => {
+        item.setAttribute('aria-current', item.dataset.themeValue === state ? 'true' : 'false');
+      });
     }
     try { localStorage.setItem(THEME_KEY, state); } catch (_) {}
     // Mirror into the iframed content page. Same-origin, so direct DOM
@@ -8872,11 +9102,19 @@ window.__MANIFESTS = {
   }
   // Re-apply on every iframe load (navigating between newsletters).
   if (frame) frame.addEventListener('load', syncIframeTheme);
-  if (themeToggle) {
-    addClickAndKey(themeToggle, () => {
-      const cur = themeToggle.dataset.themeState || 'warm';
-      const next = themeOrder[(themeOrder.indexOf(cur) + 1) % themeOrder.length];
-      applyTheme(next);
+  // Theme dropdown: pick a theme → apply + close. Click-away / Escape also close it.
+  if (themeDropdown) {
+    themeDropdown.querySelectorAll('.dropdown-item[data-theme-value]').forEach((btn) => {
+      addClickAndKey(btn, () => {
+        applyTheme(btn.dataset.themeValue);
+        themeDropdown.removeAttribute('open');
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (themeDropdown.open && !themeDropdown.contains(e.target)) themeDropdown.removeAttribute('open');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && themeDropdown.open) themeDropdown.removeAttribute('open');
     });
   }
   try {
@@ -8884,12 +9122,180 @@ window.__MANIFESTS = {
     applyTheme(saved && themeOrder.includes(saved) ? saved : 'warm');
   } catch (_) { applyTheme('warm'); }
 
-  // Init — set the lang button states from the restored currentLang.
-  // The lang re-renders sidebar/home implicitly, so we call applyLang
-  // here instead of the explicit renderSidebar/renderHome pair.
+  /* ──────────────────────────────────────────────────────────────────
+     Back / forward / history controls (mirrors pagr's nav-ctrl chrome).
+     briefs already navigates with history.pushState (hash URLs) and re-
+     renders on hashchange, so browser back/forward already re-navigate —
+     this layer just reconstructs the visited list + chevron disabled state
+     from a sessionStorage visit stack keyed on location.hash.
+
+     The "current entry" is the normalized hash (empty → '#home'). After every
+     settle (initial load, a navigate()/showHome() pushState, or a back/forward
+     hashchange) settleHistory() reconciles the stack: a step to an adjacent
+     neighbour just shifts the pointer; any other arrival truncates the forward
+     history and appends the new entry — exactly like a browser's own stack.
+     ────────────────────────────────────────────────────────────────── */
+  const HIST_STACK_KEY = 'mb-hist-stack';
+  const HIST_PTR_KEY   = 'mb-hist-ptr';
+  const navBack    = $('#nav-back');
+  const navForward = $('#nav-forward');
+  const histDetails = $('#nav-history');
+  const histList    = $('#nav-history-list');
+
+  const normalizeHash = (h) => {
+    const v = (h || '').replace(/^#/, '');
+    return '#' + (v || 'home');
+  };
+  const readHistStack = () => {
+    try {
+      const raw = sessionStorage.getItem(HIST_STACK_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (_) { return []; }
+  };
+  const readHistPtr = () => {
+    const v = Number(sessionStorage.getItem(HIST_PTR_KEY));
+    return Number.isInteger(v) ? v : -1;
+  };
+  const persistHist = (stack, ptr) => {
+    try {
+      sessionStorage.setItem(HIST_STACK_KEY, JSON.stringify(stack));
+      sessionStorage.setItem(HIST_PTR_KEY, String(ptr));
+    } catch (_) {}
+  };
+
+  // Human label for a history entry, derived the same way updateBreadcrumb does:
+  // '~' for home, '~/<category label>[/<date>]' otherwise.
+  function histLabel(hash) {
+    const body = normalizeHash(hash).slice(1);
+    if (!body || body === 'home') return '~';
+    const parts = body.split('/');
+    const cat = M.categories.find(c => c.id === parts[0]);
+    if (!cat) return '~';
+    let label = '~/' + cat.label;
+    if (parts[1] && parts[1] !== 'latest') label += '/' + fmtDate(parts[1]);
+    return label;
+  }
+
+  function renderHistoryUI(stack, ptr) {
+    if (navBack)    navBack.disabled    = ptr <= 0;
+    if (navForward) navForward.disabled = ptr >= stack.length - 1;
+    if (!histDetails || !histList) return;
+    histDetails.hidden = stack.length <= 1;
+    histList.innerHTML = '';
+    // most-recent first, like pagr's reversed history list
+    stack.map((hash, index) => ({ hash, index })).reverse().forEach(({ hash, index }) => {
+      const li = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = hash;
+      link.className = 'dropdown-item';
+      link.textContent = histLabel(hash);
+      if (index === ptr) link.setAttribute('aria-current', 'true');
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        histDetails.removeAttribute('open');
+        if (normalizeHash(location.hash) === hash) return;
+        location.hash = hash; // triggers hashchange → handleHash → settleHistory
+      });
+      li.appendChild(link);
+      histList.appendChild(li);
+    });
+  }
+
+  function settleHistory() {
+    const current = normalizeHash(location.hash);
+    let stack = readHistStack();
+    let ptr = readHistPtr();
+    if (ptr >= 0 && stack[ptr] === current) {
+      // reload / re-settle of the same entry — nothing to do
+    } else if (ptr > 0 && stack[ptr - 1] === current) {
+      ptr -= 1;                       // stepped back
+    } else if (ptr >= 0 && ptr < stack.length - 1 && stack[ptr + 1] === current) {
+      ptr += 1;                       // stepped forward
+    } else {
+      stack = stack.slice(0, ptr + 1); // new navigation: truncate forward, append
+      stack.push(current);
+      ptr = stack.length - 1;
+    }
+    persistHist(stack, ptr);
+    renderHistoryUI(stack, ptr);
+  }
+
+  if (navBack)    navBack.addEventListener('click', () => history.back());
+  if (navForward) navForward.addEventListener('click', () => history.forward());
+  // Close the history dropdown on click-away / Escape (it's a bare <details>).
+  if (histDetails) {
+    document.addEventListener('click', (e) => {
+      if (histDetails.open && !histDetails.contains(e.target)) histDetails.removeAttribute('open');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && histDetails.open) {
+        histDetails.removeAttribute('open');
+        histDetails.querySelector('summary')?.focus();
+      }
+    });
+  }
+
+  // settleHistory runs after every navigation settles. navigate()/showHome()
+  // call it directly (they pushState without firing hashchange); hashchange
+  // (initial load + back/forward) settles via handleHashAndSettle.
+  function handleHashAndSettle() { handleHash(); settleHistory(); }
+
+  /* ──────────────────────────────────────────────────────────────────
+     Nav-rail minimize toggle. The chevron (#rail-toggle) collapses the rail
+     to an icon-only strip on desktop; the FAB (#rail-fab) opens it as a drawer
+     on mobile. Collapsed state persists in localStorage (mb-nav-rail).
+     ────────────────────────────────────────────────────────────────── */
+  const RAIL_KEY = 'mb-nav-rail';
+  const appShell  = $('.app-shell');
+  const railToggle = $('#rail-toggle');
+  const railFab    = $('#rail-fab');
+
+  function setRailCollapsed(collapsed) {
+    if (!appShell) return;
+    appShell.classList.toggle('rail-collapsed', collapsed);
+    if (railToggle) {
+      railToggle.setAttribute('aria-expanded', String(!collapsed));
+      const glyph = railToggle.querySelector('.rail-toggle-glyph');
+      if (glyph) glyph.textContent = collapsed ? '«' : '»';
+    }
+    try { localStorage.setItem(RAIL_KEY, collapsed ? 'collapsed' : 'expanded'); } catch (_) {}
+  }
+
+  if (railToggle) {
+    railToggle.addEventListener('click', () => {
+      setRailCollapsed(!appShell.classList.contains('rail-collapsed'));
+    });
+  }
+  // Mobile FAB toggles the off-canvas drawer (a separate .rail-open state).
+  if (railFab && appShell) {
+    railFab.addEventListener('click', () => appShell.classList.toggle('rail-open'));
+    // A nav click inside the drawer closes it; click-away closes it too.
+    $('#nav-rail')?.addEventListener('click', (e) => {
+      if (e.target.closest('.cat-head, .home-btn, .cat-date, .cal-day.has')) {
+        appShell.classList.remove('rail-open');
+      }
+    });
+    document.addEventListener('click', (e) => {
+      if (appShell.classList.contains('rail-open')
+          && !e.target.closest('#nav-rail') && !e.target.closest('#rail-fab')) {
+        appShell.classList.remove('rail-open');
+      }
+    });
+  }
+  // Restore persisted collapsed state.
+  try {
+    setRailCollapsed(localStorage.getItem(RAIL_KEY) === 'collapsed');
+  } catch (_) { setRailCollapsed(false); }
+
+  // Init — set the lang button states from the restored currentLang (re-renders
+  // sidebar/home implicitly), resolve the initial hash, then seed the history
+  // stack. Deferred to here so settleHistory()'s element refs are initialized
+  // before applyLang()'s deep-link path can trigger a navigate()/showHome().
   applyLang(currentLang);
   handleHash();
-  window.addEventListener('hashchange', handleHash);
+  settleHistory();
+  window.addEventListener('hashchange', handleHashAndSettle);
 
   /* ──────────────────────────────────────────────────────────────────
      Print picker + broadsheet print runtime.
