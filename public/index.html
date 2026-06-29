@@ -76,16 +76,15 @@
   }
 
   /* Terminal header bar — mirrors the pagr/seedr chrome: a single row on a
-     --card surface with a --border bottom rule, in three zones. LEFT: the
-     brand wordmark (mono + .glow) and a blinking .cursor-block. CENTER: the
-     back/forward/history controls then a `reader@briefs:~` breadcrumb
-     (flexible, truncating). RIGHT: the nav-rail minimize toggle. */
+     --card surface with a --border bottom rule. LEFT: the brand wordmark
+     (mono + .glow) and a blinking .cursor-block. RIGHT: the nav-rail minimize
+     toggle. */
   header.app {
     border-bottom: 1px solid var(--border);
     background: var(--card);
     font-family: var(--font-mono); /* chrome is terminal mono; the content stays serif */
-    /* Lift the header (and its open history dropdown) above the content, which is
-       also a positioned body child at z-index 1 and would otherwise paint over it. */
+    /* Lift the header above the content, which is also a positioned body child
+       at z-index 1 and would otherwise paint over it. */
     z-index: 50;
     padding: 0 1rem;
     display: flex;
@@ -113,86 +112,14 @@
     letter-spacing: -0.01em;
   }
 
-  /* CENTER zone — history controls then the breadcrumb. Takes the remaining
-     width and centers; the breadcrumb truncates on overflow. */
-  .header-center {
-    flex: 1 1 auto;
-    min-width: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.2rem;
-  }
-
-  /* RIGHT zone — the nav-rail minimize toggle (or nothing). */
+  /* RIGHT zone — the nav-rail minimize toggle, pushed to the far right
+     (the header has no center zone). */
   .header-right {
     flex: none;
+    margin-left: auto;
     display: flex;
     align-items: center;
   }
-
-  /* Back / forward / history controls — 28px square, muted, warm to --primary on
-     hover, dimmed when disabled (mirrors pagr's .nav-ctrl). */
-  .nav-ctrl {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    flex: none;
-    list-style: none;
-    cursor: pointer;
-    color: var(--muted-foreground);
-    background: none;
-    border: 0;
-    border-radius: 0;
-    transition: color 0.15s ease;
-  }
-  .nav-ctrl::-webkit-details-marker { display: none; }
-  .nav-ctrl:hover:not(:disabled) { color: var(--primary); }
-  .nav-ctrl:disabled { opacity: 0.35; cursor: default; }
-
-  /* The history dropdown sits at the top of the page, so it opens downward. */
-  .nav-history { flex: none; }
-  .nav-history-panel {
-    min-width: 200px;
-    max-width: min(80vw, 320px);
-    max-height: min(60vh, 420px);
-    overflow-y: auto;
-  }
-  .nav-history-panel .dropdown-item {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* Breadcrumb: `reader@briefs:~/path`. The host part is muted, `~` is the
-     accent, the active path segment is --foreground. Truncates on overflow.
-     A left margin separates it from the history controls (mirrors pagr). */
-  .header-crumb {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 0.72rem;
-    color: var(--muted-foreground);
-    margin-left: 0.6rem;
-  }
-  .header-crumb .crumb-host { color: var(--muted-foreground); }
-  .header-crumb .crumb-root {
-    color: var(--primary);
-    text-decoration: none;
-    cursor: pointer;
-  }
-  .header-crumb .crumb-root:hover { text-decoration: underline; }
-  .header-crumb .crumb-sep { color: var(--muted-foreground); }
-  .header-crumb .crumb-seg {
-    color: var(--muted-foreground);
-    text-decoration: none;
-    cursor: pointer;
-    transition: color 0.15s ease;
-  }
-  .header-crumb .crumb-seg:hover { color: var(--primary); }
-  .header-crumb .crumb-seg.current { color: var(--foreground); cursor: default; }
 
   /* Layout: two columns — flexible main + a fixed-width nav-rail on the right.
      The fixed footer is 2rem tall, so the shell is the viewport minus the
@@ -973,9 +900,6 @@
     .home { padding: 1rem 1rem 1.5rem; }
     .tldr-grid { grid-template-columns: 1fr; gap: 0.85rem; }
     .home h2 { font-size: 1.2rem; }
-    /* Drop the breadcrumb on the smallest widths — the brand + history
-       controls carry the chrome; the path would otherwise crowd the row. */
-    .header-crumb { display: none; }
     .status-controls { gap: 0.9rem; }
 
     /* Single main column; the rail floats as an off-canvas drawer pinned
@@ -1145,42 +1069,15 @@
 </head>
 <body>
 
-<!-- Terminal header bar, three zones (mirrors pagr): LEFT brand wordmark +
-     cursor; CENTER back/forward/history controls then the `reader@briefs:~`
-     breadcrumb (flexible, truncating); RIGHT the nav-rail minimize toggle.
-     The grouped category nav now lives in the sticky right sidebar (.nav-rail). -->
+<!-- Terminal header bar (mirrors pagr): LEFT brand wordmark + cursor; RIGHT the
+     nav-rail minimize toggle. The grouped category nav lives in the sticky right
+     sidebar (.nav-rail). -->
 <header class="app">
   <div class="header-left">
     <a class="header-brand" id="brand-home" href="#home" title="Übersicht">
       <span class="glow brand-word">Daniels Morning Briefs</span>
       <span class="cursor-block" aria-hidden="true"></span>
     </a>
-  </div>
-
-  <div class="header-center">
-    <button class="nav-ctrl" id="nav-back" type="button" aria-label="Zurück" disabled>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="m15 18-6-6 6-6"></path>
-      </svg>
-    </button>
-    <button class="nav-ctrl" id="nav-forward" type="button" aria-label="Vorwärts" disabled>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="m9 18 6-6-6-6"></path>
-      </svg>
-    </button>
-    <details class="dropdown nav-history" id="nav-history" hidden>
-      <summary class="nav-ctrl" aria-label="Verlauf">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-          <path d="M3 3v5h5"></path>
-          <path d="M12 7v5l4 2"></path>
-        </svg>
-      </summary>
-      <ul class="dropdown-panel dropdown-panel--down nav-history-panel" id="nav-history-list"><!-- populated by JS --></ul>
-    </details>
-    <span class="header-crumb" id="header-crumb" aria-live="polite">
-      <span class="crumb-host">reader@briefs:</span><a class="crumb-root" href="#home">~</a>
-    </span>
   </div>
 
   <div class="header-right">
@@ -9148,71 +9045,15 @@ window.__MANIFESTS = {
   if (brandHome) brandHome.addEventListener('click', (e) => { e.preventDefault(); showHome(); });
 
   // ── Breadcrumb / status path ─────────────────────────────────────────
-  // Terminal path shown in both the header crumb (`reader@briefs:~/section…`)
-  // and the footer status line (`~/section…`). `~` returns to the dashboard;
-  // the section segment links to its latest brief; the date segment is current.
-  const headerCrumb = $('#header-crumb');
-  const statusLoc   = $('#status-loc');
+  // Terminal path shown in the footer status line (`~` or `~/section[/date]`).
+  const statusLoc = $('#status-loc');
 
   function updateBreadcrumb(catId, date) {
-    // Footer status path: plain text `~` or `~/section[/date]`.
-    if (statusLoc) {
-      const cat = catId ? M.categories.find(c => c.id === catId) : null;
-      let path = '~';
-      if (cat) path += '/' + cat.label + (date ? '/' + fmtDate(date) : '');
-      statusLoc.textContent = path;
-    }
-
-    // Header crumb: linked segments. Rebuilt each navigation.
-    if (!headerCrumb) return;
-    headerCrumb.innerHTML = '';
-    const host = document.createElement('span');
-    host.className = 'crumb-host';
-    host.textContent = 'reader@briefs:';
-    headerCrumb.appendChild(host);
-
-    const root = document.createElement('a');
-    root.className = 'crumb-root';
-    root.href = '#home';
-    root.textContent = '~';
-    root.setAttribute('aria-label', 'Zurück zur Übersicht');
-    root.addEventListener('click', (e) => { e.preventDefault(); showHome(); });
-    headerCrumb.appendChild(root);
-
-    if (!catId) return;
-    const cat = M.categories.find(c => c.id === catId);
-    if (!cat) return;
-
-    const sep1 = document.createElement('span');
-    sep1.className = 'crumb-sep'; sep1.textContent = '/';
-    sep1.setAttribute('aria-hidden', 'true');
-    headerCrumb.appendChild(sep1);
-
-    const catSeg = document.createElement('a');
-    catSeg.className = 'crumb-seg' + (date ? '' : ' current');
-    catSeg.textContent = cat.label;
-    if (cat.entries.length && date) {
-      catSeg.href = '#' + cat.id + '/' + cat.entries[0].date;
-      catSeg.addEventListener('click', (e) => {
-        e.preventDefault();
-        navigate(cat.id, cat.entries[0].date);
-      });
-    } else {
-      catSeg.setAttribute('aria-current', 'page');
-    }
-    headerCrumb.appendChild(catSeg);
-
-    if (date) {
-      const sep2 = document.createElement('span');
-      sep2.className = 'crumb-sep'; sep2.textContent = '/';
-      sep2.setAttribute('aria-hidden', 'true');
-      headerCrumb.appendChild(sep2);
-      const dateSeg = document.createElement('span');
-      dateSeg.className = 'crumb-seg current';
-      dateSeg.setAttribute('aria-current', 'page');
-      dateSeg.textContent = fmtDate(date);
-      headerCrumb.appendChild(dateSeg);
-    }
+    if (!statusLoc) return;
+    const cat = catId ? M.categories.find(c => c.id === catId) : null;
+    let path = '~';
+    if (cat) path += '/' + cat.label + (date ? '/' + fmtDate(date) : '');
+    statusLoc.textContent = path;
   }
 
   // Navigate to a specific newsletter
@@ -9261,7 +9102,6 @@ window.__MANIFESTS = {
     if (location.hash !== targetHash) {
       history.pushState(null, '', targetHash);
     }
-    settleHistory();
   }
 
   function showHome() {
@@ -9283,7 +9123,6 @@ window.__MANIFESTS = {
     if (location.hash !== '#home' && location.hash !== '') {
       history.pushState(null, '', '#home');
     }
-    settleHistory();
   }
 
   addClickAndKey($('#home-btn'), showHome);
@@ -9474,124 +9313,9 @@ window.__MANIFESTS = {
     applyTheme(saved && themeOrder.includes(saved) ? saved : 'warm');
   } catch (_) { applyTheme('warm'); }
 
-  /* ──────────────────────────────────────────────────────────────────
-     Back / forward / history controls (mirrors pagr's nav-ctrl chrome).
-     briefs already navigates with history.pushState (hash URLs) and re-
-     renders on hashchange, so browser back/forward already re-navigate —
-     this layer just reconstructs the visited list + chevron disabled state
-     from a sessionStorage visit stack keyed on location.hash.
-
-     The "current entry" is the normalized hash (empty → '#home'). After every
-     settle (initial load, a navigate()/showHome() pushState, or a back/forward
-     hashchange) settleHistory() reconciles the stack: a step to an adjacent
-     neighbour just shifts the pointer; any other arrival truncates the forward
-     history and appends the new entry — exactly like a browser's own stack.
-     ────────────────────────────────────────────────────────────────── */
-  const HIST_STACK_KEY = 'mb-hist-stack';
-  const HIST_PTR_KEY   = 'mb-hist-ptr';
-  const navBack    = $('#nav-back');
-  const navForward = $('#nav-forward');
-  const histDetails = $('#nav-history');
-  const histList    = $('#nav-history-list');
-
-  const normalizeHash = (h) => {
-    const v = (h || '').replace(/^#/, '');
-    return '#' + (v || 'home');
-  };
-  const readHistStack = () => {
-    try {
-      const raw = sessionStorage.getItem(HIST_STACK_KEY);
-      const parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (_) { return []; }
-  };
-  const readHistPtr = () => {
-    const v = Number(sessionStorage.getItem(HIST_PTR_KEY));
-    return Number.isInteger(v) ? v : -1;
-  };
-  const persistHist = (stack, ptr) => {
-    try {
-      sessionStorage.setItem(HIST_STACK_KEY, JSON.stringify(stack));
-      sessionStorage.setItem(HIST_PTR_KEY, String(ptr));
-    } catch (_) {}
-  };
-
-  // Human label for a history entry, derived the same way updateBreadcrumb does:
-  // '~' for home, '~/<category label>[/<date>]' otherwise.
-  function histLabel(hash) {
-    const body = normalizeHash(hash).slice(1);
-    if (!body || body === 'home') return '~';
-    const parts = body.split('/');
-    const cat = M.categories.find(c => c.id === parts[0]);
-    if (!cat) return '~';
-    let label = '~/' + cat.label;
-    if (parts[1] && parts[1] !== 'latest') label += '/' + fmtDate(parts[1]);
-    return label;
-  }
-
-  function renderHistoryUI(stack, ptr) {
-    if (navBack)    navBack.disabled    = ptr <= 0;
-    if (navForward) navForward.disabled = ptr >= stack.length - 1;
-    if (!histDetails || !histList) return;
-    histDetails.hidden = stack.length <= 1;
-    histList.innerHTML = '';
-    // most-recent first, like pagr's reversed history list
-    stack.map((hash, index) => ({ hash, index })).reverse().forEach(({ hash, index }) => {
-      const li = document.createElement('li');
-      const link = document.createElement('a');
-      link.href = hash;
-      link.className = 'dropdown-item';
-      link.textContent = histLabel(hash);
-      if (index === ptr) link.setAttribute('aria-current', 'true');
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        histDetails.removeAttribute('open');
-        if (normalizeHash(location.hash) === hash) return;
-        location.hash = hash; // triggers hashchange → handleHash → settleHistory
-      });
-      li.appendChild(link);
-      histList.appendChild(li);
-    });
-  }
-
-  function settleHistory() {
-    const current = normalizeHash(location.hash);
-    let stack = readHistStack();
-    let ptr = readHistPtr();
-    if (ptr >= 0 && stack[ptr] === current) {
-      // reload / re-settle of the same entry — nothing to do
-    } else if (ptr > 0 && stack[ptr - 1] === current) {
-      ptr -= 1;                       // stepped back
-    } else if (ptr >= 0 && ptr < stack.length - 1 && stack[ptr + 1] === current) {
-      ptr += 1;                       // stepped forward
-    } else {
-      stack = stack.slice(0, ptr + 1); // new navigation: truncate forward, append
-      stack.push(current);
-      ptr = stack.length - 1;
-    }
-    persistHist(stack, ptr);
-    renderHistoryUI(stack, ptr);
-  }
-
-  if (navBack)    navBack.addEventListener('click', () => history.back());
-  if (navForward) navForward.addEventListener('click', () => history.forward());
-  // Close the history dropdown on click-away / Escape (it's a bare <details>).
-  if (histDetails) {
-    document.addEventListener('click', (e) => {
-      if (histDetails.open && !histDetails.contains(e.target)) histDetails.removeAttribute('open');
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && histDetails.open) {
-        histDetails.removeAttribute('open');
-        histDetails.querySelector('summary')?.focus();
-      }
-    });
-  }
-
-  // settleHistory runs after every navigation settles. navigate()/showHome()
-  // call it directly (they pushState without firing hashchange); hashchange
-  // (initial load + back/forward) settles via handleHashAndSettle.
-  function handleHashAndSettle() { handleHash(); settleHistory(); }
+  // Re-render on hashchange (initial load + browser back/forward). Browser
+  // back/forward still work via the hash URLs + pushState in navigate()/showHome().
+  function handleHashAndSettle() { handleHash(); }
 
   /* ──────────────────────────────────────────────────────────────────
      Nav-rail minimize toggle. The chevron (#rail-toggle) collapses the rail
@@ -9641,12 +9365,9 @@ window.__MANIFESTS = {
   } catch (_) { setRailCollapsed(false); }
 
   // Init — set the lang button states from the restored currentLang (re-renders
-  // sidebar/home implicitly), resolve the initial hash, then seed the history
-  // stack. Deferred to here so settleHistory()'s element refs are initialized
-  // before applyLang()'s deep-link path can trigger a navigate()/showHome().
+  // sidebar/home implicitly), then resolve the initial hash.
   applyLang(currentLang);
   handleHash();
-  settleHistory();
   window.addEventListener('hashchange', handleHashAndSettle);
 
   /* ──────────────────────────────────────────────────────────────────
