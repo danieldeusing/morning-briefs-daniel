@@ -1154,10 +1154,6 @@
     <nav class="status-controls" aria-label="Einstellungen">
       <a class="status-btn status-link" href="/datenschutz.html">datenschutz</a>
       <a class="status-btn status-link" href="/impressum.html">impressum</a>
-      <button class="status-btn print-btn" id="print-btn" type="button"
-              aria-label="Drucken" title="Drucken">
-        <span aria-hidden="true">🖨</span>
-      </button>
       <span class="status-sep" aria-hidden="true"></span>
       <div class="lang-picker">
         <button class="status-btn lang-trigger" id="lang-trigger" type="button"
@@ -9402,7 +9398,6 @@ window.__MANIFESTS = {
        imports tokens) so newsletter components style correctly inside
        the dashboard's print container.
      ────────────────────────────────────────────────────────────────── */
-  const printBtn    = $('#print-btn');
   const printDialog = $('#print-dialog');
   const printRoot   = $('#print-root');
   let stylesCssLoaded = false;
@@ -9441,11 +9436,36 @@ window.__MANIFESTS = {
     return li;
   }
 
-  if (printBtn && printDialog) {
-    printBtn.addEventListener('click', () => {
-      buildPrintOptions();
-      printDialog.showModal();
-    });
+  // Core print: assemble the chosen briefs into #print-root and print. Reused by
+  // the multi-select dialog and by the per-brief masthead button.
+  async function runPrint(ids) {
+    if (!ids || ids.length === 0) return;
+    await ensureNewsletterStyles();
+    await assemblePrintRoot(ids);
+    document.body.classList.add('printing');
+    // Two animation frames so layout + paint settle before print.
+    requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
+  }
+
+  // Print just the currently-open brief — called by the 🖨 button in each brief's
+  // masthead (from inside the iframe via window.parent.mbPrintCurrent()).
+  window.mbPrintCurrent = function () {
+    const { catId } = currentRoute();
+    const id = (catId && catId !== 'home' && M.categories.some(c => c.id === catId)) ? catId : 'home';
+    runPrint([id]);
+  };
+
+  // Cleanup after any print (dialog or per-brief) finishes.
+  window.addEventListener('afterprint', () => {
+    document.body.classList.remove('printing');
+    printRoot.innerHTML = '';
+    printRoot.hidden = true;
+  });
+
+  // The multi-select broadsheet dialog. No footer button anymore — per-brief
+  // printing uses the masthead 🖨 (window.mbPrintCurrent); the multi-select
+  // picker is reached via Cmd/Ctrl+P.
+  if (printDialog) {
     $('#print-cancel').addEventListener('click', () => printDialog.close());
     $('#print-run').addEventListener('click', async (e) => {
       const btn = e.currentTarget;
@@ -9455,27 +9475,13 @@ window.__MANIFESTS = {
       btn.disabled = true;
       btn.textContent = 'Lädt…';
       try {
-        await ensureNewsletterStyles();
-        await assemblePrintRoot(selected);
         printDialog.close();
-        document.body.classList.add('printing');
-        // Two animation frames so layout + paint settle before print.
-        requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
+        await runPrint(selected);
       } finally {
         btn.disabled = false;
         btn.textContent = 'Drucken';
       }
     });
-    // Cleanup after the system print dialog closes.
-    window.addEventListener('afterprint', () => {
-      document.body.classList.remove('printing');
-      printRoot.innerHTML = '';
-      printRoot.hidden = true;
-    });
-
-    // Single print path: route Cmd/Ctrl+P to the same Drucken dialog, so the
-    // browser's native print of the raw page/iframe is never used — every
-    // print goes through the assembled print-root renderer.
     document.addEventListener('keydown', (e) => {
       if ((e.metaKey || e.ctrlKey) && (e.key === 'p' || e.key === 'P')) {
         e.preventDefault();

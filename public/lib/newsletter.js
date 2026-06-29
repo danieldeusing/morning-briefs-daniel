@@ -96,7 +96,7 @@
   const UI_STRINGS = {
     de: { readStop: 'Vorlesen stoppen', pause: 'Pause', resume: 'Weiterlesen',
           sectionReadAria: 'Sektion vorlesen', sectionReadTitle: 'Diese Sektion vorlesen',
-          readAll: 'Ganzen Newsletter vorlesen', pauseResume: 'Pause / Weiter', stop: 'Stop',
+          readAll: 'Ganzen Newsletter vorlesen', print: 'Drucken', pauseResume: 'Pause / Weiter', stop: 'Stop',
           voice: 'Stimme', voiceChoose: 'Stimme wählen', rate: 'Geschwindigkeit',
           menuToggle: 'Vorlese-Menü ein-/ausblenden', menu: 'Vorlese-Menü',
           zoomIn: 'Vergrößert anzeigen', zoomedView: 'Vergrößerte Ansicht', diagram: 'Diagramm', close: 'Schließen',
@@ -104,7 +104,7 @@
           rangeW: 'Letzte Woche (täglich)', rangeM: 'Letzten 30 Tage', rangeY: 'Letzte 12 Monate' },
     en: { readStop: 'Stop reading', pause: 'Pause', resume: 'Resume',
           sectionReadAria: 'Read section', sectionReadTitle: 'Read this section aloud',
-          readAll: 'Read whole newsletter', pauseResume: 'Pause / Resume', stop: 'Stop',
+          readAll: 'Read whole newsletter', print: 'Print', pauseResume: 'Pause / Resume', stop: 'Stop',
           voice: 'Voice', voiceChoose: 'Choose voice', rate: 'Speed',
           menuToggle: 'Toggle read-aloud menu', menu: 'Read-aloud menu',
           zoomIn: 'Enlarge', zoomedView: 'Enlarged view', diagram: 'Diagram', close: 'Close',
@@ -112,7 +112,7 @@
           rangeW: 'Last week (daily)', rangeM: 'Last 30 days', rangeY: 'Last 12 months' },
     pt: { readStop: 'Parar leitura', pause: 'Pausar', resume: 'Continuar',
           sectionReadAria: 'Ler seção', sectionReadTitle: 'Ler esta seção em voz alta',
-          readAll: 'Ler boletim inteiro', pauseResume: 'Pausar / Continuar', stop: 'Parar',
+          readAll: 'Ler boletim inteiro', print: 'Imprimir', pauseResume: 'Pausar / Continuar', stop: 'Parar',
           voice: 'Voz', voiceChoose: 'Escolher voz', rate: 'Velocidade',
           menuToggle: 'Mostrar/ocultar menu de leitura', menu: 'Menu de leitura',
           zoomIn: 'Ampliar', zoomedView: 'Visualização ampliada', diagram: 'Diagrama', close: 'Fechar',
@@ -120,7 +120,7 @@
           rangeW: 'Última semana (diário)', rangeM: 'Últimos 30 dias', rangeY: 'Últimos 12 meses' },
     es: { readStop: 'Detener lectura', pause: 'Pausar', resume: 'Continuar',
           sectionReadAria: 'Leer sección', sectionReadTitle: 'Leer esta sección en voz alta',
-          readAll: 'Leer todo el boletín', pauseResume: 'Pausar / Continuar', stop: 'Detener',
+          readAll: 'Leer todo el boletín', print: 'Imprimir', pauseResume: 'Pausar / Continuar', stop: 'Detener',
           voice: 'Voz', voiceChoose: 'Elegir voz', rate: 'Velocidad',
           menuToggle: 'Mostrar/ocultar menú de lectura', menu: 'Menú de lectura',
           zoomIn: 'Ampliar', zoomedView: 'Vista ampliada', diagram: 'Diagrama', close: 'Cerrar',
@@ -864,6 +864,34 @@
       masthead.appendChild(btn);
     }
 
+    // Inject a 🖨 print button into the masthead next to the 🔊 button. Inside the
+    // dashboard (iframe) it routes to the dashboard's broadsheet print of THIS
+    // brief; standalone (opened in its own tab) it just prints the page, which
+    // has its own @media print styles.
+    function addPrintButton() {
+      const masthead = document.querySelector('.masthead');
+      if (!masthead) return;
+      if (masthead.querySelector('.print-btn')) return;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'read-btn print-btn';
+      btn.setAttribute('aria-label', ui('print'));
+      btn.title = ui('print');
+      btn.textContent = '🖨';
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+          if (window.parent !== window && typeof window.parent.mbPrintCurrent === 'function') {
+            window.parent.mbPrintCurrent();
+            return;
+          }
+        } catch (_) { /* cross-origin parent — fall through to native print */ }
+        window.print();
+      });
+      masthead.appendChild(btn);
+    }
+
     function buildPanel() {
       if (document.querySelector('.voice-reader-panel')) return;
       const panel = document.createElement('div');
@@ -908,6 +936,7 @@
 
     addSectionButtons();
     addReadAllButton();
+    addPrintButton();
     buildPanel();
   }
 
