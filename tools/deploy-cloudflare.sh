@@ -23,44 +23,54 @@ if [[ ! -d public ]]; then
   exit 1
 fi
 
-# 1Password service-account token (workspace .env) drives the op CLI.
 if [[ ! -f "$WORKSPACE_ENV" ]]; then
   echo "deploy-cloudflare: workspace .env not found at $WORKSPACE_ENV" >&2
   exit 1
 fi
-OP_SERVICE_ACCOUNT_TOKEN="$(grep '^OP_SERVICE_TOKEN=' "$WORKSPACE_ENV" | cut -d= -f2-)"
-export OP_SERVICE_ACCOUNT_TOKEN
-if [[ -z "$OP_SERVICE_ACCOUNT_TOKEN" ]]; then
-  echo "deploy-cloudflare: OP_SERVICE_TOKEN missing from $WORKSPACE_ENV" >&2
-  exit 1
+
+# Cloudflare Pages-Edit token + Account ID.
+# PRIMARY: read straight from the workspace .env (op-free). This is what makes
+# UNATTENDED deploys reliable — `op` (1Password CLI) intermittently HANGS in
+# headless/cron runs (its desktop-daemon auth path blocks), and being a Go binary
+# it ignores SIGALRM so it can't be timed out cleanly. Reading the cached creds
+# from .env skips op entirely. Re-cache them with:
+#   op item get 'cloudflare - daniedeusing - api token' --vault danieldeusing-agents \
+#     --fields password --reveal   (and --fields 'Account ID')  >> ../../.env  as
+#   CLOUDFLARE_API_TOKEN=… / CLOUDFLARE_ACCOUNT_ID=…
+# FALLBACK: if they're not in .env, fetch from 1Password via op, guarded by a
+# kill -9 watchdog (SIGKILL is the only signal op can't ignore; op writes the
+# value out fast and only hangs on exit, so the kill lands after it's captured).
+CLOUDFLARE_API_TOKEN="$(grep -E '^CLOUDFLARE_API_TOKEN=' "$WORKSPACE_ENV" | cut -d= -f2-)"
+CLOUDFLARE_ACCOUNT_ID="$(grep -E '^CLOUDFLARE_ACCOUNT_ID=' "$WORKSPACE_ENV" | cut -d= -f2-)"
+
+if [[ -z "$CLOUDFLARE_API_TOKEN" || -z "$CLOUDFLARE_ACCOUNT_ID" ]]; then
+  echo "deploy-cloudflare: Cloudflare creds not in .env — falling back to 1Password (op)…" >&2
+  OP_SERVICE_ACCOUNT_TOKEN="$(grep '^OP_SERVICE_TOKEN=' "$WORKSPACE_ENV" | cut -d= -f2-)"
+  export OP_SERVICE_ACCOUNT_TOKEN
+  if [[ -z "$OP_SERVICE_ACCOUNT_TOKEN" ]]; then
+    echo "deploy-cloudflare: OP_SERVICE_TOKEN also missing from $WORKSPACE_ENV" >&2
+    exit 1
+  fi
+  op_field() {
+    local out; out="$(mktemp)"
+    op item get 'cloudflare - daniedeusing - api token' \
+      --vault danieldeusing-agents --fields "$1" --reveal >"$out" 2>/dev/null &
+    local op_pid=$!
+    ( command sleep 25; kill -9 "$op_pid" 2>/dev/null ) &
+    local watchdog_pid=$!
+    local rc=0
+    wait "$op_pid" 2>/dev/null || rc=$?
+    kill "$watchdog_pid" 2>/dev/null; wait "$watchdog_pid" 2>/dev/null || true
+    cat "$out"; rm -f "$out"
+    return "$rc"
+  }
+  if [[ -z "$CLOUDFLARE_API_TOKEN"  ]]; then CLOUDFLARE_API_TOKEN="$(op_field password)" || true; fi
+  if [[ -z "$CLOUDFLARE_ACCOUNT_ID" ]]; then CLOUDFLARE_ACCOUNT_ID="$(op_field 'Account ID')" || true; fi
 fi
 
-# Cloudflare Pages-Edit token + Account ID from the danieldeusing-agents vault.
-# Wrap `op` in a hard 60s timeout: it intermittently HANGS in headless/cron runs
-# (its desktop-daemon auth path blocks), which used to silently stall the entire
-# deploy (git push had already succeeded, so the live site went stale unnoticed).
-# `op` is a Go binary that IGNORES SIGALRM, so perl's `alarm` / `timeout(1)` can
-# NOT stop it (verified 2026-06-29) — only SIGKILL works. So background it with a
-# kill -9 watchdog: a hang is force-killed at 60s, leaving empty output → the
-# guard below exits 1. Interactive runs (op authenticates fine) are unaffected.
-op_field() {
-  local out; out="$(mktemp)"
-  op item get 'cloudflare - daniedeusing - api token' \
-    --vault danieldeusing-agents --fields "$1" --reveal >"$out" 2>/dev/null &
-  local op_pid=$!
-  ( command sleep 25; kill -9 "$op_pid" 2>/dev/null ) &
-  local watchdog_pid=$!
-  local rc=0
-  wait "$op_pid" 2>/dev/null || rc=$?
-  kill "$watchdog_pid" 2>/dev/null; wait "$watchdog_pid" 2>/dev/null || true
-  cat "$out"; rm -f "$out"
-  return "$rc"
-}
-CLOUDFLARE_API_TOKEN="$(op_field password)" || true
-CLOUDFLARE_ACCOUNT_ID="$(op_field 'Account ID')" || true
 export CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID
 if [[ -z "$CLOUDFLARE_API_TOKEN" || -z "$CLOUDFLARE_ACCOUNT_ID" ]]; then
-  echo "deploy-cloudflare: could not read Cloudflare token/account from 1Password (op timed out or failed)" >&2
+  echo "deploy-cloudflare: could not obtain Cloudflare token/account (.env or 1Password)" >&2
   exit 1
 fi
 
