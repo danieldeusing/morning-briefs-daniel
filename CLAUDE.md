@@ -286,11 +286,14 @@ bash tools/deploy-cloudflare.sh        # wraps: wrangler pages deploy public \
                                        #   --project-name briefs --branch prod
 ```
 
-It reads the Cloudflare **Pages-Edit** API token + Account ID from 1Password
-(workspace `.env` → `OP_SERVICE_TOKEN` → vault `danieldeusing-agents`, item
-`cloudflare - daniedeusing - api token`), exports them as
-`CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`, and runs `wrangler`. Nothing is
-hard-coded or committed. Runnable by hand or by the routine.
+It reads the Cloudflare **Pages-Edit** API token + Account ID — primarily
+straight from the workspace `.env` (keys `CLOUDFLARE_API_TOKEN` /
+`CLOUDFLARE_ACCOUNT_ID`, op-free), falling back to 1Password (`OP_SERVICE_TOKEN`
+→ vault `danieldeusing-agents`, item `cloudflare - daniedeusing - api token`)
+only if they're absent — exports them, and runs `wrangler`. The `.env`-first path
+exists because `op` intermittently **hangs in headless/cron runs**, which used to
+silently stall the deploy and leave the live site stale. Nothing is hard-coded or
+committed (`.env` is untracked, `chmod 600`). Runnable by hand or by the routine.
 
 The consolidated **morning-brief routine runs this automatically** as its final
 phase: rebuild dashboard → `git add -A && git commit && git push origin main` →
