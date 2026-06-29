@@ -36,15 +36,25 @@ if [[ -z "$OP_SERVICE_ACCOUNT_TOKEN" ]]; then
 fi
 
 # Cloudflare Pages-Edit token + Account ID from the danieldeusing-agents vault.
-# Wrap `op` in a hard 60s timeout: it intermittently HANGS in headless/cron runs,
-# which used to silently stall the entire deploy (git push had already succeeded,
-# so the failure went unnoticed and the live site went stale). macOS has no
-# timeout(1), so use perl's alarm — the timer survives exec and SIGALRM kills op
-# on expiry. A hang now fails fast (empty output) → the guard below exits 1.
+# Wrap `op` in a hard 60s timeout: it intermittently HANGS in headless/cron runs
+# (its desktop-daemon auth path blocks), which used to silently stall the entire
+# deploy (git push had already succeeded, so the live site went stale unnoticed).
+# `op` is a Go binary that IGNORES SIGALRM, so perl's `alarm` / `timeout(1)` can
+# NOT stop it (verified 2026-06-29) — only SIGKILL works. So background it with a
+# kill -9 watchdog: a hang is force-killed at 60s, leaving empty output → the
+# guard below exits 1. Interactive runs (op authenticates fine) are unaffected.
 op_field() {
-  perl -e 'alarm shift @ARGV; exec @ARGV' 60 \
-    op item get 'cloudflare - daniedeusing - api token' \
-    --vault danieldeusing-agents --fields "$1" --reveal 2>/dev/null
+  local out; out="$(mktemp)"
+  op item get 'cloudflare - daniedeusing - api token' \
+    --vault danieldeusing-agents --fields "$1" --reveal >"$out" 2>/dev/null &
+  local op_pid=$!
+  ( command sleep 25; kill -9 "$op_pid" 2>/dev/null ) &
+  local watchdog_pid=$!
+  local rc=0
+  wait "$op_pid" 2>/dev/null || rc=$?
+  kill "$watchdog_pid" 2>/dev/null; wait "$watchdog_pid" 2>/dev/null || true
+  cat "$out"; rm -f "$out"
+  return "$rc"
 }
 CLOUDFLARE_API_TOKEN="$(op_field password)" || true
 CLOUDFLARE_ACCOUNT_ID="$(op_field 'Account ID')" || true
