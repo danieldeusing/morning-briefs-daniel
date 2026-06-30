@@ -263,7 +263,7 @@
      Fixed footer status bar — mirrors the pagr/seedr StatusBar: a 2rem bar
      pinned to the viewport bottom on a --card surface with a --border top
      rule. LEFT: `[briefs] reader@briefs:~/path` status line. RIGHT: the
-     relocated controls (theme menu, print, language menu) + an anim toggle.
+     relocated controls (theme menu, language menu) + an anim toggle.
      ──────────────────────────────────────────────────────────────────── */
   footer.status-bar {
     position: fixed;
@@ -943,127 +943,6 @@
     .tldr-card-body .tldr li { font-size: 0.8rem; }
   }
 
-  /* ────────────────────────────────────────────────────────────────────
-     Print — hide the header + footer chrome and let the iframe content (or
-     home grid) take the full page. Same-origin iframes print their content
-     natively, so the visible newsletter prints with its own @media print
-     rules from lib/styles.css.
-     ──────────────────────────────────────────────────────────────────── */
-  @media print {
-    /* Print styling now lives in lib/styles.css (no-cache), loaded on demand by
-       the Drucken flow before window.print(). This fallback only hides chrome
-       for a stray browser-menu print before lib has loaded. */
-    header.app, footer.status-bar, .loading, .print-dialog, .nav-rail, .rail-fab {
-      display: none !important;
-    }
-    /* Let body grow past the viewport so a long print isn't clipped to one
-       page (screen layout pins html/body to 100% with overflow:hidden). */
-    html, body { height: auto !important; overflow: visible !important; }
-    .app-shell { display: block !important; height: auto !important; }
-  }
-
-  /* ──────────────────────────────────────────────────────────────────
-     Print dialog (screen) — native <dialog> styled to match the
-     dashboard chrome. The actual print-rendering rules sit further
-     below in the @media print block.
-     ────────────────────────────────────────────────────────────────── */
-  .print-dialog {
-    padding: 1.3rem 1.5rem 1.1rem;
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    background: var(--panel);
-    color: var(--fg);
-    min-width: min(420px, calc(100vw - 2rem));
-    max-width: 540px;
-    box-shadow: var(--shadow-lift);
-    font-family: var(--font-body);
-  }
-  .print-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
-  .print-dialog h2 {
-    margin: 0 0 0.3rem;
-    font-family: var(--font-display);
-    font-size: 1.35rem;
-    color: var(--fg);
-  }
-  .print-dialog-lead {
-    margin: 0 0 1rem;
-    color: var(--muted-ink);
-    font-size: 0.85rem;
-    line-height: 1.45;
-  }
-  .print-options {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1.2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.05rem;
-    max-height: 50vh;
-    overflow-y: auto;
-  }
-  .print-options li { margin: 0; }
-  .print-options label {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.45rem 0.5rem;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background 120ms;
-  }
-  .print-options label:hover { background: var(--rule-soft); }
-  .print-options input[type="checkbox"] {
-    width: 1rem;
-    height: 1rem;
-    accent-color: var(--cat-accent);
-    cursor: pointer;
-  }
-  .print-options .opt-icon { font-size: 1.1rem; flex: none; width: 1.4rem; text-align: center; }
-  .print-options .opt-meta {
-    margin-left: auto;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--soft);
-  }
-  .print-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.55rem;
-    border-top: 1px solid var(--rule);
-    padding-top: 0.9rem;
-  }
-  .print-cancel, .print-run {
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 600;
-  }
-  .print-cancel {
-    background: transparent;
-    color: var(--fg);
-    border: 1px solid var(--rule);
-  }
-  .print-cancel:hover { background: var(--rule-soft); }
-  .print-run {
-    background: var(--cat-accent-text);
-    color: var(--bg);
-    border: 1px solid var(--cat-accent-text);
-  }
-  .print-run:hover { filter: brightness(1.05); }
-  .print-run:disabled { opacity: 0.5; cursor: progress; }
-
-  /* Print-root is invisible on screen. */
-  .print-root[hidden] { display: none !important; }
-
-  /* ──────────────────────────────────────────────────────────────────
-     PRINT MODE — A4 portrait, broadsheet feel. Activated by adding
-     body.printing before window.print() runs.
-     ────────────────────────────────────────────────────────────────── */
-  /* Dashboard + print-root print styling moved to lib/styles.css (no-cache). */
 </style>
 </head>
 <body>
@@ -1136,7 +1015,7 @@
 
 <!-- Fixed footer status bar: status path (left), relocated controls + anim
      toggle (right). Controls keep their original ids so the existing handlers
-     (theme cycle, print, language switch) work unchanged. -->
+     (theme cycle, language switch) work unchanged. -->
 <footer class="status-bar">
   <div class="status-inner">
     <span class="status-path" id="status-path">
@@ -1190,27 +1069,6 @@
     </nav>
   </div>
 </footer>
-
-<!-- Print picker dialog. Native <dialog> with showModal() gives focus
-     trap, Escape-close, and backdrop click-out for free. The options
-     list is populated dynamically from the manifest when the dialog
-     opens (so today's available newsletters are always accurate). -->
-<dialog id="print-dialog" class="print-dialog" aria-labelledby="print-dialog-title">
-  <h2 id="print-dialog-title">Drucken</h2>
-  <p class="print-dialog-lead">Wählen, welche Ausgaben gedruckt werden sollen.
-    Das Layout ist eine zweispaltige A4-Broadsheet-Seite pro Newsletter
-    — nicht der Browser-Default.</p>
-  <ul class="print-options" id="print-options"></ul>
-  <div class="print-actions">
-    <button type="button" class="print-cancel" id="print-cancel">Abbrechen</button>
-    <button type="button" class="print-run" id="print-run">Drucken</button>
-  </div>
-</dialog>
-
-<!-- Print container: filled at print time with selected newsletter
-     content, hidden on screen via display:none, made visible only
-     under @media print when body.printing is set. -->
-<div class="print-root" id="print-root" hidden></div>
 
 <script>
 // ============================================================
@@ -9531,157 +9389,6 @@ window.__MANIFESTS = {
   applyLang(currentLang);
   handleHash();
   window.addEventListener('hashchange', handleHashAndSettle);
-
-  /* ──────────────────────────────────────────────────────────────────
-     Print picker + broadsheet print runtime.
-     - Print button opens a native <dialog> with one checkbox per
-       category that has a newsletter for today (latest date), plus
-       the dashboard summary. All checked by default.
-     - On confirm: fetches each selected newsletter's HTML, extracts
-       the masthead + main, wraps in `.print-newsletter cat-<id>`,
-       stacks into #print-root, and calls window.print(). The @media
-       print CSS block (above) takes over from there.
-     - lib/styles.css is loaded on demand (dashboard normally only
-       imports tokens) so newsletter components style correctly inside
-       the dashboard's print container.
-     ────────────────────────────────────────────────────────────────── */
-  const printDialog = $('#print-dialog');
-  const printRoot   = $('#print-root');
-  let stylesCssLoaded = false;
-  function ensureNewsletterStyles() {
-    if (stylesCssLoaded) return Promise.resolve();
-    return new Promise((resolve) => {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = 'lib/styles.css';
-      link.onload = () => { stylesCssLoaded = true; resolve(); };
-      link.onerror = () => resolve();  // fail-open so dialog still works
-      document.head.appendChild(link);
-    });
-  }
-
-  function buildPrintOptions() {
-    const list = $('#print-options');
-    list.innerHTML = '';
-    // Dashboard option first.
-    list.appendChild(buildPrintOption('home', '🏠', 'Übersicht', 'Heute'));
-    // One option per category that has at least one entry.
-    M.categories.forEach(cat => {
-      const latest = cat.entries[0];
-      if (!latest) return;
-      list.appendChild(buildPrintOption(cat.id, cat.icon, cat.label, fmtDate(latest.date)));
-    });
-  }
-  function buildPrintOption(id, icon, label, meta) {
-    const li = document.createElement('li');
-    li.innerHTML = `<label>
-      <input type="checkbox" value="${id}" checked>
-      <span class="opt-icon" aria-hidden="true">${icon}</span>
-      <span class="opt-label">${label}</span>
-      <span class="opt-meta">${meta}</span>
-    </label>`;
-    return li;
-  }
-
-  // Core print: assemble the chosen briefs into #print-root and print. Reused by
-  // the multi-select dialog and by the per-brief masthead button.
-  async function runPrint(ids) {
-    if (!ids || ids.length === 0) return;
-    await ensureNewsletterStyles();
-    await assemblePrintRoot(ids);
-    document.body.classList.add('printing');
-    // Two animation frames so layout + paint settle before print.
-    requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
-  }
-
-  // Print just the currently-open brief — called by the 🖨 button in each brief's
-  // masthead (from inside the iframe via window.parent.mbPrintCurrent()).
-  window.mbPrintCurrent = function () {
-    const { catId } = currentRoute();
-    const id = (catId && catId !== 'home' && M.categories.some(c => c.id === catId)) ? catId : 'home';
-    runPrint([id]);
-  };
-
-  // Cleanup after any print (dialog or per-brief) finishes.
-  window.addEventListener('afterprint', () => {
-    document.body.classList.remove('printing');
-    printRoot.innerHTML = '';
-    printRoot.hidden = true;
-  });
-
-  // The multi-select broadsheet dialog. No footer button anymore — per-brief
-  // printing uses the masthead 🖨 (window.mbPrintCurrent); the multi-select
-  // picker is reached via Cmd/Ctrl+P.
-  if (printDialog) {
-    $('#print-cancel').addEventListener('click', () => printDialog.close());
-    $('#print-run').addEventListener('click', async (e) => {
-      const btn = e.currentTarget;
-      const selected = Array.from(printDialog.querySelectorAll('input[type="checkbox"]:checked'))
-                             .map(cb => cb.value);
-      if (selected.length === 0) { printDialog.close(); return; }
-      btn.disabled = true;
-      btn.textContent = 'Lädt…';
-      try {
-        printDialog.close();
-        await runPrint(selected);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Drucken';
-      }
-    });
-    document.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && (e.key === 'p' || e.key === 'P')) {
-        e.preventDefault();
-        if (!document.body.classList.contains('printing') && !printDialog.open) {
-          buildPrintOptions();
-          printDialog.showModal();
-        }
-      }
-    });
-  }
-
-  async function assemblePrintRoot(selected) {
-    printRoot.innerHTML = '';
-    printRoot.hidden = false;  // make it part of the DOM for print
-
-    for (const value of selected) {
-      let section;
-      if (value === 'home') {
-        section = document.createElement('section');
-        section.className = 'print-newsletter cat-home';
-        const masthead = document.createElement('header');
-        masthead.className = 'masthead';
-        masthead.innerHTML = `
-          <div class="masthead-issue"><span>Übersicht</span><span class="dot">·</span><span>Heute ${fmtDate(M.generated)}</span></div>
-          <h1 class="masthead-title">Daniels Morning Briefs — Tagesüberblick</h1>`;
-        section.appendChild(masthead);
-        // Clone home tldr-grid into a print-main wrapper styled like a main.shell.
-        const main = document.createElement('main');
-        main.className = 'shell';
-        const home = $('#home-view .tldr-grid').cloneNode(true);
-        main.appendChild(home);
-        section.appendChild(main);
-      } else {
-        const cat = M.categories.find(c => c.id === value);
-        if (!cat || !cat.entries[0]) continue;
-        const url = urlFor(cat.id, cat.entries[0].date, currentLang);
-        try {
-          const html = await fetch(url, { credentials: 'omit' }).then(r => r.text());
-          const doc = new DOMParser().parseFromString(html, 'text/html');
-          const masthead = doc.querySelector('header.masthead');
-          const main = doc.querySelector('main.shell, main');
-          section = document.createElement('section');
-          section.className = 'print-newsletter cat-' + cat.id;
-          if (masthead) section.appendChild(masthead.cloneNode(true));
-          if (main)     section.appendChild(main.cloneNode(true));
-        } catch (err) {
-          console.warn('print: failed to fetch', url, err);
-          continue;
-        }
-      }
-      if (section) printRoot.appendChild(section);
-    }
-  }
 })();
 </script>
 </body>
