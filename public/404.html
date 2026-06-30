@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daniels Morning Briefs</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <noscript><meta http-equiv="refresh" content="0; url=/"></noscript>
+  <script>
+    // Cloudflare Pages serves this for any path without a matching file —
+    // notably the bare directory URLs /<category>/ and /<category>/<lang>/
+    // (which hold dated brief files but no index.html). The dashboard only
+    // works when served from "/" (it loads CSS and the brief <iframe> via
+    // paths relative to the root), so we must NEVER let it render at a deep
+    // path. Instead, translate the directory URL into a dashboard deep-link
+    // (#<category>/latest, plus the language) and redirect to the root.
+    (function () {
+      var CATS = ['economy', 'stocks-crypto', 'software', 'ai-dev', 'ai-usecases',
+                  'football', 'motorsport', 'family', 'jobs', 'learn-language'];
+      var seg = location.pathname.replace(/^\/+|\/+$/g, '').split('/');
+      var cat = seg[0], lang = seg[1];
+      if (CATS.indexOf(cat) !== -1) {
+        if (['de', 'en', 'pt', 'es'].indexOf(lang) !== -1) {
+          try { localStorage.setItem('mb-lang', lang); } catch (e) {}
+        }
+        location.replace('/#' + cat + '/latest');
+      } else {
+        location.replace('/');
+      }
+    })();
+  </script>
+</head>
+<body></body>
+</html>
