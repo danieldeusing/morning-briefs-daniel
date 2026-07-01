@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-07-01</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Edición 2026-07-01</span>
+  </div>
+  <h1 class="masthead-title">Falla RMM con CVSS 10,0 bajo ataque, Microsoft aprieta los precios hoy</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Este no fue un comienzo tranquilo de semana. Una falla de soporte remoto en SimpleHelp con una puntuación CVSS perfecta de 10,0 está siendo explotada activamente para distribuir un nuevo robo de datos que apunta específicamente a credenciales de nube y desarrollador — exactamente el tipo de acceso que abre tu stack. Mientras tanto, los aumentos de precio de Microsoft 365 entran en vigencia hoy, Europol ha desmantelado la siguiente capa de infraestructura de robadores, y el FBI advierte: los servicios de inteligencia rusos ahora están robando claves de respaldo de Signal.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>SimpleHelp CVE-2026-48558</strong>: CVSS 10,0, ~1.000 servidores RMM expuestos, explotación activa para TaskWeaver + "Djinn Stealer". Plazo CISA KEV para agencias: 2 de julio. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Microsoft 365 Precios</strong>: a partir de hoy más caros — Business Basic +16%, Business Standard +12%, Frontline F1 hasta +43%. <span class="chip">Global</span></li>
+      <li><span class="chip good">Sec</span> <strong>Operación Endgame Fase 3</strong>: 326 servidores, 142 dominios confiscados, $47 millones, 27 millones de credenciales recuperadas. <span class="chip">EU</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Alerta FBI Signal</strong>: Servicios rusos (UNC5792/UNC4221) ahora phishing de claves "Secure-Backup" — reseteo de cuenta no ayuda. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Langflow CVE-2026-33017</strong>: CVSS 9,3, RCE no autenticado vía <code>exec()</code>, explotado en 20 h, minero Monero + worm SSH. Patch: 1.9.0. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>Windows 11 KB5095093</strong>: "Point-in-time Restore" — snapshots VSS de 72 h como rollback de sistema. Rollout obligatorio 14 de julio. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Splunk & PostgreSQL</strong>: RCE Splunk 9.8 vía sidecar Postgres (KEV), más 11 CVEs PostgreSQL de mayo — relevante para tu stack. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Perspectiva de la semana</div>
+      <div class="timeline-sub">Plazos de parches, fechas efectivas de precios, rollouts obligatorios</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Mié 01/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Hoy</span>
+          <span>Aumentos de precio de Microsoft 365 entran en vigencia (5–43% por SKU)</span>
+          <span>Explotación de SimpleHelp continúa — verifica tus servidores</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Jue 02/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Plazo CISA KEV: SimpleHelp CVE-2026-48558 (agencias federales de EE.UU.)</span>
+          <span>Ventana de actualización Langflow 1.9.0 (KEV, mineros activos)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mar 14/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Patch Tuesday de julio — Windows 11 KB5095093 se vuelve rollout obligatorio</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>SimpleHelp: CVSS 10,0, ~1.000 servidores expuestos, un robo para credenciales dev</h2>
+        <p>La historia más importante del día es una falla RMM. <strong>CVE-2026-48558</strong> en <strong>SimpleHelp</strong> tiene la puntuación máxima perfecta <span class="stat">CVSS 10,0</span> y está siendo explotada activamente. La causa raíz: En login OIDC, la aplicación simplemente no verifica la firma criptográfica de los tokens de identidad — un atacante envía un token falsificado y accede sin credenciales.<sup>[1]</sup> Afectadas las versiones <strong>5.5.15 y anteriores</strong> más builds pre-lanzamiento 6.0; corregido a fines de mayo en <strong>5.5.16</strong> y <strong>6.0 RC2</strong>.<sup>[1][2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">RMM:</strong> Remote Monitoring & Management — el software que los proveedores de TI usan para acceder remotamente a cientos de máquinas de clientes. Piensa en una llave maestra que abre cada departamento de un edificio completo. Quien invade el servidor RMM se sienta directo en ese llavero — por eso las herramientas RMM son un objetivo favorito.
+        </div>
+        <p>Al momento de la divulgación, aproximadamente <span class="stat">1.000</span> servidores SimpleHelp vulnerables estaban expuestos en línea, según BleepingComputer.<sup>[3]</sup> CISA ha agregado la falla a su catálogo Known-Exploited-Vulnerabilities; las agencias federales de EE.UU. deben mitigar antes del <strong>2 de julio de 2026</strong> conforme BOD 26-04.<sup>[4]</sup></p>
+        <div class="callout warn">
+          <span class="callout-label">Atención</span> Lo que hace esto interesante no es solo la falla, sino la carga útil. A través de los servidores comprometidos llega un cargador Node.js modular llamado <strong>TaskWeaver</strong>, que identifica el dispositivo y descarga módulos JavaScript adicionales del servidor C2.<sup>[3]</sup> Instala un nuevo robo de datos, <strong>Djinn Stealer</strong>, que apunta explícitamente a credenciales de proveedor de nube, servicios de identidad, plataformas de deployment y — explícitamente — herramientas de desarrollador de IA. Los datos se exfiltran encriptados con AES-256-GCM y RSA-2048.<sup>[5]</sup> Por eso está en el Brief de Software y no en el de IA: la superficie de ataque es el gancho, no un modelo. Si tienes secretos orientados a dev en tu ambiente, eres el objetivo declarado.
+        </div>
+        <div class="footnotes"><ol>
+          <li id="s1">CVSS/causa raíz: <a href="https://www.tenable.com/cve/CVE-2026-48558">tenable.com</a> (12/06/2026)</li>
+          <li id="s2">Versiones de parche: <a href="https://www.securityweek.com/critical-simplehelp-vulnerability-exploited-for-malware-delivery/">securityweek.com</a></li>
+          <li id="s3">~1.000 servidores + TaskWeaver: <a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-critical-simplehelp-flaw-deploy-new-djinn-infostealer-taskweaver-malware/">bleepingcomputer.com</a> (30/06/2026)</li>
+          <li id="s4">Plazo KEV 02/07 (BOD 26-04): <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov</a> (Alerta 29/06/2026)</li>
+          <li id="s5">Objetivos Djinn Stealer: <a href="https://thehackernews.com/2026/06/attackers-exploit-simplehelp-cve-2026.html">thehackernews.com</a> (30/06/2026)</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Langflow: RCE no autenticado vía <code>exec()</code>, explotado en 20 horas</h2>
+        <p>Otro caso de la categoría "tooling de agentes como superficie de ataque". <strong>Langflow</strong> — el constructor visual para flujos LLM — lleva una ejecución remota de código no autenticada en <strong>CVE-2026-33017</strong> (<span class="stat">CVSS 9,3</span>). El endpoint <code>POST /api/v1/build_public_tmp/{flow_id}/flow</code> acepta código Python controlado por atacante y lo pasa sin ningún sandbox directo a <code>exec()</code> — sin credencial, un único request HTTP.<sup>[6][7]</sup></p>
+        <p>Todas las versiones <strong>hasta 1.8.2</strong> son afectadas; la corrección está en <strong>1.9.0</strong>.<sup>[6]</sup> Fue explotado dentro de <strong>20 horas</strong> de la publicación del aviso.<sup>[7]</sup> Los atacantes colocan un minero Monero (XMRig) bajo <code>/var/tmp/.xlamb/</code> y — la parte desagradable — lanzan un worm de reutilización de claves SSH que atraviesa <code>~/.ssh/known_hosts</code> y sockets de agente, propagándose vía SCP a cada host alcanzable.<sup>[8]</sup> Fuentes secundarias indican que la falla está en el catálogo CISA KEV (no pudimos verificar independientemente la fecha exacta de listado).</p>
+        <p>Recuerda: "flujo público" aquí literalmente significa <em>sin límite de autenticación</em>. Cualquiera ejecutando Langflow con acceso a la red debería ponerlo detrás de una capa de autenticación y no quedarse en la serie 1.8.x — el componente worm transforma un nodo único expuesto en un incendio a través de cadenas de confianza SSH.</p>
+        <div class="footnotes"><ol>
+          <li id="s6">Puntuación/versiones: <a href="https://thehackernews.com/2026/06/langflow-rce-exploited-to-deploy-monero.html">thehackernews.com</a></li>
+          <li id="s7">Causa raíz: <a href="https://www.sonicwall.com/blog/langflow-ai-code-injection-to-rce-flaw">sonicwall.com</a></li>
+          <li id="s8">Explotación de 20 horas: <a href="https://www.infosecurity-magazine.com/news/hackers-exploit-critical-langflow/">infosecurity-magazine.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>FBI: Servicios de inteligencia rusos ahora roban claves de respaldo de Signal</h2>
+        <p>El FBI publicó un Public Service Announcement el <strong>26 de junio</strong> (<strong>I-062626-PSA</strong>): Dos grupos de amenaza rusos, <strong>UNC5792</strong> y <strong>UNC4221</strong> — atribuidos a servicios de inteligencia rusos — están haciendo phishing específicamente de las claves de recuperación <strong>"Secure-Backup"</strong> de Signal.<sup>[9][10]</sup></p>
+        <div class="callout warn">
+          <span class="callout-label">Atención</span> El núcleo amargo: Una clave de recuperación robada permanece válida — incluso si la víctima configura una nueva cuenta Signal en el mismo número de teléfono, la clave comprometida <em>no</em> se vuelve inválida.<sup>[11]</sup> Así que el reflejo clásico "simplemente vuelve a registrarse" no funciona aquí. El programa estadounidense Rewards for Justice ha ofrecido $10 millones por pistas que lleven a los responsables.<sup>[12]</sup>
+        </div>
+        <div class="footnotes"><ol>
+          <li id="s9">ID PSA/fecha: <a href="https://www.bleepingcomputer.com/news/security/fbi-russian-hackers-now-target-signal-backup-recovery-keys/">bleepingcomputer.com</a> (26/06/2026)</li>
+          <li id="s10">Grupos de amenaza: <a href="https://www.bleepingcomputer.com/news/security/fbi-russian-hackers-now-target-signal-backup-recovery-keys/">bleepingcomputer.com</a></li>
+          <li id="s11">Reseteo no ayuda: <a href="https://www.bleepingcomputer.com/news/security/fbi-russian-hackers-now-target-signal-backup-recovery-keys/">bleepingcomputer.com</a></li>
+          <li id="s12">Recompensa de $10 millones: <a href="https://www.bleepingcomputer.com/news/security/fbi-russian-hackers-now-target-signal-backup-recovery-keys/">bleepingcomputer.com</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Microsoft 365: ahora más caro a partir de hoy — 5 a 43% por SKU</h2>
+        <p>Anunciado en diciembre, vigente hoy: A partir del <strong>1º de julio de 2026</strong>, los precios de lista de Microsoft 365 están subiendo.<sup>[13]</sup> No es un bug de software, pero es un factor de costo de infraestructura que ningún equipo puede evadir — así que aquí con números oficiales en lugar de especulación.</p>
+        <div class="pro-con" style="display:block">
+          <table style="width:100%;border-collapse:collapse;font-size:0.9em">
+            <thead><tr style="text-align:left;border-bottom:2px solid var(--rule)">
+              <th style="padding:4px 6px">SKU (por usuario/mes)</th><th style="padding:4px 6px">antiguo</th><th style="padding:4px 6px">nuevo</th><th style="padding:4px 6px">Δ</th>
+            </tr></thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--rule-soft)"><td style="padding:4px 6px">Business Basic</td><td style="padding:4px 6px">$6.00</td><td style="padding:4px 6px">$7.00</td><td style="padding:4px 6px">+16%</td></tr>
+              <tr style="border-bottom:1px solid var(--rule-soft)"><td style="padding:4px 6px">Business Standard</td><td style="padding:4px 6px">$12.50</td><td style="padding:4px 6px">$14.00</td><td style="padding:4px 6px">+12%</td></tr>
+              <tr style="border-bottom:1px solid var(--rule-soft)"><td style="padding:4px 6px">Apps</td><td style="padding:4px 6px">$12.00</td><td style="padding:4px 6px">$14.00</td><td style="padding:4px 6px">+17%</td></tr>
+              <tr style="border-bottom:1px solid var(--rule-soft)"><td style="padding:4px 6px">Office 365 E3</td><td style="padding:4px 6px">$23.00</td><td style="padding:4px 6px">$26.00</td><td style="padding:4px 6px">+13%</td></tr>
+              <tr style="border-bottom:1px solid var(--rule-soft)"><td style="padding:4px 6px">Microsoft 365 E3</td><td style="padding:4px 6px">$36.00</td><td style="padding:4px 6px">$39.00</td><td style="padding:4px 6px">+8%</td></tr>
+              <tr style="border-bottom:1px solid var(--rule-soft)"><td style="padding:4px 6px">Frontline F1</td><td style="padding:4px 6px">$2.25</td><td style="padding:4px 6px">$3.00</td><td style="padding:4px 6px">+33%</td></tr>
+              <tr><td style="padding:4px 6px">Frontline F1 (sin Teams)</td><td style="padding:4px 6px">$1.75</td><td style="padding:4px 6px">$2.50</td><td style="padding:4px 6px">+43%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Los números provienen directamente de la página de noticias de licensing de Microsoft en dólares estadounidenses.<sup>[13]</sup> Los más afectados son los planes Frontline baratos (hasta +43%), lo cual es notable para negocios con muchos trabajadores en turnos o no-administrativos.</p>
+        <div class="footnotes"><ol>
+          <li id="s13">Tabla de precios + fecha efectiva: <a href="https://www.microsoft.com/en-us/licensing/news/2026-m365-packaging-pricing-updates">microsoft.com/licensing</a> (anunciado 04/12/2025, vigente 01/07/2026)</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Operación Endgame Fase 3: Europol desmanteló la siguiente capa de robadores</h2>
+        <p>Entre el <strong>15 y 19 de junio</strong>, la tercera ola de la <strong>Operación Endgame</strong> — coordinada por Europol y Eurojust — desmanteló la infraestructura detrás de las familias de malware Amadey, StealC y SocGholish/FakeUpdates.<sup>[14]</sup> El resultado: <span class="stat">326 servidores</span> perturbados, <span class="stat">142 dominios</span> sacados de la red, aproximadamente <span class="stat">$47 millones</span> en cripto marcado como criminal y <span class="stat">27 millones</span> de credenciales robadas recuperadas de más de 385.000 sistemas comprometidos.<sup>[15][16][17]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Robo de datos:</strong> Malware cuyo único trabajo es agarrar contraseñas almacenadas, cookies, carteras cripto y tokens de una computadora infectada y enviarlos afuera. Como un carterista que solo roba llaves y desaparece silenciosamente — el acceso robado se vende en masa luego.
+        </div>
+        <p>Solo en mayo, más de 140.000 dispositivos infectados estaban vinculados a Amadey y StealC; la perturbación SocGholish — conectada a Evil Corp — limpió casi 15.000 sitios web comprometidos.<sup>[14]</sup> Los participantes incluyeron Canadá, Dinamarca, Alemania, Países Bajos, Reino Unido, EE.UU. más diez socios privados.<sup>[14]</sup></p>
+        <div class="footnotes"><ol>
+          <li id="s14">Operación, países, contexto: <a href="https://www.bleepingcomputer.com/news/security/amadey-stealc-malware-operations-disrupted-in-operation-endgame-action/">bleepingcomputer.com</a> (24/06/2026)</li>
+          <li id="s15">326/142: <a href="https://www.bleepingcomputer.com/news/security/amadey-stealc-malware-operations-disrupted-in-operation-endgame-action/">bleepingcomputer.com</a></li>
+          <li id="s16">$47 millones: <a href="https://www.bleepingcomputer.com/news/security/amadey-stealc-malware-operations-disrupted-in-operation-endgame-action/">bleepingcomputer.com</a></li>
+          <li id="s17">27 millones de credenciales: <a href="https://www.bleepingcomputer.com/news/security/amadey-stealc-malware-operations-disrupted-in-operation-endgame-action/">bleepingcomputer.com</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Windows 11 KB5095093: "Point-in-time Restore" como rollback de sistema</h2>
+        <p>Una característica sólida en lugar de una falla: Con la actualización de vista previa <strong>KB5095093</strong> (build <strong>26100.8737</strong> para 24H2, <strong>26200.8737</strong> para 25H2), lanzado el <strong>23 de junio</strong>, Microsoft introduce <strong>"Point-in-time Restore"</strong>.<sup>[18][19]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Snapshot VSS:</strong> El Volume Shadow Copy Service periódicamente congela una imagen consistente del estado del sistema — como una foto de toda tu computadora en un punto en el tiempo. Point-in-time Restore te deja saltar de vuelta a esa foto si una actualización o cambio rompe algo.
+        </div>
+        <p>En dispositivos de consumidor, los snapshots se crean automáticamente cada 24 horas y se mantienen máximo <strong>72 horas</strong> (Enterprise puede establecer intervalos de 4/6/12/16/24 horas); el sistema necesita al menos <span class="stat">200 GB</span> de almacenamiento.<sup>[19][20]</sup> La vista previa está en vivo ahora; se vuelve <strong>obligatoria</strong> con el Patch Tuesday de julio el <strong>14 de julio</strong>.<sup>[20]</sup></p>
+        <div class="footnotes"><ol>
+          <li id="s18">Números de build: <a href="https://www.bleepingcomputer.com/news/microsoft/windows-11-kb5095093-update-rolls-out-new-point-in-time-restore-feature/">bleepingcomputer.com</a> (23/06/2026)</li>
+          <li id="s19">Retención de snapshot: <a href="https://www.bleepingcomputer.com/news/microsoft/windows-11-kb5095093-update-rolls-out-new-point-in-time-restore-feature/">bleepingcomputer.com</a></li>
+          <li id="s20">200 GB + 14/07: <a href="https://windowsnews.ai/article/windows-11-july-2026-patch-tuesday-update-delivers-point-in-time-restore-and-screen-tint.430935">windowsnews.ai</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Bases de datos & Infraestructura: RCE Splunk y resumen de parches PostgreSQL</h2>
+        <p><strong>Splunk Enterprise</strong> tiene una RCE no autenticada en <strong>CVE-2026-20253</strong> (<span class="stat">CVSS 9,8</span>) vía endpoint de archivo sidecar PostgreSQL. Afectadas las ramas <strong>10.0.0–10.0.6</strong> y <strong>10.2.0–10.2.3</strong>; corregido en <strong>10.0.7</strong> y <strong>10.2.4</strong>.<sup>[21]</sup> La falla está en el catálogo CISA KEV — el plazo de agencia (ya pasado) fue <strong>21 de junio</strong>, mencionado aquí para contexto porque ataques activos comenzaron poco después de la divulgación.<sup>[22]</sup></p>
+        <div class="callout info">
+          <span class="callout-label">Para tu stack</span> Más antiguo pero directamente relevante: El <strong>14 de mayo</strong>, PostgreSQL envió un resumen de parches a través de todas las ramas (18.4, 17.10, 16.14, 15.18, 14.23) con <strong>11 CVEs</strong>.<sup>[23]</sup> Dos se destacan con CVSS 8,8: <strong>CVE-2026-6637</strong> — un buffer overflow de stack en <code>refint</code> que deja a un usuario con privilegios bajos ejecutar código como el usuario OS de la base de datos — y <strong>CVE-2026-6475</strong>, una falla de symlink-following en <code>pg_basebackup</code>/<code>pg_rewind</code> que deja a un superusuario de origen sobrescribir archivos locales como <code>.bashrc</code>.<sup>[24][25]</sup> Si aún estás en una versión menor debajo de estos, planifica la actualización.
+        </div>
+        <div class="footnotes"><ol>
+          <li id="s21">Versiones Splunk: <a href="https://advisory.splunk.com/advisories/SVD-2026-0603">advisory.splunk.com</a> (10/06/2026)</li>
+          <li id="s22">Plazo KEV Splunk 21/06: <a href="https://www.securityweek.com/splunk-enterprise-vulnerability-exploited-in-attacks-days-after-disclosure/">securityweek.com</a> (18/06/2026)</li>
+          <li id="s23">11 CVEs / versiones: <a href="https://www.heise.de/en/news/PostgreSQL-Updates-patch-high-risk-security-vulnerabilities-11297673.html">heise.de</a> (14/05/2026)</li>
+          <li id="s24">CVE-2026-6637: <a href="https://www.heise.de/en/news/PostgreSQL-Updates-patch-high-risk-security-vulnerabilities-11297673.html">heise.de</a></li>
+          <li id="s25">CVE-2026-6475: <a href="https://www.heise.de/en/news/PostgreSQL-Updates-patch-high-risk-security-vulnerabilities-11297673.html">heise.de</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>El patrón detrás del día: Las credenciales son el premio</h2>
+        <p>Tres de las historias de hoy — SimpleHelp/Djinn, Operación Endgame y la advertencia Signal — cuentan la misma historia desde tres ángulos: el valor real ya no está en cifrar archivos, sino en drenar silenciosamente credenciales de acceso. Djinn ataca tokens de nube y dev, Endgame recuperó 27 millones de credenciales robadas, e incluso el ataque Signal quiere una clave, no texto plano.</p>
+        <p>Para un desarrollador, hablando prácticamente: El punto de ataque más valioso en tu máquina es la carpeta con tus tokens — <code>~/.aws</code>, <code>~/.ssh</code>, tu login Docker, el <code>.env</code> en tu proyecto, tu token CLI de nube en caché. Tokens de corta vida, claves de hardware en lugar de contraseñas, y un ojo atento en conexiones incomunes de RMM o tooling cuestan poco y le quitan todo valor a esta categoría de premio.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es miércoles, primero de julio. Este no fue un comienzo tranquilo de semana — el día está dominado por problemas de seguridad, y una de las mayores palancas de costo de la industria está siendo tirada hoy.</p>
+  <p>La historia de portada es una falla en SimpleHelp, software de soporte remoto. Tiene la puntuación máxima, diez punto cero, porque el programa simplemente no verifica la firma de los tokens de login. Alrededor de mil servidores vulnerables estaban expuestos en línea en el momento de la divulgación, y los atacantes ya están explotándolo. Están inyectando un nuevo ladrón de datos que específicamente ataca credenciales de nube y desarrollador. Las agencias federales estadounidenses tienen hasta el dos de julio para arreglarlo.</p>
+  <p>Mientras tanto, Microsoft está apretando el tornillo de precios hoy. Los precios de lista de Microsoft 365 están subiendo de cinco a cuarenta y tres por ciento, dependiendo del plan. Business Basic va a subir dieciséis por ciento, los paquetes Frontline baratos incluso hasta cuarenta y tres por ciento. Esto no es un error — es un factor de costo que cada equipo necesita presupuestar.</p>
+  <p>De Europa viene una buena noticia. En la tercera ola de la Operación Endgame, Europol y Eurojust han incautado trescientos veintiséis servidores y ciento cuarenta y dos dominios, congelado cuarenta y siete millones de dólares en criptografía como producto criminal, y recuperado veintisiete millones de credenciales robadas.</p>
+  <p>El FBI también advierte: Los servicios de inteligencia rusos ahora están robando las claves de respaldo de Signal. La parte complicada — incluso si alguien vuelve a registrar su cuenta en el mismo número de teléfono, una clave robada no se vuelve inválida de esa forma.</p>
+  <p>También hay dos casos para desarrolladores: Langflow, un constructor para flujos de IA, tenía una falla crítica que fue explotada en veinte horas, completa con un worm que se propaga a través de claves SSH. Y Windows once está recibiendo una nueva característica de retroceso con la actualización de julio que guarda el estado del sistema como una instantánea.</p>
+  <p>Mañana, el enfoque probablemente volverá a los plazos de parches — especialmente el plazo SimpleHelp el dos de julio y el Patch Tuesday el catorce. Hasta entonces: verifica tus servidores, revisa tus versiones de Postgres.</p>
+</div>
+
+</body>
+</html>
