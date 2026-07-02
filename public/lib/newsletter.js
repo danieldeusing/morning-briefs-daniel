@@ -945,13 +945,13 @@
      ────────────────────────────────────────────────────────────────── */
   const JOBS_UI = {
     de: { prev: 'Zurück', next: 'Weiter', page: 'Seite', of: 'von',
-          count: 'Einträge', fit: 'Match', why: '— Begründung' },
+          count: 'Einträge', fit: 'Match', why: '— Begründung', nodate: 'Datum nicht angegeben' },
     en: { prev: 'Prev', next: 'Next', page: 'Page', of: 'of',
-          count: 'listings', fit: 'Fit', why: '— why' },
+          count: 'listings', fit: 'Fit', why: '— why', nodate: 'Date not provided' },
     pt: { prev: 'Anterior', next: 'Próximo', page: 'Página', of: 'de',
-          count: 'vagas', fit: 'Match', why: '— motivo' },
+          count: 'vagas', fit: 'Match', why: '— motivo', nodate: 'Data não fornecida' },
     es: { prev: 'Anterior', next: 'Siguiente', page: 'Página', of: 'de',
-          count: 'vacantes', fit: 'Match', why: '— motivo' },
+          count: 'vacantes', fit: 'Match', why: '— motivo', nodate: 'Fecha no proporcionada' },
   };
   function jui(key) { return (JOBS_UI[pageLang()] || JOBS_UI.de)[key]; }
 
@@ -1042,6 +1042,11 @@
         const d = document.createElement('span');
         d.className = 'job-date';
         d.textContent = job.date_posted;
+        main.appendChild(d);
+      } else {
+        const d = document.createElement('span');
+        d.className = 'job-date job-date-missing';
+        d.textContent = jui('nodate');
         main.appendChild(d);
       }
 
