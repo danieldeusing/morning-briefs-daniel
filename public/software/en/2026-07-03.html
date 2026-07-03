@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-07-03</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-07-03</span>
+  </div>
+  <h1 class="masthead-title">CISA adds SharePoint hole to KEV list—the one Microsoft called harmless</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">A summer Friday when the supply chain and patch calendar steal the headlines. CISA is forcing US federal agencies to patch SharePoint by tomorrow—for a bug Microsoft itself flagged in May as "unlikely to be exploited." Two fresh libssh2 holes remain patched in master only, with no official release yet. A self-propagating npm worm is eating through `binding.gyp`. And curl is closing the bounty door for a month because the intake has become unmanageable.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">USA</span> <strong>SharePoint RCE on KEV list</strong>: CVE-2026-45659 (CVSS 8.8) under active exploitation—federal agencies must patch by 07-04. Microsoft had downgraded this to "Less Likely" in May.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">OSS</span> <strong>libssh2 pre-auth RCE</strong>: CVE-2026-55200 (CVSS 9.2) affects all versions ≤ 1.11.1, public PoC available—fix only in master, no tagged release yet.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">OSS</span> <strong>npm worm "Miasma"</strong>: 57 packages, hundreds of malicious versions, self-propagates via `binding.gyp` on `npm install`. Hardest hit: `@vapi-ai/server-sdk` (~86,500 downloads/week).</li>
+      <li><span class="chip">Sec</span> <span class="chip">Global</span> <strong>M365 password spray</strong>: 81 million login attempts in two weeks, 78 accounts compromised across 64 organizations—via ROPC flow that bypasses interactive MFA.</li>
+      <li><span class="chip">Browser</span> <span class="chip">Global</span> <strong>Chrome 150</strong>: 382 security fixes, 15 rated Critical—none exploited in the wild so far.</li>
+      <li><span class="chip good">OSS</span> <span class="chip">Global</span> <strong>curl shuts bounty door</strong>: HackerOne intake pauses all of July; report rate 4–5× above 2024. curl 8.22.0 shifts to 2026-09-02.</li>
+      <li><span class="chip">Release</span> <span class="chip">Web</span> <strong>Angular 22.0.5</strong> ships (plus 22.1.0-next.4)—routine patch on 6-month cadence, no action needed.</li>
+      <li><span class="chip">Regulation</span> <span class="chip">EU</span> <strong>CRA countdown</strong>: the Cyber Resilience Act disclosure duty kicks in on 2026-09-11—time to set up incident reporting now.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Patch deadlines, releases, and what's on the calendar</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Fri 07-03</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>curl bounty pause ongoing (since 07-01)</span>
+          <span>libssh2 PoC public, no release</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Sat 07-04</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CISA deadline for SharePoint CVE-2026-45659 (BOD 26-04)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun 07-05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet day expected</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 07-06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Week starts—keep eye on libssh2 release</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 07-07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Angular patch cycle (next 22.0.x possible)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 07-08</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Next Chrome stable cycle in sight</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu 07-09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>No fixed deadline</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>SharePoint RCE: CISA overrides Microsoft's risk call <span class="h2-refs">[1]</span></h2>
+        <p>Today's story is less about the hole than the contradiction behind it. CISA has added <strong>CVE-2026-45659</strong>, a remote code execution in on-premises SharePoint (insecure deserialization), to its KEV catalog after confirming active exploitation. Affected: SharePoint Server Subscription Edition, 2019, and Enterprise 2016. The kicker: when Microsoft patched the bug in May, it downrated real-world exploitation as <em>"Less Likely"</em>—CISA has now reversed that call.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">KEV catalog:</strong> The Known Exploited Vulnerabilities list from US authorities (CISA) is like a wanted poster for security holes that attackers are already using in the real world. If a bug is on it, it's not theoretical anymore—someone is exploiting it today. For US federal agencies, patching becomes mandatory with a deadline.
+        </div>
+        <p>What makes the hole especially nasty is the low bar: according to The Register, <strong>any account with "Site Member" permissions</strong> plus valid credentials is enough to run arbitrary code—no admin needed.<sup>[1]</sup> Under Binding Operational Directive 26-04, agencies must patch by <strong>2026-07-04</strong>. For anyone running on-premises SharePoint, that's the signal to finally apply the May patch—not because I'm raising an alarm, but because it's being exploited in the wild.</p>
+        <p class="src src-date">As of 2026-07-02 · <span class="src"><a href="https://www.theregister.com/security/2026/07/02/microsoft-said-exploitation-was-less-likely-but-cisa-just-added-sharepoint-rce-to-kev-list/5265886">theregister.com</a></span></p>
+        <div class="footnotes"><ol><li id="fn1"><a href="https://www.theregister.com/security/2026/07/02/microsoft-said-exploitation-was-less-likely-but-cisa-just-added-sharepoint-rce-to-kev-list/5265886">The Register — CISA adds SharePoint RCE to KEV list (2026-07-02)</a></li></ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>libssh2: two pre-auth holes, one PoC, no release <span class="h2-refs">[2][3]</span></h2>
+        <p>libssh2 sits as an SSH client library in countless tools and language bindings—anywhere a program connects over SSH without invoking the OpenSSH client directly. Two newly disclosed bugs hit <strong>all versions ≤ 1.11.1</strong>, and both fire <em>before</em> authentication.</p>
+        <ul>
+          <li><strong>CVE-2026-55200</strong> (CVSS 9.2)—Out-of-bounds write in <code>transport.c</code>. A malicious SSH <em>server</em> can inject code into a client. The critical detail: a public proof-of-concept is already circulating.<sup>[2]</sup></li>
+          <li><strong>CVE-2026-55199</strong> (CVSS 8.2)—Out-of-bounds read plus infinite loop in the <code>SSH_MSG_EXT_INFO</code> handler (<code>packet.c</code>), making it a pre-auth denial-of-service via CPU exhaustion.<sup>[3]</sup></li>
+        </ul>
+        <div class="callout warn">
+          <span class="callout-label">Heads up</span> The fixes are merged to master (commits 7acf3df / 1762685), but there's <strong>no tagged official release yet</strong>. If you have libssh2 vendored or pull it via distro packages, there's nothing finished to deploy right now—if you connect outbound to untrusted SSH servers (CI runners, scrapers, deploy tools), keep the master fixes on your radar.
+        </div>
+        <p>A sourcing note of our own: the 9.2 for CVE-2026-55200 comes from the official GitHub Advisory database; the 8.2 for the DoS bug is currently only secondhand-sourced (Hacker News snippet, cross-checked against the sibling entry)—so read that number with a caveat until the official CVE entry catches up.</p>
+        <div class="footnotes"><ol>
+          <li id="fn2"><a href="https://github.com/advisories/GHSA-r8mh-x5qv-7gg2">GitHub Advisory — GHSA-r8mh-x5qv-7gg2 (CVE-2026-55200, 2026-06-17)</a></li>
+          <li id="fn3"><a href="https://thehackernews.com/2026/06/public-poc-released-for-critical.html">The Hacker News — Public PoC for critical libssh2 flaw (June 2026)</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Chrome 150: 382 fixes, 15 of them Critical <span class="h2-refs">[6]</span></h2>
+        <p>Google shipped another massive update with Chrome 150: <strong>382 security fixes</strong>, of which <strong>15 are rated Critical</strong>—mostly use-after-free bugs, including a sandbox escape path via the Dawn graphics library. Versions: 150.0.7871.46/.47 (Win/Mac), .46 (Linux), .63 (Android). The upside: according to Google, <strong>none</strong> of the patched bugs are exploited in the wild so far.<sup>[6]</sup></p>
+        <p>No reason to panic, but the sheer volume of use-after-frees shows where browser fuzzing pipelines are now focused. Chrome updates quietly in the background—a restart picks up the fix.</p>
+        <p class="src src-date">As of 2026-07-01 · <span class="src"><a href="https://www.malwarebytes.com/blog/bugs/2026/07/chrome-needs-another-whopper-update-to-fix-382-security-fixes">malwarebytes.com</a></span></p>
+        <div class="footnotes"><ol><li id="fn6"><a href="https://www.malwarebytes.com/blog/bugs/2026/07/chrome-needs-another-whopper-update-to-fix-382-security-fixes">Malwarebytes — Chrome 382-fix update (2026-07-01)</a></li></ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>npm worm "Miasma": self-propagating via binding.gyp <span class="h2-refs">[4]</span></h2>
+        <p>The week's most interesting software-engineering incident is a supply-chain worm in the Shai-Hulud line. It has infected <strong>57 npm packages</strong> in hundreds of malicious versions—and unlike the usual suspects, it doesn't spread <strong>via</strong> lifecycle scripts but through the <code>binding.gyp</code> file that node-gyp processes when compiling native modules.<sup>[4]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">binding.gyp / node-gyp:</strong> Some npm packages contain native C/C++ code that must be compiled during installation. node-gyp is the build tool, and <code>binding.gyp</code> is its recipe. Imagine ordering furniture and the assembly instructions themselves run a command when you open the box—that's where the worm hooks in.
+        </div>
+        <p>The mechanism is textbook vicious: node-gyp's command expansion runs code during `npm install`, the worm lists all packages by the maintainer via registry.npmjs.org, downloads each target, injects its own <code>binding.gyp</code> plus <code>index.js</code>, and republishes. Biggest victims by reach: <strong>@vapi-ai/server-sdk</strong> (~86,500 downloads/week) and <strong>ai-sdk-ollama</strong> (~36,900/week).<sup>[4]</sup></p>
+        <div class="callout info">
+          <span class="callout-label">Context</span> That AI SDK packages rank among the biggest targets is no accident—the agent and tooling layer around AI is a fast-growing, often freshly-maintained attack surface. But the root problem remains software—install-time code execution—not the model behind it. Practical hardening: `--ignore-scripts` doesn't cut it here <em>because</em> the vector is node-gyp command expansion, not a lifecycle hook. Pin lockfiles, scrutinize new major bumps in native packages.
+        </div>
+        <p class="src src-date">Incident 2026-06-01–03 · <span class="src"><a href="https://snyk.io/blog/node-gyp-supply-chain-compromise-self-propagating-npm-worm-binding-gyp/">snyk.io</a></span></p>
+        <div class="footnotes"><ol><li id="fn4"><a href="https://snyk.io/blog/node-gyp-supply-chain-compromise-self-propagating-npm-worm-binding-gyp/">Snyk — node-gyp self-propagating npm worm (2026-06-04)</a></li></ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>M365 password spray: 81 million attempts, MFA bypassed <span class="h2-refs">[5]</span></h2>
+        <p>Huntress documented an aggressive password-spray campaign against Microsoft 365 environments: <strong>over 81 million login attempts</strong> between June 12 and 26, 2026 (peak on the 22nd), with <strong>78 compromised accounts across 64 organizations</strong> at the end.<sup>[5]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Password spraying:</strong> Instead of hammering one account with many passwords (which triggers lockouts), the attacker tries <em>one</em> common password against many accounts—like a burglar testing a master key on every door on the street instead of trying all keys on one door.
+        </div>
+        <p>The real pain lies in the mechanism: attackers used the <strong>ROPC OAuth flow</strong>, which sends the password directly to the <code>/token</code> endpoint—<em>without</em> an interactive MFA prompt. Even if Conditional Access requires MFA, the second factor doesn't trigger on this flow. Countermeasures: block ROPC entirely via Conditional Access policy, disable legacy auth.<sup>[5]</sup></p>
+        <p class="src src-date">As of 2026-07-01 (Huntress) · <span class="src"><a href="https://www.bleepingcomputer.com/news/security/hackers-target-microsoft-365-accounts-with-81-million-login-attempts/">bleepingcomputer.com</a></span></p>
+        <div class="footnotes"><ol><li id="fn5"><a href="https://www.bleepingcomputer.com/news/security/hackers-target-microsoft-365-accounts-with-81-million-login-attempts/">BleepingComputer — M365 81M login attempts (2026-07-01)</a></li></ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>curl shuts the bounty door for a month <span class="h2-refs">[7]</span></h2>
+        <p>Daniel Stenberg is pausing curl's HackerOne report form for all of July—<strong>2026-07-01 00:00 CEST through 2026-08-03 09:00 CEST</strong>, dubbed "summer of bliss" in the blog post. Reason: plain overload. The rate of incoming security reports is currently <strong>4–5× above 2024</strong> and double 2025, averaging more than one report per day.<sup>[7]</sup></p>
+        <p>That's remarkably honest for a core infrastructure project: better to close the door and work through the real cases carefully than drown in noise (much of it questionable "AI-slop" reports). Collateral damage: <strong>curl 8.22.0</strong> is sliding to <strong>2026-09-02</strong>. No security issue—just a release waiting its turn.</p>
+        <p class="src src-date">As of 2026-06-15 · <span class="src"><a href="https://daniel.haxx.se/blog/">daniel.haxx.se</a></span></p>
+        <div class="footnotes"><ol><li id="fn7"><a href="https://daniel.haxx.se/blog/">Daniel Stenberg — "Summer of bliss" (2026-06-15)</a></li></ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Angular 22.0.5—routine, no fires</h2>
+        <p>On 2026-07-01, <strong>Angular 22.0.5</strong> (patch) and <strong>22.1.0-next.4</strong> (pre-release) landed—planned rhythm on the 6-month major cadence, nothing security-critical. For Angular projects: an `ng update` candidate when convenient, no rush.</p>
+        <p class="src"><a href="https://github.com/angular/angular/releases">github.com/angular/angular</a></p>
+      </section>
+
+      <section class="news-item">
+        <h2>Standing thread: CRA disclosure duty looms</h2>
+        <p>A heads-up, even though it falls outside the 7-day window: the EU Cyber Resilience Act activates its <strong>disclosure duty for vulnerabilities and incidents on 2026-09-11</strong>—the actual product security requirements don't kick in until 2027-12-11. Meaning: if you bring software to market in the EU, you'll need to disclose actively exploited holes to ENISA/CSIRT within tight timeframes starting in September. For small teams (Daniel-size) this is the moment to think through your incident reporting chain before you have to improvise under time pressure.<sup>[8]</sup></p>
+        <p class="src src-date">As of June 2026 · <span class="src"><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">digital-strategy.ec.europa.eu</a></span></p>
+        <div class="footnotes"><ol><li id="fn8"><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">EU Commission — CRA Reporting (as of June 2026)</a></li></ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>BR Tech: no non-AI item today</h2>
+        <p>Honesty flag: the Brazilian tech scene had no non-AI software/engineering story in this brief's remit for today—the hits (Nubank hybrid-work policy, a 45B-real 2026 investment) are consumer/HR topics without dev substance. No point padding; tomorrow opens fresh.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Friday, July third. Not a day of major releases, but one of supply chains and patch deadlines—and one where Microsoft gets a lesson in risk assessment.</p>
+  <p>The main story: US authorities have added a SharePoint hole to their wanted list that Microsoft downgraded to unlikely back in May. It's now under active attack. The score is eight point eight, and according to The Register, any regular member account is enough to run code. Federal agencies must patch by tomorrow. If you run on-premises SharePoint, now's the time to apply that May patch.</p>
+  <p>Nearly as pressing is libssh2, the small SSH library that lives in countless tools. Two fresh holes hit all versions through one point one one point one, both before login. The critical one, scoring nine point two, lets a malicious server inject code into a client—and a public proof of concept is already out there. The fixes are in master, but no official release yet.</p>
+  <p>From the supply chain: a worm called Miasma. It's infected fifty-seven npm packages and replicates itself—not through the usual lifecycle scripts, but through the binding-point-gyp file that runs when compiling native modules. Like assembly instructions that execute a command just opening the box. Snyk says the hardest hit was the top AI SDK, with over eighty-six thousand downloads a week.</p>
+  <p>Then a password spray against Microsoft 365: over eighty-one million login tries in two weeks, seventy-eight accounts taken. According to Huntress, the attackers bypassed two-factor verification through an old OAuth flow that sends passwords straight to the token endpoint, no interactive prompt.</p>
+  <p>Then two quieter pieces. Chrome one-fifty has fixed three hundred eighty-two security issues, fifteen of them critical, none exploited so far. And curl is shutting its bug bounty door for the whole month because reports are coming in four to five times faster than twenty twenty-four—release eight point two two point zero is sliding to September second.</p>
+  <p>Tomorrow the SharePoint deadline expires—first look is whether libssh2 finally gets a tagged release and whether SharePoint attacks spread wider. Until then.</p>
+</div>
+
+</body>
+</html>
