@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-07-04</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-07-04</span>
+  </div>
+  <h1 class="masthead-title">ColdFusion 10.0: A perfect hole, exploited in hours</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">One weekend, three emergency patches, and a KEV deadline that expires today: Adobe, Citrix, and Microsoft closed one actively exploited hole each within 96 hours. The thread isn't the individual bug, but the speed — with ColdFusion, the window between "public" and "under attack in the field" wasn't hours, but literal hours. If you run one of these three boxes on the net, today isn't a newsletter day—it's a patch day.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>ColdFusion CVSS 10.0</strong>: Adobe emergency bulletin APSB26-68 closes CVE-2026-48282 (Path-Traversal → arbitrary write) — exploited within hours of disclosure.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>Citrix "CitrixBleed" redux</strong>: CVE-2026-8451 (CVSS 8.8) leaks NetScaler memory via SAML IdP — patch on 06/30, exploits &lt;24 h later.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">USA</span> <strong>SharePoint in CISA KEV</strong>: CVE-2026-45659 (RCE, 8.8) — the FCEB agency deadline runs out <em>today</em> (07/04).</li>
+      <li><span class="chip good">OSS</span> <span class="chip">Global</span> <strong>npm v12 arrives in July</strong>: Install scripts, Git deps, and remote tarballs are off by default going forward — direct answer to supply-chain worms.</li>
+      <li><span class="chip">Infra</span> <span class="chip">Global</span> <strong>Let's Encrypt ends <code>tlsclient</code></strong>: the ACME profile sunsets on 07/08, because Chrome forces client and server auth into separate PKIs.</li>
+      <li><span class="chip good">Release</span> <span class="chip">Web</span> <strong>Angular 22.0.5</strong> (07/01) — patch on the June major; nothing dramatic, but the current line.</li>
+      <li><span class="chip">Regulation</span> <span class="chip">EU</span> <strong>CRA moves closer</strong>: as of 09/11, reporting mandates kick in (24 h / 72 h / 14 days) — background, not a week marker.</li>
+      <li><span class="chip">OSS</span> <span class="chip">DE</span> <span class="chip">BR</span> <strong>Quiet day regionally</strong>: no fresh SAP/DE-OSS or BR-tech news — today the security wave carries the brief.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">Deadlines and patch windows due this week</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Sat 07/04</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>CISA KEV deadline: SharePoint CVE-2026-45659 for FCEB agencies to patch</span>
+          <span>ColdFusion / NetScaler already under active attack — patch weekend</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun 07/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet — afterwork on emergency patches</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 07/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Prepare npm v12 transition (test warnings starting with 11.16.0)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 07/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Wed 07/08</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Let's Encrypt sunsets the <code>tlsclient</code> ACME profile</span>
+          <span>Shift mTLS setups to private CA — final deadline</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu 07/09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 07/10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>npm v12 expected in July window (no fixed date)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>An emergency weekend: three actively exploited holes</h2>
+        <p>Adobe, Citrix, and Microsoft each closed a flaw between June 30 and today in products that sit at the center of many corporate networks — and all three were already <em>under attack</em> before most admins even saw the patch. That's the real point of today: not the number of CVEs, but the window between disclosure and exploit, now measured in hours. I'll walk through all three — what it is, who's affected, and what to do without getting lost in ops details.</p>
+      </section>
+
+      <section class="news-item">
+        <h3>Adobe ColdFusion — CVSS 10.0, the maximum <span class="h2-refs">[1][2][3]</span></h3>
+        <p>On 06/30, Adobe published the emergency bulletin <strong>APSB26-68</strong> — Priority Rating 1, the top tier — closing eleven flaws.<sup>[1]</sup> The most severe is <strong>CVE-2026-48282</strong>, a Path-Traversal (CWE-22) that leads to arbitrary file write and thus code execution. The CVSS score: <span class="stat">10.0</span> — the theoretical maximum, almost never seen.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Path-Traversal:</strong> Picture a doorman who's only allowed to fetch files from a specific room. A path-traversal is the trick of handing him a note saying "fetch me the file two doors over, then down three flights" — he faithfully follows the directions right out of the allowed room. With CVE-2026-48282, the attacker lands outside the web directory and gets to write there — and whoever can write can execute code.
+        </div>
+        <p>Affected are <strong>ColdFusion 2025 (Update 9 and older)</strong> and <strong>ColdFusion 2023 (Update 20 and older)</strong>; fixes are in Update 10 and Update 21 respectively.<sup>[3]</sup> And this is where it gets serious: The hole came <em>within hours</em> of disclosure under active exploit, one observed attempt traced to an IP in India.<sup>[3]</sup> ColdFusion has been a recurring CISA-KEV theme in prior years — anyone still running it knows the pattern. If a ColdFusion instance is reachable from the internet, the patch window is effectively closed.</p>
+        <div class="callout warn">
+          <span class="callout-label">Heads up</span> CVSS 10.0 means: no user account needed, no interaction, remote, full impact. Publicly reachable 2025/2023 installs need Update 10 / 21 immediately — and if in doubt, check whether anything's already been written.
+        </div>
+        <div class="footnotes"><ol>
+          <li id="fn1">Adobe APSB26-68 / The Hacker News — <a href="https://thehackernews.com/2026/07/adobe-patches-7-cvss-100-flaws-in.html">thehackernews.com</a></li>
+          <li id="fn2">BleepingComputer — <a href="https://www.bleepingcomputer.com/news/security/adobe-patches-seven-max-severity-coldfusion-campaign-flaws/">bleepingcomputer.com</a></li>
+          <li id="fn3">Cyber Press — <a href="https://cyberpress.org/adobe-coldfusion-critical-flaws/">cyberpress.org</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h3>Citrix NetScaler — "CitrixBleed," round three <span class="h2-refs">[4][5][6]</span></h3>
+        <p>On 06/30, Citrix closed six bugs in NetScaler ADC/Gateway, including <strong>CVE-2026-8451</strong> (CVSS <span class="stat">8.8</span>): insufficient input validation leading to a <em>memory overread</em> when the appliance is configured as a SAML Identity Provider.<sup>[4]</sup> An unauthenticated attacker can thus read fragments of the appliance's memory — same class as the notorious "CitrixBleed" hole.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Memory Overread:</strong> Like reading aloud from a note without stopping at the end of the sentence, just keeping going with whatever happens to be lying nearby on the table — notes that aren't yours. Here a custom-built XML/SAML parser doesn't stop at a null byte, a `&gt;`, or a matching quote; it doesn't stop at spaces or newlines either.<sup>[6]</sup> So it "keeps reading" into adjacent memory — which might hold session tokens, credentials, or other secrets.
+        </div>
+        <p>Vulnerable are <strong>14.1 before 14.1-72.61</strong> and <strong>13.1 before 13.1-63.18</strong> (plus corresponding FIPS/NDcPP builds).<sup>[5]</sup> The pace is troubling here too: Security firm Lupovis reported active exploitation <em>less than 24 hours</em> after release.<sup>[4]</sup> NetScaler boxes typically sit at the network edge as VPN/gateway gatekeepers — exactly the place where a memory leak hurts most.</p>
+        <div class="footnotes"><ol start="4">
+          <li id="fn4">CyberScoop / The Hacker News — <a href="https://cyberscoop.com/citrix-netscaler-flaw-cve-2026-8451-citrixbleed/">cyberscoop.com</a></li>
+          <li id="fn5">SOCRadar — <a href="https://socradar.io/blog/cve-2026-8451-netscaler-overread-citrixbleed/">socradar.io</a></li>
+          <li id="fn6">eSecurity Planet / watchTowr Labs — <a href="https://www.esecurityplanet.com/threats/cve-2026-8451-citrix-netscaler-vulnerability-leaks-memory/">esecurityplanet.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h3>SharePoint — KEV deadline expires today <span class="h2-refs">[7]</span></h3>
+        <p>The US Cyber Agency CISA has added <strong>CVE-2026-45659</strong> — an RCE hole in Microsoft SharePoint Server, CVSS <span class="stat">8.8</span>, arising from <em>deserialization of untrusted data</em> — to its Known-Exploited-Vulnerabilities catalog (KEV). For US federal agencies (FCEB), the patch deadline is <strong>07/04/2026 — today</strong>.<sup>[7]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">CISA KEV:</strong> A wanted list maintained by the US Cyber Agency for holes that are <em>demonstrably</em> being exploited in the wild. Being added is the signal "this is no longer theory, it's happening now" — and it sets agencies a hard patch deadline. For everyone else, the KEV is the best free prioritization list out there.
+        </div>
+        <p>Deserialization in short: the program takes stored data and reconstructs live objects from it; if that data is tampered with and awakened unchecked, it can hold malicious code — a recurring pattern in SharePoint. Anyone running SharePoint on-prem should be aware of this deadline, agency mandate or not.</p>
+        <div class="callout info">
+          <span class="callout-label">Source note</span> The CISA KEV page itself was unreachable today on direct fetch (HTTP 403). The KEV listing and the 07/04 deadline are thus cross-checked via trade press and carried as reported — not confirmed from primary source.
+        </div>
+        <div class="footnotes"><ol start="7">
+          <li id="fn7">The Hacker News — <a href="https://thehackernews.com/2026/07/sharepoint-rce-cve-2026-45659-added-to.html">thehackernews.com</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>npm v12: Supply chain gets locked down by default <span class="h2-refs">[8][9]</span></h2>
+        <p>The biggest OSS move of the week isn't a CVE, it's a principle shift: <strong>npm v12</strong> — per GitHub announcement of 06/09, planned for July 2026 — turns off three risky defaults.<sup>[8]</sup> <code>npm install</code> will no longer run <strong>install scripts</strong> (preinstall/install/postinstall) from dependencies, no longer resolve <strong>Git dependencies</strong>, and no longer fetch <strong>remote-URL tarballs</strong> (e.g., https packages) — each only with explicit permission (<code>--allow-git</code>, <code>--allow-remote</code>, or a project allowlist).<sup>[9]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Install-script attack:</strong> Many npm packages are allowed to run a small script automatically during install — meant e.g. for compilation. It's also the doorway: a malicious (or hijacked) package can let arbitrary code run during a bare <code>npm install</code>, before you've used a single line. Like new furniture that walks through your house on unpacking. npm v12 locks that door — it only opens if you explicitly turn the key.
+        </div>
+        <p>This is the direct, overdue response to the wave of self-replicating supply-chain worms in recent months. Good to know: the changes are <strong>already testable today</strong> — behind warnings in npm 11.16.0, so build pipelines can be tested before the jump.<sup>[8]</sup></p>
+        <div class="callout info">
+          <span class="callout-label">The catch</span> Security researchers point out that v12 does <em>not</em> solve the bigger problem: takeover of a maintainer account. If a legitimate account is compromised, malicious code ships as a regularly signed release — then script-blocking doesn't help, because the package is "trusted." Hardening installation ≠ hardening identity.<sup>[10]</sup>
+        </div>
+        <div class="footnotes"><ol start="8">
+          <li id="fn8">DevOps.com — <a href="https://devops.com/npm-v12-is-coming-in-july-heres-what-developers-need-to-do-now/">devops.com</a></li>
+          <li id="fn9">GitHub Changelog (06/09/2026) — <a href="https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/">github.blog</a></li>
+          <li id="fn10">Cybernews — <a href="https://cybernews.com/security/npm-security-overhaul-adress-supply-chain-attacks/">cybernews.com</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Let's Encrypt ends <code>tlsclient</code> — Chrome splits the PKI <span class="h2-refs">[11]</span></h2>
+        <p>On <strong>07/08</strong>, Let's Encrypt sunsets its <code>tlsclient</code> ACME profile — the profile used to issue certificates for <em>client</em> authentication (mTLS). The reason isn't a flaw at Let's Encrypt, but a mandate from Chrome's Root Program: Google requires by June 2026 that TLS client and server auth be split into <em>separate</em> PKIs.<sup>[11]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">mTLS &amp; separate PKIs:</strong> In standard HTTPS, only the server proves itself. In mTLS, the <em>client</em> also shows an ID — useful for service-to-service traffic. Until now, the same certificate "authority" (PKI) could issue both types of ID. Chrome wants them split, so a problem in one world doesn't poison the other — like separate ID-issuing authorities for a passport and a work badge. Upshot: for mTLS, you'll need your own private CA instead of Let's Encrypt going forward.
+        </div>
+        <p>In practice: if you've used Let's Encrypt for mTLS client certs, you need to switch to a private CA by 07/08 — for plain server certs (regular HTTPS), nothing changes. For most setups this is a sideshow, for zero-trust / service-mesh architectures it's a real migration point.</p>
+        <p>One more thing, same thread: Let's Encrypt is shortening certificate lifetimes. The <code>tlsserver</code> profile has been able to optionally issue 45-day certs since 05/13; the classic default profile moves to 64 days by 02/10/2027 and to 45 days by 02/16/2028.<sup>[12]</sup> Anyone still renewing by hand should move to automation now.</p>
+        <div class="footnotes"><ol start="11">
+          <li id="fn11">Let's Encrypt — <a href="https://letsencrypt.org/2025/05/14/ending-tls-client-authentication">letsencrypt.org</a></li>
+          <li id="fn12">Neowin — <a href="https://www.neowin.net/news/lets-encrypt-launches-generation-y-shortens-cert-lifetimes-to-45-days/">neowin.net</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Frontend: Angular 22.0.5 <span class="h2-refs">[13]</span></h2>
+        <p>On the framework front it's quiet, but the current line is worth noting: <strong>Angular 22.0.5</strong> shipped on 07/01, alongside prerelease 22.1.0-next.4. Angular 22 as a major came out in June 2026 and is now the current line.<sup>[13]</sup> Nothing dramatic — patch maintenance on the fresh major. If you're on 22, upgrading to .0.5 is safe; if you're still on 21, there's no rush for the major jump.</p>
+        <div class="footnotes"><ol start="13">
+          <li id="fn13">endoflife.date / angular.dev — <a href="https://endoflife.date/angular">endoflife.date</a></li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PostgreSQL: security thread in the rearview <span class="h2-refs">[14]</span></h2>
+        <p>Not today's story, but relevant to your stack DNA and still in the refresh window for many teams: the PostgreSQL security releases from <strong>05/14/2026</strong> (18.4 / 17.10 / 16.14 / 15.18 / 14.23) closed <span class="stat">eleven</span> CVEs, several at CVSS 8.8 — including symlink-following in <code>pg_basebackup</code>/<code>pg_rewind</code> (CVE-2026-6475), a stack overwrite in the libpq <code>lo_*</code> functions (CVE-2026-6477), and a stack overflow plus SQL injection in the <code>refint</code> module (CVE-2026-6637).<sup>[14]</sup> If you haven't touched your Postgres minor since May, catch it up — the fixes are pure minor-version, no rebuild.</p>
+        <p>On the roadmap, PostgreSQL 19 is taking shape; beta is underway, GA is expected late summer/fall — concrete dates deliberately omitted here because today they're only from search-engine snippets, not checked against the official roadmap. Once postgresql.org announces a fixed date, it goes in the outlook.</p>
+        <div class="footnotes"><ol start="14">
+          <li id="fn14">PostgreSQL.org (05/14/2026) — <a href="https://www.postgresql.org/about/news/postgresql-184-1710-1614-1518-and-1423-released-3297/">postgresql.org</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Standing thread — EU: CRA reporting mandates approach <span class="h2-refs">[15]</span></h2>
+        <p>The Cyber Resilience Act (CRA) isn't a deadline this week, but it's on every networked-product maker's radar: Starting <strong>09/11/2026</strong>, mandatory reporting kicks in for flaws and incidents via a central platform — first report within <span class="stat">24 h</span>, follow-up within 72 h, final report no later than 14 days after the security patch.<sup>[15]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Cyber Resilience Act (CRA):</strong> An EU law that mandates "security by design" for everything with digital elements — from smart door locks to a library in an app. The part coming into force now: if an exploited hole becomes known, you must report it to authorities, and fast. Like a reporting requirement for certain diseases — except you're reporting software flaws. If you ship into the EU, start practicing the 24-hour reflex now, not on 09/11.
+        </div>
+        <p>For solo devs and small DE teams: prepare a lean reporting workflow before the first incident starts the clock. The combination this week — holes exploited in hours — plus a 24-hour reporting mandate from September makes clear where we're headed.</p>
+        <div class="footnotes"><ol start="15">
+          <li id="fn15">EU Commission / Digital Strategy — <a href="https://digital-strategy.ec.europa.eu/en/factpages/cyber-resilience-act-implementation">digital-strategy.ec.europa.eu</a></li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief: AI coding &amp; applied AI — today's elsewhere</h2>
+        <p>To avoid duplication: the big AI stories of the day are the domain of the neighboring briefs. The new coding model <strong>Claude Sonnet 5</strong>, the GitLab report on "AI productivity paradox," and Claude Code's top ranking against Copilot/Cursor are covered in detail in the <strong>ai-dev brief</strong>. The gated release of <strong>GPT-5.6</strong>, the White House AI standards framework, and the UN AI commission are in the <strong>ai-usecases brief</strong>. Just a pointer here — the software brief stays focused on non-AI IT.</p>
+      </section>
+
+      <section class="news-item">
+        <h2>Regional quiet — and that's honest</h2>
+        <p>No fresh SAP, Zalando, Bosch, or other DE-OSS news in the last 24–48 hours, and nothing dated for today from Brazil (Nubank, Mercado Livre, StackSpot). Rather than invent a story, I'll be straight: today the global security wave carries the brief, the DE/BR axis is simply quiet. Tomorrow back to full coverage of Europe and Brazil.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Saturday, July fourth. And it's not a quiet Saturday — it's an emergency weekend. Adobe, Citrix, and Microsoft each closed a critical hole in four days, and all three were already under attack before most admins even saw the patch. The thread today isn't the count of bugs, but the speed with which they're exploited.</p>
+  <p>The heaviest blow is Adobe ColdFusion. Adobe's emergency bulletin closes a hole with a CVSS score of ten point zero — the absolute maximum, almost never seen. An attacker can write arbitrary files from a distance without an account and execute code. And the troubling part: according to Cyber Press, the hole came under active exploit within hours of disclosure. Anyone with a ColdFusion instance reachable from the internet must patch today — Update ten for the twenty twenty-five version, Update twenty-one for twenty twenty-three.</p>
+  <p>The second case is Citrix NetScaler, and it's essentially another round of the notorious CitrixBleed hole. A custom-built parser reads too far into memory and leaks fragments that might hold session tokens or login credentials — if the appliance runs as a SAML Identity Provider. Citrix patched on June thirtieth, and according to CyberScoop, the security firm Lupovis saw active attacks less than twenty-four hours later.</p>
+  <p>The third case is Microsoft SharePoint. The U.S. Cyber Agency CISA added it to its wanted list of actively exploited holes, and for U.S. federal agencies the patch deadline is exactly today. Small note: the CISA page itself was unreachable today, so I'm carrying this as reported through trade press — not confirmed from the primary source.</p>
+  <p>Away from the holes, some good news. The Node package manager npm gets its twelfth major version in July, and it switches off three risky defaults: install scripts, Git dependencies, and packages from remote addresses only run going forward if you explicitly allow them. That's the overdue response to supply-chain worms in recent months. One catch remains, as Cybernews points out: takeover of a maintainer account doesn't solve this — no amount of script-blocking helps.</p>
+  <p>For anyone using mutual TLS authentication: Let's Encrypt sunsets its client-cert profile on July eighth, because Chrome demands client and server credentials split into separate certificate authorities. Anyone who used that for service-to-service traffic will need their own private certificate authority from now on. Regular HTTPS doesn't change.</p>
+  <p>A quick note on the fine print: Angular shipped version twenty-two point zero point five on July first, pure patch maintenance. PostgreSQL closed eleven security holes in May — if you haven't refreshed your database since then, catch up. And the European Cyber Resilience Act gets closer: starting September eleventh, reporting requirements take effect with a twenty-four-hour window.</p>
+  <p>The big AI stories of the day — the new Claude Sonnet five model and the gated release of GPT five point six — are in the neighboring briefs ai-dev and ai-usecases; this one stays on non-AI software. Regionally it was quiet today, from Germany and from Brazil alike.</p>
+  <p>For next week's briefing I'm watching whether the three emergency holes trigger more KEV entries or follow-up patches, and whether PostgreSQL names a fixed date for version nineteen. Until then: patch those three boxes if one of them's in your network.</p>
+</div>
+
+</body>
+</html>
