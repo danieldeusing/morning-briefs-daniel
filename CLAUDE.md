@@ -71,7 +71,7 @@ ids override the agent's frontmatter default).
 |---|---|---|---|
 | Research | `brief-researcher` | `claude-sonnet-4-6` | `/tmp/brief-research-<cat>-<date>.md` dossier (sourced facts) |
 | Write **DE** | `brief-writer` | `claude-opus-4-8` (complex: economy, stocks-crypto, jobs) / `claude-opus-4-7` (medium: rest) | `public/<cat>/de/<date>.html` + `/tmp/brief-sources-<cat>-<date>.md` |
-| Translate **EN/PT/ES** | `brief-translator` | `haiku` | `public/<cat>/{en,pt,es}/<date>.html` |
+| Translate **EN/PT/ES** | `brief-translator` | `claude-sonnet-4-6` | `public/<cat>/{en,pt,es}/<date>.html` |
 | Verify | `brief-fact-checker` | `claude-sonnet-4-6` | structured report → fix loop (cap 2 rounds) |
 | Pre-research (jobs only) | `jobs-aggregator` | `claude-sonnet-4-6` | listings JSON (orchestrator calls it; subagents can't nest) |
 | Dashboard | `tools/build_manifest.py --verify` | — | rewrites `window.__MANIFESTS` in `index.html` |

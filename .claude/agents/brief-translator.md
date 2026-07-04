@@ -2,7 +2,7 @@
 name: brief-translator
 description: Translate the canonical German (de) Morning Brief file for one category+date into EN, PT-BR and es-MX, preserving all HTML structure verbatim. Given the de file path, writes public/<cat>/{en,pt,es}/<date>.html. Pure translation — does no research, invents no numbers, changes no data blocks. Use as the translation phase of the consolidated morning-brief routine, after the writer finishes the de file.
 tools: [Read, Write, Grep, Glob, Bash]
-model: haiku
+model: sonnet
 permissionMode: dontAsk
 maxTurns: 40
 ---
