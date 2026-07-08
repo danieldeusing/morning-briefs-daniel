@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-07-08</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software &amp; IT</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-07-08</span>
+  </div>
+  <h1 class="masthead-title">A No-Warning PoC Dump Leaves Two Critical Flaws Wide Open</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">In late June, someone ignored the industry's rulebook: an anonymous researcher going by the handle "bikini" published working exploit prototypes for Docker, Gitea, libssh2, PHP, and Firefox — without notifying a single vendor beforehand. Two of the findings are severe, and one still has no fixed version today. In parallel, the kernel closed a flaw that had sat in the code since August 2010 and lets guests escape their VM onto the host. No alarm mode — but a good day to ask: who's allowed to start CI workflows at your org?</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">OSS</span> <strong>"Exploitarium"</strong>: anonymous PoC dump covering ~22 OSS projects with no vendor warning, June 27 – July 1. The count varies between outlets — what's solid is the fact of it, not the number.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Infra</span> <strong>Gitea act_runner</strong>: CVE-2026-58053, NVD score <strong>9.9 critical</strong>. Anyone allowed to run a workflow on a Docker runner lands on the host as root. NVD lists <em>no</em> fixed version.</li>
+      <li><span class="chip">Sec</span> <span class="chip">OSS</span> <strong>libssh2</strong>: CVE-2026-55200 — fix exists only as upstream commit <code>7acf3df</code>, still no tagged release (latest remains 1.11.1). A <strong>client-side flaw</strong> — the malicious SSH <em>server</em> is the one attacking you. Score divergence: 9.2 (CVSS 4.0) vs. 8.3 (NVD, CVSS 3.1).</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Infra</span> <strong>"Januscape"</strong>: CVE-2026-53359, a 16-year-old use-after-free in KVM's shadow MMU. Guest-to-host escape on Intel <em>and</em> AMD. Fixed in the kernel since July 4 — don't forget companion CVE-2026-46113.</li>
+      <li><span class="chip">Sec</span> <span class="chip">USA</span> <strong>CISA KEV</strong>: SharePoint RCE CVE-2026-45659 on July 1, three more on July 7 — including Langflow CVE-2026-55255 (8.4 per NVD vs. 9.9 per secondary trackers).</li>
+      <li><span class="chip good">OSS</span> <span class="chip">Global</span> <strong>npm v12</strong>: <code>postinstall</code> off by default, Git and remote URLs now opt-in only. The late but correct answer to eleven weeks of supply-chain poisoning.</li>
+      <li><span class="chip">Regulation</span> <span class="chip">EU</span> <strong>European Commission</strong>: "Action Plan on Cybersecurity and AI" unveiled yesterday — built on the AI Act, CRA, NIS2. Lots of structure, no deadlines.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>Confidential Computing</strong>: researchers break the location guarantee of attested TLS. A fix inside the handshake may be impossible.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Patch work up front, Patch Tuesday at the back</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Wed 07/08</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Check the kernel against the July 4 Januscape fixes — both patches</span>
+          <span>libssh2: roll out distro-patched builds — no upstream release (also hits curl, Git, PHP)</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu 07/09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Upgrade Gitea to 1.26.4 (auth bypass) — and clarify who's allowed to start workflows on Docker runners while act_runner stays unfixed</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 07/10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>KEV check: Langflow to 1.9.1, verify the SharePoint out-of-band patch</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 07/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Check CI logs for npm 11.16 warnings — they show what breaks under v12</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun 07/12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Rest day</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 07/13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Catch up on distro backports: Debian/Ubuntu/RHEL are lagging behind upstream stables</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue 07/14</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Microsoft Patch Tuesday (second Tuesday) — first regular SharePoint update since the KEV listing</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>"Exploitarium": a dump that breaks the rules of the game <span class="h2-refs">[1][2]</span></h2>
+        <p>Between <strong>June 27 and July 1, 2026</strong>, an anonymous researcher going by the handle <em>"bikini"</em> filled a public repository with working proof-of-concept exploits — for Docker, Gitea, libssh2, PHP, Firefox, OpenVPN, 7-Zip, VLC, and Ghidra.<sup>[1]</sup> No vendor was notified beforehand: no embargo, no deadline, no patch window.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Coordinated disclosure:</strong> Someone who finds a flaw normally tells the vendor first, typically giving them 90 days. It's like discovering your neighbor's lock is broken — you knock on their door instead of putting it in the city paper. Exploitarium skipped the knock.
+        </div>
+        <p>What's notable is that no one can pin down a clean number: heise described "just under two dozen" projects on July 1,<sup>[1]</sup> while byteiota counts <strong>130+ PoCs across 22 projects</strong>.<sup>[2]</sup> The repo kept growing while the articles were being written. There's no reliable "as of today" total — anyone who quotes one has simply picked their favorite.</p>
+        <p>My take: in the short term, the dump hurts defenders more than it helps attackers. The more interesting structural lesson is that the more serious finding sits in a <em>tooling layer</em> almost no one inventories as attack surface — the CI runner.</p>
+        <div class="footnotes"><ol>
+          <li id="s1"><a href="https://www.heise.de/en/news/Exploitarium-Anonymous-security-researcher-publishes-two-dozen-zero-days-11350105.html">heise.de — Exploitarium (Jul 1, 2026)</a></li>
+          <li id="s2"><a href="https://byteiota.com/exploitarium-130-0-days-dropped-two-are-critical-now/">byteiota.com — Exploitarium dump (Jun 28, 2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>libssh2 CVE-2026-55200 — and why "9.2" and "8.3" are both correct <span class="h2-refs">[3][4]</span></h2>
+        <p><code>ssh2_transport_read()</code> was missing an upper bound on <code>packet_length</code>. Per NVD, it's an out-of-bounds write, affecting <strong>all versions through 1.11.1</strong>, fixed with commit <code>7acf3df</code> — which as of today (2026-07-08) has landed in <strong>no tagged release</strong>; the newest upstream tag remains 1.11.1, and distributions ship patched 1.11.1 builds.<sup>[3][4]</sup></p>
+        <div class="callout warn">
+          <span class="callout-label">Score divergence</span> NVD itself carries <strong>both</strong> scores: <strong>9.2 (critical)</strong> and <strong>8.3 (high)</strong>. Not a contradiction, but a standard difference: 9.2 is a <strong>CVSS 4.0</strong> score, 8.3 a <strong>CVSS 3.1</strong> score.<sup>[3]</sup> If you prioritize by threshold, know which scale your scanner speaks.
+        </div>
+        <p>More important than the score is the vector. NVD's 3.1 vector ends in <code>UI:R</code>. So this is a <strong>client-side flaw</strong>: it's not your SSH server being attacked, but <em>your</em> curl, <em>your</em> Git, <em>your</em> PHP — the moment it connects to a server an attacker controls.<sup>[3]</sup> No credentials are needed: the corruption happens while reading the transport packet, before any authentication.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Transitive dependency:</strong> You never installed libssh2, and yet it's in your house. curl uses it for SCP/SFTP, Git for <code>git clone ssh://…</code>, PHP for <code>ssh2_*</code>. Like sugar in a jarred sauce: not on the front of the label, but in there. The question isn't "do I use libssh2?" but "what in my image links libssh2?".
+        </div>
+        <p>The uncomfortable consequence: outbound SSH connections are attack surface. A CI job that clones from a compromised remote is enough.<sup>[4]</sup> Check with <code>ldd $(which curl)</code>, then rebuild base images.</p>
+        <div class="footnotes"><ol>
+          <li id="s3"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-55200">nvd.nist.gov — CVE-2026-55200 (modified Jul 1, 2026)</a></li>
+          <li id="s4"><a href="https://byteiota.com/cve-2026-55200-libssh2-rce-curl-git-php/">byteiota.com — libssh2 RCE, curl/Git/PHP (Jun 30, 2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Gitea: 9.9 in the runner, header spoof in the server <span class="h2-refs">[5][2]</span></h2>
+        <h3>act_runner CVE-2026-58053 — no fixed version</h3>
+        <p>The most severe finding in the dump. NVD assigns <strong>9.9 (critical)</strong>, vector <code>CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H</code>.<sup>[5]</sup> Gitea's <code>act_runner</code>, with the Docker backend, passes a workflow's <code>container.options</code> string straight through to the job container's HostConfig. If it says <code>privileged: false</code>, only the privileged flag gets switched off — <code>--pid=host</code>, <code>--cap-add</code>, or <code>--security-opt</code> travel along unchanged.<sup>[5]</sup> Anyone allowed to run a workflow gets host namespaces and far-reaching capabilities this way.</p>
+        <div class="callout warn">
+          <span class="callout-label">No fix in sight</span> Affected is <code>act</code> through <strong>0.262.0</strong> inclusive; NVD lists (as of Jul 8) <strong>no fixed version</strong>.<sup>[5]</sup> Mitigation is organizational, not technical: who's allowed to start workflows on your Docker-backed runners? For self-hosted runners on public repos, the answer is often "anyone with a pull request".
+        </div>
+        <h3>CVE-2026-20896 — auth bypass, but fixed</h3>
+        <p>Separately, a confirmed authentication bypass: any source IP could gain full admin rights via the HTTP header <code>X-WEBAUTH-USER: admin</code>.<sup>[2]</sup> One header, no password. Fixed in <strong>Gitea 1.26.3 / 1.26.4</strong> — unlike the runner issue, there's actually an update here.</p>
+        <div class="footnotes"><ol>
+          <li id="s5"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-58053">nvd.nist.gov — CVE-2026-58053 (modified Jun 30, 2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Docker <code>cp</code>: reported, unconfirmed, no comment <span class="h2-refs">[2]</span></h2>
+        <p>The same dump includes a PoC against <code>docker cp</code>, validated against Docker CLI/Engine <strong>29.6.0</strong> (API 1.55), PoC dated June 23.<sup>[2]</sup> Described deliberately in broad strokes: a process inside the container can race a host-side copy operation over target-path resolution, so that a path controlled by the container ends up outside the requested destination.</p>
+        <p>Two honest caveats: <strong>there's no CVE</strong>, and Docker Inc. had not commented as of research time. This is a <em>disclosed PoC</em>, not a vendor-confirmed vulnerability with a severity rating — anyone who runs <code>docker cp</code> automated against containers populated by others should keep it in mind.</p>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>"Januscape": a 16-year-old VM escape <span class="h2-refs">[6][7]</span></h2>
+        <p>CVE-2026-53359 is a use-after-free in KVM's shadow paging. Per NVD: when a shadow page is freed after a memslot is deleted, an rmap entry survives, and later memory accesses dereference a freed page.<sup>[6]</sup> The vulnerable code traces back to a kernel commit from <strong>August 1, 2010</strong>.<sup>[7]</sup> Because it sits in the shared x86 shadow MMU, it hits <strong>Intel and AMD equally</strong>.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Guest-to-host escape:</strong> A VM is a guest in the hypervisor's house and is never supposed to leave its room. An "escape" is when the guest walks through the wall into the living room and finds the keys to every other room there. For cloud neighbors, that wall is the entire security model.
+        </div>
+        <div class="callout warn">
+          <span class="callout-label">Score pending</span> There's <strong>no consolidated CVSS</strong>: NVD lists (as of Jul 8) no score of its own,<sup>[6]</sup> Red Hat's advisory gives a base of <strong>7</strong>, secondary trackers list <strong>7.8 (CVSS 3.0)</strong>.<sup>[7]</sup> All three figures circulate in parallel. For prioritization, what matters anyway is whether you run other people's code in VMs on your hardware.
+        </div>
+        <p>Where <code>/dev/kvm</code> is world-writable — RHEL, for instance — reporting says an unprivileged local user is enough to get root on the host.<sup>[7]</sup> That elevates the flaw from a "cloud-provider problem" to a "multi-user machine problem".</p>
+        <p>Fixed on <strong>July 4, 2026</strong> in the stable series <strong>7.1.3, 6.18.38, 6.12.95, 6.6.144, and 6.1.177</strong>.<sup>[7]</sup> <strong>Important caveat (as of 2026-07-08):</strong> NVD lists <em>no</em> fix for the 5.15.x and 5.10.x series — if you run 5.x, check with your distributor whether the backport landed rather than assuming you're patched. The related <strong>CVE-2026-46113</strong> (KVM shadow-paging UAF, same file) affects series <em>below</em> the July stables; no reachable primary source claims the two patches are strictly coupled.</p>
+        <div class="footnotes"><ol>
+          <li id="s6"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-53359">nvd.nist.gov — CVE-2026-53359 (Jul 4, 2026, unscored)</a></li>
+          <li id="s7"><a href="https://www.bleepingcomputer.com/news/linux/new-januscape-linux-kernel-flaw-allows-vm-escape-on-intel-amd-devices/">bleepingcomputer.com — Januscape VM escape (Jul 4, 2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>CISA KEV: four adds in one week <span class="h2-refs">[8][9]</span></h2>
+        <p>KEV is the catalog of vulnerabilities for which CISA has <em>evidence of active exploitation</em> — not a risk forecast, but "this is happening right now". On <strong>July 1</strong>, the SharePoint Server RCE <strong>CVE-2026-45659</strong> was added (CVSS 8.8, deserialization of untrusted data, patched via an out-of-band update in late May); the deadline for US federal agencies expired on July 4.<sup>[8]</sup> On <strong>July 7</strong>, <strong>CVE-2026-48908</strong> (JoomShaper SP Page Builder, unrestricted file upload), <strong>CVE-2026-55255</strong> (Langflow, authorization bypass), and <strong>CVE-2026-56290</strong> (Joomlack Page Builder, improper access control) followed.<sup>[8]</sup></p>
+        <div class="callout info">
+          <span class="callout-label">Sourcing note</span> cisa.gov and thehackernews.com returned HTTP 403 on every direct fetch attempt. The KEV figures come from the indexed text of the CISA alert page plus confirmation via NVD — <strong>not</strong> from a directly loaded cisa.gov document. CVE IDs and Langflow details are checked against NVD; the KEV-add data is not.
+        </div>
+        <p>Langflow deserves a second look. NVD describes an IDOR vulnerability in the <code>/api/v1/responses</code> endpoint: any <em>authenticated</em> user can execute someone else's flow by writing that flow's ID into the request. Fixed in <strong>Langflow 1.9.1</strong> per the GitHub advisory; NVD's CPE data lists <code>&lt;1.9.2</code> as affected.<sup>[9]</sup> And another score divergence: the GitHub CNA (mirrored on NVD) lists <strong>8.4 (high)</strong>, vector <code>CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:H/A:L</code>; secondary trackers report the same CVE as <strong>9.9 (critical)</strong>.<sup>[9]</sup> I'm citing both — the difference is visibly in <code>AC:H</code> and <code>A:L</code> (Scope is <code>S:C</code> in both).</p>
+        <div class="footnotes"><ol>
+          <li id="s8"><a href="https://www.cisa.gov/news-events/alerts/2026/07/07/cisa-adds-three-known-exploited-vulnerabilities-catalog">cisa.gov — Three KEV additions (Jul 7, 2026; fetch returned 403)</a></li>
+          <li id="s9"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-55255">nvd.nist.gov — CVE-2026-55255, Langflow (Jul 8, 2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Docker Compose 5.3.1 — and what was in 5.3.0 <span class="h2-refs">[10]</span></h2>
+        <p>Compose <strong>5.3.1</strong> came out yesterday and is a pure maintenance release (CI and dependency bumps).<sup>[10]</sup> The actual feature landed five days earlier: <strong>5.3.0</strong> from July 2 brings <strong>native init containers</strong>.<sup>[10]</sup></p>
+        <p>Familiar from Kubernetes, previously only faked in Compose via <code>depends_on</code> contortions: an init container <em>runs to completion</em> before the service starts — migrations, waiting on Postgres, volume permissions. Anyone who baked <code>wait-for-it.sh</code> into their entrypoint can now express that declaratively. With the reconciliation engine from 5.2.0,<sup>[10]</sup> Compose is moving toward "little Kubernetes for one machine".</p>
+        <div class="footnotes"><ol>
+          <li id="s10"><a href="https://github.com/docker/compose/releases">github.com/docker/compose — Releases (5.3.1, Jul 7, 2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Citrix XenServer 9 wants Broadcom refugees <span class="h2-refs">[11]</span></h2>
+        <p>Released July 1, positioned as a cheaper alternative for anyone reassessing their virtualization strategy after VMware's price hikes under Broadcom.<sup>[11]</sup> Citrix phrases it more diplomatically, but means exactly that. Anyone reading about hypervisors this week will think of Januscape — XenServer runs on Xen rather than KVM, but the lesson applies across platforms: the wall between guest and host is thinner than the marketing suggests.</p>
+        <div class="footnotes"><ol>
+          <li id="s11"><a href="https://www.theregister.com/virtualization/2026/07/01/citrix-says-its-back-as-a-mainstream-server-virtualization-player-that-wont-send-scary-bills/5264838">theregister.com — Citrix XenServer 9 (Jul 1, 2026)</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>npm v12: install scripts finally off <span class="h2-refs">[12]</span></h2>
+        <p>The three breaking changes from GitHub's changelog of June 9:<sup>[12]</sup> <code>allowScripts</code> is <strong>off</strong> by default — <code>npm install</code> no longer runs <code>preinstall</code>, <code>install</code>, and <code>postinstall</code> of dependencies. <code>--allow-git</code> and <code>--allow-remote</code> default to <strong>none</strong>: Git or remote-URL dependencies must be explicitly allowed.</p>
+        <div class="eli5">
+          <strong class="eli5-term">postinstall script:</strong> A package is allowed to run an arbitrary command on your machine while installing — meant for "compile the native extension". Like a furniture box that starts walking around your apartment the moment you open it. Almost every npm supply-chain worm rides on this: installing means executing code, not just downloading it.
+        </div>
+        <p>The trigger is obvious. Per reports, the Mastra AI incident happened around June 17 — a stolen maintainer account, <strong>140+ packages in the <code>@mastra</code> scope</strong> republished with a malicious dependency, attributed by Microsoft's threat intel to the Sapphire Sleet group (BlueNoroff/APT38); the sixth notable npm poisoning in eleven weeks, preceded by Bitwarden CLI, SAP CAP, TanStack, and AntV. The attribution and count come from secondary reporting — context, not proof.</p>
+        <p>v12 is slated for <strong>July 2026</strong>, not out yet as of today.<sup>[12]</sup> npm 11.16.0 and newer already warn about the spots that will break — a look at the CI logs on Saturday tells you what's going to cost you in August. My opinion: this should have arrived in 2018. That it took state actors to flip a default is the real story.</p>
+        <div class="footnotes"><ol>
+          <li id="s12"><a href="https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/">github.blog — Breaking changes for npm v12 (Jun 9, 2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Jamf AI Governance: endpoint policy for AI tools <span class="h2-refs">[13]</span></h2>
+        <p>Generally available since <strong>June 30</strong>: an OS-level visibility and policy layer for AI usage across Mac fleets. It detects AI tools, agents, and LLM runtimes on the device ("shadow AI discovery"), lets you set policy on them, and logs for audits; initially covering Claude Code, Claude Desktop, and OpenAI Codex.<sup>[13]</sup> Jamf says it manages over 35 million devices across 78,000+ organizations.<sup>[13]</sup></p>
+        <p>Why this runs here and not in the ai-dev brief: the hook is endpoint management, not the model. From an IT standpoint, a coding agent with shell access is a process with network and filesystem rights — and until recently, it appeared in no inventory at all. Jamf cites Gartner on AI governance spend of <strong>$492 million in 2026</strong> and over <strong>$1 billion by 2030</strong>; organizations with deep AI integration reported an incident <strong>40% more often</strong>.<sup>[13]</sup> Both figures come from the Jamf press release, not from a Gartner report we reviewed directly.</p>
+        <div class="footnotes"><ol>
+          <li id="s13"><a href="https://www.jamf.com/resources/press-releases/jamf-launches-ai-governance-a-first-of-its-kind-native-ai-control-plane-for-mac/">jamf.com — Jamf AI Governance GA (Jun 30, 2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>EU: Action Plan on Cybersecurity &amp; AI <span class="h2-refs">[14]</span></h2>
+        <p>Yesterday, <strong>July 7</strong>, the Commission unveiled its "Action Plan on Cybersecurity and Artificial Intelligence." It explicitly builds on existing law: the AI Act, the Cyber Resilience Act, the NIS2 directive, and the Cyber Solidarity Act.<sup>[14]</sup> In substance, it covers an EU-owned AI evaluation capacity and a secure testing platform together with ENISA.</p>
+        <p>What's <em>not</em> in it: concrete implementation deadlines — notable, since the plan explicitly refers to the CRA, whose reporting obligations become mandatory in September 2026. An action plan without a date is a statement of intent. For anyone shipping software into the EU, the CRA deadline remains the date that counts.</p>
+        <div class="footnotes"><ol>
+          <li id="s14"><a href="https://commission.europa.eu/news-and-media/news/new-eu-plan-address-risks-and-opportunities-advanced-ai-cybersecurity-2026-07-07_en">commission.europa.eu — Action plan (Jul 7, 2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Confidential Computing: the location guarantee is gone <span class="h2-refs">[15]</span></h2>
+        <p>Research published on July 4 describes a "diversion attack" against attested TLS: a connection meant for a specific server can be silently redirected to a different, compromised machine running identical software — without the client noticing.<sup>[15]</sup> Affected: Meta's WhatsApp Private Processing, Edgeless Systems Contrast, and Cocos AI (v0.4.0–0.8.2), plus a PoC from the CCC Attestation SIG.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Remote attestation:</strong> Before you hand a stranger's server your secrets, its CPU shows you a signed photo: "Exactly this code is running, in this encrypted enclave." Like a photo ID — it's genuine, the code checks out, it just doesn't say <em>which</em> person is holding it up.
+        </div>
+        <p>The researchers' recommendation is uncomfortable: drop attestation <em>inside</em> the handshake, switch to post-handshake attestation; a complete fix within today's model may not be possible at all.<sup>[15]</sup> Not an operations issue, but a procurement one: anyone being sold "Confidential Computing" as a compliance argument should ask <em>when</em> attestation actually happens.</p>
+        <div class="footnotes"><ol>
+          <li id="s15"><a href="https://www.theregister.com/security/2026/07/04/confidential-computings-core-trust-mechanism-is-broken-the-fix-may-not-exist/5266056">theregister.com — Confidential computing broken (Jul 4, 2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Microsoft loses used-license dispute <span class="h2-refs">[16]</span></h2>
+        <p>The UK Court of Appeal yesterday rejected Microsoft's appeal against a ruling that allows ValueLicensing to resell used on-prem licenses; the claim puts damages at <strong>£270 million</strong>.<sup>[16]</sup> At its core, this is the old question of whether a vendor can dry up the secondary market for perpetual licenses to push customers into subscriptions. For European IT buyers, it's a real bargaining position.</p>
+        <div class="footnotes"><ol>
+          <li id="s16"><a href="https://www.theregister.com/software/2026/07/07/court-tosses-microsofts-appeal-in-pre-owned-software-licenses-battle/5267742">theregister.com — Microsoft loses appeal (Jul 7, 2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Briefly noted</h2>
+        <p><strong>OpenJDK CPU on July 21.</strong> The next Critical Patch Update falls on the third Tuesday of July — no version numbers yet, so it's deliberately <em>not</em> in the 7-day track above.</p>
+        <p><strong>What shipped recently</strong> (outside this news window): Angular 22 stable on June 3, React 19.2.7 on June 1, Node.js 26.0.0 on May 5, Spring Boot 4.1.0 on June 10.</p>
+        <p><strong>AI launches belong elsewhere.</strong> GPT-5.6 (Sol/Terra/Luna) and the new Claude Fable 5 pricing are model news — <em>details in the ai-dev brief</em>. Microsoft's "Frontier Company," HP × OpenAI, and Profound Aim are in the ai-usecases brief.</p>
+        <p><strong>Brazil: nothing today.</strong> The pass through tecnoblog, baguete, and similar outlets turned up no BR-dev or BR-OSS story — just Nubank business figures, which belong in the economy brief. An honest gap beats filler.</p>
+      </article>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Wednesday, July 8th, and today's news is overshadowed by something that happened at the end of June: an anonymous researcher going by the handle bikini simply dropped a whole collection of working exploit prototypes onto the internet. For Docker, for Gitea, for libssh2, for PHP, for Firefox. Without telling a single vendor beforehand.</p>
+  <p>That breaks a rule the industry has lived by for decades. Normally you tell the vendor and give them around ninety days. Here, there was no knock on the door. And nobody can say for sure exactly how many exploits we're talking about. heise wrote on July first about just under two dozen projects; byteiota counts a hundred and thirty prototypes across twenty-two projects. The repository kept growing while the articles were being written. There's no solid overall number.</p>
+  <p>Two of the findings are genuinely serious. The worse one sits in Gitea, specifically in act_runner — the thing that runs your continuous integration jobs. The American vulnerability database NVD rates it nine point nine out of ten. Anyone allowed to start a workflow on a Docker-backed runner can ride it straight to root on the host, even with privileged mode turned off. And the uncomfortable part: there's still no fixed version. The only real countermeasure is organizational — you have to ask who's actually allowed to start workflows at your shop. For self-hosted runners on public repos, the answer is often: anyone who opens a pull request.</p>
+  <p>The second finding involves libssh2, a small library almost nobody installs on purpose and yet almost everybody has in the house. curl uses it, Git uses it, PHP uses it. Here's a detail that gets lost in a lot of the coverage: this is a client-side flaw. It's not your SSH server under attack, it's your Git, the moment it connects to a server an attacker controls. A CI job that clones from a compromised remote is enough. That's fixed in version one-point-twelve-point-zero.</p>
+  <p>One more thing about libssh2, because it explains the confusion you'll see in ticketing systems. NVD itself carries both severities: nine point two and eight point three. That's not a contradiction — nine point two is calculated under the newer CVSS version four standard, eight point three under version three point one. If you prioritize by threshold, you need to know which scale your scanner is speaking.</p>
+  <p>The second big story is a kernel bug called Januscape. The vulnerable code traces back to a commit from August first, two thousand ten. Sixteen years. It sits in KVM's memory management — the virtualization layer in the Linux kernel — in a part shared by Intel and AMD alike. A guest can break out of its virtual machine and land on the host. On distributions like Red Hat Enterprise Linux, reports say even an unprivileged local user is enough to get root that way.</p>
+  <p>The stable kernels were fixed on July fourth. Important detail: NVD lists no fix for the five point fifteen and five point ten series. If you still run those, ask your distributor rather than assuming you are patched. Alongside the actual escape fix, you need the companion carrying the identifier CVE twenty twenty-six, forty-six thousand one hundred thirteen. If you only backport one of them, you're not done. And there's no consolidated severity score here either: NVD hasn't rated it at all yet, Red Hat calls it a seven, secondary trackers say seven point eight.</p>
+  <p>There's good news out of the supply-chain world. npm version twelve turns off install scripts by default. A package can no longer just run arbitrary code on your machine the moment you install it. Dependencies pointing at Git or arbitrary remote addresses will also need explicit permission going forward. It's the late but correct answer to one supply-chain poisoning after another over eleven weeks. My take is blunt: this should have happened back in 2018. That it took state-backed attackers to flip a default setting is the real story here.</p>
+  <p>Quickly through the rest. Docker Compose five-point-three finally brings native init containers — steps that run cleanly to completion before the actual service starts. The European Commission unveiled an action plan on cybersecurity and artificial intelligence yesterday, without a single concrete deadline. And researchers have shown that confidential computing can prove which code is running, but not on which machine it's running. A fix within today's model may not even be possible.</p>
+  <p>What's coming this week: Tuesday is Microsoft's Patch Tuesday, the first regular opportunity for a SharePoint update since it landed on the US list of actively exploited vulnerabilities. And on July twenty-first, the next Critical Patch Update is due for OpenJDK. Tomorrow we'll see whether Gitea finally ships a fixed runner version.</p>
+</div>
+
+</body>
+</html>
