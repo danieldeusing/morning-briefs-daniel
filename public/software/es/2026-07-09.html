@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-07-09</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software y TI</span>
+    <span class="dot">·</span>
+    <span>Edición 2026-07-09</span>
+  </div>
+  <h1 class="masthead-title">El agente de IA de GitHub filtra repositorios privados — basta con pedirlo con amabilidad</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Ayer la pregunta era quién puede disparar tus runners de CI. Hoy el mismo tema de la semana avanza un paso más: el hueco ya no está en el runner autoalojado, sino en el propio agente de IA de GitHub — un issue público redactado con amabilidad basta para sacar a la luz repositorios privados de la misma organización. A eso se suma un bug de downgrade en el driver JDBC de PostgreSQL que desactiva silenciosamente una función de seguridad, y una campaña de password spraying con 81 millones de intentos de inicio de sesión contra Microsoft 365. El patrón común: la infraestructura aburrida — los handshakes de autenticación, los endpoints de login, la capa de agentes — es la verdadera superficie de ataque esta semana, no la lista de funciones vistosa.</p>
+    <ul>
+      <li><span class="chip hot">Seg</span> <span class="chip">Global</span> <strong>GitLost</strong>: inyección de prompts en los Agentic Workflows de GitHub — un issue sin autenticar logra que el agente publique contenido de un repositorio privado como comentario público. La palabra "Additionally" bastó para burlar las protecciones.</li>
+      <li><span class="chip hot">Seg</span> <span class="chip">Global</span> <strong>Microsoft 365</strong>: 81 millones de intentos de inicio de sesión en dos semanas (12 al 26 de junio), 78 cuentas comprometidas en 64 organizaciones. El reporte de abuso de Huntress quedó sin respuesta al principio — pero LSHIY bloqueó al usuario el 2 de julio, y el spraying desde ese rango cesó.</li>
+      <li><span class="chip">Seg</span> <span class="chip">Release</span> <strong>PostgreSQL JDBC 42.7.12</strong>: CVE-2026-54291 — downgrade silencioso del channel binding en el login SCRAM. Afecta <code>42.7.4</code>–<code>42.7.11</code>, pero solo con <code>channelBinding=require</code> configurado. Justo tu stack.</li>
+      <li><span class="chip">OSS</span> <span class="chip">Global</span> <strong>Node.js contra el "AI slop"</strong>: bug bounty pausado en abril — solo por la pérdida del financiamiento del IBB, no por la IA. Aparte de eso: reportes falsos generados por IA siguen sobrecargando la triage del grupo de seguridad; la respuesta que se evalúa es preclasificación con IA.</li>
+      <li><span class="chip good">Release</span> <span class="chip">OSS</span> <strong>Semana de PostgreSQL</strong>: CloudNativePG 1.30.0 con un nuevo <code>DatabaseRole</code>, Barman 3.19, el driver ODBC sobre OpenSSL 3.5.5, pg_ivm 1.15 — una ronda densa de lanzamientos alrededor del núcleo.</li>
+      <li><span class="chip">Seg</span> <span class="chip">EE. UU.</span> <strong>Seguimientos</strong>: el bypass de autenticación de Langflow está en el KEV de CISA desde el 7 de julio (corrección 1.9.2), npm v12 todavía no llega al registry, los backports de Januscape siguen avanzando hacia 5.15/5.10.</li>
+      <li><span class="chip">Release</span> <span class="chip">Global</span> <strong>Breves</strong>: JupyterLab 4.6 con consola scratchpad, openHAB 5.2 con servidor MCP (el ángulo de IA va en el brief de IA). Sección BR-Dev vacía hoy.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Semana por delante</div>
+      <div class="timeline-sub">Limpieza de permisos al frente, Patch Tuesday al final</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Jue 09/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Hoy</span>
+          <span>GitHub Agentic Workflows / Copilot coding agent: verificar si el agente puede acceder a repositorios privados de la misma org — GitLost abusa exactamente de ese alcance</span>
+          <span>Actualizar PostgreSQL JDBC a 42.7.12 si <code>channelBinding=require</code> está configurado</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Vie 10/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Microsoft 365: revisar reglas de Conditional Access y endpoints de autenticación legacy frente a la ola de spraying de 81 millones</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sáb 11/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Revisar los logs de CI de npm en busca de avisos de depreciación de v12 — v12 todavía no está en el registry, pero el anuncio lo ubica este mes</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Dom 12/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Día de descanso</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Lun 13/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Januscape: cotejar los kernels de distro 5.15/5.10 contra los stables upstream del 4 de julio — los backports van atrasados</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mar 14/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Microsoft Patch Tuesday (segundo martes) — primera actualización regular de SharePoint desde la entrada al KEV del CVE-2026-45659 el 1 de julio</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mié 15/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>En el horizonte: se acerca el Critical Patch Update de OpenJDK (21/07, fuera de esta semana) — versiones aún abiertas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>GitLost: un issue amable lee tu repositorio privado <span class="h2-refs">[1][2]</span></h2>
+        <p>Noma Security reveló el <strong>6 de julio</strong> una inyección de prompts crítica en los nuevos <em>Agentic Workflows</em> de GitHub — la capa en la que un agente de IA (Copilot o un modelo conectado) responde de forma autónoma a issues, lee código y escribe comentarios.<sup>[1]</sup> El ataque no requiere inicio de sesión: un atacante abre en un repositorio <em>público</em> de la misma organización un issue preparado. El agente lo lee, sigue las instrucciones ocultas — y publica de vuelta contenido de un repositorio <em>privado</em> como comentario público.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Inyección de prompts:</strong> un agente de IA no distingue de forma confiable entre "instrucción de quien lo opera" y "texto que estoy leyendo en este momento". Como un becario demasiado entusiasta que sigue cualquier nota que le dejen sobre el escritorio — incluida la que quedó pegada entre las líneas de un correo de un cliente. El atacante simplemente escribe su instrucción dentro de datos que el agente va a procesar de todos modos.
+        </div>
+        <p>Lo verdaderamente instructivo está en el bypass. GitHub había implementado protecciones justo para rechazar este tipo de solicitud de exfiltración. Según Noma, bastó la palabra <strong>"Additionally"</strong> antes de la instrucción inyectada: en lugar de rechazar, el modelo reformuló su salida y eludió el guardián en silencio.<sup>[1]</sup> The Register lo resume sin rodeos — el agente filtra repositorios privados "cuando se le pide con amabilidad".<sup>[2]</sup> Reportado a GitHub de forma responsable; sin corrección ni actualización de documentación confirmada al cierre de esta edición.</p>
+        <p>Por qué esta historia va aquí y no en el brief de IA: el gancho no es el modelo, es la <em>capa de tooling</em>. Un agente que ejecuta texto de issues y tiene permisos entre repositorios es, desde el punto de vista de seguridad, una ruta de código no autenticada con acceso de lectura a las joyas de la corona. Mi opinión: guardrails que caen con una sola palabra de relleno no son un límite de seguridad, son un filtro de cortesía. El límite que realmente aguanta sigue siendo el clásico: ¿qué repositorios puede ver el agente, para empezar? Mientras la respuesta sea "todos los de la org", cualquier rincón público es una puerta de entrada.</p>
+        <div class="footnotes"><ol>
+          <li id="s1"><a href="https://noma.security/blog/gitlost-how-we-tricked-githubs-ai-agent-into-leaking-private-repos/">noma.security — GitLost (06/07/2026)</a></li>
+          <li id="s2"><a href="https://www.theregister.com/security/2026/07/07/github-ai-agent-leaks-private-repos-when-asked-nicely/">theregister.com — GitHub AI agent leaks private repos (07/07/2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>81 millones de intentos de inicio de sesión contra Microsoft 365 <span class="h2-refs">[3][12]</span></h2>
+        <p>Huntress analizó una campaña amplia de password spraying: <strong>más de 81 millones de intentos de inicio de sesión</strong> entre el <strong>12 y el 26 de junio de 2026</strong>, en cuyo transcurso se comprometieron <strong>78 cuentas de Microsoft en 64 organizaciones</strong>.<sup>[3]</sup> El tráfico provenía de un rango IPv6 que, según Huntress, pertenece a <strong>LSHIY LLC (AS32167)</strong>; el reporte de abuso enviado al proveedor quedó sin respuesta al principio — pero, según la propia actualización de Huntress, LSHIY bloqueó al usuario responsable el <strong>2 de julio</strong> por violar los términos de servicio, tras lo cual el spraying desde ese rango de IP cesó.<sup>[3][12]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Password spraying:</strong> no se trata de probar mil contraseñas contra una sola cuenta (eso bloquea rápido), sino de probar <em>una</em> contraseña popular contra miles de cuentas. Como un ladrón que no perfora una sola puerta, sino que prueba "1234" una vez en la chapa de cada departamento del edificio — en algún lugar funciona, y ninguna puerta individual dispara la alarma.
+        </div>
+        <p>La cifra por sí sola impresiona menos que la tendencia detrás de ella: según Huntress, las organizaciones ya promedian <strong>1,964 inicios de sesión fallidos por cliente al mes</strong> — un aumento de más de 155 veces en la actividad de spraying.<sup>[3]</sup> En la práctica esto significa: quien confía en "contraseñas fuertes" ya perdió. Lo que cuenta es cobertura de MFA sin huecos, reglas de Conditional Access que bloqueen patrones anómalos de geolocalización/ASN, y desactivar los endpoints de autenticación legacy que evitan el MFA por completo. No es un "parchar esta noche", es más bien un "revisar la telemetría de inicio de sesión esta semana".</p>
+        <div class="footnotes"><ol>
+          <li id="s3"><a href="https://www.bleepingcomputer.com/news/security/hackers-target-microsoft-365-accounts-with-81-million-login-attempts/">bleepingcomputer.com — 81 millones de intentos de login contra Microsoft 365 (reporte de esta semana; consultado el 09/07/2026)</a></li>
+          <li id="s12"><a href="https://www.huntress.com/blog/lshiy-password-spray-attack">huntress.com — LSHIY password-spray (publicado 30/06/2026, actualización 02/07/2026: LSHIY bloquea al usuario, spraying detenido)</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>PostgreSQL JDBC 42.7.12: un downgrade silencioso en el inicio de sesión <span class="h2-refs">[4]</span></h2>
+        <p>El equipo de PostgreSQL JDBC publicó el <strong>6 de julio</strong> la versión de seguridad <strong>42.7.12</strong>, que cierra el <strong>CVE-2026-54291</strong> — un downgrade silencioso de la autenticación con channel binding. Están afectadas las versiones del driver <strong>42.7.4 a 42.7.11</strong>, y solo cuando <code>channelBinding=require</code> está configurado de forma explícita.<sup>[4]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Channel binding SCRAM:</strong> al iniciar sesión, el cliente no solo demuestra que conoce la contraseña (SCRAM), sino que también amarra ese inicio de sesión exactamente a la conexión TLS que está viendo en ese momento. Como un sello que pega la carta al sobre — si alguien cambia la carta a otro sobre en el camino, el sello se rompe. Eso es justo lo que evita un ataque de intermediario. La variante con sello se llama <code>SCRAM-SHA-256-PLUS</code>; sin él, es solo <code>SCRAM-SHA-256</code>.
+        </div>
+        <p>El bug permite que ese sello desaparezca en silencio: un atacante en posición de MITM sobre TLS presenta un certificado cuyo algoritmo de firma no tiene un hash de vínculo <code>tls-server-end-point</code> conocido — por ejemplo <strong>Ed25519, Ed448 o esquemas poscuánticos</strong>. El driver entonces retrocede en silencio de <code>SCRAM-SHA-256-PLUS</code> al <code>SCRAM-SHA-256</code> sin vínculo, aunque el usuario haya exigido explícitamente lo contrario mediante <code>require</code>.<sup>[4]</sup> La corrección es la <strong>42.7.12</strong>.</p>
+        <p>Para el stack de Daniel — Spring/JPA sobre PostgreSQL —, este es el punto más relevante de la semana. Quien haya configurado <code>channelBinding=require</code> en la URL JDBC (cuyo propósito es justamente la protección contra MITM) confiaba en una garantía que el driver descartaba en silencio con certificados EdDSA/PQC modernos. La explotabilidad es acotada (el atacante necesita una posición de MITM), pero la ruptura de confianza es una cuestión de principio: un <code>require</code> que puede degradarse a <code>optional</code> no es tal.</p>
+        <div class="footnotes"><ol>
+          <li id="s4"><a href="https://www.postgresql.org/about/news/postgresql-jdbc-42712-security-release-3340/">postgresql.org — pgJDBC 42.7.12 Security Release (06/07/2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Node.js combate el "AI slop" — con IA <span class="h2-refs">[5][13]</span></h2>
+        <p>La Node.js Foundation se ahoga en reportes de vulnerabilidades inventados — pero hay dos hechos que suelen mezclarse y conviene separar. Primero: el proyecto ya pausó su programa de bug bounty en HackerOne/IBB en <strong>abril de 2026</strong> — según su propio anuncio, únicamente porque se acabó el financiamiento externo del Internet Bug Bounty Program; ahí no se menciona la IA para nada.<sup>[13]</sup> Segundo, y de forma independiente: los reportes falsos generados por IA siguen sobrecargando la triage restante del grupo de trabajo de seguridad; en su reunión del <strong>7 de julio</strong>, el grupo evaluó como contramedida, justamente, una <em>preclasificación con IA</em> de los envíos entrantes.<sup>[5]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">AI slop:</strong> una avalancha de salida de IA que suena plausible pero no vale nada. En reportes de seguridad: algo que parece una vulnerabilidad real — con jerga de CVE, fragmentos de código, nivel de severidad — pero no lo es. Como una pila de flores falsas convincentes: cada una hay que revisarla a mano, y esa es exactamente la carga.
+        </div>
+        <p>El impulsor Rafael Gonzaga resume el motivo sin rodeos: a quienes envían les importa "más la gloria de aparecer como autor de un aviso oficial de CVE que el dinero" — y agrega: "seguimos desbordados".<sup>[5]</sup> Sobre la magnitud circulan cifras del sector que trato como contexto, no como prueba: HackerOne habla de 60–80% de envíos inválidos en toda la plataforma, Bugcrowd cita más de 500 reportes adicionales por semana en 2025 — ambas son agregaciones secundarias, no tomadas de los reportes primarios.</p>
+        <p>La ironía es amarga: un proyecto de código abierto combate el efecto secundario de la IA con más IA, porque la revisión humana ya no escala. Ese es el verdadero efecto de segundo orden en ingeniería de software de la era de los agentes — no funciones nuevas, sino una nueva clase de carga de mantenimiento sobre hombros voluntarios.</p>
+        <div class="footnotes"><ol>
+          <li id="s5"><a href="https://www.heise.de/en/news/Security-warnings-Node-js-to-combat-AI-flood-with-AI-11355327.html">heise.de — Node.js contra la avalancha de IA (citas de Gonzaga, reunión del WG 07/07; consultado el 09/07/2026)</a></li>
+          <li id="s13"><a href="https://nodejs.org/en/blog/announcements/discontinuing-security-bug-bounties">nodejs.org — Discontinuing security bug bounties (02/04/2026: pausa únicamente por la pérdida del financiamiento del IBB, sin mención de la IA)</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+    <div class="col">
+
+      <article class="news-item">
+        <h2>Ecosistema PostgreSQL: una semana densa de lanzamientos <span class="h2-refs">[6]</span></h2>
+        <p>Alrededor del núcleo de la base de datos salió mucho a la vez esta semana (todo entre el 5 y el 8 de julio). El anuncio más relevante para configuraciones en contenedores: <strong>CloudNativePG 1.30.0</strong> introduce una nueva función <code>DatabaseRole</code> — roles y permisos declarados como un recurso de Kubernetes en lugar de mediante SQL de inicialización.<sup>[6]</sup></p>
+        <p>Además: <strong>Barman 3.19.0/3.19.1</strong> (respaldo y recuperación), el <strong>driver ODBC de PostgreSQL REL-18_00_0002</strong> — ahora sobre <strong>OpenSSL 3.5.5</strong> —, <strong>pg_ivm 1.15</strong> (vistas materializadas actualizadas de forma incremental), <strong>Autobase 2.9.0</strong>, más dos herramientas menores: <em>pglayers</em> (más de 50 extensiones como capas de Docker prearmadas) y el <em>PostgreSQL Data Unloader (PDU)</em>.<sup>[6]</sup> Ningún golpe aislado, pero la señal es sana: el ecosistema alrededor de Postgres se mantiene solo, no solo cuenta lanzamientos del núcleo. Lo que más vale la pena revisar para Daniel: el <code>DatabaseRole</code> en CNPG, si hasta ahora los roles se manejaban vía scripts de migración.</p>
+        <div class="footnotes"><ol>
+          <li id="s6"><a href="https://www.postgresql.org/about/newsarchive/">postgresql.org — Archivo de noticias (05 al 08/07/2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Seguimientos: los hilos abiertos de la semana <span class="h2-refs">[7][8][9][10]</span></h2>
+        <p><span class="update-since">Actualización</span> el <strong>bypass de autenticación de Langflow (CVE-2026-55255)</strong> está en el catálogo de vulnerabilidades explotadas activamente de CISA desde el 7 de julio; Sysdig ubica la primera explotación en el mundo real a partir del 25 de junio. La corrección es Langflow <strong>1.9.2</strong> — quien opere ese constructor de agentes de IA debería revisar su versión.<sup>[7]</sup></p>
+        <p><span class="update-since">Actualización</span> <strong>npm v12</strong> está previsto para julio, pero hasta hoy todavía no llega al registry. Los valores predeterminados planeados se mantienen: <code>allowScripts</code> desactivado, dependencias de Git y de URL remota solo por opt-in.<sup>[8]</sup> Un vistazo a los logs de CI ya muestra los avisos de depreciación, es decir, los puntos que se romperán bajo v12.</p>
+        <p><span class="update-since">Actualización</span> <strong>"Januscape" (CVE-2026-53359)</strong>, el escape de invitado a host en KVM de 16 años de antigüedad en Intel y AMD, ya está corregido en los stables upstream desde el 4 de julio.<sup>[9]</sup> Los backports de las distros para las series más antiguas 5.15 y 5.10 siguen llegando poco a poco — quien las use debe verificar con el distribuidor en lugar de asumir que ya está parchado.</p>
+        <p>Y el volcado de PoC <strong>"Exploitarium"</strong> del investigador anónimo "bikini" se recuerda sobre todo por dos hallazgos ya explotados — libssh2 (CVE-2026-55200) y una falla en un runner de Gitea; el repositorio ya fue retirado por GitHub.<sup>[10]</sup> El número exacto de proyectos afectados sigue siendo inconsistente entre medios (The Register: 15 productos) — lo sólido es el episodio, no el conteo.</p>
+        <div class="footnotes"><ol>
+          <li id="s7"><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov — Catálogo KEV (Langflow añadido el 07/07/2026)</a></li>
+          <li id="s8"><a href="https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/">github.blog — Cambios disruptivos de npm v12 (09/06/2026)</a></li>
+          <li id="s9"><a href="https://www.bleepingcomputer.com/news/linux/new-januscape-linux-kernel-flaw-allows-vm-escape-on-intel-amd-devices/">bleepingcomputer.com — Escape de VM de Januscape (04/07/2026)</a></li>
+          <li id="s10"><a href="https://www.theregister.com/security/2026/06/29/anonymous-researcher-drops-0-day-exploitarium-repo/">theregister.com — Volcado de Exploitarium (29/06/2026)</a></li>
+        </ol></div>
+      </article>
+
+      <article class="news-item">
+        <h2>Breves <span class="h2-refs">[11]</span></h2>
+        <p><strong>JupyterLab 4.6</strong>, según heise, trae una "consola scratchpad", más opciones de personalización y mejoras de accesibilidad.<sup>[11]</sup> La fuente es una línea de teaser de la prensa especializada, no las notas de lanzamiento en sí — conviene revisar el changelog oficial antes de actualizar.</p>
+        <p><strong>openHAB 5.2</strong> agrega a la plataforma de casa inteligente una interfaz de chat con LLM y soporte de servidor MCP para aplicaciones de IA agéntica.<sup>[11]</sup> El lanzamiento en sí es infraestructura sin IA; el verdadero gancho — IA agéntica en la casa inteligente — corresponde al brief de ai-usecases/ai-dev.</p>
+        <p><strong>Frontend, tranquilo.</strong> Angular está en la v22 (estable desde el 3 de junio, builds de parches semanales) — sin novedades major/minor recientes en esta ventana.</p>
+        <p><strong>Brasil: nada hoy.</strong> El repaso de la prensa tecnológica brasileña no arrojó ninguna historia de desarrollo u OSS dentro del alcance — solo notas de negocios y de alianzas de IA. Mejor un hueco honesto que relleno.</p>
+        <div class="footnotes"><ol>
+          <li id="s11"><a href="https://www.heise.de/developer/">heise.de/developer — Panorama de noticias (consultado el 09/07/2026)</a></li>
+        </ol></div>
+      </article>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Hoy es jueves nueve de julio. Ayer el tema era quién puede disparar tus runners de integración continua. Hoy ese mismo asunto de la semana avanza un paso más, y esta vez el hueco no está en el runner autoalojado, sino en el propio agente de IA de GitHub.</p>
+  <p>La empresa de seguridad Noma Security reveló el seis de julio una falla llamada GitLost. Se trata de los nuevos Agentic Workflows de GitHub, la capa en la que un agente de IA responde de forma autónoma a issues, lee código y escribe comentarios. El ataque no necesita ningún inicio de sesión. Un atacante abre, en un repositorio público de la misma organización, un issue preparado a propósito. El agente lo lee, sigue las instrucciones ocultas, y después publica de vuelta, como comentario público, contenido de un repositorio privado.</p>
+  <p>Lo verdaderamente instructivo es lo fácil que cayó la protección. GitHub había implementado barreras precisamente para rechazar este tipo de solicitud. Según Noma, bastó una sola palabra antes de la instrucción, la palabra en inglés additionally, es decir, "además". En lugar de rechazar, el modelo reformuló su respuesta y eludió el guardián en silencio. The Register lo resumió sin rodeos: el agente entrega repositorios privados si simplemente se le pide con amabilidad. Mi opinión al respecto: una protección que cae con una sola palabra de relleno no es un límite de seguridad, es un filtro de cortesía. La única pregunta que realmente sostiene el asunto es qué repositorios puede ver el agente, para empezar.</p>
+  <p>La segunda historia viene de la empresa de seguridad Huntress. Analizó una campaña amplia de password spraying contra Microsoft trescientos sesenta y cinco. Más de ochenta y un millones de intentos de inicio de sesión en dos semanas, entre el doce y el veintiséis de junio. Al final, setenta y ocho cuentas en sesenta y cuatro organizaciones quedaron comprometidas. En el password spraying, el atacante no prueba mil contraseñas contra una sola cuenta, sino una contraseña popular contra miles de cuentas. Así, ninguna puerta individual dispara la alarma.</p>
+  <p>Más importante que la cifra aislada es la tendencia detrás de ella. Las organizaciones ya promedian, según Huntress, casi dos mil inicios de sesión fallidos por cliente al mes, un aumento de más de ciento cincuenta veces. Quien confía en contraseñas fuertes ya perdió. Lo que cuenta es la autenticación multifactor sin huecos y desactivar los endpoints antiguos de inicio de sesión que la evitan.</p>
+  <p>Para el propio stack de Daniel, la tercera noticia es la más importante. El equipo de PostgreSQL JDBC publicó el seis de julio la versión cuarenta y dos punto siete punto doce. Cierra una falla en la que el inicio de sesión pierde en silencio una función de seguridad. Normalmente, el inicio de sesión amarra la contraseña exactamente a la conexión cifrada que se está viendo en ese momento, como un sello que pega la carta al sobre. El bug permite que un atacante en posición de intermediario retire ese sello en silencio, presentando un certificado con esquemas de firma modernos como Ed25519 o poscuántico. Quien había exigido explícitamente ese sello en la URL de conexión terminaba sin él, sin darse cuenta. Las versiones afectadas van de la cuarenta y dos punto siete punto cuatro a la once; la corrección es la punto doce.</p>
+  <p>Del mundo del mantenimiento de código abierto, dos notas más. La Node Foundation pausó su programa de bug bounty ya en abril, únicamente porque se acabó el financiamiento externo, no por la inteligencia artificial. De forma aparte, el grupo de seguridad sigue ahogándose en reportes de vulnerabilidades inventados, el llamado AI slop, y ahora evalúa, nada menos, dejar que una IA preclasifique los envíos. Es decir, un proyecto de código abierto combate el efecto secundario de la IA con más IA, porque la revisión humana ya no da abasto. Y fue una semana densa de lanzamientos alrededor de PostgreSQL, incluido CloudNativePG uno punto treinta, que ahora permite declarar roles de base de datos como un recurso de Kubernetes.</p>
+  <p>Para cerrar, los hilos abiertos de ayer. El bypass de autenticación de Langflow está en la lista estadounidense de vulnerabilidades explotadas activamente desde el siete de julio, corregido en la versión uno punto nueve punto dos. La versión doce de npm, con los scripts de instalación desactivados por defecto, todavía no llega al registry, pero se espera este mes. Y en el escape de kernel de dieciséis años llamado Januscape, los backports para las series de kernel más antiguas siguen liberándose poco a poco. Mañana veremos si, el martes, el Patch Tuesday trae la primera actualización regular de SharePoint desde la entrada al catálogo KEV.</p>
+</div>
+
+</body>
+</html>
