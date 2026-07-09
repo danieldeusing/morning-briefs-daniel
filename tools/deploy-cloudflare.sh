@@ -74,10 +74,36 @@ if [[ -z "$CLOUDFLARE_API_TOKEN" || -z "$CLOUDFLARE_ACCOUNT_ID" ]]; then
   exit 1
 fi
 
+# wrangler@4 requires Node >=18. The unattended shell sometimes defaults to an
+# OLD nvm Node (e.g. v12/npm6). On such a Node, `npx --yes wrangler@4 …` silently
+# runs npm's own binary instead of wrangler and exits 0 WITHOUT deploying — the
+# script then reports success while the live site stays stale. Guard against that:
+# if the active Node is <18, switch PATH to the newest installed nvm Node >=18.
+if ! node -e 'process.exit((+process.versions.node.split(".")[0])>=18?0:1)' 2>/dev/null; then
+  best_ver="$(ls -d "$HOME"/.nvm/versions/node/v* 2>/dev/null \
+                | sed -E 's#.*/v##' | awk -F. '$1>=18' \
+                | sort -t. -k1,1n -k2,2n -k3,3n | tail -1)"
+  if [[ -n "$best_ver" ]]; then
+    export PATH="$HOME/.nvm/versions/node/v$best_ver/bin:$PATH"
+    echo "deploy-cloudflare: active Node too old for wrangler — using Node v$best_ver"
+  else
+    echo "deploy-cloudflare: ERROR — no Node >=18 found; wrangler cannot deploy" >&2
+    exit 1
+  fi
+fi
+
 echo "deploy-cloudflare: deploying public/ → Pages project '$PROJECT_NAME' (branch $PROD_BRANCH)…"
-npx --yes wrangler@4 pages deploy public \
-  --project-name "$PROJECT_NAME" \
-  --branch "$PROD_BRANCH" \
-  --commit-dirty=true
+# Prefer a globally-installed wrangler (on the Node>=18 PATH); fall back to npx.
+if command -v wrangler >/dev/null 2>&1; then
+  wrangler pages deploy public \
+    --project-name "$PROJECT_NAME" \
+    --branch "$PROD_BRANCH" \
+    --commit-dirty=true
+else
+  npx --yes wrangler@4 pages deploy public \
+    --project-name "$PROJECT_NAME" \
+    --branch "$PROD_BRANCH" \
+    --commit-dirty=true
+fi
 
 echo "deploy-cloudflare: done → https://briefs.danieldeusing.de"
