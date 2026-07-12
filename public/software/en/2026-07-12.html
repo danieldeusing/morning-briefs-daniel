@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-07-12</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-07-12</span>
+  </div>
+  <h1 class="masthead-title">Two hijacked npm packages — the supply chain remains the front line</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">A quiet Sunday, but not an empty one: this week's news thread is the software supply chain, and it's under active attack. Within a few days, two npm packages were hijacked — yesterday <code>jscrambler</code> with a Rust infostealer, before that the Injective SDK with a wallet-key backdoor. This is exactly the attack class npm v12's new defaults are meant to stop — reason enough to honestly ask what this hardening actually prevents and what it merely displaces. Also: a silent downgrade gap in the Postgres JDBC driver right in Daniel's stack, and CodeQL gets a query against prompt injection.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>jscrambler npm package hijacked</strong> (Jul 11): five malicious releases in ~3 hours, a Rust infostealer for browser profiles, the Bitwarden extension, and Steam — at 8.18.0 the dropper moved out of the install hook into <code>dist/index.js</code>.</li>
+      <li><span class="chip hot">Sec</span> <strong>Injective SDK backdoored</strong> (Jul 8): <code>@injectivelabs/sdk-ts</code> v1.20.21 stole seed phrases and private keys — 18 packages, ~50,000 downloads/week, live &lt;1 hour, no damage done. Fixed in 1.20.23.</li>
+      <li><span class="chip">Infra</span> <strong>npm v12 — assessment</strong>: would have blocked the first jscrambler hook, but not the dropper in <code>dist/</code> or the Injective backdoor in the SDK code. Necessary, not sufficient.</li>
+      <li><span class="chip hot">Sec</span> <strong>PostgreSQL JDBC 42.7.12</strong>: closes CVE-2026-54291 — <code>channelBinding=require</code> was silently downgraded from SCRAM-PLUS to plain SCRAM. Affects 42.7.4–42.7.11.</li>
+      <li><span class="chip good">OSS</span> <strong>GitHub CodeQL 2.26.0</strong> (Jul 10): Kotlin up to 2.4.0 — plus a new query, <code>js/system-prompt-injection</code>, that detects untrusted input flowing into AI system prompts.</li>
+      <li><span class="chip">Infra</span> <strong>Microsoft Foundry hosted agents (GA)</strong>: hypervisor-isolated sandbox per session, framework-agnostic, scale-to-zero — the isolation story, not the agent story.</li>
+      <li><span class="chip">Sec</span> <strong>Langflow CVE, in context</strong>: NVD rates it 8.4 (high), the vendor 9.9 (critical) — and it's still been actively exploited since Jun 25. KEV beats CVSS score.</li>
+      <li><span class="chip">Release</span> <strong>Briefly noted</strong>: Angular 22.0.5, Firefox 152.0.5 (153 on Jul 21), SQLite 3.53.3 — and the OpenJDK quarterly CPU on Jul 21.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">Supply-chain incidents, security tooling, and the last open patch deadlines</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col hot">
+        <div class="tl-date">Wed Jul 8</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Injective SDK on npm backdoored (v1.20.21)</span>
+          <span>npm v12 (July release) locks install scripts &amp; git/remote deps</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu Jul 9</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri Jul 10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GitHub CodeQL 2.26.0 (Kotlin 2.4.0 + prompt-injection query)</span>
+          <span>CISA KEV +2: Balbooa Forms, iCagenda</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Sat Jul 11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>jscrambler npm package compromised (Rust infostealer)</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Sun Jul 12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>This brief — a supply-chain double hit &amp; the limits of npm v12</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mon Jul 13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>KEV deadline for Balbooa Forms / iCagenda (US federal agencies)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue Jul 14</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet — looking ahead: OpenJDK quarterly CPU on Jul 21</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>jscrambler npm package hijacked: five malicious releases in three hours</h2>
+        <p>The freshest hit landed yesterday, Saturday July 11: the npm package <code>jscrambler</code> was compromised. According to security press (<a href="https://thehackernews.com/2026/07/compromised-jscrambler-8140-npm-release.html">The Hacker News</a>, building on Socket), the version released on Jul 11, <strong>8.14.0</strong>, carried a <code>preinstall</code> hook that drops and executes a native binary — one build each for Windows, macOS, and Linux. Over roughly three hours, the attacker pushed <strong>five</strong> malicious releases (8.14.0/8.16.0/8.17.0/8.18.0/8.20.0). The payload: a Rust-written infostealer that grabs Chrome/Brave/Edge/Chromium profiles, the Bitwarden browser extension, and Steam sessions.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Infostealer:</strong> A program whose only job is to quietly copy stored passwords, browser cookies, crypto wallets, and session tokens and send them to the attacker. Like a burglar who doesn't break anything — he just photographs every key and password lying around and leaves.
+        </div>
+        <p><strong>The instructive detail:</strong> At <strong>8.18.0</strong>, the attacker moved the dropper out of the <code>preinstall</code> hook and directly into the shipped files <code>dist/index.js</code> and <code>dist/bin/jscrambler.js</code> — specifically to fool scanners that only look at install scripts. This means the malware no longer runs at install time, but at <em>import</em> or execution time. This exact trick will matter shortly when we assess npm v12. (The release list and the dropper move come from security-press summaries — the Socket and THN detail pages blocked direct access, so this should be read as secondhand, not primary telemetry.)</p>
+        <span class="src">Source: <a href="https://thehackernews.com/2026/07/compromised-jscrambler-8140-npm-release.html">thehackernews.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Injective SDK backdoored: wallet keys from 18 packages</h2>
+        <p>A few days earlier, on Wednesday July 8, the same attack class with a harder target. <code>@injectivelabs/sdk-ts</code> — the TypeScript SDK for the Injective blockchain — had a backdoor slipped in via a <strong>compromised GitHub developer account</strong>. Version <strong>1.20.21</strong> quietly captured wallet recovery phrases (seed phrases) and private keys. Scope per <a href="https://www.bleepingcomputer.com/news/security/injective-sdk-on-npm-infected-with-cryptocurrency-wallet-stealer/">BleepingComputer</a> and <a href="https://www.stepsecurity.io/blog/injective-npm-supply-chain-attack-18-packages-backdoored-to-steal-crypto-wallet-keys">StepSecurity</a>: 18 affected packages, around 50,000 downloads per week, live for under an hour, no damage done. Fixed in <strong>1.20.23</strong> — anyone pulling the Injective SDK should update.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Seed phrase:</strong> The 12–24 words that serve as the master key to a crypto wallet — whoever has them owns the wallet, no password needed. Like a master key to a safe that happens to fit on a postcard: once stolen, everything inside is exposed forever.
+        </div>
+        <p>The contrast with jscrambler is the point: two different entry points, the same outcome. jscrambler came via a hijacked publish account with install-script and code payloads; Injective via a hijacked GitHub account that committed the backdoor directly into the <em>SDK source code</em>. Both bypass the simple maxim "just don't run install scripts" — the malicious code sits in the code itself, which is meant to run anyway.</p>
+        <span class="src">Sources: <a href="https://thehackernews.com/2026/07/injective-labs-github-compromise-pushes.html">thehackernews.com</a> · <a href="https://www.bleepingcomputer.com/news/security/injective-sdk-on-npm-infected-with-cryptocurrency-wallet-stealer/">bleepingcomputer.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>What npm v12 stops — and what it doesn't</h2>
+        <p>npm v12 flips three defaults to secure this month — no <code>preinstall</code>/<code>install</code>/<code>postinstall</code> scripts from dependencies, no git deps, and no remote-URL deps without explicit opt-in (<a href="https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/">GitHub changelog</a>). The mechanics ran in detail in the Jul 10 brief; today's fresh, honest question is: would this have stopped this weekend's two cases?</p>
+        <div class="mechanism">
+          <span class="step">Install hook</span>
+          <span class="arrow">→</span>
+          <span class="step">npm v12 blocks</span>
+          <span class="arrow">·</span>
+          <span class="step">Code in dist/</span>
+          <span class="arrow">→</span>
+          <span class="step">keeps running</span>
+        </div>
+        <p><strong>Partially.</strong> jscrambler's <em>first</em> releases used a <code>preinstall</code> hook — npm v12 would have blocked that by default. But at 8.18.0 the dropper moved into <code>dist/index.js</code>, i.e. code that runs when the package is imported — npm v12 does nothing there. And the Injective backdoor sat in the SDK source code from the start, executed at runtime as intended — likewise untouched by the install-script lockdown.</p>
+        <p><strong>Bottom line, with an opinion:</strong> npm v12 raises the floor and kills the cheapest attack, the install-script drive-by. But the payload simply relocates to import- and runtime code. Necessary, not sufficient. The real lines of defense stay the same: pin versions, lockfile plus integrity hashes, check provenance/attestation — and don't blindly bump just because a new version is out.</p>
+        <span class="src">Source: <a href="https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/">github.blog</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PostgreSQL JDBC 42.7.12: silent channel-binding downgrade (CVE-2026-54291)</h2>
+        <p>Right in Daniel's stack (Java/Spring on Postgres): the <a href="https://jdbc.postgresql.org/changelogs/2026-06-29-42.7.12-release/">security release 42.7.12</a> of the PostgreSQL JDBC driver (released June 29, reported in <a href="https://www.postgresql.org/about/newsarchive/">postgresql.org</a> news on Jul 6) closes CVE-2026-54291. The core issue: connections with the setting <code>channelBinding=require</code> could be silently downgraded from <code>SCRAM-SHA-256-PLUS</code> (with channel binding) to plain <code>SCRAM-SHA-256</code> (without) — undermining exactly the protection that had been explicitly requested. Affected versions are 42.7.4 through 42.7.11; severity is rated <em>medium</em>.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Channel binding:</strong> When your app logs into Postgres over TLS, channel binding ties the password handshake to that exact encrypted connection — an attacker sitting in the middle who relays your login to a different server can't reuse it. Like a signature valid only on this one sealed envelope, not on a copy. A "silent downgrade" means the client believes it got the protection — but never did.
+        </div>
+        <p>Anyone who set <code>channelBinding=require</code> against MITM attacks should move to 42.7.12; otherwise the hardening may have been running for nothing. From the Postgres ecosystem this week also came <strong>CloudNativePG 1.30.0</strong> (new <code>DatabaseRole</code> resource), <strong>pg_ivm 1.15</strong>, and <strong>Barman 3.19.0/3.19.1</strong> — not a security fix, but worth a look for anyone running Postgres in Kubernetes.</p>
+        <span class="src">Sources: <a href="https://jdbc.postgresql.org/changelogs/2026-06-29-42.7.12-release/">jdbc.postgresql.org</a> · <a href="https://www.postgresql.org/about/newsarchive/">postgresql.org</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>GitHub CodeQL 2.26.0: Kotlin 2.4.0 — and a query against prompt injection</h2>
+        <p>CodeQL is GitHub's static code-analysis engine — the machine behind Code Scanning. Version <a href="https://github.blog/changelog/2026-07-10-codeql-2-26-0-adds-kotlin-2-4-0-support-and-ai-prompt-injection-detection/">2.26.0 (Jul 10)</a> now supports Kotlin up to 2.4.0 and brings — the interesting part for a security tool — a new query, <code>js/system-prompt-injection</code>. It detects when untrusted user input flows into an AI model's system prompt, and adds new prompt-injection sinks for the OpenAI, Anthropic, and Google GenAI SDKs. This clearly belongs in the software brief: it's a scanning feature, not a model launch.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Prompt-injection sink:</strong> If your app builds user input into the instructions it gives an AI model, a malicious user can smuggle in commands that hijack the model ("ignore the above, do X"). A CodeQL "sink" is a known-dangerous endpoint the scanner watches; the new query tracks whether untrusted data reaches the system-prompt sink — the same taint-tracking idea used for SQL injection, applied to LLM calls.
+        </div>
+        <p>The takeaway: the more applications wire LLMs into their backend, the more prompt injection becomes an AppSec class like XSS or SQLi — and now mainstream SAST tooling is starting to model it. For anyone already using code scanning, this arrives for free with the CodeQL update.</p>
+        <span class="src">Source: <a href="https://github.blog/changelog/2026-07-10-codeql-2-26-0-adds-kotlin-2-4-0-support-and-ai-prompt-injection-detection/">github.blog</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Microsoft Foundry: hypervisor-isolated sandboxes for agents (GA)</h2>
+        <p>As an infra note, cleanly scoped: Microsoft Foundry's "hosted agents" reached general availability in July (<a href="https://byteiota.com/foundry-agent-service-ga/">byteiota.com</a>). Every session gets its own hypervisor-isolated sandbox — dedicated compute, memory, and file system — and it's framework-agnostic: LangGraph, Claude Agent SDK, OpenAI Agents SDK, or a custom Dockerfile all run. Pricing: <strong>$0.0994 per vCPU-hour</strong> plus <strong>$0.0118 per GiB-hour</strong>, with scale-to-zero when idle.</p>
+        <p>The software-relevant angle here is deliberately <em>not</em> "which agent framework" (that's ai-dev/ai-usecases territory — the details live there), but the <strong>isolation model</strong>: anyone running untrusted, LLM-generated code needs a hypervisor boundary per session — the same problem gVisor or Firecracker solve for multi-tenant compute. The fact that the big clouds now ship this as a managed default is the real infra story.</p>
+        <span class="src">Source: <a href="https://byteiota.com/foundry-agent-service-ga/">byteiota.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Briefly noted</h2>
+        <h3>Langflow: higher CVSS ≠ most exploited</h3>
+        <p>Follow-up to the Jul 7 KEV listing (which ran in the Jul 10 brief): the fresh nuance on CVE-2026-55255 in Langflow is the rating itself. <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-55255">NVD</a> rates the IDOR flaw at CVSS 8.4 (high), the vendor at 9.9 (critical) — a methodology divergence. And despite the lower NVD figure, per <a href="https://www.sysdig.com/blog/understanding-langflow-cve-2026-55255-and-why-higher-cvss-vulnerabilities-arent-always-the-most-exploited">Sysdig</a> it's been actively exploited since Jun 25. Lesson: don't triage purely by NVD base score — KEV membership beats CVSS score.</p>
+        <h3>Angular 22.0.5</h3>
+        <p>From the <a href="https://angular.dev/reference/releases">Angular release channel</a>: patch release 22.0.5 (Jul 1), plus 22.1.0-next.4 in preview. Nothing dramatic — for Daniel's Angular work, a routine bump on the 22.x line.</p>
+        <h3>Browser &amp; web</h3>
+        <p>Firefox 152.0.5 landed Jul 7, stable Firefox 153 is expected Jul 21; Safari Technology Preview 247 shipped Jul 1. Nothing urgent, just the engine status for completeness.</p>
+        <h3>SQLite 3.53.3</h3>
+        <p>The maintenance patch <a href="https://sqlite.org/releaselog/3_53_3.html">3.53.3</a> (Jun 26) clears up issues from 3.53.0 — notably, several of the fixed reports came from AI-assisted findings per the release notes. A small sign of the times.</p>
+        <h3>JVM horizon: OpenJDK CPU on Jul 21</h3>
+        <p>Worth noting for everyone on the JVM: OpenJDK's quarterly Critical Patch Updates land on the third Tuesday — for July that's the 21st (17.0.20 / 21.0.12 / 11.0.30 / 8u502). Deliberately not in the 7-day timeline since it's nine days out, but on the radar.</p>
+        <span class="src">Sources: <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-55255">nvd.nist.gov</a> · <a href="https://www.sysdig.com/blog/understanding-langflow-cve-2026-55255-and-why-higher-cvss-vulnerabilities-arent-always-the-most-exploited">sysdig.com</a> · <a href="https://sqlite.org/releaselog/3_53_3.html">sqlite.org</a></span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Sunday, July 12th. A quiet news day — but not an empty one. This week's throughline is the software supply chain, and it's under active attack. Within a few days, two npm packages were hijacked.</p>
+  <p>The freshest hit came yesterday. The npm package jscrambler was compromised. The malicious version, eight point fourteen, carried an install hook that drops and launches a native malicious file, one build each for Windows, macOS, and Linux. Over roughly three hours, the attacker pushed out five malicious versions. The payload was a Rust-written infostealer — a program whose sole purpose is to quietly copy stored passwords, browser cookies, and session tokens and ship them off. It grabbed browser profiles, the Bitwarden extension, and Steam sessions.</p>
+  <p>The instructive detail: at version eight point eighteen, the attacker moved the malicious code out of the install hook and directly into the package's shipped files. That means the malware no longer runs at install time but at import time — a deliberate move to fool scanners that only check install scripts. That's about to matter. This information comes from security-press reporting, not primary telemetry, since the detail pages blocked direct access.</p>
+  <p>A few days earlier, on July 8th, the same attack class hit a harder target. The TypeScript SDK for the Injective blockchain had a backdoor slipped in through a hijacked GitHub developer account. Version one twenty twenty-one quietly captured seed phrases and private keys from crypto wallets. A seed phrase is a wallet's master key — whoever has it owns everything inside, no password required. Eighteen packages were affected, with around fifty thousand downloads a week; it was live for under an hour, and no damage was done. The fix is version one twenty twenty-three.</p>
+  <p>Both cases bypass the simple rule of just not running install scripts, because the malicious code sits in the code itself, which is meant to run anyway. That leads to the honest question about npm version twelve, which this month aims to contain exactly this kind of attack by locking down install scripts and git and remote dependencies by default. The mechanics ran in the brief on July tenth; today's the assessment: would it have stopped these two cases?</p>
+  <p>Only partly. The first jscrambler hook, npm twelve would have blocked. But the later dropper in the shipped files, and the Injective backdoor in the source code, both run at runtime — where the install-script lockdown changes nothing. My takeaway: npm twelve raises the floor and kills the cheapest attack, but the payload simply relocates to import and runtime code. Necessary, not sufficient. The real lines of defense remain: pin versions, lockfiles and integrity hashes, checking provenance — and not blindly upgrading.</p>
+  <p>From Daniel's own stack comes a silent gap. The security release forty-two point seven point twelve of the PostgreSQL JDBC driver closes a vulnerability where an explicitly requested, connection-bound authentication method was silently downgraded to the weaker variant. Anyone who set this protection against man-in-the-middle attacks should update, or the hardening may have been running for nothing. And GitHub's code scanner CodeQL, in version two point twenty-six, adds Kotlin support up to version two point four — plus a new rule that detects when user input flows into an AI model's system prompt. Prompt injection is slowly becoming a security class like SQL injection, and mainstream tooling is starting to model it.</p>
+  <p>Briefly: Microsoft Foundry is now shipping its hosted agents to general availability, each session in its own hypervisor-isolated sandbox — the interesting part isn't the framework, but the isolation, when you're running someone else's AI-generated code. And when rating vulnerabilities, take a look at Langflow: NVD scores it eight point four, the vendor nine point nine — and it's still been exploited since late June. Landing in the actively-exploited catalog says more than the raw score.</p>
+  <p>Tomorrow is Monday, and with it the patch deadline runs out for the two Joomla flaws from Friday. Next week I'll check whether more affected packages turn up around the two npm incidents, and whether npm version twelve is actually rolling out broadly. Until then.</p>
+</div>
+
+</body>
+</html>
