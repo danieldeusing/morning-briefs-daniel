@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-07-15</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-07-15</span>
+  </div>
+  <h1 class="masthead-title">Second npm hit of the week — via CI, not the install scripts</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">For two weeks running, the npm supply chain has been bleeding — and the freshest hit exposes an uncomfortable truth. Less than 48 hours after the jscrambler incident wrapped up (thread in the Jul 12 brief), the AsyncAPI generator was hijacked on Jul 14: not via an install script, but through a broken GitHub Actions pipeline and a stolen bot token. Meaning: npm's new script lockdown in v12 wouldn't have stopped this one. On top of that, SAP with a 9.9 hole, Langflow as the first AI agent platform in CISA's exploit catalog, and a ten-hour Actions outage. No alarm bell — just a read on where the real line of defense currently sits.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>AsyncAPI hijacked</strong>: a "pwn request" in GitHub Actions stole the <code>asyncapi-bot</code> PAT, which was used to publish 4 malicious <code>@asyncapi</code> packages (~3M downloads/week). Second npm hit within a week.</li>
+      <li><span class="chip">Sec</span> <strong>The catch</strong>: npm's install-script lockdown (v12, Jul 12 brief) wouldn't have stopped this — the attack ran on the publish side via stolen CI credentials, not through <code>postinstall</code>.</li>
+      <li><span class="chip">Sec</span> <span class="chip">DE</span> <strong>SAP July Patch Day</strong> (Jul 14): 16 security notes, NetWeaver ABAP hole <strong>CVE-2026-44747</strong> at CVSS 9.9; plus Approuter and Commerce Cloud at 9.1 each.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>Langflow in the KEV</strong>: <strong>CVE-2026-55255</strong> — first AI agent platform in CISA's catalog. Plus two Joomla page-builder RCEs at CVSS 10.0 each.</li>
+      <li><span class="chip">Infra</span> <strong>GitHub Actions</strong> was down for about ten hours on Jul 9: ~8% of runs delayed by more than 5 minutes, ~2% never started (figures via status page, secondary source).</li>
+      <li><span class="chip good">Release</span> <strong>PostgreSQL 19</strong> is in Beta 1, GA in September. Addendum: CloudNativePG RCE <strong>CVE-2026-44477</strong> (9.4) — not a new incident, but the May patch is worth catching up on.</li>
+      <li><span class="chip">OSS</span> <span class="chip">EU</span> <strong>Bambu vs. OrcaSlicer fork</strong>: AGPLv3 dispute from May — Rossmann offered $10,000 for the defense, Prusa criticized publicly. No confirmed new development this week.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">This week</div>
+      <div class="timeline-sub">The supply-chain thread keeps pulling — and what's next</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Thu Jul 9</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GitHub Actions outage 03:29–13:39 UTC</span>
+          <span>Hosted runners delayed/failed</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri Jul 10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CISA KEV deadline (FCEB) for the new adds</span>
+          <span>ColdFusion, Joomla builder, Langflow</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat Jul 11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>jscrambler npm packages compromised (thread, Jul 12 brief)</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue Jul 14</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>SAP July Patch Day (16 notes, CVE-2026-44747 at 9.9)</span>
+          <span>AsyncAPI generator hijacked via GitHub CI</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Wed Jul 15</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Assessment: second npm hit, script lockdown falls short</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Early Aug</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>npm GAT restrictions phase 1 (publishing token)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>npm supply chain, round two: AsyncAPI hijacked via CI</h2>
+        <p>On Jul 14, Wiz's red team documented an incident that continues this week's pattern — but strikes at a different spot. The <strong>AsyncAPI generator</strong> (the code-gen tool built around the API specification standard) was taken over via a so-called "pwn request" in its GitHub Actions pipeline. The attacker opened <strong>37 pull requests</strong> to camouflage the actual exploit, let the vulnerable workflow run its malicious code, stole the <code>asyncapi-bot</code> PAT, and used it to publish <strong>4 malicious <code>@asyncapi</code> npm packages</strong> (5 versions). The affected packages together add up to <strong>over 3M downloads per week</strong>. The payload scanned the runner environment for secrets and exfiltrated them to a dead-drop URL on <code>rentry.co</code>.</p>
+        <div class="eli5">
+          <strong class="eli5-term">"pwn request" / <code>pull_request_target</code>:</strong> GitHub Actions can trigger workflows when someone opens a pull request. The <code>pull_request_target</code> trigger runs with the <em>target repo's secrets</em> — intended for tasks like labeling PRs from strangers. Imagine a stranger is allowed to drop mail through your slot, and your household robot opens every envelope with your front-door key still in hand. Here the flaw was that the workflow checked out the <em>attacker's code</em> instead of its own base branch — and that code then ran with the full keyring.</div>
+        <p>The sharp punchline: this is the <strong>second npm hit within a week</strong> (jscrambler was the first, Jul 11, thread in the Jul 12 brief) — and both escape the defense npm is currently selling as its big move. npm v12 disables install scripts by default (covered in detail on Jul 12). Except: AsyncAPI was compromised on the <em>publish side</em> — malicious versions, uploaded with stolen credentials; no <code>postinstall</code> anywhere in sight. And jscrambler's later payloads executed themselves on <code>import</code>, meaning they survived even <code>--ignore-scripts</code>. The script lockdown is correct and overdue — but the attackers are already a level ahead: CI pipelines, publishing tokens, the <code>import</code> path.</p>
+        <div class="callout info">
+          <span class="callout-label">What this means in practice</span>
+          The perimeter question shifts from "what runs during <code>npm install</code>?" to "who's allowed to publish, and with which token?" Concretely: pin the lockfile and run <code>npm ci</code>, verify provenance/signatures, restrict <code>pull_request_target</code> workflows to read-only permissions with no checkout of foreign code, and trim bot PATs down to minimal scopes. npm's planned GAT restrictions (phase 1 in early August) target exactly the publishing side — the right direction.
+        </div>
+        <div class="src"><a href="https://www.wiz.io/blog/m-red-team-asyncapi-supply-chain-compromise-via-github-actions">wiz.io</a> · <a href="https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/">github.blog (v12 context)</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>GitHub as a single point of failure: ten-hour Actions outage</h2>
+        <p>Fitting for the CI theme: on Jul 9, GitHub Actions was down from <strong>03:29 to 13:39 UTC</strong> — a good ten hours. Per GitHub's status-page history, for most of the outage roughly <strong>8% of workflow runs on hosted runners were delayed by more than 5 minutes</strong>, and about <strong>2% never started at all</strong>. The cause was an unhealthy backend service for runner provisioning (data replication). The exact percentages are a secondary aggregate — the status-page detail view couldn't be read directly — so take them with a grain of salt; the order of magnitude (a multi-hour, partial outage) stands.</p>
+        <p>Less dramatic but annoying: in early July, user reports of GitHub Copilot billing and quota glitches piled up (access wrongly blocked despite a reset or raised budget). Billing glitches, not a security issue — but another reminder of how much dev-day-to-day hangs on a single vendor.</p>
+        <div class="src"><a href="https://www.githubstatus.com/history">githubstatus.com</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>OSS politics: Bambu Lab vs. the OrcaSlicer fork</h2>
+        <p>An AGPLv3 dispute from May 2026 with no confirmed new development this week: developer Pawel Jarczak maintains a fork ("OrcaSlicer-bambulab") of the AGPLv3-licensed Linux client for Bambu Studio. Bambu Lab has threatened legal action, arguing the modified software endangers its servers through manipulated metadata (user-agent spoofing → DDoS/security risk). Repair activist Louis Rossmann offered <strong>$10,000</strong> for the defense, and Josef Prusa publicly criticized Bambu Lab. At its core, this is an AGPLv3 copyleft and right-to-repair conflict.</p>
+        <p><strong>Note on the date:</strong> The origin is likely <strong>May 2026</strong> (the golem.de article carries a May slug); the topic resurfaced in golem.de's ticker on Jul 14. Whether there's an actual new development this week couldn't be confirmed behind the cookie wall — so it's deliberately framed here as "still simmering," not as a fresh incident.</p>
+        <div class="src"><a href="https://www.golem.de/news/wegen-orca-slicer-fork-bambu-lab-geht-gegen-open-source-entwickler-vor-2605-208641.html">golem.de</a></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>SAP July Patch Day: a 9.9 in the NetWeaver core <span class="h2-refs">[1]</span></h2>
+        <p>On Jul 14, SAP published its July Patch Day: <strong>16 new security notes</strong> plus a GitHub security advisory, three of them rated critical. For Daniel's environment (Java/enterprise stack, many DE clients run SAP in the background), the most important date of the week.</p>
+        <p>The frontrunner is <strong>CVE-2026-44747</strong> at <strong>CVSS 9.9</strong>: a memory access flaw caused by a logic error in the memory management of the <strong>SAP NetWeaver Application Server ABAP</strong> — the classic core of many SAP landscapes. Plus two 9.1s:</p>
+        <p><strong>CVE-2026-27690</strong> (CVSS 9.1) — HTTP request smuggling in <strong>SAP Approuter</strong> before version 20.10.0.</p>
+        <div class="eli5">
+          <strong class="eli5-term">HTTP request smuggling:</strong> When two servers (say, a proxy and the backend) interpret the boundary between two HTTP requests differently, an attacker can "smuggle in" a second, hidden request. Like a letter with two addresses in the same envelope: the mail room reads one, the recipient reads the other.</div>
+        <p><strong>CVE-2026-44761</strong> (CVSS 9.1) — insecure sample credentials in <strong>SAP Commerce Cloud</strong> (HY_COM 2205, COM_CLOUD 2211, and 2211-JDK21). The classic: shipped default credentials that should never have been active in production.</p>
+        <p><em>Source note:</em> The figures come from the security trade press (securityonline.info, cross-checked against two further outlets); the primary SAP notes page itself wasn't directly accessible. Verify the concrete notes in the SAP Support Portal before a change window.</p>
+        <div class="footnotes">
+          <ol>
+            <li><a href="https://securityonline.info/sap-patch-day-july-2026/">securityonline.info — SAP Patch Day July 2026</a></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="news-item">
+        <h2>CISA KEV: Langflow is the first AI agent platform in the catalog <span class="h2-refs">[1]</span></h2>
+        <p>CISA newly added four actively exploited flaws to the KEV catalog (FCEB deadline Jul 10). One of them stands out for our beat:</p>
+        <div class="eli5">
+          <strong class="eli5-term">KEV (Known Exploited Vulnerabilities):</strong> CISA's list of vulnerabilities <em>confirmed</em> to be under active exploitation in the wild right now. US federal agencies must patch them by a deadline. For everyone else, the list is a "this is genuinely being attacked" signal — priority, not a panic button.</div>
+        <p><strong>Langflow — CVE-2026-55255</strong> (CVSS 6.1): an authorization bypass via a user-controlled key that lets an authenticated attacker execute <em>other users' flows</em>. The score is moderate, the symbolism isn't: Langflow is a low-code platform for building AI agents — making it the <strong>first AI agent platform ever in the KEV</strong>. Exactly the second-order effect this brief cares about: the agent-tooling layer itself becomes an attack surface, regardless of which model runs underneath.</p>
+        <p>The other three follow the familiar CMS-plugin-upload pattern, but at full force: <strong>Joomlack Page Builder — CVE-2026-56290</strong> (CVSS 10.0, unauthenticated file upload → RCE) and <strong>JoomShaper SP Page Builder — CVE-2026-48908</strong> (CVSS 10.0, unrestricted upload; fix: update to 6.6.2+). The fourth, Adobe ColdFusion (CVE-2026-48282, 10.0), already ran in the Jul 10 brief — noted here only for completeness.</p>
+        <p><em>Source note:</em> The CISA advisory pages themselves returned HTTP 403 on access; the CVE details are documented via The Hacker News (which in turn cites CISA) and a cross-check — solid, but not quoted directly from the primary advisory.</p>
+        <div class="footnotes">
+          <ol>
+            <li><a href="https://thehackernews.com/2026/07/cisa-adds-4-actively-exploited-adobe.html">thehackernews.com — CISA adds 4 actively exploited flaws</a> · <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov (KEV catalog)</a></li>
+          </ol>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PostgreSQL 19 in beta — and a CNPG addendum</h2>
+        <p><strong>PostgreSQL 19 Beta 1</strong> has been out since Jun 4, with GA targeted for <strong>September 2026</strong>. No action pressure yet for Daniel (Postgres in the stack), but the right moment to test his own extensions and JDBC paths against the beta before the feature-freeze reality hits in fall.</p>
+        <p><strong>Addendum, deliberately flagged as such:</strong> Current security roundups are again mentioning <strong>CVE-2026-44477</strong> — a privilege escalation in the Kubernetes operator <strong>CloudNativePG</strong> (CVSS 9.4): the metrics exporter could escalate via <code>RESET ROLE</code> → <code>COPY TO PROGRAM</code> to OS-level RCE and superuser. <strong>This is not a new incident</strong> — the release and advisory are dated <strong>May 8, 2026</strong>, fixed in 1.29.1 / 1.28.3. If you're running CNPG in a cluster and didn't patch in May: do it now. Affected were ≤ 1.29.0 and ≤ 1.28.2.</p>
+        <div class="src"><a href="https://www.postgresql.org/about/news/postgresql-19-beta-1-released-3313/">postgresql.org</a> · <a href="https://cloudnative-pg.io/releases/cloudnative-pg-1-29.1-released/">cloudnative-pg.io</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Briefly noted: releases &amp; deadlines</h2>
+        <p><strong>Kubernetes 1.35.6</strong> has been the current patch release of the line since Jun 9 (EOL Feb 28, 2027) — nothing fresh, noted only for completeness if you're deciding between patch levels.</p>
+        <p><strong>npm GAT restrictions:</strong> After the install-script switch in v12, the second building block of npm's hardening arrives in phases — <strong>first GAT restrictions in early August 2026</strong>, the second publishing stage in January 2027. Exactly the publishing side the AsyncAPI attack targeted. Worth noting, not urgent enough for the 7-day timeline.</p>
+        <div class="src"><a href="https://kubernetes.io/releases/patch-releases/">kubernetes.io</a> · <a href="https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/">github.blog</a></div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Wednesday, July 15th. Today's big story isn't a new vulnerability — it's a pattern. For the second time in a week, the npm supply chain got hit, and the latest attack shows the defense is standing in the wrong place.</p>
+  <p>On July 14th, Wiz's red team documented how the AsyncAPI generator got hijacked. The attacker exploited a broken GitHub Actions pipeline, opened thirty-seven pull requests as camouflage, and stole the project bot's access token. With that, he published four malicious packages under the AsyncAPI name — together pulling over three million downloads a week.</p>
+  <p>And here's the real punchline. npm is currently rolling out version twelve, which disables install scripts by default to slow down exactly this kind of attack. Except this attack ran through the publishing side, with stolen credentials. No install script would have stopped it. The attackers are already a level ahead — inside CI pipelines and around publishing tokens.</p>
+  <p>Out of Germany comes the second big date: SAP published its July Patch Day on the fourteenth. Sixteen security notes, three of them critical. The worst one, in the NetWeaver core, scores nine point nine. Plus one nine-point-one flaw each in Approuter and Commerce Cloud.</p>
+  <p>There's a small piece of history at CISA. The US agency added Langflow to its catalog of actively exploited vulnerabilities — the first AI agent platform ever to land there. The score is a moderate six point one, but the message is clear: the tooling layer around AI agents is becoming an attack target in its own right. Also added: two Joomla page builders with the maximum score of ten.</p>
+  <p>Fitting the infrastructure theme, GitHub Actions suffered a ten-hour outage on July ninth. About eight percent of runs were delayed more than five minutes, roughly two percent never started at all. The exact numbers come from the status page and should be read with some caution — but they're a reminder of how much developer routine hangs on a single vendor.</p>
+  <p>To close, two quieter threads. PostgreSQL nineteen is in its first beta, with the finished version due in September. And the dispute between Bambu Lab and an open-source developer over an OrcaSlicer fork dates back to May — a copyleft conflict with no confirmed new update this week.</p>
+  <p>Tomorrow we'll see whether AsyncAPI stays a one-off or a third hit follows — and whether SAP customers roll out their critical notes. That was the software brief for today.</p>
+</div>
+
+</body>
+</html>
