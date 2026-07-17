@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-07-17</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Edição 17/07/2026</span>
+  </div>
+  <h1 class="masthead-title">GhostLock escapa do container — o Ubuntu ainda espera</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Os últimos dias foram um desfile de brechas em appliances ativamente exploradas (SonicWall, Oracle, AD FS — tudo no brief de ontem). Hoje a história mais interessante está mais no fundo: <strong>GhostLock</strong>, um use-after-free de quinze anos no kernel Linux, dá root a qualquer usuário logado — <em>e</em> escapa de containers Docker e Kubernetes. O exploit público é 97% confiável. A correção está no mainline desde <strong>20/04/2026</strong> (commit <code>3bfdc63936dd</code>), com backports a partir de <strong>04/05</strong>, e a família RHEL entregou em 09/07 — mas quem consulta hoje o <strong>Ubuntu LTS</strong> ainda lê "vulnerable" ali. Essa é a notícia de verdade: não a brecha, mas os quase três meses de atraso das distribuições por trás dela. Além disso, a perícia sobre a invasão do AsyncAPI, que mostra por que o <code>--ignore-scripts</code> não teria salvado nada aqui.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>GhostLock (CVE-2026-43499)</strong>: use-after-free na lógica de priority inheritance do kernel, presente desde 2011 (Linux 2.6.39), CVSS 7,8. Usuário local → root, <strong>incluindo escape de container</strong>. Exploit público, 97% de taxa de acerto.</li>
+      <li><span class="chip hot">Infra</span> <span class="chip">Global</span> <strong>Ubuntu LTS fica para trás</strong>: o 24.04 está hoje como "vulnerable, work in progress", o 22.04 e o 20.04 simplesmente como "vulnerable" — dez dias após a divulgação (07/07) e quase três meses após a correção no mainline. A AlmaLinux já tinha kernels corrigidos em 09/07.</li>
+      <li><span class="chip">Sec</span> <span class="chip">Global</span> <strong>A correção precisou de outra correção</strong>: o patch original do kernel trouxe consigo um novo bug de travamento (<strong>CVE-2026-53166</strong>) — revertido no upstream em junho, portanto bem antes da divulgação.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>AsyncAPI, a perícia</strong>: a Microsoft Threat Intelligence desmontou a invasão de 14/07. O código malicioso dispara na <em>importação</em>, não na instalação — o <code>npm install --ignore-scripts</code> passa batido. É baixado um pacote criptografado de ~8,2 MB via IPFS.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">EUA</span> <strong>Prazo do KEV hoje</strong>: as duas brechas do SonicWall SMA1000 (<strong>CVE-2026-15409</strong>, CVSS 10,0) precisam estar corrigidas em órgãos dos EUA hoje. O Oracle E-Business Suite segue amanhã.</li>
+      <li><span class="chip good">Release</span> <span class="chip">Global</span> <strong>PostgreSQL 19 Beta 2</strong> (16/07) — uma beta de faxina, não uma beta de recursos. O GA continua "por volta de setembro/outubro de 2026". Além do <strong>Angular 22.0.7</strong>, também ontem.</li>
+      <li><span class="chip">Release</span> <span class="chip">Global</span> <strong>Python 3.15.0b4 amanhã</strong> (18/07), depois o rc1 em 04/08 — o GA está previsto para 01/10/2026.</li>
+      <li><span class="chip">Regulação</span> <span class="chip">UE</span> <strong>Google: o que já é definitivo e o que não é</strong>. A sentença do Android (€ 4,125 bilhões) transitou em julgado desde 02/07. A <em>nova</em> multa do DMA, apesar das manchetes circulando, <strong>ainda não foi aplicada</strong> — esperada antes do recesso de verão, sem data fixa.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Semana à frente</div>
+      <div class="timeline-sub">Quais prazos estão vencendo — e quando chega a vez do seu kernel</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">ter 14/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>AsyncAPI: cinco versões envenenadas publicadas no npm</span>
+          <span>Zero-days do SonicWall SMA1000 divulgados</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">qua 15/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Microsoft Threat Intelligence publica a análise do AsyncAPI</span>
+          <span>Oracle E-Business Suite (CVE-2026-46817) entra no KEV</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">qui 16/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>PostgreSQL 19 Beta 2</span>
+          <span>Angular 22.0.7</span>
+        </div>
+      </div>
+      <div class="tl-col today hot">
+        <div class="tl-date">sex 17/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Hoje</span>
+          <span>Prazo do KEV vence: SonicWall SMA1000 (CVE-2026-15409/15410)</span>
+          <span>Kernel do Ubuntu LTS segue sem a correção do GhostLock</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">sáb 18/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Prazo do KEV: Oracle E-Business Suite (CVE-2026-46817)</span>
+          <span>Python 3.15.0 beta 4</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>GhostLock: o container deixou de ser uma parede</h2>
+        <p>A descoberta mais interessante da semana não é uma brecha em appliance, e sim um bug que está no kernel Linux desde <strong>2011</strong> — introduzido com o <strong>Linux 2.6.39</strong> e não detectado por cerca de quinze anos. O <strong>CVE-2026-43499</strong>, batizado de "GhostLock", é um use-after-free na lógica de priority inheritance do <em>rtmutex</em>: a função de limpeza <code>remove_waiter()</code> limpa a tarefa que está <em>rodando no momento</em> em vez da que realmente está esperando, deixando um ponteiro pendurado em memória de stack do kernel já liberada.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Use-after-free:</strong> um programa devolve um espaço de memória, mas continua guardando o endereço — e depois volta a escrever ali. É como fazer check-out do seu quarto de hotel, ficar com a chave e voltar de madrugada: nesse meio-tempo, outra pessoa já está hospedada lá. Se o invasor conseguir determinar quem se muda para lá, o kernel de repente passa a escrever dados que o invasor preparou.</div>
+        <div class="eli5">
+          <strong class="eli5-term">Priority Inheritance (futex PI):</strong> quando uma tarefa sem importância segura um lock do qual uma tarefa importante depende, o kernel empresta rapidamente a ela a prioridade mais alta — para que termine mais rápido e libere o lock. Como quando o estagiário é deixado passar na frente do caixa porque o chefe está logo atrás dele. O GhostLock embaralha exatamente esse empréstimo.</div>
+        <p>O gatilho vem de três futexes e vários threads, levados de propósito a um impasse de prioridade; depois disso, o invasor reocupa o stack frame liberado com uma estrutura de waiter falsificada e vai escalando até leitura/escrita arbitrária no kernel e, por fim, root. A brecha depende só do <code>CONFIG_FUTEX_PI</code> — que está ativado em praticamente todo kernel de distribuição. Foi encontrada pela <strong>Nebula Security</strong> com sua ferramenta de análise VEGA; segundo testes próprios, o exploit é <strong>97%</strong> confiável e rendeu <strong>US$ 92.337</strong> pelo programa kernelCTF do Google.</p>
+        <p>A parte que realmente afeta Daniel: <strong>o GhostLock escapa de containers.</strong> A nota CVSS de <strong>7,8</strong> ("alta", não "crítica") só fica assim moderada porque o invasor já precisa estar logado na máquina. Só que exatamente essa condição é barata de conseguir num mundo de containers: todo processo dentro de um container <em>é</em> um usuário local no kernel do host.</p>
+        <div class="callout warn">
+          <span class="callout-label">Atenção</span>
+          Containers compartilham o kernel do host — o isolamento é uma função do kernel, não uma cerca. Por isso, um LPE de kernel não é uma brecha "só local" em Docker/Kubernetes, e sim o caminho clássico de "posso rodar código em um pod" para "o node é meu". Quem roda código de terceiros em containers (CI runner, multi-tenant) deveria ler esse 7,8 mais como um 9.
+        </div>
+        <div class="src"><a href="https://thehackernews.com/2026/07/15-year-old-ghostlock-flaw-enables-root.html">thehackernews.com</a> · <a href="https://almalinux.org/blog/2026-07-09-ghostlock/">almalinux.org</a> · <a href="https://ubuntu.com/security/CVE-2026-43499">ubuntu.com/security</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Quase três meses de atraso nas distribuições — e uma correção que precisou de outra correção</h2>
+        <p>A correção do kernel já existe há muito mais tempo do que as manchetes sugerem. A linha do tempo de quem encontrou a falha: reportada em <strong>18/04/2026</strong>, corrigida no mainline em <strong>20/04/2026</strong> como o commit <strong>3bfdc63936dd</strong>, com backports para as séries stable a partir de <strong>04/05</strong>, e só tornada pública em <strong>07/07</strong>. A <strong>AlmaLinux</strong> já tinha kernels corrigidos no repositório de testes em <strong>09/07</strong> — especificamente <code>kernel-4.18.0-553.141.2.el8_10</code> (AlmaLinux 8), <code>kernel-5.14.0-687.24.1.el9_8</code> (9) e <code>kernel-6.12.0-211.32.1.el10_2</code> (10) ou superior. Ou seja: dois dias após a divulgação.</p>
+        <p>E o Ubuntu? Uma olhada na própria página de CVE da Canonical <strong>hoje, 17/07</strong> — dez dias após a divulgação e quase três meses após a correção no mainline: o <strong>24.04 LTS</strong> (Noble) está, na maioria dos pacotes de kernel, como <em>"Vulnerable, work in progress"</em>; o <strong>22.04 LTS</strong> (Jammy) e o <strong>20.04 LTS</strong> (Focal) simplesmente como <em>"Vulnerable"</em>. Prioridade: "High". Até agora, essencialmente só o 26.04 (Resolute) está corrigido.</p>
+        <p>O caminho até aqui não foi direto: a correção <em>original</em> precisou, ela própria, de um ajuste — trouxe consigo um bug de travamento, catalogado como <strong>CVE-2026-53166</strong>, revertido no upstream em junho. Só que isso não serve como explicação para o atraso atual do Ubuntu: aquilo foi resolvido cinco semanas antes da divulgação. Por que os kernels LTS continuam abertos mesmo assim, a Canonical não diz — a página só informa "work in progress".</p>
+        <div class="callout info">
+          <span class="callout-label">Para a stack de Daniel</span>
+          Na prática: <code>apt list --upgradable | grep linux-image</code> não ajuda agora — para Jammy/Focal simplesmente ainda não há nada para puxar. O que dá para fazer: acompanhar a página de CVE do Ubuntu e <em>reiniciar</em> depois da atualização do kernel (uma correção de kernel só vale a partir daí; Livepatch só se você já usa). Até lá, vale dobrado a regra antiga: nada de código não confiável em containers num host que importa para você.
+        </div>
+        <div class="src"><a href="https://ubuntu.com/security/CVE-2026-43499">ubuntu.com/security</a> · <a href="https://almalinux.org/blog/2026-07-09-ghostlock/">almalinux.org</a> · <a href="https://thehackernews.com/2026/07/15-year-old-ghostlock-flaw-enables-root.html">thehackernews.com</a></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>AsyncAPI: por que o <code>--ignore-scripts</code> não teria adiantado dessa vez</h2>
+        <p><span class="update-since">Atualização desde qua</span> O ataque à cadeia de suprimentos do AsyncAPI já apareceu aqui como um fio em 15/07. Agora a <strong>Microsoft Threat Intelligence</strong> divulgou a análise — e ela é mais interessante que o incidente em si, porque derruba uma suposição confortável.</p>
+        <p>Foram afetadas <strong>cinco versões envenenadas em quatro pacotes</strong>, publicadas em 14/07: <code>@asyncapi/specs</code> (6.11.2-alpha.1 e 6.11.2), <code>@asyncapi/generator</code> (3.3.1), <code>@asyncapi/generator-components</code> (0.7.1) e <code>@asyncapi/generator-helpers</code> (1.1.1). A frase decisiva do relatório da Microsoft: "When any consuming build or application imports a poisoned package, the injected block runs immediately."</p>
+        <p>Esse é o ponto central. A defesa padrão contra pacotes npm envenenados — e o recurso que o npm v12 está vendendo como grande avanço — é desligar os <strong>scripts de instalação</strong>. Só que aqui o código malicioso não dispara na instalação, e sim no <code>import</code>/<code>require</code>. Com isso, o <code>npm install --ignore-scripts</code> passa batido: o pacote fica quieto no disco, esperando até que seu build o utilize.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Install-Hook vs. tempo de importação:</strong> um install-hook é um script que dispara ao descompactar o pacote — e essa porta dá para trancar. Já o código de tempo de importação está no próprio pacote e roda assim que seu programa o usa. É como um pacote que não explode ao ser desembalado, mas na primeira vez que é usado: o controle de segurança na entrada não vê nada.</div>
+        <p>Segundo a Microsoft, é baixado um pacote criptografado de <strong>cerca de 8,2 MB</strong> (<code>sync.js</code>) via <strong>IPFS</strong>, que instala um runtime de C2 (framework "M-RED-TEAM", identificador de campanha "miasma-train-p1"). O IPFS como via de transporte é a jogada esperta: nenhum nome de domínio para bloquear, nenhum servidor para apreender. A conclusão, sem mudanças desde quarta: lockfiles e versões fixadas protegem mais aqui do que qualquer bloqueio de scripts.</p>
+        <div class="src"><a href="https://www.microsoft.com/en-us/security/blog/2026/07/15/unpacking-asyncapi-npm-supply-chain-compromise-import-time-payload-delivery/">microsoft.com/security</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Prazos do KEV: SonicWall hoje, Oracle amanhã</h2>
+        <p>Rápido, porque ontem já foi detalhado: para as duas brechas do SonicWall SMA1000, o prazo de correção para órgãos federais dos EUA vence <strong>hoje, 17/07</strong> (Binding Operational Directive 26-04). São elas: <strong>CVE-2026-15409</strong> — uma SSRF não autenticada com nota máxima <strong>CVSS 10,0</strong> — e <strong>CVE-2026-15410</strong> (CVSS 7,2, injeção de código após login). A SonicWall confirmou "exploração ativa" em vários incidentes investigados; corrigido nas versões 12.4.3-03453 e 12.5.0-02835 ou superiores.</p>
+        <p><strong>Amanhã, 18/07</strong>, vence o prazo para o <strong>CVE-2026-46817</strong> no Oracle E-Business Suite (CVSS 9,8, tomada não autenticada). Nenhuma das duas roda na stack de Daniel — o valor está na calibração: entre a divulgação (14/07) e o prazo do órgão (17/07) ficam apenas <strong>três dias</strong>. É essa a rapidez com que o órgão dos EUA aperta o parafuso quando uma brecha se mostra comprovadamente perigosa. É a régua com que se pode medir a própria janela de correção.</p>
+        <div class="callout info">
+          <span class="callout-label">Contexto</span>
+          As páginas de KEV do cisa.gov fecharam a porta hoje com HTTP 403 em acesso direto — os dados acima, por isso, se apoiam em duas fontes secundárias independentes (BleepingComputer, Rapid7), que coincidem em números, notas e prazos, e não no próprio texto do site da CISA.
+        </div>
+        <div class="src"><a href="https://www.bleepingcomputer.com/news/security/sonicwall-warns-of-sma1000-flaws-exploited-in-zero-day-attacks-patch-now/">bleepingcomputer.com</a> · <a href="https://www.rapid7.com/blog/post/etr-rapid7-mdr-team-discovers-new-sonicwall-sma1000-zero-days-being-actively-exploited-cve-2026-15409-cve-2026-15410/">rapid7.com</a> · <a href="https://www.bleepingcomputer.com/news/security/cisa-orders-feds-to-patch-actively-exploited-oracle-flaw-by-saturday/">bleepingcomputer.com</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Fio do Gitea: 13 dias do aviso ao primeiro ataque</h2>
+        <p>Complemento a um fio de 08 e 11/07 — não é um incidente novo, mas um número que fica na cabeça. A brecha do Gitea Docker <strong>CVE-2026-20896</strong> (CVSS 9,8) surge porque a imagem oficial fixa <code>REVERSE_PROXY_TRUSTED_PROXIES = *</code>: com isso, o Gitea passa a confiar no cabeçalho <code>X-WEBAUTH-USER</code> vindo de <em>qualquer</em> IP de origem — dá para se passar por qualquer usuário. Corrigido na <strong>1.26.3</strong>.</p>
+        <p>A Sysdig viu a primeira tentativa de exploração em ambiente real <strong>13 dias</strong> depois da divulgação (observação por volta de 07/07, reportada em meados de julho — portanto não é um número do dia). Segundo a contagem, há cerca de <strong>6.200</strong> instâncias do Gitea publicamente acessíveis; quantas dessas são vulneráveis, o número explicitamente não diz.</p>
+        <p>Duas semanas soam tranquilas — não são. É o teto realista da sua janela de correção para uma brecha crítica e bem documentada numa aplicação web autogerenciada. Quem roda Gitea em homelab ou para clientes: cheque a versão da imagem, e se houver um reverse proxy na frente, fixe a lista de proxies confiáveis num IP real em vez de <code>*</code>.</p>
+        <div class="src"><a href="https://thehackernews.com/2026/07/threat-actors-probe-gitea-docker-flaw.html">thehackernews.com</a> · <a href="https://www.penligent.ai/hackinglabs/cve-2026-20896/">penligent.ai</a></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PostgreSQL 19 Beta 2: a rodada de faxina</h2>
+        <p>A <strong>PostgreSQL 19 Beta 2</strong> saiu em <strong>16/07</strong>. Importante para calibrar a expectativa: isso <em>não</em> é um anúncio de recursos. Os grandes temas do PG 19 — as consultas nativas de grafo <strong>SQL/PGQ</strong> e o <strong>REPACK</strong> unificado — vieram com a Beta 1 (tratada aqui em 10/07) e na Beta 2 aparecem só na lista de <em>correções de bugs</em>: "Several fixes for the new SQL/PGQ property graph feature" e "Fix <code>REPACK</code> worker not being cleaned up on a <code>FATAL</code> exit".</p>
+        <p><em>Nota sobre os números:</em> vários resumos secundários vendem a Beta 2 como um release de recursos, com "feature freeze" incluso. O anúncio do próprio postgresql.org não sustenta isso — ele trata de testes. Por isso, aqui vale a versão da fonte primária.</p>
+        <p>A data para guardar está assim na página: mais betas e um ou mais release candidates "until the final release around <strong>September/October 2026</strong>". Para Daniel, isso significa: se você quer planejar o SQL/PGQ num projeto, agora é a janela em que seu bug report ainda faz diferença — a partir do outono é ticket de suporte.</p>
+        <div class="src"><a href="https://www.postgresql.org/about/news/postgresql-19-beta-2-released-3350/">postgresql.org</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Frontend &amp; Python: Angular 22.0.7, e amanhã o 3.15.0b4</h2>
+        <p>O <strong>Angular 22.0.7</strong> saiu em <strong>16/07</strong> e está listado como "Latest" na página de releases — o sétimo patch da série 22, iniciada em junho. O ritmo semanal de patches se mantém. Para os projetos Angular de Daniel: bump de rotina, nada que justifique reorganizar um sprint.</p>
+        <p>No Python, amanhã, <strong>sábado 18/07</strong>, chega o <strong>3.15.0 beta 4</strong> — segundo o cronograma de releases (PEP 790), a última beta antes do primeiro release candidate em <strong>04/08</strong>. O <strong>3.15.0</strong> final está marcado para <strong>01/10/2026</strong>. Quem roda serviços FastAPI: a fase de beta é o momento barato para testar suas dependências contra o 3.15 — em outubro você vai encontrar os mesmos erros sob pressão de prazo.</p>
+        <p><em>Sinalizado com honestidade:</em> circulam dois recursos badalados sobre o 3.15 — um profiler de amostragem estatística e uma palavra-chave <code>lazy</code> para importações explicitamente adiadas. Eles não aparecem no PEP do cronograma de releases, e nenhuma fonte primária apareceu hoje para confirmá-los; por isso, aqui ficam sem números e sem detalhes, até que isso seja comprovado.</p>
+        <div class="src"><a href="https://github.com/angular/angular/releases">github.com/angular/angular</a> · <a href="https://peps.python.org/pep-0790/">peps.python.org/pep-0790</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Google na UE: o que transitou em julgado — e o que não</h2>
+        <p>Fio contínuo de regulação da UE, hoje sobretudo como esclarecimento. Circulam manchetes de que a UE teria acabado de aplicar uma multa recorde de <strong>DMA</strong> contra o Google. Pelo que se sabe até agora, isso não procede — e o risco de confusão é grande, porque de fato existem <em>dois</em> processos.</p>
+        <p><strong>Transitou em julgado:</strong> o Tribunal de Justiça da UE confirmou definitivamente, em <strong>02/07</strong>, a multa antitruste do Android — <strong>€ 4,125 bilhões</strong>, originalmente € 4,3 bilhões em 2018, levemente reduzida pelo Tribunal Geral da UE em 2022. Com isso, encerra-se um processo de oito anos. Está concluído e já foi tratado aqui em 05/07.</p>
+        <p><strong>Ainda não decidido:</strong> o processo <em>separado</em> e mais recente do DMA sobre autopreferência na busca do Google e sobre as regras anti-steering na Play Store. A decisão da Comissão é esperada antes do recesso de verão do Parlamento — não há data fixa, ou seja, ainda não saiu. O <strong>27/07</strong>, tantas vezes citado, <em>não</em> tem a ver com a multa: é o prazo legal para duas decisões de especificação separadas (DMA.100220, sobre acesso de IA no Android, e DMA.100209, sobre compartilhamento de dados de busca).</p>
+        <div class="callout info">
+          <span class="callout-label">Honestidade nas fontes</span>
+          Uma manchete de 16/07 afirma que a multa do DMA já teria sido aplicada; o próprio artigo estava inacessível (403), e a checagem cruzada continua indicando "decisão pendente". Até que uma fonte primária da Comissão diga outra coisa, vale aqui: esperada, não aplicada. A sentença do Android é outra coisa — não misture os dois valores.
+        </div>
+        <div class="src"><a href="https://www.usnews.com/news/top-news/articles/2026-07-02/google-loses-fight-against-record-4-1-billion-eu-antitrust-fine">usnews.com</a> · <a href="https://techxplore.com/news/2026-07-eu-court-bn-euro-google-1.html">techxplore.com</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Higiene do KEV: um CVE de 2023 na lista de julho</h2>
+        <p>Observação pequena, à margem, porque ajuda na leitura dos catálogos: no lote do KEV de <strong>15/07</strong> está o <strong>CVE-2023-4346</strong> (protocolo KNX, automação predial) — uma brecha com número de <strong>2023</strong>. Isso não é erro nem brecha nova: uma entrada no KEV registra a data do <em>comprovante de exploração</em>, não a da descoberta.</p>
+        <p>Irrelevante para a stack de Daniel (KNX é tecnologia predial, não backend web). Mas como regra de leitura, vale ouro: quem joga entradas de KEV automaticamente no sistema de tickets como "zero-days recém-descobertos" produz alarmes falsos. Sempre olhar o ano no número do CVE.</p>
+        <div class="src"><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov (catálogo KEV)</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Anotado à margem</h2>
+        <p>O dia de notícias de IA foi barulhento — Gemini 3.5 Pro, Kimi K3, Kimi K2.7 no Copilot. Esse é território do <strong>brief de ai-dev</strong> e fica lá; aqui, IA só aparece quando vira uma questão de software (como no pacote do AsyncAPI, que puxa sua carga via IPFS).</p>
+        <p>Do Brasil não saiu hoje nada de consistente na área de tecnologia — nenhum gancho BR na janela. Em vez de esticar uma história, fica registrada a lacuna: amanhã tem mais.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Hoje é sexta-feira, dezessete de julho. Os últimos dias foram um desfile de appliances sob ataque ativo — SonicWall, Oracle, Microsoft. Hoje a história mais interessante está um andar abaixo, direto no próprio kernel.</p>
+  <p>Ela se chama GhostLock e tem quinze anos de idade. A falha entrou no kernel Linux em dois mil e onze e permaneceu despercebida desde então. Tecnicamente é um use-after-free: o kernel libera um espaço de memória, mas continua guardando o endereço e depois volta a escrever ali. É como fazer check-out de um quarto de hotel, ficar com a chave e voltar de madrugada — nesse meio-tempo, já tem outra pessoa hospedada lá. Quem consegue determinar quem se muda para lá, ganha root.</p>
+  <p>O ponto que afeta Daniel: o GhostLock escapa de containers. A gravidade está em sete vírgula oito, ou seja, alta, mas não crítica — e só por isso, porque o invasor já precisa estar logado na máquina. Só que, num mundo de containers, isso é barato de conseguir. Containers compartilham o kernel do host. O isolamento é uma função do kernel, não uma cerca. Segundo quem descobriu a falha, o exploit público é noventa e sete por cento confiável, e o Google pagou uns noventa e dois mil dólares de recompensa por ele.</p>
+  <p>A notícia de verdade, porém, não é a brecha, e sim o que aconteceu depois. A correção está no kernel mainline desde o dia vinte de abril, no commit três-b-f-d-c-seis-três, e os backports rodam desde o dia quatro de maio. A falha só foi tornada pública em sete de julho. A AlmaLinux já tinha kernels prontos no repositório de testes dois dias depois. Já o Ubuntu: uma olhada na própria página de CVE da Canonical hoje — dez dias após a divulgação e quase três meses após a correção no mainline — mostra a versão vinte e quatro ponto zero quatro como, cito, vulnerável, trabalho em andamento — e as versões vinte e dois ponto zero quatro e vinte ponto zero quatro simplesmente como vulneráveis. O patch original do kernel até precisou de uma correção própria, porque trouxe consigo um bug de travamento — mas isso foi revertido em junho, cinco semanas antes da divulgação. Ou seja, não serve como explicação para o atraso atual.</p>
+  <p>Segunda história, a cadeia de suprimentos do npm. A Microsoft Threat Intelligence desmontou a invasão do AsyncAPI do dia catorze de julho, e a análise derruba uma suposição confortável. Cinco versões envenenadas em quatro pacotes. O código malicioso não dispara na instalação, e sim na importação. Com isso, a defesa padrão — desligar scripts de instalação, o recurso que o npm está vendendo como grande avanço — passa completamente batida. O pacote fica quieto no disco, esperando até que seu build o utilize. É baixado um pacote criptografado de cerca de oito vírgula dois megabytes via IPFS. Nenhum nome de domínio para bloquear, nenhum servidor para apreender.</p>
+  <p>Sobre os prazos: para as duas brechas do SonicWall, o prazo de correção para órgãos dos EUA vence hoje, uma delas com a nota máxima de dez vírgula zero. A brecha da Oracle segue amanhã. Nenhuma das duas roda na stack de Daniel, mas a calibração ensina algo: entre a divulgação e o prazo do órgão ficam três dias. Combinando com isso, um número do fio do Gitea — a Sysdig viu a primeira tentativa real de ataque treze dias depois do aviso. Esse é o teto realista da sua janela de correção.</p>
+  <p>Mais tranquilo, o lado dos releases. O PostgreSQL dezenove Beta dois saiu ontem — mas como rodada de faxina, não como release de recursos. As consultas de grafo e o novo comando repack vieram com a Beta um e agora só aparecem na lista de correção de bugs. Vários resumos vendem isso de outro jeito; o anúncio de postgresql ponto org não sustenta essa versão. O dezenove final chega, cito, por volta de setembro, outubro de dois mil e vinte e seis. Além disso, o Angular vinte e dois ponto zero ponto sete, também ontem, e amanhã o Python três quinze Beta quatro — a última beta antes do release candidate do dia quatro de agosto, pronto no primeiro de outubro.</p>
+  <p>Para fechar, um esclarecimento vindo de Bruxelas. Circulam manchetes de que a UE teria acabado de aplicar uma multa recorde contra o Google com base no Digital Markets Act. Isso não procede, pelo que se sabe até agora. Transitou em julgado a sentença do Android, do dia dois de julho — quatro vírgula um dois cinco bilhões de euros, confirmada definitivamente depois de quase oito anos. Já o novo processo do DMA sobre autopreferência na busca ainda não foi decidido; a decisão é esperada antes do recesso de verão do Parlamento, sem data fixa. São dois processos, dois valores — não misture.</p>
+  <p>Na semana que vem, vamos ver se o Ubuntu finalmente atualiza seus kernels LTS, e antes do recesso de verão, se sai a decisão do DMA. Esse foi o brief de software de hoje.</p>
+</div>
+
+</body>
+</html>
