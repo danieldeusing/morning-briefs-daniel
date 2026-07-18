@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-07-18</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Edição 18/07/2026</span>
+  </div>
+  <h1 class="masthead-title">wp2shell: sete horas da regra WAF até o PoC</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">O WordPress lançou na sexta-feira as versões <strong>6.9.5 e 7.0.2</strong>, corrigindo uma RCE pré-autenticação no core que funciona em uma instalação padrão, sem plugin e sem login. A Rapid7 escreveu no mesmo dia que um exploit público era "altamente provável em pouco tempo". Essa previsão durou exatamente <strong>sete horas e quarenta e um minutos</strong> — contados desde as regras de WAF da Cloudflare, às 17h03 UTC, até o primeiro repositório PoC público, às 00h44 UTC desta madrugada. O patch em si já estava disponível havia horas; a verdadeira notícia não é a falha, portanto, mas o quão curta ficou a janela em que "corrigido, mas ainda não implantado" era um estado aceitável. Além disso: um prazo KEV do SharePoint que vence amanhã, um aviso do 7-Zip que torna relevante, com atraso, um patch de fim de junho, e a retrospectiva de duas invasões ao npm em uma semana.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>wp2shell (CVE-2026-63030)</strong>: RCE pré-autenticação no core do WordPress via rotas em lote da REST API mais SQLi. Afeta 6.9.0–6.9.4 e 7.0.0–7.0.1, corrigido em <strong>6.9.5 / 7.0.2</strong>. A NVD lista dois scores lado a lado: <strong>9,8 CRÍTICO</strong> do CNA (WPScan) e <strong>7,5 ALTO</strong> do CISA-ADP — a discordância é justamente o ponto.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>PoC já é público</strong>: um PoC de detecção para a cadeia (63030 + 60137) está no GitHub desde hoje, <strong>00h44 UTC</strong>. Exploração em ambiente real ainda <em>não</em> foi confirmada — nem pela Rapid7, nem pela securityonline.</li>
+      <li><span class="chip good">Infra</span> <span class="chip">Global</span> <strong>A Cloudflare saiu na frente</strong>: duas regras de WAF gerenciadas desde as <strong>17h03 UTC do dia 17/07</strong>, ação padrão <em>Bloquear</em>, aplicada expressamente também aos planos gratuitos. Útil como amortecedor — não substitui a atualização.</li>
+      <li><span class="chip">Sec</span> <span class="chip">Global</span> <strong>O segundo CVE atinge mais gente</strong>: <strong>CVE-2026-60137</strong> (injeção de SQL) remonta até a série <strong>6.8</strong> — corrigido em <strong>6.8.6</strong>. Quem "ficou parado" na 6.8 achando-se estável não está fora de risco.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">USA</span> <strong>Prazo KEV vence amanhã</strong>: <strong>CVE-2026-58644</strong> (SharePoint, RCE por desserialização, CVSS <strong>9,8</strong>) está no catálogo da CISA desde 16/07, e órgãos federais dos EUA precisam ter corrigido até <strong>19/07</strong>. Exploração ativa confirmada.</li>
+      <li><span class="chip">Sec</span> <span class="chip">Global</span> <strong>7-Zip, o aviso atrasado</strong>: <strong>CVE-2026-14266</strong>, estouro de buffer em heap ao processar dados <code>xz</code>, CVSS <strong>7,0</strong> (ZDI-26-444). Corrigido já na <strong>26.02</strong>, de 25/06 — o aviso só saiu esta semana.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>npm, segunda rodada</strong>: depois do AsyncAPI (14/07), agora o retrospecto da invasão ao <strong>jscrambler</strong> de 11/07 — cinco versões envenenadas mais quatro pacotes de plugins. As versões antigas (8.14.0/8.16.0/8.17.0) disparavam via hook <code>preinstall</code>, as mais novas (8.18.0/8.20.0) tinham o dropper no código principal do pacote — <code>--ignore-scripts</code> só ajudou nas antigas.</li>
+      <li><span class="chip">Release</span> <span class="chip">Global</span> <strong>Docker Desktop 4.82.0</strong> (13/07) — Compose <strong>v5.3.0</strong>, Scout CLI 1.23.1, sem CVEs nas notas de versão. Rodada tranquila.</li>
+      <li><span class="chip">Release</span> <span class="chip">Global</span> <strong>CPU trimestral da Oracle na terça-feira</strong> (21/07). O que vem nela só se sabe na terça — as "versões de Java para julho" que circulam hoje são especulação.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Panorama da semana</div>
+      <div class="timeline-sub">O que apareceu esta semana — e qual prazo bate à porta em seguida</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Ter 14/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>SonicWall SMA1000: dois zero-days revelados</span>
+          <span>Tailscale 1.98.9 (TS-2026-004 a -009)</span>
+          <span>AsyncAPI: cinco versões npm envenenadas</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Qua 15/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Microsoft Threat Intelligence: análise do AsyncAPI</span>
+          <span>Aviso ZDI-26-444 do 7-Zip torna-se público</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Qui 16/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>SharePoint CVE-2026-58644 entra no KEV da CISA</span>
+          <span>PostgreSQL 19 Beta 2</span>
+          <span>Angular 22.0.7</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Sex 17/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>WordPress 6.9.5 / 7.0.2 / 6.8.6 / 7.1-beta2</span>
+          <span>Regras de WAF da Cloudflare no ar, 17h03 UTC</span>
+        </div>
+      </div>
+      <div class="tl-col today hot">
+        <div class="tl-date">Sáb 18/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Hoje</span>
+          <span>PoC do wp2shell no GitHub, 00h44 UTC</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Dom 19/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Prazo KEV do SharePoint (órgãos dos EUA)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Seg 20/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Nada agendado</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Ter 21/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Oracle Critical Patch Update (rodada trimestral)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>wp2shell: uma instalação padrão basta</h2>
+        <p>O WordPress lançou em <strong>17/07</strong> uma rodada de segurança — <strong>6.9.5</strong>, <strong>7.0.2</strong>, <strong>6.8.6</strong> e <strong>7.1-beta2</strong> — fechando duas falhas no core. A mais grave, <strong>CVE-2026-63030</strong>, ganhou pelo caminho o apelido de "wp2shell": uma <strong>RCE pré-autenticação</strong>, ou seja, execução de código no servidor sem qualquer login.</p>
+        <p>A cadeia tem dois elos. Primeiro, uma <em>confusão de rota</em> no endpoint em lote da REST API: o WordPress consegue agrupar várias chamadas de API em uma única requisição HTTP, e ao resolver qual rota interna uma chamada agrupada realmente designa, o sistema pode ser enganado. Segundo, uma injeção de SQL em <code>WP_Query</code>, acessível justamente por trás dessa rota mal resolvida. Juntas, segundo a Rapid7, resultam em "complete compromise of the website and its underlying data" (comprometimento total do site e dos dados subjacentes).</p>
+        <div class="eli5">
+          <strong class="eli5-term">Confusão de rota:</strong> um aplicativo web decide, pelo caminho da URL, qual função interna vai tratar uma requisição — e qual verificação de permissão vem antes dela. É como um porteiro que decide quem entra olhando a placa na porta. Numa requisição em lote, porém, a placa está dentro do <em>pacote</em>, e não na porta: o porteiro checa a etiqueta inofensiva, e lá dentro a porta proibida é aberta assim mesmo.</div>
+        <p>O que torna isso perigoso não é a sofisticação, mas a ausência de pré-requisitos: nenhuma conta, nenhum plugin, nenhuma configuração especial. Uma instância recém-instalada do WordPress, com as configurações padrão, é acessível por uma requisição HTTP anônima.</p>
+        <p>Estão afetadas as versões <strong>6.9.0 a 6.9.4</strong> e <strong>7.0.0 a 7.0.1</strong>. Tudo abaixo de 6.9 não é afetado por esta CVE — o que não é consolo, veja abaixo: a segunda falha da mesma rodada de sexta-feira remonta até a 6.8. O WordPress acionou <strong>atualizações automáticas forçadas</strong> para os ramos afetados; a intenção é boa, mas atualizações automáticas costumam falhar silenciosamente por permissões de arquivo ou cron desativado. O certo é conferir qual versão realmente está rodando, em vez de presumir.</p>
+        <div class="src"><a href="https://wordpress.org/news/2026/07/wordpress-7-0-2-release/">wordpress.org/news</a> · <a href="https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/">rapid7.com</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Dois scores para a mesma falha — o CNA diz 9,8, o ADP diz 7,5</h2>
+        <p>Quem rola a página do registro da NVD para o CVE-2026-63030 até mais abaixo encontra duas avaliações CVSS lado a lado. O <strong>CNA</strong> — ou seja, o atribuidor oficial, aqui a WPScan — dá <strong>9,8 CRÍTICO</strong>, com o vetor clássico <code>AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</code>: não autenticado pela rede, os três impactos (confidencialidade, integridade, disponibilidade) em "alto". O registro do <strong>CISA-ADP</strong> dá <strong>7,5 ALTO</strong>, com vetor reduzido: <code>C:H/I:N/A:N</code> — o invasor lê dados, mas a avaliação do ADP não inclui acesso de escrita nem dano à disponibilidade na conta. A Rapid7 cita a frase completa com os dois valores: "While the official GitHub security advisory classifies the severity as Critical, the vulnerability has currently been assigned a CVSS score of 7.5." (Embora o aviso oficial de segurança do GitHub classifique a gravidade como Crítica, a vulnerabilidade atualmente recebeu uma pontuação CVSS de 7,5.)</p>
+        <p>Não é uma história de "número que ainda vai ser ajustado", e sim uma divergência real — com relevância prática: quem baseia a priorização de patches num limiar de score ("a partir de 9,0 é urgente, abaixo disso entra na próxima janela") e vê primeiro o 7,5 acaba adiando. Regra: havendo mais de uma avaliação, vale a mais alta. E mais importante que o número são, de qualquer forma, as condições — sem login, sem plugins, acessível pela internet.</p>
+        <div class="src"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-63030">nvd.nist.gov</a> · <a href="https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/">rapid7.com</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>O segundo CVE remonta mais no tempo</h2>
+        <p>Além do wp2shell, a rodada de sexta-feira traz o <strong>CVE-2026-60137</strong>, uma injeção de SQL relatada por uma equipe formada por TF1T, dtro e haongo (GHSA-fpp7-x2x2-2mjf). Ela recebe menos atenção, mas atinge mais instalações: remonta até a série <strong>6.8</strong> e é corrigida ali na <strong>6.8.6</strong>.</p>
+        <p>É a combinação incômoda para quem opera com "ficamos deliberadamente uma versão minor atrás": na RCE espetacular você está livre, na SQLi mais silenciosa você está exposto — e como ela não vira manchete, ninguém confere. Quem administra WordPress deveria simplesmente revisar hoje os quatro ramos: 6.8.6, 6.9.5, 7.0.2, 7.1-beta2. Tudo abaixo de 6.8 não é afetado, segundo o post de lançamento.</p>
+        <div class="src"><a href="https://wordpress.org/news/2026/07/wordpress-7-0-2-release/">wordpress.org/news</a></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Sete horas e quarenta e um minutos</h2>
+        <p>A verdadeira lição deste fim de semana está numa conta de horário. A <strong>Cloudflare</strong> lançou suas duas novas regras de WAF — uma para a SQLi e outra para a RCE — segundo declaração própria "at 17:03 UTC on July 17 2026", com ação padrão <em>Bloquear</em> e explicitamente "to protect all customers, including those on free and paid plans" (para proteger todos os clientes, inclusive os dos planos gratuito e pago). A Rapid7 escreveu no mesmo dia que os detalhes técnicos do exploit ainda não haviam sido publicados, mas que um PoC público era "highly likely […] in a short period of time" (altamente provável em pouco tempo).</p>
+        <p>O primeiro repositório PoC público da cadeia foi criado, segundo a API do GitHub, em <strong>18/07/2026 às 00h44min18s UTC</strong> — sete horas e quarenta e um minutos depois das regras da Cloudflare, e ainda no mesmo dia do patch. Ele se descreve como um PoC de detecção; a securityonline relata que a ferramenta confirma a injeção e consegue ler o banco de dados, inclusive os hashes de senha do administrador.</p>
+        <div class="callout warn">
+          <span class="callout-label">Atenção</span>
+          Exploração confirmada em ambiente real ainda <em>não existe</em> — nem segundo a Rapid7 ("not aware of publicly confirmed in-the-wild exploitation", 17/07), nem segundo a securityonline ("No in-the-wild exploitation has been confirmed.", 18/07). Isso é um retrato do momento, não um sinal de tranquilidade: numa falha pré-autenticação na base de CMS mais usada do mundo, varredura em massa é o normal em questão de dias, não semanas.
+        </div>
+        <p>A consequência prática é incômoda, mas simples. O modelo antigo — o patch sai, você agenda uma janela de manutenção para a semana seguinte — parte da premissa silenciosa de que entre o fix e a arma se passam dias. Mas como o próprio patch já é a instrução (qualquer um pode ler o diff), essa janela encolheu para horas. Para tudo que é acessível pela internet sem login, vale: <em>no dia do patch</em>, ou com um filtro protetor na frente antes disso.</p>
+        <div class="src"><a href="https://blog.cloudflare.com/wordpress-vulnerabilities/">blog.cloudflare.com</a> · <a href="https://securityonline.info/wordpress-pre-auth-rce-cve-2026-63030/">securityonline.info</a> · <a href="https://github.com/Senanfurkan/wordpress-cve-2026-63030">github.com</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>SharePoint 9,8: o prazo vence amanhã</h2>
+        <p><strong>CVE-2026-58644</strong> é uma falha de desserialização no Microsoft SharePoint com CVSS <strong>9,8</strong> (vetor <code>AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</code>). A descrição da NVD é sucinta: "Deserialization of untrusted data in Microsoft Office SharePoint allows an unauthorized attacker to execute code over a network." A falha está sendo ativamente explorada e entrou no catálogo KEV da CISA em <strong>16/07</strong>; o prazo para órgãos federais dos EUA termina em <strong>19/07</strong> — amanhã.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Desserialização:</strong> um programa recebe um fluxo de dados e reconstrói a partir dele objetos "vivos" na memória. É como um móvel para montar com manual de instruções. O problema: se o atacante escreve o manual, o programa não monta uma cadeira, e sim o que estiver escrito ali — e alguns objetos, ao serem montados, executam código.</div>
+        <p>Versões corrigidas: <strong>SharePoint Server 2016 a partir de 16.0.5556.1005</strong> e <strong>2019 a partir de 16.0.10417.20153</strong> (ambas retiradas do campo CNA/CPE da NVD e consistentes entre si). Para a <strong>Subscription Edition</strong>, o número é ambíguo: o campo CNA/CPE da NVD indica <strong>16.0.19725.20384</strong>, mas o próprio bloco de "Initial Analysis" da NVD indica <strong>…20434</strong> — os dois na mesma página. O confiável aqui é o <strong>KB5002655</strong> da Microsoft, contra o qual se deve conferir a versão instalada, em vez de confiar em um dos números da NVD. Para a stack do Daniel, isso não é uma exposição direta — entra aqui porque servidores SharePoint são bastante comuns em redes de empresas de médio porte na Alemanha, e um prazo KEV vencendo num domingo é um bom gancho para perguntar aos clientes.</p>
+        <div class="callout info">
+          <span class="callout-label">Situação das fontes</span>
+          As páginas de alerta da CISA responderam com HTTP 403 na consulta. A entrada no KEV (16/07) e o prazo (19/07) se apoiam, portanto, no registro da NVD mais cobertura secundária, e não numa leitura literal da página da CISA.
+        </div>
+        <div class="src"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-58644">nvd.nist.gov</a> · <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov/kev</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>7-Zip: o fix tem três semanas, o aviso tem três dias</h2>
+        <p><strong>CVE-2026-14266</strong> é um estouro de buffer em heap que pode ocorrer ao processar dados no formato <code>xz</code> — CVSS <strong>7,0</strong>, catalogado como <strong>ZDI-26-444</strong> (ZDI-CAN-30169), relatado por Landon Peng, da Lunbun LLC. Estão afetadas todas as versões <strong>anteriores à 26.02</strong>; a correção está no <strong>7-Zip 26.02</strong> — já publicado em <strong>25/06/2026</strong>.</p>
+        <p>A exploração requer interação do usuário: a vítima precisa abrir um arquivo compactado preparado. A cobertura não afirma exploração em ambiente real; foi uma divulgação coordenada via Zero Day Initiative. É a variante mais tranquila — com uma ressalva: o 7-Zip não se atualiza sozinho. O fix está disponível há três semanas, e é justamente por isso que ainda não chegou à maioria das máquinas. O comando <code>7z i</code> mostra a versão instalada.</p>
+        <div class="callout info">
+          <span class="callout-label">Situação das fontes</span>
+          O registro da NVD para o CVE-2026-14266 estava, no momento da consulta, marcado como <em>RESERVED</em>, ou seja, sem conteúdo. Score e faixas de versão vêm da cobertura do heise, que por sua vez cita o aviso da ZDI — um passo mais distante da fonte primária do que eu gostaria. Se a NVD atualizar e divergir, prevalece a NVD.
+        </div>
+        <div class="src"><a href="https://www.heise.de/en/news/7-Zip-Update-patches-code-smuggling-vulnerability-11368387.html">heise.de</a> · <a href="https://www.zerodayinitiative.com/advisories/ZDI-26-444/">zerodayinitiative.com</a></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>npm, duas invasões em uma semana</h2>
+        <p><span class="update-since">Atualização</span> O incidente do AsyncAPI foi coberto aqui em detalhes ontem. O que passou um pouco despercebido: ele não foi o único. Em <strong>11/07</strong>, várias versões do pacote <code>jscrambler</code> e de seus plugins de build foram comprometidas por meio de credenciais de publicação roubadas — três dias antes do AsyncAPI.</p>
+        <p>São relatadas como envenenadas as versões <code>jscrambler</code> 8.14.0, 8.16.0, 8.17.0, 8.18.0 e 8.20.0, além de <code>jscrambler-webpack-plugin</code> 8.6.2, <code>gulp-jscrambler</code> 8.6.2, <code>grunt-jscrambler</code> 8.5.2 e <code>jscrambler-metro-plugin</code> 9.0.2; as versões limpas seriam, respectivamente, 8.22.0 e 8.6.3 / 8.6.3 / 8.5.3 / 9.0.3. O código malicioso carregava infostealers específicos por plataforma, escritos em Rust, a partir de um contêiner ofuscado de cerca de 7,8 MB — o alvo eram credenciais de nuvem, tokens de CI, sessões de navegador, carteiras cripto e arquivos de configuração de ferramentas de codificação com IA.</p>
+        <p>O interessante é a entrega. Ela mudou no meio da campanha: segundo a Socket, citada pelo The Hacker News, as versões 8.14.0, 8.16.0 e 8.17.0 disparam a partir de um hook <code>preinstall</code> — contra isso ajuda o <code>npm install --ignore-scripts</code>. Já em 8.18.0 e 8.20.0, o dropper migrou para o código principal do pacote e para a CLI, "so it fires when the package is imported or run, and npm install --ignore-scripts does not stop it" (de modo que ele dispara quando o pacote é importado ou executado, e o npm install --ignore-scripts não o impede). O atacante testou, portanto, os dois caminhos dentro de uma única semana.</p>
+        <p>A comparação com o AsyncAPI fica, assim, menos limpa, mas mais instrutiva: o bloqueio de scripts cobre um caminho e não o outro — e, como o mesmo atacante pode usar os dois, ele não substitui as defesas mais banais. O que teria barrado os dois é pouco espetacular: versões fixadas (pinned) e alguns dias de espera antes de uma versão recém-publicada entrar no build.</p>
+        <div class="callout info">
+          <span class="callout-label">Situação das fontes</span>
+          O blog da socket.dev respondeu com HTTP 403 na consulta. As listas de versões acima vêm de cobertura secundária (resumos da Socket, The Hacker News) e <em>não</em> foram conferidas contra uma fonte primária lida literalmente. Antes de aplicar uma lista de pins, confira contra o registro do npm.
+        </div>
+        <div class="src"><a href="https://thehackernews.com/2026/07/compromised-jscrambler-8140-npm-release.html">thehackernews.com</a> · <a href="https://socket.dev/blog/jscrambler-supply-chain-attack">socket.dev</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Rodada trimestral da Oracle na terça-feira</h2>
+        <p>Em <strong>21/07/2026</strong> chega a próxima rodada do <strong>Oracle Critical Patch Update</strong> — a rodada trimestral de janeiro, abril, julho e outubro, sempre na terceira terça-feira. Para tudo que depende de Java/JVM, isso significa: conferir na terça-feira o que sai para o Oracle Java SE e aguardar os backports da própria distribuição ou do fornecedor do JDK.</p>
+        <p>Deliberadamente <em>sem</em> números de versão aqui. As páginas de avisos da Oracle responderam com HTTP 403 na consulta, e já circulam nos resultados de busca resumos da "CPU de julho" com contagens de CVEs e até uma data de publicação errada (15/07 — que foi uma quarta-feira). Análises prévias de uma rodada ainda não publicada ou são recicladas da rodada trimestral anterior, ou são chute. Na terça-feira, sai em <code>oracle.com/security-alerts/</code>.</p>
+        <div class="src"><a href="https://www.oracle.com/security-alerts/">oracle.com/security-alerts</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Docker Desktop 4.82.0 — uma rodada tranquila</h2>
+        <p><strong>Docker Desktop 4.82.0</strong> saiu em <strong>13/07/2026</strong> e traz, entre outras coisas, <strong>Docker Compose v5.3.0</strong>, Docker Agent v1.98.0 e Scout CLI 1.23.1. As notas de versão <em>não</em> registram CVEs nem correções de segurança — é uma rodada de bugfixes, incluindo um erro em que contêineres criados pelo Docker Desktop recebiam um timeout de parada de um segundo em vez do padrão da engine.</p>
+        <p>É exatamente o tipo de bug que só se percebe num deploy, quando uma aplicação que leva três segundos para desligar de forma limpa é derrubada abruptamente. Quem testa localmente o comportamento de desligamento de contêineres e estranhou divergências em relação à produção: era isso.</p>
+        <div class="src"><a href="https://docs.docker.com/desktop/release-notes/">docs.docker.com</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Manutenção da stack, em resumo</h2>
+        <h3>Angular 22.0.7</h3>
+        <p>Lançado em 16/07; traz, além de correções no compilador, uma proteção contra <strong>ReDoS</strong> ao processar URLs de source maps. ReDoS significa: um texto formatado de forma maliciosa faz uma expressão regular calcular por um tempo exponencialmente longo — o processo trava, sem que ninguém tenha realmente invadido nada. O ramo paralelo <code>v22.1.0-next.6</code> saiu no mesmo dia.</p>
+        <h3>PostgreSQL 19 Beta 2</h3>
+        <p>Também em 16/07, uma beta de arrumação: corrigida uma regressão em <code>vacuumdb --analyze-in-stages</code> com tabelas particionadas, além de correções em tabelas temporais (<code>FOR PORTION OF</code>), grafos de propriedades SQL/PGQ e uma condição de corrida ao ativar a decodificação lógica. GA segue previsto "para setembro/outubro de 2026".</p>
+        <h3>Tailscale 1.98.9</h3>
+        <p>De 14/07, com seis avisos (TS-2026-004 a -009) — entre eles, o encaminhamento de socket Unix do SSH agora respeita permissões de symlink, Serve/Funnel interrompem a resolução de caminhos não absolutos (contra CPU-pinning), e o SSH passa a rejeitar nomes de usuário puramente numéricos e nomes com hífen inicial. Detalhado no brief de 16/07.</p>
+        <div class="src"><a href="https://github.com/angular/angular/releases">github.com/angular</a> · <a href="https://www.postgresql.org/about/news/postgresql-19-beta-2-released-3350/">postgresql.org</a> · <a href="https://tailscale.com/changelog">tailscale.com/changelog</a></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Anotado à margem</h2>
+        <p><strong>Prazo da SonicWall venceu.</strong> O prazo KEV para CVE-2026-15409 (CVSS 10,0) e CVE-2026-15410 encerrou em 17/07; as versões corrigidas da SMA-1000 são 12.4.3-03453 e 12.5.0-02835 em diante. Exploração ativa foi confirmada pela própria SonicWall. Detalhes no brief de 16/07.</p>
+        <p><strong>DMA contra o Android.</strong> A Comissão Europeia dirigiu ao Google, em 16/07, <em>medidas de especificação vinculantes</em>: assistentes de IA de terceiros devem obter acesso equivalente a 11 funções relevantes do Android — como exemplos, são citados expressamente a <em>ativação por voz</em> ("iniciar o próprio assistente por comando de voz, como 'Hey Google'"), <em>ações dentro de apps</em> (por exemplo, chamar um táxi) e sugestões de resposta em chats. A implementação deve ocorrer na "the next major Android release" (próxima versão principal do Android) — a Comissão não indica em sua página nem um número de versão, nem um prazo; a cobertura jornalística situa ambos em <strong>2027</strong>. Isso entra aqui apenas como mecânica regulatória: é o primeiro caso em que o DMA não ataca configurações padrão nem regras de loja, e sim impõe <em>paridade de API</em> para concorrentes. O lado dos assistentes dessa história pertence aos briefs de ai-dev e ai-usecases.</p>
+        <p><strong>O que não escrevo hoje.</strong> Sobre as entradas no KEV da semana passada (Langflow, Joomla/JoomShaper, Oracle E-Business Suite, Microsoft AD FS), não houve nada de novo hoje; sem atualização, elas caem na regra das 48 horas.</p>
+        <div class="src"><a href="https://www.sonicwall.com/support/notices/product-notice-sma-1000-series-affected-by-multiple-vulnerabilities/kA1VN000001nv6D0AQ">sonicwall.com</a> · <a href="https://thehackernews.com/2026/07/two-sonicwall-sma-1000-zero-days.html">thehackernews.com</a> · <a href="https://digital-markets-act.ec.europa.eu/commission-provides-guidance-google-ai-interoperability-android-and-sharing-google-search-data-under-2026-07-16_en">digital-markets-act.ec.europa.eu</a></div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Hoje é sábado, dezoito de julho. O dia tem um horário como protagonista: zero hora e quarenta e quatro minutos.</p>
+  <p>O WordPress lançou ontem uma rodada de segurança: seis ponto nove ponto cinco, sete ponto zero ponto dois, além de seis ponto oito ponto seis e uma versão beta. Com isso, fecha-se uma falha que ganhou o apelido de wp two shell — uma execução de código pré-autenticação no núcleo do WordPress. Não precisa de login, não precisa de plugin, não precisa de configuração especial. Uma instalação padrão já basta.</p>
+  <p>Tecnicamente, duas coisas estão encadeadas. O WordPress consegue agrupar várias chamadas de API numa única requisição, e, ao resolver qual rota interna uma dessas chamadas agrupadas realmente representa, o sistema pode ser enganado. Por trás disso espera uma injeção de SQL. Juntas, como escreve a Rapid7, elas resultam na tomada completa do site e do banco de dados.</p>
+  <p>Agora, sobre o horário. Ontem, às dezessete horas e três minutos, horário universal coordenado, a Cloudflare lançou duas regras de firewall contra isso, para todos os clientes, inclusive os de planos gratuitos. A Rapid7 escreveu no mesmo dia que um exploit público era altamente provável em pouco tempo. Essa previsão durou sete horas e quarenta e um minutos. À zero hora e quarenta e quatro desta madrugada, a primeira prova de conceito pública apareceu no GitHub — o patch em si já estava disponível havia horas.</p>
+  <p>Ataques confirmados em ambiente real ainda não existem, nem segundo a Rapid7, nem segundo a securityonline. Mas isso é só um retrato do momento. A verdadeira lição está na conta do tempo: o modelo antigo, em que se vê um patch e depois se agenda uma janela de manutenção para a semana seguinte, parte do pressuposto de que entre o conserto e a arma se passam dias. Só que, como o próprio patch já é a instrução, agora são horas. Para tudo que é acessível pela internet sem login, a regra passa a ser: no dia do patch.</p>
+  <p>Vale notar como essa falha é classificada. O órgão oficial responsável pela atribuição, a WPScan, dá nota nove vírgula oito, crítica. Já o registro secundário da CISA dá sete vírgula cinco, alta, com um cálculo mais restrito. É uma divergência real entre os dois avaliadores, não um número provisório à espera de ajuste — e quem prioriza patches só pelo valor da nota corre o risco de deixar essa falha para depois.</p>
+  <p>Paralelamente, há ainda um segundo erro, mais discreto, na mesma rodada: uma injeção de SQL. Ela remonta até a série seis ponto oito e é corrigida ali na versão seis ponto oito ponto seis. Quem fica deliberadamente uma versão atrás está livre da falha espetacular e exposto à silenciosa. E é justamente por isso que ninguém confere.</p>
+  <p>De Redmond vem o segundo prazo do fim de semana. Uma falha de desserialização no SharePoint, com valor nove vírgula oito, está sendo ativamente explorada e entrou desde quinta-feira no catálogo de vulnerabilidades conhecidas exploradas. Órgãos dos Estados Unidos precisam ter corrigido até amanhã. Para a própria stack do Daniel isso não é relevante, mas para clientes de médio porte na Alemanha, sim.</p>
+  <p>Depois, um retrospecto: 7-Zip. Um estouro de heap ao processar dados xz, valor sete vírgula zero, relatado através da Zero Day Initiative. O conserto está na versão vinte e seis ponto zero dois, disponível desde vinte e cinco de junho. O aviso só saiu há três dias. O 7-Zip não se atualiza sozinho, e por isso o conserto de três semanas atrás ainda não chegou à maioria das máquinas.</p>
+  <p>No tema npm, esta semana não houve uma invasão, e sim duas. Depois do AsyncAPI, em quatorze de julho, agora o retrospecto do jscrambler, do dia onze: cinco versões envenenadas mais quatro pacotes de plugins, um infostealer em Rust. O interessante é como o ataque mudou de tática no meio do caminho: as primeiras versões disparavam o código malicioso na instalação, e aí desativar os scripts de instalação ajudava. Já nas versões mais recentes, o código malicioso foi para dentro do próprio pacote e da linha de comando, disparando ao ser importado ou executado — e nesse caso bloquear scripts não adianta nada. O atacante testou os dois caminhos na mesma semana. O que teria travado os dois é mais simples: versões fixadas e alguns dias de espera antes de uma versão nova entrar no build.</p>
+  <p>Por fim, o olhar para frente. Na terça-feira chega a rodada trimestral de patches da Oracle. O que ela traz para Java, hoje ninguém sabe com seriedade, mesmo já circulando na internet resumos que trazem até uma data errada. Assim, a semana que vem deve trazer manutenção de Java — e a pergunta se a prova de conceito da falha do WordPress vai virar varredura em larga escala.</p>
+</div>
+
+</body>
+</html>
