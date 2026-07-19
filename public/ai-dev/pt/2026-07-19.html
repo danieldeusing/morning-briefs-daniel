@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI-Dev · 2026-07-19</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI-Dev</span>
+    <span class="dot">·</span>
+    <span>Edição 2026-07-19</span>
+  </div>
+  <h1 class="masthead-title">A vantagem está no harness, não no modelo</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Há dois anos falamos de modelos como se o modelo fosse o produto. Uma medição de 12/07 sugere que estamos olhando para a metade errada. Duas ferramentas de codificação, <strong>o mesmo modelo por baixo</strong> — o Claude Code empurra para o contexto cerca de <strong>32.800 tokens</strong> de prompt de sistema, descrições de ferramentas e estrutura antes da pergunta em si, o OpenCode cerca de <strong>6.900</strong>. Fator 4,7. Quem acha isso desperdício perdeu o ponto: são exatamente esses tokens a diferença que se sente ao trabalhar. Somado ao código-fonte TypeScript vazado por acidente em março — 512.000 linhas, cinco estratégias de compressão de contexto, 14 pontos de quebra de cache rastreados —, isso forma o primeiro retrato razoavelmente nítido de onde de fato está o trabalho em um agente de codificação. Além disso: a especificação do MCP fica definitiva em nove dias e descarta o estado, o PyTorch traz o FlexAttention para o Mac, e o Grok 4.5 apresenta números bonitos que ninguém conferiu de forma independente.</p>
+    <ul>
+      <li><span class="chip hot">Harness</span> <strong>Overhead de contexto 4,7 vezes maior com o mesmo modelo</strong> — Claude Code 2.1.207 vs. OpenCode 1.17.18, ambos fixados em <code>claude-sonnet-4-5</code>. Medido em 12/07/2026.</li>
+      <li><span class="chip">Harness</span> <strong>53.839 tokens de escrita em cache contra 1.003.</strong> O Claude Code reescreveu por completo seu prefixo de ~43k no meio da tarefa — caro, mas aparentemente proposital.</li>
+      <li><span class="chip">Claude</span> <strong>O vazamento do código-fonte de 31/03 explica o porquê</strong>: v2.1.88, ~1.900 arquivos, 46.000 linhas só para o motor de requisições, 29.000 para definições de ferramentas.</li>
+      <li><span class="chip hot">MCP</span> <strong>Especificação final em 28/07 — daqui a nove dias.</strong> Maior revisão desde o início: sem handshake de <code>initialize</code>, sem <code>Mcp-Session-Id</code>, Roots/Sampling/Logging marcados como obsoletos.</li>
+      <li><span class="chip good">Local</span> <strong>PyTorch 2.13</strong> (08/07): o FlexAttention agora roda em Apple Silicon, até <strong>~12,3×</strong> mais rápido que o SDPA em padrões de atenção esparsos. Para experimentos locais no Mac, a entrada mais interessante da semana.</li>
+      <li><span class="chip">Bench</span> <strong>Grok 4.5: 64,7 % no SWE-Bench Pro — segundo a xAI.</strong> Consulta própria ao leaderboard SEAL da Scale hoje: o Grok 4.5 não aparece lá. Número do fornecedor, não medição. Por isso hoje, propositalmente, <em>sem</em> gráfico de barras.</li>
+      <li><span class="chip">Claude</span> <strong>Claude Code 2.1.214</strong> (18/07): uma leva inteira de brechas fechadas na verificação de permissões — bypass do PowerShell, a regra <code>Edit(src/**)</code> alcançava longe demais, comandos com mais de 10.000 caracteres agora sempre pedem confirmação.</li>
+      <li><span class="chip">Tool</span> <strong>Chamada geral:</strong> Cline hoje de manhã na <code>cli-v3.0.45</code>, OpenHands na <code>cloud-1.46.2</code> (15/07), Cursor inalterado em 3.11, leaderboard do Aider congelado desde 20/11/2025, Continue.dev definitivamente morto.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Perspectiva da semana</div>
+      <div class="timeline-sub">Uma data certa no horizonte: a especificação do MCP se torna final</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Qua 08/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Lançamento duplo</span>
+          <span>xAI lança o Grok 4.5, $2 / $6 por milhão de tokens</span>
+          <span>PyTorch 2.13: FlexAttention no Apple Silicon</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Dom 12/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Medição</span>
+          <span>Comparação de overhead de tokens entre Claude Code e OpenCode é publicada</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sex 17/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Ferramentas</span>
+          <span>Claude Code 2.1.212: <code>/fork</code> em segundo plano, <code>/subtask</code></span>
+          <span>Cursor no Slack: plano prévio, multi-repositório</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sáb 18/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Segurança</span>
+          <span>Claude Code 2.1.214: verificação de permissões reforçada em vários pontos</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Dom 19/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Hoje</span>
+          <span>Cline <code>cli-v3.0.45</code> + SDK v0.0.65 (04:02 UTC)</span>
+          <span>Claude Code 2.1.215: <code>/verify</code> e <code>/code-review</code> agora só sob demanda</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Ter 28/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Prazo final</span>
+          <span>Especificação do MCP se torna final: núcleo sem estado</span>
+          <span>Roots, Sampling e Logging passam a ser considerados obsoletos a partir de então</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Mesmo modelo, contexto quatro vezes maior <span class="h2-refs">[1][2][3]</span></h2>
+        <p>O desenho do experimento é tão simples que dá vontade de perguntar por que ninguém o fez de forma tão limpa antes. Pega-se dois agentes de codificação de linha de comando — <strong>Claude Code 2.1.207</strong> e <strong>OpenCode 1.17.18</strong> —, força-se ambos a usar o mesmo modelo-base (<code>claude-sonnet-4-5</code>), dá-se a mesma tarefa a ambos e conta-se o que de fato passa pela linha. Resultado de <strong>12/07/2026</strong>: o Claude Code encheu o contexto com cerca de <strong>33.000 tokens</strong> de prompt de sistema, esquemas de ferramentas e estrutura injetada, antes mesmo de a pergunta real chegar. O OpenCode se virou com cerca de <strong>7.000</strong>.<sup>[1]</sup></p>
+        <div class="eli5"><strong class="eli5-term">Harness (estrutura):</strong> O modelo é o motor, o harness é o resto do carro — direção, câmbio, freios, painel. Tecnicamente, é a camada que decide o que o modelo chega a ver: quais arquivos, quais ferramentas, quais regras, quais lembranças do histórico, e o que é descartado quando fica demais. Dois carros com o mesmo motor dirigem de formas completamente diferentes. É exatamente isso que essa comparação mede.</div>
+        <p>Mais revelador ainda que o número inicial é o comportamento ao longo do caminho. No teste, o Claude Code escreveu <strong>53.839 tokens de cache em cinco requisições</strong>, incluindo <em>uma reescrita completa de todo o seu prefixo de ~43k no meio da tarefa</em>. O OpenCode escreveu <strong>1.003</strong>.<sup>[2]</sup></p>
+        <div class="eli5"><strong class="eli5-term">Cache de prompt e prefixo de cache:</strong> O início sempre igual de uma conversa — prompt de sistema, lista de ferramentas, regras do projeto — não precisa ser reprocessado a cada requisição. O provedor o guarda em cache, como um carimbo que se aplica repetidamente em vez de reescrever o texto toda vez. A pegadinha: se um único caractere do início mudar, todo o carimbo fica inválido e precisa ser recortado de novo — o que custa mais. Quem reestrutura seu prefixo no meio da execução não faz isso por acidente barato, mas paga conscientemente por isso.</div>
+        <p><strong>Minha leitura, e eu a defendo:</strong> isso não é desleixo, é a conta. Um agente que reorganiza metade do seu contexto no meio da tarefa decidiu que um contexto arrumado vale mais do que um barato. Quem já viu uma execução longa de agente começar a girar em círculos a partir do minuto quarenta sabe por quê: o inimigo não é a falta de conhecimento, é o contexto entulhado. A sobrecarga 4,7 vezes maior compra disciplina de ferramentas e comportamento de organização — pago em tokens, ou seja, em dinheiro vivo por execução.</p>
+        <p>O que o estudo explicitamente <em>não</em> mostra: que mais overhead é automaticamente melhor. Ele mede tokens, não qualidade de resultado. A abordagem enxuta do OpenCode é plausivelmente superior em tarefas curtas e bem delimitadas — menos peso morto, menos distração, menos custo. A frase honesta é: agora temos uma medição sólida do lado dos custos e continuamos sem nenhuma do lado dos benefícios. Quem quiser inverter isso precisa rodar as duas ferramentas pelo mesmo conjunto de tarefas e contar taxas de sucesso. É exatamente isso que falta.</p>
+        <div class="callout info"><span class="callout-label">O que o vazamento acrescenta</span> Em <strong>31/03/2026</strong>, a versão <strong>2.1.88</strong> do pacote <code>@anthropic-ai/claude-code</code> veio acompanhada, por acidente, de um source map do Bun não higienizado — <strong>59,8 MB</strong>, a partir do qual foi possível reconstruir <strong>~1.900 arquivos TypeScript com mais de 512.000 linhas</strong>. A Anthropic classificou isso como um erro de empacotamento causado por falha humana, não como um incidente de segurança.<sup>[3]</sup> Em termos de conteúdo, combina exatamente com a medição acima: <strong>cinco estratégias diferentes de compressão de contexto</strong>, um motor de requisições com <strong>46.000 linhas</strong>, <strong>29.000 linhas</strong> só para definições de ferramentas, <strong>14 pontos de quebra de cache rastreados</strong> e <strong>três modelos de execução para subagentes</strong> (Fork, Teammate, Worktree).<sup>[3]</sup> O fato de alguém rastrear explicitamente catorze formas de destruir o cache diz mais sobre o esforço de desenvolvimento do que qualquer anúncio.</div>
+        <p><strong>O que isso significa na prática.</strong> Trocar de modelo sob o mesmo harness muda menos do que o benchmark promete — trocar de harness sob o mesmo modelo muda mais. Se seu agente trabalha bem ou mal, a causa está pelo menos tanto na estrutura quanto no modelo. E, de forma incômoda: essa camada é, nas ferramentas fechadas, o verdadeiro fundamento do negócio. Por isso nenhum cartão de modelo menciona o que realmente conta aqui — e por isso um source map quebrado foi mais informativo do que dois anos de marketing.</p>
+        <div class="footnotes"><ol>
+          <li id="fn1"><span class="src"><a href="https://systima.ai/blog/claude-code-vs-opencode-token-overhead">systima.ai</a></span> — "Claude Code used roughly 33,000 tokens of system prompt, tool schemas, and injected scaffolding before the prompt even arrived. OpenCode used about 7,000."; versões testadas "Claude Code 2.1.207 and OpenCode 1.17.18, both pinned to claude-sonnet-4-5". Artigo datado de 12/07/2026, acessado em 19/07/2026.</li>
+          <li id="fn2"><span class="src"><a href="https://systima.ai/blog/claude-code-vs-opencode-token-overhead">systima.ai</a></span> — "Claude Code wrote 53,839 cache tokens across five requests, including one complete mid-task re-write of its full ~43k prefix. OpenCode wrote 1,003." Medição única de um autor, não uma média de várias execuções — deve ser lida como indicação de tendência.</li>
+          <li id="fn3"><span class="src"><a href="https://www.infoq.com/news/2026/04/claude-code-source-leak/">infoq.com</a> · <a href="https://claudefa.st/blog/guide/mechanics/claude-code-source-leak">claudefa.st</a></span> — InfoQ: "The leak was discovered on March 31, 2026, affecting version 2.1.88 of the @anthropic-ai/claude-code package"; "a release packaging issue caused by human error, not a security breach". claudefa.st: "~1,900 TypeScript source files / 512,000+ lines of code … 59.8 MB source map file (cli.js.map)"; "Five context compaction strategies"; "46,000 lines" motor de requisições; "29,000 lines" definições de ferramentas; "14 tracked cache-break vectors"; "three subagent execution models: Fork, Teammate, and Worktree". Ambos acessados em 19/07/2026.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>O harness também é o limite de segurança <span class="h2-refs">[4]</span></h2>
+        <p>Alinhado com a história acima, e por isso aqui em vez de na chamada geral: <strong>Claude Code 2.1.214</strong>, de <strong>18/07</strong>, é em grande parte um conserto de permissões. Foram corrigidos, entre outros: uma regra como <code>Edit(src/**)</code>, que liberava gravações em qualquer <code>src/</code> em qualquer lugar da árvore em vez de apenas no diretório de trabalho; uma forma de burlar a verificação em sessões do PowerShell 5.1; verificações do Bash que, em caso de dúvida, agora bloqueiam em vez de permitir redirecionamentos de descritor de arquivo; e comandos com mais de <strong>10.000 caracteres</strong>, que a partir de agora sempre pedem confirmação em vez de rodar automaticamente.<sup>[4]</sup> Hoje veio a <strong>2.1.215</strong>: <code>/verify</code> e <code>/code-review</code> não iniciam mais sozinhos, apenas sob demanda.</p>
+        <p><strong>O ponto não é a falha isolada.</strong> O ponto é que essas decisões — este comando pode rodar sem perguntar? — são tomadas inteiramente na estrutura, não no modelo. Um modelo melhor não teria evitado nenhuma dessas seis falhas. Quem deixa agentes de codificação rodar com privilégios ampliados está escolhendo menos um modelo e mais um motor de permissões. E esse motor precisa ser mantido atualizado: uma lista de padrões permitidos, escrita há semanas, pode significar hoje algo diferente do que significava ontem.</p>
+        <div class="footnotes"><ol>
+          <li id="fn4"><span class="src"><a href="https://code.claude.com/docs/en/changelog">code.claude.com/docs/en/changelog</a></span> — Consulta própria em 19/07/2026. Versão 2.1.214 (18/07/2026): "Fixed single-segment <code>dir/**</code> allow rules like <code>Edit(src/**)</code> auto-approving writes to nested <code>dir/</code> directories anywhere in the tree instead of only <code>&lt;cwd&gt;/dir</code>"; "Fixed a permission-check bypass affecting commands run in Windows PowerShell 5.1 sessions"; "Fixed Bash permission checks to fail closed on file-descriptor redirect forms"; "commands over 10,000 characters now always prompt". Versão 2.1.215 (19/07/2026): "Claude no longer runs the <code>/verify</code> and <code>/code-review</code> skills on its own".</li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>O MCP fica sem estado em nove dias <span class="h2-refs">[5]</span></h2>
+        <p>Essa é a data para anotar no calendário. Em <strong>28/07/2026</strong>, a nova especificação do MCP se torna final — segundo o próprio projeto, a <strong>maior revisão desde o lançamento</strong> do protocolo. O candidato a release está disponível desde <strong>21/05/2026</strong>, então houve bastante antecedência; quem ainda não deu uma olhada tem pouco mais de uma semana.<sup>[5]</sup></p>
+        <div class="eli5"><strong class="eli5-term">MCP (Model Context Protocol):</strong> Um padrão comum de tomada elétrica entre assistentes de IA e tudo o que eles devem usar — arquivos, bancos de dados, sistemas de tickets, APIs. Antes, cada ferramenta escrevia seu próprio adaptador para cada fonte de dados; o MCP é o acordo sobre como deve ser o plugue. Um servidor MCP é então a tomada para exatamente uma fonte de dados, e qualquer assistente que fale esse padrão se encaixa nela.</div>
+        <p>A mudança central: o núcleo fica <strong>sem estado</strong>. O handshake <code>initialize</code>/<code>initialized</code> deixa de existir, assim como o cabeçalho <code>Mcp-Session-Id</code> — "qualquer requisição MCP pode chegar a qualquer instância do servidor".<sup>[5]</sup></p>
+        <div class="eli5"><strong class="eli5-term">Sem estado:</strong> Até agora, um servidor MCP era como uma ligação telefônica — você se conecta, recebe um número de sessão, e tudo o mais depende dessa mesma linha. Quem quisesse distribuir o servidor em dez máquinas precisava garantir que cada requisição seguinte chegasse exatamente à mesma máquina. Sem estado é como um cartão-postal: cada requisição carrega tudo o que é necessário, qualquer máquina pode respondê-la. Para operar atrás de um balanceador de carga, essa é a diferença entre "funciona" e "não funciona".</div>
+        <p>Além disso, <strong>Roots</strong>, <strong>Sampling</strong> e <strong>Logging</strong> serão marcados como obsoletos. Alívio para quem opera servidores em produção: segundo a especificação, entre a marcação e a remoção mais antecipada possível há <strong>pelo menos doze meses</strong>.<sup>[5]</sup> Ou seja, nada quebra em 28/07 — mas quem ainda constrói algo novo contra essas três funcionalidades hoje está construindo um beco sem saída.</p>
+        <p><strong>Por que considero esta a notícia mais importante da semana na prática:</strong> é a única com uma data certa e uma ação concreta. Servidores MCP escritos por nós mesmos já são, para muitos, parte silenciosa da caixa de ferramentas, e é exatamente esse tipo de infraestrutura secundária que acaba pegando a gente de surpresa três meses depois. Meia hora: passar pelos servidores, verificar se algum usa uma das três áreas obsoletas e revisar as suposições sobre sessão. Se o seu servidor mantém estado em memória porque depende do número de sessão, é aí que a coisa fica interessante.</p>
+        <div class="footnotes"><ol>
+          <li id="fn5"><span class="src"><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/">blog.modelcontextprotocol.io</a></span> — "Published on May 21, 2026."; "The final specification ships on July 28, 2026."; "the largest revision of the protocol since launch"; "eliminates the initialize/initialized handshake and Mcp-Session-Id header … any MCP request can land on any server instance"; "at least twelve months between deprecation and the earliest possible removal". Acessado em 19/07/2026.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>PyTorch 2.13: FlexAttention chega ao Mac <span class="h2-refs">[6]</span></h2>
+        <p><span class="chip good">Vale testar</span> <strong>PyTorch 2.13</strong> foi lançado em <strong>08/07/2026</strong> e traz o <strong>FlexAttention para Apple Silicon (MPS)</strong> — via kernels Metal escritos à mão. O número do post de lançamento: em um formato de 1×8×32768×64 com uma janela deslizante de 256 (ou seja, <strong>densidade de ocupação de 0,8 %</strong>), o FlexAttention roda em <strong>~35 ms</strong> contra <strong>~431 ms</strong> do SDPA — fator <strong>~12,3</strong>. Um caso menor, com comprimento 8192 e janela de 64, chega a <strong>~4,15×</strong>.<sup>[6]</sup></p>
+        <div class="eli5"><strong class="eli5-term">Attention esparsa (sparse):</strong> "Attention" é a etapa em que cada palavra do texto olha para todas as outras para decidir o que é importante no momento. Com 32.000 palavras, isso dá mais de um bilhão de pares — a parte mais cara do modelo. Mas, na maioria das vezes, não é preciso considerar todos: uma palavra costuma precisar conhecer apenas algumas centenas de vizinhas. Isso é uma janela deslizante, e aí sobra menos de um por cento daquele bilhão. O <strong>FlexAttention</strong> é o mecanismo com o qual se escreve esse padrão como uma pequena regra, e o PyTorch gera a partir dela um código que nem chega a calcular os 99% desnecessários. O SDPA calcula tudo.</div>
+        <p><strong>Por que isso está aqui e não nas letras miúdas:</strong> o fator vale para o caso esparso — em attention densa não há nada de graça, porque simplesmente não há nada para deixar de fora. Mas quem trabalha localmente em um Mac com contexto longo encontra exatamente esse caso o tempo todo, e até agora esse era o ponto em que era preciso recorrer a uma máquina estranha com CUDA. O fator doze não é o número que se deve esperar — o fator quatro do exemplo menor é a estimativa mais honesta. E mesmo essa já basta para justificar um teste no fim de semana.</p>
+        <div class="footnotes"><ol>
+          <li id="fn6"><span class="src"><a href="https://pytorch.org/blog/pytorch-2-13-release-blog/">pytorch.org</a></span> — "FlexAttention lands on Apple Silicon (MPS), with up to ~12x speedup over SDPA on sparse patterns"; "on a 1×8×32768×64 shape with a 256-element sliding window (0.8% density), FlexAttention runs in ~35 ms vs ~431 ms for SDPA (~12.3x); a smaller 8192-length / 64-window case achieves ~4.15x". Publicado em 08/07/2026, acessado em 19/07/2026. Post de lançamento do próprio fabricante — as medições não foram verificadas de forma independente.</li>
+        </ol></div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Grok 4.5: números bons, nenhuma medição <span class="h2-refs">[7][8]</span></h2>
+        <p><strong>xAI</strong> lançou em <strong>08/07/2026</strong> o <strong>Grok 4.5</strong>, disponível, entre outros lugares, diretamente no Cursor. O preço da API é de <strong>$2 por milhão de tokens de entrada e $6 por milhão de tokens de saída</strong>, bem abaixo do que custam os modelos de ponta da concorrência.<sup>[7]</sup> Mas a alegação mais interessante não é o preço, e sim a economia de palavras: <strong>15.954 tokens de saída em média por tarefa</strong> contra <strong>67.020</strong> do Opus 4.8 no modo máximo — fator <strong>4,2</strong>.<sup>[8]</sup> Quem já viu um modelo de raciocínio falando sozinho por páginas a fio sobre uma mudança de uma linha entende por que isso seria uma categoria própria de progresso.</p>
+        <div class="callout warn"><span class="callout-label">E agora, o ceticismo</span> Todos esses números — <strong>64,7 % no SWE-Bench Pro</strong> para o Grok 4.5, assim como os valores comparativos do Opus 4.8 (69,2 %) e do Claude Fable 5 (80,4 %), além do Terminal-Bench 2.1 (83,3 % contra 78,9 %) — vêm de <strong>cartões de sistema dos respectivos fornecedores</strong>, segundo a própria fonte que os resume.<sup>[8]</sup> São <strong>autodeclarações, não medições independentes</strong>. A contraverificação foi tentada hoje: uma consulta ao leaderboard público <strong>SEAL para o SWE-Bench Pro na Scale AI</strong> trouxe, em <strong>19/07/2026</strong>, apenas registros mais antigos (entre outros, <code>claude-opus-4-6</code>, <code>claude-opus-4-5</code>, <code>claude-4-5-Sonnet</code>). <strong>O Grok 4.5 não estava lá.</strong> Até que isso seja atualizado, vale: número do fornecedor.</div>
+        <div class="eli5"><strong class="eli5-term">Por que um número do fornecedor e uma medição são duas coisas diferentes:</strong> um benchmark é uma prova, mas quem aplica a prova também importa. O fornecedor pode escolher sua própria estrutura, fazer várias tentativas, pegar a melhor execução e selecionar as tarefas que relata. Como um aluno que estuda em casa, se autocorrige e depois informa a própria nota. O leaderboard independente é a sala de prova: as mesmas tarefas, as mesmas condições, para todos. Por isso "segundo o fornecedor, 64,7 %" não é uma notinha de rodapé qualquer, é uma afirmação diferente.</div>
+        <p><strong>Por isso, o que deixamos de fora hoje:</strong> o gráfico de barras. Quatro modelos com quatro valores percentuais lado a lado até ficariam bonitos — e transformariam visualmente quatro autodeclarações em uma série de medições. Um gráfico diz "isso foi comparado". E é exatamente isso que não é o caso aqui. Prefiro essa lacuna a um gráfico que afirma mais do que os dados sustentam.</p>
+        <p>Um adendo: o fato de os fornecedores estarem migrando para o <strong>SWE-Bench Pro</strong> tem um motivo — o conjunto Verified mais antigo é amplamente considerado saturado, com suspeita de contaminação de treinamento. Essa é, explicitamente, uma <em>opinião difundida no campo</em> e não um achado: hoje eu só vi comentário secundário sobre isso, nenhuma fonte primária verificada. Contexto, não número.</p>
+        <div class="footnotes"><ol>
+          <li id="fn7"><span class="src"><a href="https://winbuzzer.com/2026/07/09/grok-45-targets-coding-workflows-with-lower-api-pricing-xcxwbn/">winbuzzer.com</a> · <a href="https://cursor.com/changelog">cursor.com/changelog</a></span> — "SpaceXAI announced Grok 4.5 on July 8th, 2026 … pricing at 2 dollars per million input tokens and 6 dollars per million output tokens"; changelog do Cursor: "Grok 4.5 Model (July 8, 2026)". Acessado em 19/07/2026.</li>
+          <li id="fn8"><span class="src"><a href="https://apidog.com/blog/grok-4-5-benchmarks/">apidog.com</a> · <a href="https://labs.scale.com/leaderboard/swe_bench_pro_public">labs.scale.com (SEAL)</a></span> — apidog: "15,954 average output tokens per SWE Bench Pro task for Grok 4.5, versus 67,020 for Opus 4.8 (max), a 4.2x difference"; "SWE Bench Pro (resolve rate): Grok 4.5: 64.7% / Claude Opus 4.8 (max): 69.2% / Claude Fable 5 (max): 80.4%"; "Terminal Bench 2.1: Grok 4.5: 83.3% / Claude Opus 4.8 (max): 78.9%" — atribuído pela própria fonte aos "respective developers' published system cards". Contraverificação no leaderboard SEAL, acesso em 19/07/2026: não continha o Grok 4.5.</li>
+        </ol></div>
+      </section>
+
+      <section class="news-item">
+        <h2>Chamada geral das ferramentas <span class="h2-refs">[9][10]</span></h2>
+        <ul>
+          <li><strong>Cline</strong> — é o único que se move hoje: <strong><code>cli-v3.0.45</code></strong>, lançado em <strong>19/07/2026 às 04:10 UTC</strong>, além do <code>sdk/v0.0.65</code> oito minutos antes. O ritmo de dois dias da semana passada se mantém.<sup>[9]</sup></li>
+          <li><strong>OpenHands</strong> — <strong><code>cloud-1.46.2</code></strong> de <strong>15/07</strong>, depois de <code>1.46.1</code> (14/07) e <code>1.46.0</code> (10/07); a marca mais recente auto-hospedada é a <code>1.11.0</code> de 09/07 Quatro lançamentos em uma semana, todos na linha cloud.<sup>[9]</sup></li>
+          <li><strong>Cursor</strong> — versão inalterada em <strong>3.11</strong> (10/07), com chats paralelos e capacidade de busca em registros de agentes. Entrada mais recente do changelog sem número de versão: <strong>17/07</strong>, melhorias na integração com o Slack — plano antes de iniciar, ambientes multi-repositório, leitura e escrita em outros canais.<sup>[10]</sup></li>
+          <li><strong>Claude Code</strong> — <strong>2.1.215</strong> (hoje), veja a seção de segurança à esquerda.</li>
+        </ul>
+        <p><strong>Quieto na sombra:</strong> <strong>Aider</strong> continua sendo o paciente crônico — o leaderboard Polyglot ainda traz "Most Recent Update: November 20, 2025", com o GPT-5 (high) na liderança, com 88,0 % de taxa de sucesso a um custo de execução de $29,08. Com oito meses, não conhece nenhum dos modelos de 2026: sinalizar como desatualizado, não citar.<sup>[10]</sup> <strong>Continue.dev</strong> é definitivamente passado — adquirido pelo Cursor, última versão em junho, e os dados na nuvem foram apagados após <strong>15/07</strong>; quem ainda tinha algo lá não tem mais. <strong>GitHub Copilot</strong>, <strong>Devin Desktop</strong> e <strong>JetBrains AI</strong> seguem sem entrada datada desde o último boletim.</p>
+        <div class="callout info"><span class="callout-label">Situação das fontes</span> As versões de <strong>Cline</strong>, <strong>OpenHands</strong>, <strong>Cursor</strong>, <strong>Claude Code</strong> e <strong>Aider</strong> vêm de consultas próprias à respectiva API de releases ou página de changelog em <strong>19/07/2026</strong>. As informações sobre o <strong>Continue.dev</strong> se baseiam em fontes secundárias — o próprio changelog do projeto termina já em janeiro de 2026 e não menciona a aquisição; por isso, é apresentado sem detalhe de versão. <strong>Copilot</strong>, <strong>Devin Desktop</strong> e <strong>JetBrains AI</strong> não foram consultados novamente hoje.</div>
+        <div class="footnotes"><ol>
+          <li id="fn9"><span class="src"><a href="https://github.com/cline/cline/releases">github.com/cline/cline/releases</a> · <a href="https://github.com/OpenHands/OpenHands/releases">github.com/OpenHands/OpenHands/releases</a></span> — Consulta própria à API de releases do GitHub, 19/07/2026. Cline: <code>cli-v3.0.45</code> published 2026-07-19T04:10:41Z, <code>sdk/sdk/v0.0.65</code> 2026-07-19T04:02:15Z. OpenHands: <code>cloud-1.46.2</code> 2026-07-15T16:05:32Z, <code>cloud-1.46.1</code> 2026-07-14, <code>cloud-1.46.0</code> 2026-07-10, <code>1.11.0</code> 2026-07-09.</li>
+          <li id="fn10"><span class="src"><a href="https://cursor.com/changelog">cursor.com/changelog</a> · <a href="https://aider.chat/docs/leaderboards/">aider.chat/docs/leaderboards</a></span> — Cursor, acessado em 19/07/2026: versão mais recente "3.11 (Jul 10, 2026) — Side Chats and Conversation Search"; entrada mais recente "Jul 17, 2026: Improvements to Cursor in Slack". Aider: "Most Recent Update: November 20, 2025"; "Leading Model: GPT-5 (high) with an 88.0% success rate", custo de execução de $29,08.</li>
+        </ol></div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Hoje é domingo, dezenove de julho. O dia em si está calmo, mas há uma medição sobre a mesa que vira de cabeça para baixo uma suposição com a qual trabalhamos há dois anos.</p>
+  <p>A gente fala de modelos como se o modelo fosse o produto. Um estudo do dia doze de julho sugere que estamos olhando para a metade errada da equação. Alguém pegou duas ferramentas de linha de comando para programar, o Claude Code e o OpenCode, e forçou as duas a usar o mesmo modelo por baixo do capô. Depois, a mesma tarefa, contando o que realmente trafega entre as partes. O Claude Code jogou cerca de trinta e três mil tokens de instruções de sistema, descrições de ferramentas e estrutura no contexto antes mesmo de a pergunta de verdade chegar. O OpenCode se virou com cerca de sete mil. Isso é um fator de quatro vírgula sete.</p>
+  <p>Para situar rapidamente o que é um harness: o modelo é o motor, o harness é o resto do carro. Direção, câmbio, freios. É a camada que decide o que o modelo chega a ver e o que é descartado quando fica excesso demais. Dois carros com o mesmo motor dirigem de um jeito completamente diferente.</p>
+  <p>Mais revelador ainda é o comportamento durante a tarefa. No teste, o Claude Code escreveu mais de cinquenta mil tokens de cache, incluindo uma reescrita completa de todo o início do seu contexto no meio do trabalho. A ferramenta concorrente escreveu mil. Minha leitura é que isso não é desleixo, é conta. Um agente que se reorganiza no meio da tarefa decidiu que um contexto limpo vale mais do que um barato. Mas, para ser honesto, é preciso acrescentar: o estudo mede tokens, ou seja, custo. Não mede se o resultado final é melhor. Isso ainda falta.</p>
+  <p>Combina com isso o código-fonte que vazou por acidente no final de março. Em uma versão do Claude Code veio junto um arquivo não higienizado, a partir do qual foi possível reconstruir cerca de mil e novecentos arquivos e mais de meio milhão de linhas. A Anthropic chamou isso de erro de empacotamento por falha humana, não um incidente de segurança. Ali dentro aparecem cinco métodos diferentes para encolher o contexto, quarenta e seis mil linhas só para o motor de requisições e catorze formas rastreadas de quebrar o cache. O fato de alguém acompanhar explicitamente catorze desses pontos de ruptura diz mais sobre o esforço nessa camada do que qualquer anúncio.</p>
+  <p>O segundo ponto do mesmo fio: segurança também mora na estrutura, não no modelo. A versão lançada ontem fechou de uma vez várias brechas na verificação de permissões. Uma regra de permissão para um diretório liberava gravações em pastas de mesmo nome em qualquer lugar da árvore, uma brecha afetava sessões do PowerShell, e comandos muito longos agora não rodam mais automaticamente, eles pedem confirmação. Nenhum modelo melhor teria evitado qualquer uma dessas falhas.</p>
+  <p>A data mais importante está a nove dias de distância. No dia vinte e oito de julho, a nova especificação do Model Context Protocol se torna final, segundo o projeto a maior revisão desde o início. O núcleo passa a ser sem estado: o handshake de login e o número de sessão desaparecem, e qualquer requisição pode chegar a qualquer instância do servidor. Três recursos mais antigos, Roots, Sampling e Logging, passam a ser considerados obsoletos, com um prazo de pelo menos doze meses até uma possível remoção. Ou seja, nada quebra de imediato, mas quem ainda constrói algo novo contra isso hoje está construindo um beco sem saída. Meia hora dedicada aos próprios servidores é bem investida.</p>
+  <p>Para quem trabalha localmente em um Mac, também há uma boa notícia. O PyTorch dois ponto treze, lançado no dia oito de julho, traz o Flex-Attention para o Apple Silicon. Em padrões de atenção muito esparsos, o projeto mede uma aceleração de até doze vezes em relação ao método anterior, e em um exemplo menor, cerca de quatro vezes. O fator quatro é a estimativa mais honesta, e mesmo assim já é suficiente para justificar um teste no fim de semana.</p>
+  <p>Para fechar, um alerta sobre números bonitos demais. A xAI lançou há onze dias o Grok quatro ponto cinco, barato e supostamente quatro vezes mais econômico em palavras do que a concorrência. O valor citado de sessenta e quatro vírgula sete por cento em um benchmark difícil de programação, porém, vem do próprio cartão de sistema do fornecedor. Uma olhada no leaderboard público independente hoje de manhã simplesmente não mostrou o modelo lá. Por isso, esta edição deixa de propósito o gráfico de barras de fora: quatro autodeclarações lado a lado pareceriam uma série de medições, e não seriam.</p>
+  <p>No lado das ferramentas, está tudo tranquilo. O Cline lançou de madrugada uma nova versão de linha de comando, o OpenHands chegou a quatro lançamentos esta semana, o Cursor segue inalterado na versão três ponto onze. O leaderboard do Aider continua congelado desde novembro do ano passado, e o Continue.dev foi definitivamente desligado depois da aquisição pelo Cursor. Nos próximos dias, o que mais vale acompanhar é se a especificação final do MCP realmente sai no dia vinte e oito de julho e com que rapidez os grandes provedores de servidores vão se adaptar.</p>
+</div>
+
+</body>
+</html>

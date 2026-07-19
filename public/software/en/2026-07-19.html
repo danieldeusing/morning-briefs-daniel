@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-07-19</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-07-19</span>
+  </div>
+  <h1 class="masthead-title">Three npm Breaches, Three Different Doors</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Sunday, no fresh advisory in the sources we monitor — so today's a tally of a week that had plenty going on. In eleven days, three npm packages were hijacked: <strong>@injectivelabs/sdk-ts</strong> (08.07), <strong>jscrambler</strong> (11.07), <strong>@asyncapi/*</strong> (14.07). Individually, these already ran here. Together they form a pattern that strikes me as more important than any single case: <strong>each one used a different execution path</strong>. And of all days, on 08.07 — the day of the first breach — npm v12 turned off <code>allowScripts</code> by default, a defense that would have blocked exactly one of the three routes. Not an argument against the change; one against considering it solved. Also in this issue: why the "record Patch Tuesday" is roughly three-quarters Chromium, a SharePoint score where Microsoft says <strong>5.3</strong> and the NVD says <strong>9.8</strong>, and the NIS2 registration deadline in twelve days.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>Three breaches, three mechanisms</strong>: Injective (<strong>runtime — a hook on key derivation</strong>, <code>PrivateKey.fromMnemonic()</code>/<code>fromHex()</code>, firing only when a wallet is loaded; keys exfiltrated via the <code>X-Request-Id</code> header)<sup>[24]</sup>, jscrambler (first a <code>preinstall</code> hook, then a switch to the package's main code), AsyncAPI (import-time, payload delivered through a <strong>CI pwn request</strong> — GitHub Actions <code>pull_request_target</code>)<sup>[25]</sup>.</li>
+      <li><span class="chip">Infra</span> <span class="chip">Global</span> <strong>npm v12 has been out since 08.07</strong>: <code>allowScripts</code> off by default, <code>--allow-git</code> and <code>--allow-remote</code> set to none. Blocks install scripts — not code that runs on <code>import</code>.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">Global</span> <strong>Response time is the real defense</strong>: Injective fixed after ~49 minutes, jscrambler detected after 6 minutes, AsyncAPI first pulled downstream after 19 minutes.</li>
+      <li><span class="chip hot">Sec</span> <span class="chip">USA</span> <strong>SharePoint score, two opinions</strong>: <strong>CVE-2026-56164</strong> — Microsoft rates it CVSS <strong>5.3</strong> (Medium), the NVD <strong>9.8</strong> (Critical). Same attack vector, completely different impact assumption. In the CISA KEV since 14.07.</li>
+      <li><span class="chip">Sec</span> <span class="chip">Global</span> <strong>The record is partly bookkeeping</strong>: Of the <strong>621</strong> CVEs in the July Patch Tuesday, around <strong>480</strong> are Chromium/Edge, per ZDI. That leaves ~141 genuine Microsoft bugs, of which <strong>63 are Critical</strong>. Outlets report 569, 570, 621, and 622 — they're all counting differently.</li>
+      <li><span class="chip">Sec</span> <span class="chip">Browser</span> <strong>Firefox 152.0.6</strong> (MFSA 2026-67, 14.07): two Critical CVEs with public exploit code, no confirmed exploitation per Mozilla. <strong>Chrome 150.0.7871.124/.125</strong> (16.07): 15 fixes, two critical use-after-free bugs in Ozone.</li>
+      <li><span class="chip hot">Regulation</span> <span class="chip">DE</span> <strong>NIS2: twelve days left</strong> — grace period until <strong>31 Jul 2026</strong>. Of ~29,500 expected entities, only ~18,500 had registered by the end of May. And legally, this isn't a deadline extension — it's forbearance.</li>
+      <li><span class="chip">Release</span> <span class="chip">Global</span> <strong>PostgreSQL 19 Beta 2</strong> (16.07) cleans up the cycle's two big new features: SQL/PGQ property graphs and <code>FOR PORTION OF</code>. GA is targeted for Sept./Oct.</li>
+      <li><span class="chip">Release</span> <span class="chip">Web</span> <strong>Angular 22.0.7</strong> (16.07) with a ReDoS fix in sourcemap URL validation; <strong>Tailscale 1.98.9</strong> (14.07) closes six issues, TS-2026-004 through -009.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">The week that just played out — and the next hard deadline is 31.07 (NIS2)</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col hot">
+        <div class="tl-date">Tue 14.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Microsoft Patch Tuesday: 621 CVEs per ZDI (counts range 569–622), two exploited zero-days</span>
+          <span>AsyncAPI: five poisoned npm versions</span>
+          <span>Firefox 152.0.6 (MFSA 2026-67) · Tailscale 1.98.9</span>
+          <span>CISA KEV: SharePoint, AD FS, SonicWall SMA1000</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 15.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Microsoft analysis of the AsyncAPI breach</span>
+          <span>Trade press coverage of the BSI's NIS2 grace period</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu 16.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>PostgreSQL 19 Beta 2</span>
+          <span>Angular 22.0.7 / 22.1.0-next.6</span>
+          <span>Chrome stable update for desktop</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 17.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>KEV deadline for US agencies: SharePoint + SonicWall</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 18.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Weekend — no new advisories in the sources we monitor</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Sun 19.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>This issue — weekly npm tally, score dispute, NIS2</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 20.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>First full work week after the record Patch Tuesday — rollout window</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Three Breaches, Three Different Doors</h2>
+        <p>Three hijacked npm packages in eleven days is unpleasant but not unusual — in 2026 this happens on a weekly cadence. What's interesting is putting them side by side: <strong>none of the three attackers used the same execution path</strong>. Anyone relying on a single defense measure would have missed twice this week.</p>
+
+        <div class="eli5">
+          <strong class="eli5-term">Execution path:</strong> For a malicious package to cause harm, its code has to run at some point. There are several moments for that — during installation, during import into your own code, or when a CLI command starts. Like a burglar choosing between the front door, a basement window, and the garage door: an extra lock on the front door only helps if that's the door he picks.
+        </div>
+
+        <h3>08.07 — Injective SDK: Keys in the HTTP Header</h3>
+        <p>Through a compromised GitHub account, <code>@injectivelabs/sdk-ts@1.20.21</code> was published (tens of thousands of downloads a week — ~50,000 per The Hacker News, &gt;30,000 per Datadog). The detail that matters for defense: the code ran <strong>neither as an install script nor at import time</strong>. Datadog documents two hooks placed directly in the key-derivation functions <code>PrivateKey.fromMnemonic()</code> and <code>PrivateKey.fromHex()</code> — they fire at <strong>runtime</strong>, only once a wallet is loaded. The harvested mnemonics and private keys then went out <strong>base64-encoded in the <code>X-Request-Id</code> header</strong> of outgoing requests — a field almost nobody looks at, since it normally just carries a correlation ID. Injective found the commit and shipped 1.20.23 after <strong>about 49 minutes</strong>.<sup>[1][2][24]</sup></p>
+
+        <h3>11.07 — jscrambler: the Attacker Switches Doors Mid-Attack</h3>
+        <p>The malicious <code>jscrambler@8.14.0</code> went live at 16:12:40 BST; Socket's research team spotted it <strong>six minutes later</strong>, with around 1,500 downloads. Five versions were affected (8.14.0, 8.16.0, 8.17.0, 8.18.0, 8.20.0); 8.22.0 is clean. The notable part is in the middle: the early versions ran via a <code>preinstall</code> hook on <code>dist/setup.js</code>. The later ones <strong>dropped the install script</strong> and injected a self-executing function into the package's main code — one that fires on <code>import</code> or CLI invocation and slips past any scanner that only checks install scripts.<sup>[3][4]</sup></p>
+
+        <h3>14.07 — AsyncAPI: Import-Time, Precisely Timed</h3>
+        <p>Five compromised versions across four packages (<code>@asyncapi/specs</code> 6.11.2-alpha.1 and 6.11.2, <code>generator@3.3.1</code>, <code>generator-components@0.7.1</code>, <code>generator-helpers@1.1.1</code>). The way in was not a trusted maintainer but an <strong>external attacker using a CI pwn request</strong>: a workflow (<code>manual-netlify-preview.yml</code>) triggered on <code>pull_request_target</code> but checked out the pull request's own code — foreign code running in the base repository's context, with access to its secrets. Via PR <strong>#2155</strong> (05:08 UTC, 14.07), a token belonging to the <code>asyncapi-bot</code> service account was stolen.<sup>[25][26]</sup> Microsoft's reconstruction reads like a release plan: first re-publish around 07:10 UTC, the stable version with a byte-identical payload at <strong>08:30:09 UTC</strong>, first confirmed download at <strong>08:49:22 UTC</strong>. Here too, the code runs on import; <code>npm install --ignore-scripts</code> was useless.<sup>[5]</sup></p>
+
+        <table class="mini-table">
+          <thead>
+            <tr><th>Incident</th><th>Fires on</th><th>Response</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Injective, 08.07</td><td>Runtime — hook on key derivation</td><td>~49 min.</td></tr>
+            <tr><td>jscrambler, 11.07</td><td>preinstall → main code</td><td>6 min.</td></tr>
+            <tr><td>AsyncAPI, 14.07</td><td>Import-time</td><td>19 min.*</td></tr>
+          </tbody>
+        </table>
+        <p><small>* For AsyncAPI, not a response time but the span until the first observed downstream consumption.</small></p>
+        <span class="src"><a href="https://thehackernews.com/2026/07/injective-labs-github-compromise-pushes.html">thehackernews.com</a> · <a href="https://www.stepsecurity.io/blog/injective-npm-supply-chain-attack-18-packages-backdoored-to-steal-crypto-wallet-keys">stepsecurity.io</a> · <a href="https://www.bleepingcomputer.com/news/security/hackers-backdoor-jscrambler-npm-package-with-infostealer-malware/">bleepingcomputer.com</a> · <a href="https://www.microsoft.com/en-us/security/blog/2026/07/15/unpacking-asyncapi-npm-supply-chain-compromise-import-time-payload-delivery/">microsoft.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>npm v12 Closed the Right Door — There Are Just Several</h2>
+        <p>On <strong>08.07</strong> — the same day the Injective backdoor went live — npm v12 was released. The key change: <code>allowScripts</code> is now <em>off</em> by default. <code>npm install</code> no longer runs <code>preinstall</code>, <code>install</code>, and <code>postinstall</code> from dependencies unless explicitly allowed — including implicit <code>node-gyp</code> rebuilds. <code>--allow-git</code> and <code>--allow-remote</code> are now also set to none.<sup>[6]</sup></p>
+        <p>The right call, arriving late. But the tally for the week is uncomfortable: the new default would have stopped <strong>part of a single</strong> incident — the early jscrambler versions. Injective and AsyncAPI bypassed install scripts entirely, and the jscrambler attacker switched to that path himself mid-attack. The safeguard wasn't defeated; the attackers moved elsewhere.</p>
+        <div class="mechanism">
+          <span class="step">Install scripts blocked</span>
+          <span class="arrow">→</span>
+          <span class="step">Payload moves into the main code</span>
+          <span class="arrow">→</span>
+          <span class="step">Execution on <code>import</code></span>
+        </div>
+        <p>The takeaway is unspectacular but concrete: <code>--ignore-scripts</code> is basic hygiene, not a defense. What actually helps is the time axis — lockfiles with exact versions and a grace period before adopting a fresh release. Six minutes of detection time only benefits someone who doesn't install in the first six minutes.</p>
+        <div class="callout warn">
+          <span class="callout-label">For Daniel's Stack</span>
+          The Angular/TypeScript branch is the exposed part: an <code>npm ci</code> in a GitHub Action pulls the same dependency tree as locally, just unattended and often with registry tokens sitting in the environment. The jscrambler malware targeted AWS/GCP/Azure credentials, crypto wallets, and configurations for AI coding assistants<sup>[7]</sup> — exactly what's lying around on a dev machine. Maven and pip have the same problem structurally.
+        </div>
+        <span class="src"><a href="https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/">github.blog</a> · <a href="https://cyberpress.org/jscrambler-npm-supply-chain-attack/">cyberpress.org</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>SharePoint: Microsoft Says 5.3, the NVD Says 9.8</h2>
+        <p><span class="update-since">Update as of 16.07</span> Thursday's issue said the on-paper score for <strong>CVE-2026-56164</strong> sat "more toward the middle" at 5.3. That was Microsoft's number. The NVD has since published its own assessment — and lands at <strong>9.8, Critical</strong>. That's not a rounding difference; those are two different worlds.<sup>[8]</sup></p>
+        <p>Both fully agree on the attack vector: <code>AV:N/AC:L/PR:N/UI:N</code> — over the network, low complexity, no privileges, no user interaction needed. The disagreement is entirely about impact. Microsoft sets <code>C:N/I:L/A:N</code>: no confidentiality breach, low integrity impact. The NVD sets <code>C:H/I:H/A:H</code> — everything high.</p>
+        <div class="eli5">
+          <strong class="eli5-term">CVSS:</strong> A scoring system from 0 to 10 that rates a vulnerability by attack path and potential damage. Like a restaurant guide: the stars exist, but who awards them matters too. A vendor often rates the flaw <em>within its own component</em>, while an outside analyst rates what an attacker can ultimately achieve with it.
+        </div>
+        <p>In practice, the dispute doesn't matter, and that's the point. The flaw has been in the CISA KEV catalog since <strong>14.07</strong> — the same day the patch shipped — and US agencies had to remediate by 17.07. Affected: SharePoint Server 2019 (&lt; 16.0.10417.20175), Subscription Edition (&lt; 16.0.19725.20434), and Enterprise Server 2016 (&lt; 16.0.5561.1001).<sup>[9]</sup> The Zero Day Initiative puts it more dryly than I could: <em>"patch it now and worry about the score later"</em>.<sup>[10]</sup></p>
+        <p>My read: a KEV entry is an empirical finding, a CVSS score is a model assumption. Where the two diverge, the finding wins. The score is good for sorting, not for deciding.</p>
+        <span class="src"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-56164">nvd.nist.gov</a> · <a href="https://www.thezdi.com/blog/2026/7/14/the-july-2026-security-update-review">thezdi.com</a> · <a href="https://www.tenable.com/blog/microsofts-july-2026-patch-tuesday-addresses-569-cves-cve-2026-56155-cve-2026-56164">tenable.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>The "Record Patch Tuesday" Is Three-Quarters Chromium</h2>
+        <p>July's Patch Tuesday made the rounds as the biggest ever — and the headlines cheerfully contradict each other: <strong>622</strong> at The Hacker News, <strong>621</strong> at Security Affairs, <strong>570</strong> at BleepingComputer, <strong>569</strong> in Tenable's own count. Anyone citing a single one of these numbers as fact is citing a counting rule.<sup>[11][12]</sup></p>
+        <p>The Zero Day Initiative untangles it: of the 621 CVEs, <strong>around 480 are Chromium and Chromium-based Edge</strong> — bugs assigned by a different CNA that Microsoft merely carries along. That leaves roughly <strong>141</strong> genuine Microsoft flaws. By severity: 63 Critical, six Moderate, one Low, the rest Important.<sup>[10]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">CNA:</strong> The body allowed to assign a CVE number — usually the vendor itself. Like a residents' registration office: if someone moves from one town to another, they might show up in both towns' statistics. When Microsoft pulls a Chromium flaw into its own Edge, it shows up in Microsoft's update guide even though Google assigned it.
+        </div>
+        <p>That doesn't defuse the number — 141 bugs with 63 Critical is plenty, and the ZDI rightly notes the year-to-date total already exceeds any full year of the last two decades. But anyone who has to justify a patch window gets further with "141 of our own, 63 of them critical, two actively exploited" than with a number the trade press disagrees on by fifty.</p>
+        <span class="src"><a href="https://www.thezdi.com/blog/2026/7/14/the-july-2026-security-update-review">thezdi.com</a> · <a href="https://thehackernews.com/2026/07/microsoft-patches-record-622-flaws.html">thehackernews.com</a> · <a href="https://securityaffairs.com/195347/security/patch-tuesday-security-updates-for-july-2026-the-largest-update-ever-621-cves-in-one-month.html">securityaffairs.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>AD FS: the Second Zero-Day That Stayed Quieter</h2>
+        <p>Alongside SharePoint, <strong>CVE-2026-56155</strong> was on the 14.07 list — privilege escalation in Active Directory Federation Services, CVSS <strong>7.8</strong> (<code>AV:L/AC:L/PR:L/UI:N</code>), actively exploited and confirmed by Microsoft. The cause is an overly permissive ACL on the DKM keys; exploiting it lands you at administrator rights.<sup>[13]</sup> The local attack vector makes it less conspicuous than the SharePoint flaw — it's the second step of a chain, not the first. Doesn't run in Daniel's stack, but belongs in every Windows domain conversation this week.</p>
+        <span class="src"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-56155">nvd.nist.gov</a> · <a href="https://www.thezdi.com/blog/2026/7/14/the-july-2026-security-update-review">thezdi.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Browser Week: Firefox with a PoC, Chrome with Ozone</h2>
+        <p><strong>Firefox 152.0.6</strong> arrived on 14.07 with the advisory MFSA 2026-67 and closes two flaws rated Critical, <strong>CVE-2026-15718</strong> and <strong>CVE-2026-15719</strong>. Publicly accessible exploit code exists for both; Mozilla says it is aware of <em>no</em> active exploitation.<sup>[14][15]</sup> Part of the trade press headlined this as a "zero-day" — it isn't, as long as nobody documents in-the-wild use. Published PoC code means "the clock is running," not "it's too late."</p>
+        <p>Google released a stable update for desktop on 16.07: <strong>150.0.7871.124/.125</strong> for Windows and macOS, <strong>150.0.7871.124</strong> for Linux, with 15 security fixes. Two of them are critical use-after-free bugs in <strong>Ozone</strong>, Chrome's graphics/windowing abstraction on Linux: <strong>CVE-2026-15764</strong> and <strong>CVE-2026-15765</strong>.<sup>[16][17]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Use-after-free:</strong> The program frees a chunk of memory but then accesses it again anyway. Like turning in your hotel room key, having the room reassigned — and unlocking it again regardless. Whoever moves in fast enough decides what's there when the program looks back.
+        </div>
+        <p>Both updates are just-restart-it affairs, no drama — and a good chunk of the 480 Chromium CVEs from the paragraph above comes from exactly this pipeline.</p>
+        <span class="src"><a href="https://www.mozilla.org/en-US/security/advisories/">mozilla.org</a> · <a href="https://chromereleases.googleblog.com/">chromereleases.googleblog.com</a> · <a href="https://www.malwarebytes.com/blog/bugs/2026/07/chrome-needs-another-whopper-update-to-fix-382-security-fixes">malwarebytes.com</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>NIS2: Twelve Days, and the "Deadline" Isn't One</h2>
+        <p>The hardest deadline for a German reader falls on <strong>31 Jul 2026</strong>. Until then, the BSI is tolerating late registrations under the NIS2 implementation act — the regular deadline was 6 Mar 2026. The state of things is sobering: of <strong>around 29,500</strong> expected entities, fewer than half had registered by the original deadline; by the end of May it was <strong>around 18,500</strong>.<sup>[18]</sup></p>
+        <p>The part usually lost in the coverage: this grace period is <strong>not a statutory deadline extension</strong> — it's administrative forbearance. The obligation has existed since March; anyone who missed it is already in default and is counting on the BSI not to sanction them. Legally, that's a different thing from "I still have time until the end of July."</p>
+        <div class="eli5">
+          <strong class="eli5-term">NIS2:</strong> An EU directive that obligates companies in critical sectors to meet minimum IT security standards and to report incidents — in force in Germany since December 2025. The first step is mundane: register with the BSI and say "we exist." Like registering your address at the residents' registration office — nothing happens as a result, but skip it and you'll have a problem later.
+        </div>
+        <p>The fine range goes up to <strong>€500,000</strong>, and up to <strong>€10 million</strong> for certain violations, plus personal liability for management.<sup>[18]</sup> Also relevant for those not directly affected: registered entities push their security requirements down the supply chain — the next tender questionnaire will ask about it.</p>
+        <span class="src"><a href="https://www.kleeberg.de/2026/07/15/nis-2-registrierung-bsi-gewaehrt-nachfrist-bis-31-juli-2026/">kleeberg.de</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: the Deadline After the Deadline</h2>
+        <p>Deliberately outside the seven-day window, but the next block after NIS2: the Cyber Resilience Act's reporting obligations take effect on <strong>11 Sep 2026</strong> — a 24-hour early warning, 72-hour full report for actively exploited vulnerabilities and severe incidents. Full application on <strong>11 Dec 2027</strong>.<sup>[19]</sup></p>
+        <p>The Commission maintains an FAQ page on this that gets updated continuously — the most recent date shown on the page itself is 23 Apr 2026; a July date circulating in search snippets couldn't be confirmed on the document. Worth another look before September, since this exact FAQ defines who counts as a "manufacturer" — the decisive boundary question for a one-person software operation.</p>
+        <span class="src"><a href="https://digital-strategy.ec.europa.eu/en/factpages/cyber-resilience-act-implementation">digital-strategy.ec.europa.eu</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Stack Maintenance, Briefly</h2>
+
+        <h3>PostgreSQL 19 Beta 2 (16.07)</h3>
+        <p>The cleanup beta, focused on the cycle's two big new features: several fixes for the <strong>SQL/PGQ</strong> property graph feature and the temporal syntax <code>FOR PORTION OF</code>. Also included: a regression in <code>vacuumdb --analyze-in-stages</code> on partitioned tables and an autovacuum bug where the multixact age score could go to infinity.<sup>[20]</sup> GA is targeted for Sept./Oct. — so: test it, don't migrate to it.</p>
+
+        <h3>Angular 22.0.7 / 22.1.0-next.6 (16.07)</h3>
+        <p>A maintenance release with a security component: ReDoS prevention in the regex check for sourcemap URLs in <code>platform-browser</code>. The prior version, 22.0.6 from 08.07, brought the "safe property lookups" hardening in the router.<sup>[21]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">ReDoS:</strong> A regular expression that, given a cleverly crafted input, tries an exponential number of combinations and pegs a CPU core in the process. Like a bouncer who runs through every combination on the guest list for each visitor: a name with lots of hyphens brings the entrance to a standstill.
+        </div>
+
+        <h3>Tailscale 1.98.9 (14.07)</h3>
+        <p>Six security items, TS-2026-004 through -009: Unix socket forwarding in Tailscale SSH now respects symlink permissions, the serve socket proxy is restricted to root, Serve and Funnel now catch a path walk that could peg a CPU with non-absolute paths, and SSH rejects purely numeric usernames as well as ones starting with a hyphen.<sup>[22]</sup> The most relevant of the three lines here for a tailnet with active Serve/Funnel.</p>
+        <span class="src"><a href="https://www.postgresql.org/about/news/postgresql-19-beta-2-released-3350/">postgresql.org</a> · <a href="https://github.com/angular/angular/releases">github.com/angular</a> · <a href="https://tailscale.com/changelog">tailscale.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Noted on the Side</h2>
+        <p><strong>SonicWall SMA1000</strong>: CVE-2026-15409 (SSRF, CVSS 10.0) and CVE-2026-15410 (command injection, 7.2) have been in the KEV since 14.07, models 6210/7210/8200v — this has been here since 16.07, nothing new since.<sup>[23]</sup></p>
+        <p><strong>Beat note</strong>: AI coding tools and applied AI live in the <em>ai-dev</em> and <em>ai-usecases</em> briefs. Only the engineering fallout lands here — this week, exactly one point: the jscrambler malware also grabbed configurations for AI coding assistants. The tooling layer is a target just like any credential store.</p>
+        <p><strong>Not new, but resurfacing</strong>: the CloudNativePG flaw CVE-2026-44477 (privilege escalation via the metrics exporter, CVSS v4 9.4) is real but dates back to early May — not a new incident. Nothing developer-relevant came out of the Brazilian tech sources we monitor this week; not padded out just because a section exists.</p>
+        <span class="src"><a href="https://www.tenable.com/blog/cve-2026-15409-cve-2026-15410-sonicwall-sma-1000-zero-day-vulnerabilities-exploited-in-the">tenable.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Sources</h2>
+        <div class="footnotes">
+          <ol>
+            <li><a href="https://thehackernews.com/2026/07/injective-labs-github-compromise-pushes.html">The Hacker News — Injective</a></li>
+            <li><a href="https://www.stepsecurity.io/blog/injective-npm-supply-chain-attack-18-packages-backdoored-to-steal-crypto-wallet-keys">StepSecurity — Injective</a></li>
+            <li><a href="https://socket.dev/blog/jscrambler-supply-chain-attack">Socket — jscrambler</a> (primary source, fetch blocked with 403; figures cross-checked across three outlets)</li>
+            <li><a href="https://www.bleepingcomputer.com/news/security/hackers-backdoor-jscrambler-npm-package-with-infostealer-malware/">BleepingComputer — jscrambler</a></li>
+            <li><a href="https://www.microsoft.com/en-us/security/blog/2026/07/15/unpacking-asyncapi-npm-supply-chain-compromise-import-time-payload-delivery/">Microsoft Security — AsyncAPI (15 Jul 2026)</a></li>
+            <li><a href="https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/">GitHub Changelog — npm v12</a></li>
+            <li><a href="https://cyberpress.org/jscrambler-npm-supply-chain-attack/">Cyber Press — jscrambler targets</a></li>
+            <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-56164">NVD — CVE-2026-56164</a></li>
+            <li><a href="https://www.tenable.com/blog/microsofts-july-2026-patch-tuesday-addresses-569-cves-cve-2026-56155-cve-2026-56164">Tenable — July Patch Tuesday, KEV deadlines</a></li>
+            <li><a href="https://www.thezdi.com/blog/2026/7/14/the-july-2026-security-update-review">ZDI — July 2026 Security Update Review</a></li>
+            <li><a href="https://thehackernews.com/2026/07/microsoft-patches-record-622-flaws.html">The Hacker News — "622 flaws"</a></li>
+            <li><a href="https://securityaffairs.com/195347/security/patch-tuesday-security-updates-for-july-2026-the-largest-update-ever-621-cves-in-one-month.html">Security Affairs — "621 CVEs"</a></li>
+            <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-56155">NVD — CVE-2026-56155</a></li>
+            <li><a href="https://www.mozilla.org/en-US/security/advisories/">Mozilla — MFSA 2026-67 (14 Jul 2026)</a></li>
+            <li><a href="https://threatprotect.qualys.com/2026/07/15/mozilla-firefox-zero-day-vulnerabilities-exploited-in-attacks-cve-2026-15718-cve-2026-15719/">Qualys — Firefox 152.0.6, PoC status</a></li>
+            <li><a href="https://chromereleases.googleblog.com/">Chrome Releases (16 Jul 2026)</a></li>
+            <li><a href="https://www.malwarebytes.com/blog/bugs/2026/07/chrome-needs-another-whopper-update-to-fix-382-security-fixes">Malwarebytes — Ozone CVEs</a></li>
+            <li><a href="https://www.kleeberg.de/2026/07/15/nis-2-registrierung-bsi-gewaehrt-nachfrist-bis-31-juli-2026/">Kleeberg — NIS2 grace period</a></li>
+            <li><a href="https://digital-strategy.ec.europa.eu/en/factpages/cyber-resilience-act-implementation">EU Commission — CRA implementation</a></li>
+            <li><a href="https://www.postgresql.org/about/news/postgresql-19-beta-2-released-3350/">PostgreSQL 19 Beta 2 (16 Jul 2026)</a></li>
+            <li><a href="https://github.com/angular/angular/releases">Angular — Releases</a></li>
+            <li><a href="https://tailscale.com/changelog">Tailscale — Changelog</a></li>
+            <li><a href="https://www.tenable.com/blog/cve-2026-15409-cve-2026-15410-sonicwall-sma-1000-zero-day-vulnerabilities-exploited-in-the">Tenable — SonicWall SMA1000</a></li>
+            <li><a href="https://securitylabs.datadoghq.com/articles/not-so-anonymous-telemetry-injectivelabs-sdk-ts-backdoor/">Datadog Security Labs — Injective backdoor (runtime hook on key derivation)</a></li>
+            <li><a href="https://www.wiz.io/blog/m-red-team-asyncapi-supply-chain-compromise-via-github-actions">Wiz — AsyncAPI via GitHub Actions (pwn request, PR #2155)</a></li>
+            <li><a href="https://www.chainguard.dev/unchained/asyncapi-supply-chain-compromise-npm-packages-backdoored-via-github-actions">Chainguard — AsyncAPI compromise via GitHub Actions</a></li>
+          </ol>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Sunday, July nineteenth. There was no new advisory over the weekend in the sources we track, so no breaking news today — instead, a tally of a week in which three npm packages got hijacked.</p>
+  <p>On July eighth, it was the Injective SDK. A compromised GitHub account, a poisoned release, tens of thousands of downloads a week. The malicious code ran neither on install nor on import — it hooked the functions that derive the private key, so it only fired once someone loaded a wallet. Then it stole the keys and smuggled them out through an HTTP header called X-Request-Id — a field nobody normally looks at. The team caught the commit and shipped a clean version in just under fifty minutes.</p>
+  <p>On July eleventh, it was jscrambler's turn. Socket caught the malicious version six minutes after it went live. What's interesting is what the attacker did next: the first versions ran through an install script. Once that got noticed, the attacker dropped the script and hid the payload directly in the package's main code, where it fires on import instead. The defense wasn't broken — the attacker just moved to a different door.</p>
+  <p>On July fourteenth came AsyncAPI. The attacker came from outside: he sent a pull request that a badly configured GitHub Action then executed, secrets and all. Microsoft reconstructed the timeline: the stable poisoned version went live at eight-thirty UTC, and nineteen minutes later the first project downloaded it. Again, the code ran on import, not on install.</p>
+  <p>And on that same July eighth — the day of the first breach — npm version twelve shipped. Its headline change: install scripts from dependencies no longer run automatically. That's the right call. But of the three incidents, it would have stopped only part of one of them. The lesson for your own practice: blocking install scripts is basic hygiene, not a defense. What actually helps is time — pinned versions in your lockfile, and a few days' delay before adopting a fresh release.</p>
+  <p>Second story: a fight over a number. For the SharePoint flaw tracked as CVE 2026-56164, Microsoft rates the severity at five point three — middle of the road. The NVD, the U.S. vulnerability database, puts it at nine point eight — critical. Both agree on the attack path; they only disagree on the damage. The Zero Day Initiative summed it up best: patch first, argue about the score later. The flaw is being actively exploited, and that finding beats any model.</p>
+  <p>That fits with the third story. Microsoft's July Patch Tuesday was celebrated as a record, with counts ranging from five hundred sixty-nine to six hundred twenty-two, depending who you read. The Zero Day Initiative worked out that about four hundred eighty of those are Chromium and the Edge browser built on it. That leaves roughly a hundred forty genuine Microsoft flaws, sixty-three of them critical. Still a lot — but a different story than a triple record.</p>
+  <p>For German readers, the most important deadline: NIS2 registration with the BSI runs out on July thirty-first — twelve days from now. Of roughly twenty-nine thousand five hundred expected organizations, only about eighteen thousand five hundred had registered by the end of May. Worth knowing: this grace period isn't a legal extension, just the regulator looking the other way for now. The obligation has existed since March. Fines run up to five hundred thousand euros, and up to ten million for certain violations, plus personal liability for management.</p>
+  <p>Quick maintenance notes. PostgreSQL nineteen beta two cleans up the property-graph feature and the new temporal syntax; the final release is targeted for September or October. Angular twenty-two point zero point seven fixes a regex-exhaustion bug. Tailscale one point ninety-eight point nine closes six security issues, mostly around Serve and Funnel. And on browsers: Firefox one fifty-two point zero point six closes two critical flaws with public exploit code; Chrome one fifty ships fifteen fixes, including two critical ones in its Ozone graphics layer.</p>
+  <p>Next week will show how fast this record patch round actually gets rolled out — and whether the npm streak continues. Back here tomorrow morning.</p>
+</div>
+
+</body>
+</html>
