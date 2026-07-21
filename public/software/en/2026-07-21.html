@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-07-21</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Tuesday, 2026-07-21</span>
+    <span class="dot">·</span>
+    <span>Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">The npm Supply Chain Is on Fire — and npm Pulls the Emergency Brake</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Two npm compromises in four days, a SharePoint zero-day with an expired federal deadline, and a 16-year-old KVM bug that lets a guest escape to the host — today's non-AI software news is almost entirely about the supply chain and active exploitation. The good news is buried in the middle: npm v12 finally turns off install scripts by default.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>npm supply chain, twice</strong>: the AsyncAPI org gets compromised (payload fires at <em>import</em>, bypassing <code>--ignore-scripts</code>) — days after the Jscrambler hack. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>SharePoint zero-day</strong> CVE-2026-58644 (CVSS 9.8) in the CISA KEV, actively exploited; the federal deadline expired on 19.07. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>Linux KVM "Januscape"</strong> (CVE-2026-53359): guest escapes to host, the bug has been in the code since 2010; stable kernel patched since 04.07.</li>
+      <li><span class="chip good">Release</span> <strong>npm v12</strong> turns install scripts <em>off</em> by default — a direct response to the supply-chain wave. <span class="chip">OSS</span></li>
+      <li><span class="chip">Release</span> <strong>PostgreSQL 19 Beta 2</strong>: <code>REPACK</code> instead of <code>VACUUM FULL</code>, graph queries (SQL/PGQ), temporal <code>UPDATE/DELETE</code>. <span class="chip">OSS</span></li>
+      <li><span class="chip">Browser</span> <strong>Emergency patches</strong>: Firefox 152.0.6 + Chrome 150 — exploit code is public for the Firefox flaw. <span class="chip">Web</span></li>
+      <li><span class="chip">Sec</span> <strong>11 forgotten UEFI shims</strong> have undermined Secure Boot for over a decade (ESET); revoked via the June patch day.</li>
+      <li><span class="chip">Release</span> <strong>Oracle quarterly CPU</strong> expected today (cadence) — pre-release roundups cite ~20 new Java SE fixes; Oracle's own page was blocked. <span class="chip">USA</span></li>
+      <li><span class="chip">Infra</span> <strong>GitHub</strong> had two partial outages (Actions 13.07, REST API 16.07) — internal config regressions.</li>
+      <li><span class="chip">Regulation</span> <strong>EU Commission</strong> makes its final ruling on Google's DMA compliance on 27.07. <span class="chip">EU</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Deadlines, patches, releases — what to plan for this week</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Thu 16.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Release day</span>
+          <span>PostgreSQL 19 Beta 2 · Angular 22.0.7</span>
+          <span>AsyncAPI npm compromise goes public (MSTIC)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 17.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Aftershocks from the GitHub REST outage (16.07)</span>
+          <span>Firefox/Chrome emergency patches circulate (since 15.07)</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Sun 19.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CISA KEV deadline expired</span>
+          <span>SharePoint 9.8 + two FortiSandbox flaws at 9.1</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Tue 21.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Oracle quarterly CPU expected (third Tuesday of the quarter)</span>
+          <span>npm v12 reaches GA this month</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 22.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>No fix scheduled</span>
+          <span>Use the patch window for KVM &amp; 7-Zip</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 27.07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>EU Commission</span>
+          <span>Final DMA ruling on Google expected</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>The npm Supply Chain Is on Fire — Twice in Four Days</h2>
+        <div class="eli5">
+          <strong class="eli5-term">Supply-chain attack (import-time):</strong>
+          Instead of breaking down your door, the attacker poisons the ingredients your
+          package supplier ships you. New and nasty this time: the malicious code fires
+          the moment the package is <code>import</code>ed, not when it's
+          <code>install</code>ed. The classic defense, <code>npm install --ignore-scripts</code>,
+          therefore does <em>not</em> help — the line of code runs as soon as your build
+          loads the module.
+        </div>
+        <p>
+          On 14.07, the <strong>AsyncAPI</strong> organization on npm was hijacked: five
+          package versions across four names (<code>@asyncapi/specs</code>,
+          <code>generator</code>, <code>generator-components</code>,
+          <code>generator-helpers</code>) were republished within roughly 90 minutes, each
+          carrying the same injected loader. It delivered the "Miasma modular runtime" — a
+          remote-access trojan with C2 at <code>85.137.53[.]71</code>. Microsoft's MSTIC
+          named the campaign <em>miasma-train-p1</em> and classifies it as a successor to the
+          Miasma RAT from the Red Hat incident in June. The first downstream hit (a Yarn
+          cache) showed up at 08:49 UTC.
+          <span class="src"><a href="https://www.microsoft.com/en-us/security/blog/2026/07/15/unpacking-asyncapi-npm-supply-chain-compromise-import-time-payload-delivery/">microsoft.com</a></span>
+        </p>
+        <p>
+          Just three days earlier, on 11.07, <strong>Jscrambler</strong> was hit: five
+          <code>jscrambler</code> versions (8.14.0 through 8.20.0) plus the Webpack, Gulp,
+          Grunt, and Metro plugins were poisoned via stolen publish credentials. Hidden
+          native binaries harvested cloud, crypto-wallet, and AI-tool credentials. According
+          to Rescana, 1,479 downloads went through before the packages were pulled (single
+          source, secondhand); clean starts only at 8.22.0.
+          <span class="src"><a href="https://www.rescana.com/post/active-exploitation-alert-jscrambler-npm-packages-compromised-in-coordinated-supply-chain-attack-july-2026">rescana.com</a></span>
+        </p>
+        <p>
+          Two independent org takeovers in four days aren't a coincidence — the npm
+          ecosystem's trust model <em>is</em> the attack surface. Anyone still putting off
+          reproducible builds, pinned lockfiles, and an internal registry mirror should
+          start this week at the latest.
+        </p>
+      </section>
+
+      <section class="news-item">
+        <h2>npm v12: Install Scripts Finally Off by Default</h2>
+        <p>
+          Right on cue: GitHub announced on 08.07 that <strong>npm v12</strong> ships
+          <code>allowScripts=off</code> this month. Lifecycle scripts (<code>preinstall</code>,
+          <code>install</code>, <code>postinstall</code>) and implicit <code>node-gyp</code>
+          builds will then run only after explicit approval; Git dependencies and remote-URL
+          sources also require consent. Granular access tokens (GATs) lose sensitive
+          permissions starting August 2026, and publishing restrictions kick in from January
+          2027. Warnings already appear as of npm 11.16.0.
+          <span class="src"><a href="https://thehackernews.com/2026/07/npm-12-disables-install-scripts-by.html">thehackernews.com</a></span>
+        </p>
+        <div class="callout info">
+          <span class="callout-label">Context</span>
+          Overdue — but no silver bullet. The AsyncAPI attack fired at <code>import</code>,
+          not <code>install</code>; <code>--ignore-scripts</code> or scripts-off would not
+          have stopped <em>this</em> particular incident. MSTIC says so itself. The new
+          default closes the broad postinstall hole but doesn't replace provenance checks.
+        </div>
+      </section>
+
+      <section class="news-item">
+        <h2>Gitea Docker Image Trusts Every Proxy Header</h2>
+        <p>
+          The official <strong>Gitea</strong> Docker image hardcoded the line
+          <code>REVERSE_PROXY_TRUSTED_PROXIES=*</code> in the default <code>app.ini</code>
+          (CVE-2026-20896, CVSS 9.8). With reverse-proxy login enabled, that wildcard trusts
+          every source IP: anyone who reaches the port can send an
+          <code>X-WEBAUTH-USER</code> header and log in as any user, no password or token
+          needed. Fixed in 1.26.3 (late June); the first exploit probes appeared roughly 13
+          days after disclosure, and about 6,200 Gitea instances are still exposed online.
+          <span class="src"><a href="https://thehackernews.com/2026/07/threat-actors-probe-gitea-docker-flaw.html">thehackernews.com</a></span>
+        </p>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>CISA KEV: SharePoint Zero-Day and Two FortiSandbox Flaws</h2>
+        <div class="eli5">
+          <strong class="eli5-term">Deserialization of untrusted data:</strong>
+          A program unpacks stored data back into live objects — like unwrapping a piece of
+          flat-pack furniture. If it trusts that data without checking it, an attacker can
+          "wrap up" working program code instead of harmless furniture parts, and the server
+          runs it the moment it's unpacked.
+        </div>
+        <p>
+          On 16.07, CISA added <strong>CVE-2026-58644</strong> (CVSS 9.8) to its Known
+          Exploited Vulnerabilities catalog: a deserialization flaw (CWE-502) in Microsoft
+          SharePoint that an unauthenticated attacker can use over the network to achieve
+          code execution. Affected are SharePoint Enterprise Server 2016 (&lt; 16.0.5556.1005),
+          Server 2019 (&lt; 16.0.10417.20153), and the Subscription Edition
+          (&lt; 16.0.19725.20384). The deadline for US federal agencies had already expired
+          on <strong>19.07</strong> — meaning the flaw was exploited before the patch. The
+          same KEV batch also added two FortiSandbox flaws (CVE-2026-25089,
+          CVE-2026-39808, both 9.1, OS command injection).
+          <span class="src"><a href="https://thehackernews.com/2026/07/cisa-adds-exploited-sharepoint-rce-zero.html">thehackernews.com</a> · <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-58644">nvd.nist.gov</a></span>
+        </p>
+        <p>
+          Side note on the pattern: back on 07.07 and 10.07, the KEV was filled almost
+          entirely with CMS-plugin flaws (JoomShaper SP Page Builder, Langflow, iCagenda,
+          Balbooa) — the bulk of active exploitation still comes from the poorly maintained
+          CMS zoo.
+          <span class="src"><a href="https://www.cisa.gov/news-events/alerts/2026/07/07/cisa-adds-three-known-exploited-vulnerabilities-catalog">cisa.gov</a></span>
+        </p>
+      </section>
+
+      <section class="news-item">
+        <h2>Linux KVM "Januscape": the Guest Escapes to the Host</h2>
+        <div class="eli5">
+          <strong class="eli5-term">Guest-to-host escape:</strong>
+          A VM is like an apartment in a building, and the hypervisor is the building
+          superintendent's control room. A guest-to-host escape means the tenant breaks out
+          of their apartment into the control room — and now controls the whole building,
+          including every neighboring apartment. On cloud hardware, those "neighbors" are
+          other customers.
+        </div>
+        <p>
+          <strong>CVE-2026-53359</strong> (plus companion CVE-2026-46113) is a use-after-free
+          in KVM's shadow MMU. The catch: the vulnerable code has been in the kernel since
+          commit <code>2032a93d66fa</code> from <strong>August 2010</strong> — 16 years.
+          Both Intel and AMD hosts are affected. Disclosed on 06.07, the fix was merged into
+          mainline on 19.06 and landed in stable kernels on 04.07 (7.1.3, 6.18.38, 6.12.95,
+          6.6.144, 6.1.177, 5.15.211, 5.10.260). SUSE rates it 8.8 (v3.1) or 9.3 (v4.0); an
+          official NVD score was missing at publication. It requires root in the guest plus
+          nested virtualization exposed outward — a real risk mainly for cloud and
+          self-hosting setups running KVM. A companion flaw (CVE-2026-63807, reportedly a
+          guest-triggered host crash in the hugepage recovery path) is less firmly
+          established.
+          <span class="src"><a href="https://thehackernews.com/2026/07/16-year-old-linux-kvm-flaw-lets-guest.html">thehackernews.com</a></span>
+        </p>
+      </section>
+
+      <section class="news-item">
+        <h2>7-Zip: Heap Overflow in the XZ Decoder</h2>
+        <p>
+          <strong>CVE-2026-14266</strong> (CVSS 7.0) is a heap buffer overflow when unpacking
+          crafted, chunked XZ data in <strong>7-Zip</strong> — usable for code execution, but
+          only with user interaction (someone has to open the archive). Versions 21.07 through
+          26.01 are vulnerable, fixed in 26.02 (25.06). The ZDI advisory was published on
+          15.07; as of 20.07 there's no exploitation in the wild and no public PoC, and the
+          flaw isn't in the KEV. No alarm — but update 7-Zip if it sits anywhere in your
+          build or archive path.
+          <span class="src"><a href="https://www.zerodayinitiative.com/advisories/ZDI-26-444/">zerodayinitiative.com</a></span>
+        </p>
+      </section>
+
+      <section class="news-item">
+        <h2>11 Forgotten UEFI Shims Undermine Secure Boot</h2>
+        <div class="eli5">
+          <strong class="eli5-term">Secure Boot &amp; shim:</strong>
+          Secure Boot is the bouncer at computer startup — it only lets signed boot software
+          through. A "shim" is a small go-between, countersigned by Microsoft, so Linux can
+          get past the bouncer too. Old, vulnerable shims are like valid IDs that were never
+          confiscated: whoever holds one can smuggle malicious code past the bouncer.
+        </div>
+        <p>
+          ESET found eleven old shim bootloaders (v0.9 and earlier) that are trusted via
+          Microsoft's third-party UEFI CA certificate and can be abused to load bootkits
+          (such as BlackLotus) on virtually any UEFI machine — OS-independent, and possible
+          for over a decade (CVE-2026-8863, CVE-2026-10797). Responsibly disclosed in
+          February 2026, the shims were revoked via Microsoft's June patch day. Anyone who
+          applies the revocations is protected.
+          <span class="src"><a href="https://thehackernews.com/2026/07/11-old-microsoft-signed-linux-uefi.html">thehackernews.com</a></span>
+        </p>
+      </section>
+
+      <section class="news-item">
+        <h2>Zimbra: Stored XSS in the Classic Web Client</h2>
+        <p>
+          <strong>ZCS 10.1.19</strong> (07.07) closes a critical stored-XSS flaw where a
+          crafted email runs malicious code the moment it's opened and can expose mailbox,
+          session, and account data. Found by Google's Threat Analysis Group; no CVE ID had
+          been assigned at publication. Anyone running a self-hosted Zimbra instance: patch
+          soon.
+          <span class="src"><a href="https://blog.zimbra.com/2026/07/patch-release-update-zimbra-10-1-19/">blog.zimbra.com</a></span>
+        </p>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Browser Emergency Patches: Firefox and Chrome</h2>
+        <p>
+          <strong>Firefox 152.0.6</strong> (15.07) closes two critical flaws:
+          CVE-2026-15718 (invalid pointer in the JS/WebAssembly path) and CVE-2026-15719
+          (site isolation/DOM navigation). Mozilla states openly that <em>exploit code is
+          public</em> for the first one, though it knows of no in-the-wild attacks — the fix
+          just needs a browser restart. In parallel, Google shipped
+          <strong>Chrome 150.0.7871.124/.125</strong>: CVE-2026-15764 and CVE-2026-15765,
+          both critical use-after-free bugs in the Ozone display layer (the "exploit-public"
+          note applies only to Firefox). A two-click job, but do it today.
+          <span class="src"><a href="https://www.mozilla.org/en-US/security/advisories/mfsa2026-67/">mozilla.org</a> · <a href="https://thehackernews.com/2026/07/firefox-chrome-adobe-and-vmware-updates.html">thehackernews.com</a></span>
+        </p>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL 19 Beta 2</h2>
+        <p>
+          <strong>PostgreSQL 19 Beta 2</strong> landed on 16.07. Highlights relevant to
+          Daniel's stack: <code>REPACK</code> as a low-lock replacement for
+          <code>VACUUM FULL</code> + <code>CLUSTER</code> (reorganize a table without
+          exclusively locking the whole thing), property-graph queries via SQL/PGQ,
+          <code>FOR PORTION OF UPDATE/DELETE</code> on temporal tables, and inserts up to
+          twice as fast with foreign-key checks. GA is planned around September/October
+          2026 — now's the window to test it against your own test DB.
+          <span class="src"><a href="https://www.postgresql.org/about/news/postgresql-19-beta-2-released-3350/">postgresql.org</a></span>
+        </p>
+      </section>
+
+      <section class="news-item">
+        <h2>Oracle Quarterly CPU: Expected Today</h2>
+        <p>
+          Oracle's quarterly Critical Patch Update follows a "third Tuesday of
+          January/April/July/October" pattern — the April CPU landed on 21.04, and 21.07 is
+          also a Tuesday, so <strong>today</strong>. Caution on the details: Oracle's
+          advisory page was blocked (403) at deadline, and a second source instead cites
+          15.07. Early roundups mention roughly 1,455 patches org-wide, of which ~20 are new
+          for Oracle Java SE (18 remotely exploitable without authentication) — these numbers
+          remain unconfirmed until Oracle's page is reachable again. Already active for real:
+          the PeopleSoft chain CVE-2026-35278 × CVE-2026-35273, which ShinyHunters/UNC6240 is
+          using for HR/payroll data theft (breach cluster on 03.07, over 100 orgs notified,
+          68% in higher education).
+          <span class="src"><a href="https://threat-modeling.com/oracle-july-2026-critical-patch-update/">threat-modeling.com</a></span>
+        </p>
+      </section>
+
+      <section class="news-item">
+        <h2>GitHub: Two Partial Outages in a Week</h2>
+        <p>
+          Double trouble for anyone running GitHub Actions pipelines: on <strong>13.07</strong>
+          (13:11–13:53 UTC), 30% of Actions jobs failed to start and another 2% arrived more
+          than five minutes late — the cause was an autoscaling config with stale capacity
+          thresholds that scaled the service below baseline. Then on <strong>16.07</strong>
+          (22:21–23:50 UTC), around 39% of REST API requests returned HTTP 500 errors because
+          an infrastructure change incorrectly marked most of a region's API backends as
+          "unhealthy." Both were internally caused, both were fixed quickly — but a reminder
+          not to hang your deploy path on a single provider alone.
+          <span class="src"><a href="https://blog.incidenthub.cloud/github-reliability-outage-history-2025-2026">incidenthub.cloud</a></span>
+        </p>
+      </section>
+
+      <section class="news-item">
+        <h2>Tailscale Tightens Up</h2>
+        <p>
+          <strong>Tailscale v1.98.9</strong> clears out a batch of bulletins (TS-2026-004
+          through TS-2026-009). The oddest one: in TS-2026-009, a client that connected over
+          SSH with the username <code>-i</code> got misinterpreted as <code>--no-idn</code> —
+          <code>getent</code> then dumped the entire contents of <code>/etc/passwd</code>
+          (starting with root), and Tailscale opened an interactive root session. The exact
+          release date of 1.98.9 couldn't be firmly confirmed; the bulletin IDs are
+          cross-checked against the official security bulletins. Anyone using Tailscale:
+          update to the patched version.
+          <span class="src"><a href="https://tailscale.com/security-bulletins">tailscale.com</a></span>
+        </p>
+      </section>
+
+      <section class="news-item">
+        <h2>EU Commission: DMA Ruling on Google on 27.07</h2>
+        <p>
+          On the regulatory front: the European Commission is reportedly planning to issue
+          its final decision on Google's DMA compliance measures on <strong>27.07</strong>.
+          The date comes from secondary reporting (Techmeme/FT); a primary ec.europa.eu
+          confirmation is still pending — so treat it as a date to watch, not a fixed one.
+          <span class="src"><a href="https://www.techmeme.com/">techmeme.com</a></span>
+        </p>
+      </section>
+
+      <section class="news-item">
+        <h2>Briefly Noted</h2>
+        <p>
+          <strong>Angular</strong> shipped patch 22.0.7 and the 22.1 prerelease on 16.07
+          (endoflife.date/GitHub Releases — version strings from a secondary source, not
+          directly cross-checked).
+          <strong>containerd v2.2.6</strong> arrived on 09.07 as the sixth patch of the
+          2.2 line. Both routine — for the record, not for alarm.
+          <span class="src"><a href="https://endoflife.date/angular">endoflife.date</a> · <a href="https://github.com/containerd/containerd/releases">github.com</a></span>
+        </p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Tuesday, July twenty-first. Today's non-AI software news has one clear theme: the supply chain. Two separate npm organizations were hijacked within four days, on top of a SharePoint zero-day with an expired federal deadline and a sixteen-year-old Linux bug that lets a virtual machine break out to its host.</p>
+  <p>The lead story: on July fourteenth, the AsyncAPI organization on npm was taken over. Five package versions were republished within about ninety minutes, all carrying the same malicious code that pulls down a remote-access trojan. The nasty part, as Microsoft describes it: the code fires the moment the package is imported, not when it's installed. The usual defense of disabling install scripts doesn't help here at all. And this was already the second incident of the week — three days earlier, the Jscrambler packages were hit via stolen credentials.</p>
+  <p>Fittingly, there's one piece of good news: npm is pulling the emergency brake. Version twelve turns off install scripts by default starting this month. That closes a wide hole, though not the import-time hole from the AsyncAPI attack. Progress, not a cure-all.</p>
+  <p>Among the vulnerabilities, the SharePoint zero-day stands out. The US cyber agency CISA added it to its catalog of actively exploited flaws, with the maximum severity score of nine point eight. The deadline for US federal agencies had already expired on July nineteenth. The same batch also added two FortiSandbox flaws scoring nearly as high, at nine point one.</p>
+  <p>The most striking one for developers is the Linux bug nicknamed Januscape. It's been sitting in the kernel since August two thousand ten — picture a VM as an apartment and the host as the building's control room; here the tenant breaks into the control room and takes over the whole building. On cloud hardware, the neighbors are other customers. The stable kernels have been patched since July fourth.</p>
+  <p>On top of that came emergency patches for Firefox and Chrome, with public exploit code already circulating for the Firefox flaw. PostgreSQL nineteen is in its second beta and brings, among other things, REPACK, a low-lock replacement for the old VACUUM FULL. And eleven ancient boot go-betweens, countersigned by Microsoft, have been exploitable for over a decade to bypass Secure Boot — found by ESET, revoked via the June patch day.</p>
+  <p>On the side: GitHub had two partial outages this week, one in Actions and one in the REST API, both caused by internal configuration errors. And Oracle's quarterly patch bundle is expected today — I'll leave the exact fix count open, since Oracle's own page was blocked at the time of writing.</p>
+  <p>What to watch next: npm twelve's rollout later this month, and, on July twenty-seventh, the European Commission's final ruling on Google's compliance under the Digital Markets Act. Tomorrow, another look at the supply chain and patch status.</p>
+</div>
+
+</body>
+</html>
