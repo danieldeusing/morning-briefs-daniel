@@ -1,6 +1,6 @@
 # Morning Briefs
 
-An automated daily newsletter generator producing 10 category newsletters in 4 languages (DE/EN/PT/ES), served as a static site at **https://briefs.danieldeusing.de**.
+An automated daily newsletter generator producing 7 category newsletters in 4 languages (DE/EN/PT/ES), served as a static site at **https://briefs.danieldeusing.de**.
 
 ## How it works
 
@@ -21,8 +21,7 @@ strong model) goes, translation is mechanical:
 
 The German file is canonical (all research + judgement happens there); the other
 three languages are translations of it. Categories (processed in batches of 3):
-economy, stocks-crypto, software, ai-dev, ai-usecases, football, motorsport,
-family, jobs, learn-language.
+economy, software, ai-dev, ai-usecases, family, jobs, learn-language.
 
 ## Repo layout
 

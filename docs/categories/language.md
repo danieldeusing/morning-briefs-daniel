@@ -31,7 +31,7 @@ Wenn ein aktueller Anlass (z. B. eine WM-Phase, eine grosse Wirtschaftsnachricht
 ## Masthead
 Wie andere Newsletter (`<header class="masthead">` mit Issue-Zeile + `masthead-title`). Headline = das Tagesthema, z. B. „Wortschatz Wirtschaft: Inflation, Rezession, Zins" — in der jeweiligen Sprache der Datei.
 
-## TL;DR-Band (8–12 Bullets)
+## TL;DR-Band (5–7 Bullets)
 Jede Zeile ein interessanter „Aha"-Übersetzungs-Fakt:
 - `<li><span class="chip hot">FALSE FRIEND</span> <strong>actual ≠ aktuell</strong> — actual = „tatsächlich", nicht „heutig".</li>`
 - `<li><span class="chip good">IDIOM</span> <strong>pisar na bola</strong> (PT) = „Mist bauen", wörtlich „auf den Ball treten".</li>`
@@ -94,13 +94,14 @@ Für **Nicht-Verben** das `<details>`-Block weglassen. Für **Substantive** Genu
 **Mehrere Beispielsätze pro Eintrag (Pflicht):** jede der vier Sprachzellen enthält **mindestens zwei `<p class="example">`-Sätze** (für Verben gern drei, um verschiedene Tempora/Personen zu zeigen). Die Beispiele sind über die vier Sprachen **parallel** — Beispiel 1 sagt in allen vier Spalten dasselbe, Beispiel 2 dasselbe usw. Verschiedene Beispiele zeigen verschiedene Verwendungen (anderer Kontext, andere Person, anderes Tempus), nicht dieselbe Aussage umformuliert. So entsteht echter Mehrwert statt Wiederholung.
 
 ### Tägliche Sollmenge
-- **Mindestens 30 Vokabel-Einträge** (gern mehr — das ist die vom Nutzer gewünschte Menge).
-- **Davon mindestens 10 Verben** (jeweils mit voller Konjugationstabelle).
+- **10–12 Vokabel-Einträge** — das ist eine **Obergrenze**, keine Zielmarke. Lieber weniger Einträge mit besseren Beispielen als eine lange Liste.
+- **Davon höchstens 3–4 Verben** (jeweils mit voller Konjugationstabelle). Verben sind der mit Abstand teuerste Eintragstyp — je Verb vier Sprachtabellen à fünf Tempi, ca. 4,5 KB — und treiben die Dateigröße stärker als alles andere. Diese Obergrenze ist hart.
 - Jeder Eintrag mit **≥ 2 Beispielsätzen pro Sprache** (siehe oben).
 - Mindestens 1 „False Friend" (z. B. DE „aktuell" vs. EN „actual").
 - Mindestens 1 BR-spezifischer PT-Eintrag, der vom europäischen PT abweicht (z. B. „celular" statt „telemóvel").
-- 3–5 dieser Einträge sind **Wiederholungen** aus dem Ledger (siehe nächster Abschnitt), die restlichen sind neu.
-- Bei dieser Menge: thematisch in **Untergruppen** gliedern (z. B. „Verben", „Rund ums Kind", „Haushalt", „Schule") — die Vokabel-Sektion bleibt ein durchgehender breiter `<div>`, aber die Reihenfolge folgt sinnvollen Clustern. Optional einen `<h3>`-Zwischentitel pro Cluster setzen.
+- 2–3 dieser Einträge sind **Wiederholungen** aus dem Ledger (siehe nächster Abschnitt), die restlichen sind neu.
+- Bei dieser kompakten Menge braucht es **keine** `<h3>`-Untergruppen — eine sinnvolle Reihenfolge (Verben zuerst, dann Substantive/Adjektive/Redewendung) genügt. Cluster-Zwischentitel erst ab ~15 Einträgen erwägen.
+- **Richtwert Dateigröße:** die fertige DE-Datei sollte rund **50–65 KB** groß sein. Deutlich darüber heißt: zu viele Einträge oder zu viele Verben — kürzen, nicht ausnahmsweise durchwinken. (Zum Vergleich: die 34-Einträge-Ausgabe vom 24.07.2026 war 161 KB und damit dreimal zu groß.)
 
 # Spaced Repetition (Ledger — Pflicht)
 

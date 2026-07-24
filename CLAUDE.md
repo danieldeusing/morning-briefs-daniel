@@ -25,12 +25,9 @@ morning-briefs/daniel/
 │   ├── software/                (same de/en/pt/es structure)
 │   ├── ai-dev/
 │   ├── ai-usecases/
-│   ├── football/
 │   ├── family/
 │   ├── jobs/
-│   ├── learn-language/
-│   ├── motorsport/
-│   └── stocks-crypto/
+│   └── learn-language/
 │
 ├── docs/                    ← editorial specs referenced by every routine
 │   ├── FORMAT.md                shared layout/format spec
@@ -70,7 +67,7 @@ ids override the agent's frontmatter default).
 | Phase | Subagent (`.claude/agents/`) | Model | Output |
 |---|---|---|---|
 | Research | `brief-researcher` | `claude-sonnet-4-6` | `/tmp/brief-research-<cat>-<date>.md` dossier (sourced facts) |
-| Write **DE** | `brief-writer` | `claude-opus-4-8` (complex: economy, stocks-crypto, jobs) / `claude-opus-4-7` (medium: rest) | `public/<cat>/de/<date>.html` + `/tmp/brief-sources-<cat>-<date>.md` |
+| Write **DE** | `brief-writer` | `claude-opus-4-8` (complex: economy, jobs) / `claude-opus-4-7` (medium: rest) | `public/<cat>/de/<date>.html` + `/tmp/brief-sources-<cat>-<date>.md` |
 | Translate **EN/PT/ES** | `brief-translator` | `claude-sonnet-4-6` | `public/<cat>/{en,pt,es}/<date>.html` |
 | Verify | `brief-fact-checker` | `claude-sonnet-4-6` | structured report → fix loop (cap 2 rounds) |
 | Pre-research (jobs only) | `jobs-aggregator` | `claude-sonnet-4-6` | listings JSON (orchestrator calls it; subagents can't nest) |
@@ -81,8 +78,8 @@ The **coordinator** (the routine itself) wants Opus 4.8, but a desktop scheduled
 task can't pin its own model — it inherits the app's default model at fire time,
 so keep the app default on **Opus 4.8** for this routine.
 
-Categories (canonical order): `economy, stocks-crypto, software, ai-dev,
-ai-usecases, football, motorsport, family, jobs, language`. Processed in
+Categories (canonical order): `economy, software, ai-dev,
+ai-usecases, family, jobs, language`. Processed in
 **batches of 3** (bounded concurrency — more triggers rate limits). Research is
 split to a cheap model so the expensive Opus writers only reason over a sourced
 dossier rather than doing the fetch-heavy legwork themselves.
@@ -145,8 +142,8 @@ data is allowed at the end of `<body>`).
   text (`--fg`, `--muted`, `--soft`), rules (`--rule`, `--rule-soft`),
   effects (`--shadow`), typography (`--headline-font`), semantic accents
   (`--warn`, `--good`), and the seven per-category accents (`--c-economy`,
-  `--c-software`, `--c-ai-dev`, `--c-ai-usecases`, `--c-football`,
-  `--c-family`, `--c-jobs`). The active accent is `--accent`, aliased per
+  `--c-software`, `--c-ai-dev`, `--c-ai-usecases`, `--c-family`, `--c-jobs`,
+  `--c-learn-language`). The active accent is `--accent`, aliased per
   newsletter via `body.cat-X { --accent: var(--c-X); }`. Full dark-mode
   block via `@media (prefers-color-scheme: dark)`. Loaded by both
   `index.html` (`<link>`) and `lib/styles.css` (`@import`).
@@ -168,7 +165,7 @@ data is allowed at the end of `<body>`).
 Every newsletter starts as a copy of `docs/template.html` (~70 lines, no
 content). The agent sets the body class, fills the masthead, the TL;DR
 band, the timeline band, the per-category dashboard (optional —
-economy/football/family/jobs only), and the body-grid columns. CDN
+economy/family/jobs only), and the body-grid columns. CDN
 scripts (Chart.js, Mermaid) are uncommented only when a component needs
 them.
 
@@ -192,7 +189,7 @@ A daily file looks like:
     <section class="tldr"> … </section>
     <div class="timeline"> … </div>
     <!-- optional, only for categories with specialised dashboard cards: -->
-    <section class="dashboard"> … </section>          <!-- economy/football/family/jobs -->
+    <section class="dashboard"> … </section>          <!-- economy/family/jobs -->
     <div class="body-grid">
       <div class="col"> … </div>
       <div class="col"> … </div>
@@ -218,7 +215,7 @@ A daily file looks like:
    most categories, multi-stage for economy). Vertical dot column with a
    single rule, dates left-aligned, events right.
 4. **Per-category dashboard** (optional) —
-   • `.dashboard` (economy / football / family / jobs): two-column slot
+   • `.dashboard` (economy / family / jobs): two-column slot
      for the category's specialised cards (FX, match, weather, listings).
    • software / ai-dev / ai-usecases: no dashboard. The timeline band
      flows directly into the body-grid; headline stories are written as

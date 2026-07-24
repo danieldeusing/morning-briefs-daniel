@@ -4,7 +4,7 @@ Gilt für alle Morning-Brief-Newsletter (außer `dashboard`, das nur das Manifes
 
 ## Themen-Abgrenzung & Dedup (zwischen den Newslettern)
 
-Die acht Newsletter laufen unabhängig und ohne Wissen voneinander — sonst landet dieselbe Story am selben Tag in mehreren Briefs (z. B. eine KI-Keynote gleichzeitig in `software`, `ai-dev` und `ai-usecases`). Regeln:
+Die sieben Newsletter laufen unabhängig und ohne Wissen voneinander — sonst landet dieselbe Story am selben Tag in mehreren Briefs (z. B. eine KI-Keynote gleichzeitig in `software`, `ai-dev` und `ai-usecases`). Regeln:
 
 - **Klare Reviere:**
   - `ai-dev` = KI fürs Programmieren (Coding-Modelle, Agent-Tools, Harnesses, MCP, IDE-Integrationen, Benchmarks, lokale LLM-Toolchains).
@@ -57,10 +57,6 @@ fetchen, ohne an Qualität zu sparen:
 - **EUR/BRL Cross-Check** (mind. eine zusätzlich nennen): exchange-rates.org/converter/eur-brl ODER USD/BRL × EUR/USD-Cross aus TradingEconomics / BCB Ptax / Reuters.
 - Wenn EUR/USD und USD/BRL einzeln verfügbar sind, EUR/BRL daraus rechnen und gegen ECB abgleichen — Differenz >0,5 % im Brief flaggen.
 - **Wise NICHT als Quelle nutzen**. Das öffentliche Wise-Widget (`wise.com/.../eur-to-brl-rate`) cached aggressiv — mehrere Tage Stale-Werte wurden im Mai 2026 beobachtet (Widget zeigte 6,04 während die In-App-Rate bei 5,87 lag). Wenn Wise dennoch zitiert werden soll, dann als „Wise In-App-Rate (Daniel zitiert)" ohne URL.
-
-### Konkretes für Sport (football)
-- Spielstände + Tabellen: kicker.de oder bundesliga.com (DE), globoesporte.globo.com (BR), uefa.com (UCL). Stand immer mit Datum benennen.
-- xG / Pressing-Stats: understat.com, fbref.com. Quelle + Datum nennen.
 
 ### Konkretes für Wetter (family)
 - climatempo.com.br oder inmet.gov.br für Ribeirão Claro. CEMADEN für Warnungen. Timestamp pflicht.

@@ -43,7 +43,7 @@ def load_category_ids():
 
 def make_checks(cat_id: str):
     """Return {check_label: compiled_regex} for one category. The id is regex-
-    escaped so a hyphenated id like `stocks-crypto` matches literally."""
+    escaped so a hyphenated id like `learn-language` matches literally."""
     cid = re.escape(cat_id)
     return {
         "tokens.css --c-X":         (TOKENS, re.compile(r"--c-%s:\s*#" % cid)),

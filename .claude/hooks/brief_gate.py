@@ -41,8 +41,8 @@ PUBLIC = REPO_ROOT / "public"
 MODULES_DIR = HOOKS_DIR / "brief_gate_modules"
 
 CATEGORIES = {
-    "economy", "software", "ai-dev", "ai-usecases", "football",
-    "family", "jobs", "learn-language", "motorsport", "stocks-crypto",
+    "economy", "software", "ai-dev", "ai-usecases",
+    "family", "jobs", "learn-language",
 }
 # Folder name → required <html lang> value (docs/FORMAT.md per-locale table).
 LANG_BY_FOLDER = {"de": "de", "en": "en", "pt": "pt-BR", "es": "es-MX"}

@@ -21,13 +21,10 @@ MANIFEST_JSON = BASE / "manifest.json"
 # this flat order is the canonical sequence the manifest + home grid follow.
 CATEGORIES = [
     ("economy",        "Wirtschaft & Märkte", "📈", "var(--c-economy)"),
-    ("stocks-crypto",  "Börse & Krypto",      "💰", "var(--c-stocks-crypto)"),
     ("software",       "Software & IT",       "🔧", "var(--c-software)"),
     ("ai-dev",         "AI fürs Coding",      "🤖", "var(--c-ai-dev)"),
     ("ai-usecases",    "AI in der Anwendung", "🏭", "var(--c-ai-usecases)"),
     ("jobs",           "Jobs & Aufträge",     "💼", "var(--c-jobs)"),
-    ("football",       "Fußball",             "⚽", "var(--c-football)"),
-    ("motorsport",     "Motorsport",          "🏎", "var(--c-motorsport)"),
     ("family",         "Familie & Region",    "🏡", "var(--c-family)"),
     ("learn-language", "Sprachen lernen",     "🗣", "var(--c-learn-language)"),
 ]

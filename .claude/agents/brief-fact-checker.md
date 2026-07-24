@@ -60,8 +60,8 @@ public/<category>/pt/<date>.html
 public/<category>/es/<date>.html
 ```
 
-`<category>` ∈ economy, software, ai-dev, ai-usecases, football, family, jobs,
-learn-language, motorsport, stocks-crypto. DE is canonical; a translation may be
+`<category>` ∈ economy, software, ai-dev, ai-usecases, family, jobs,
+learn-language. DE is canonical; a translation may be
 missing (the dashboard falls back to DE) — check whichever of the four exist, and
 note any missing translation as its own finding.
 
@@ -136,16 +136,10 @@ note any missing translation as its own finding.
 
 ### Per-category claim hints (where the load-bearing facts cluster)
 
-Generalizes across all ten categories; lead with these per category:
+Generalizes across all seven categories; lead with these per category:
 
 - **economy** — FX pairs (EUR/BRL, USD/BRL), DXY/dollar-index, rates + their
   sample dates; forecast tiers are opinion, the underlying figures are not.
-- **stocks-crypto** — the bucket rates (stocks/crypto/commodities/…), and the
-  presence + correctness of the risk/disclaimer text.
-- **football / motorsport** — standings (positions, points, played), scores, and
-  kickoff/race/session **times with their timezone labels** (BRT vs MEZ/MESZ — the
-  trizone conversions are a classic off-by-an-hour across DST; `sports-time-trizone`
-  is the canonical converter the routines use).
 - **family** — dengue / health epidemiological-week figures (the SE-week stamp must
   match the source week) and event dates (must be today-or-future, real venues).
 - **ai-dev** — benchmark scores (SWE-Bench, LiveCodeBench, LMArena) with a cited

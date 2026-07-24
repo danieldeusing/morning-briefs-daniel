@@ -2,7 +2,7 @@
 name: brief-writer
 description: Research and write the CANONICAL GERMAN (de) file for one Morning Brief category on one date. Given a category id + date, reads that category's spec (docs/categories/<cat>.md) plus the shared editorial docs, does live-sourced research, and writes only public/<cat>/de/<date>.html plus a sources scratch file. Does NOT translate and does NOT fact-check — the orchestrator handles those phases separately. Use as the research+write phase of the consolidated morning-brief routine.
 tools: [Read, Write, Edit, Grep, Glob, Bash, WebSearch, WebFetch, Skill]
-skills: [fx-snapshot, fetch-with-fallback, sports-time-trizone, conjugation-verify, family-event-radar, twiced-idea-builder, srs-ledger-reconcile, recommendation-block-lint]
+skills: [fx-snapshot, fetch-with-fallback, conjugation-verify, family-event-radar, twiced-idea-builder, srs-ledger-reconcile]
 model: claude-opus-4-7
 permissionMode: dontAsk
 maxTurns: 120
@@ -30,8 +30,8 @@ filling tables, copying component markup. Deliberating hard over boilerplate
 burns tokens without improving the brief.
 
 ## Inputs (the orchestrator gives you)
-- `category` — one of: economy, stocks-crypto, software, ai-dev, ai-usecases,
-  football, motorsport, family, jobs, language.
+- `category` — one of: economy, software, ai-dev, ai-usecases, family, jobs,
+  language.
 - `date` — `YYYY-MM-DD`.
 - The **research dossier** `/tmp/brief-research-<category>-<date>.md` (written by
   the researcher: candidate stories + sourced fact lines with verbatim snippets +
@@ -88,8 +88,7 @@ burns tokens without improving the brief.
 - **DE only.** Do not create `en/`, `pt/`, or `es/` files. Do not call any
   fact-checker. Do not rebuild the dashboard.
 - Honour every category-specific rule in `docs/categories/<category>.md`
-  (e.g. economy FX/Wise rule, football dual-timezone, stocks-crypto five-bucket
-  coverage + recommendation format, language SRS ledger).
+  (e.g. economy FX/Wise rule, language SRS ledger).
 - Length and skip-rules per the category spec. No padding.
 
 ## Final message (keep it short — it returns to the orchestrator's context)

@@ -33,10 +33,6 @@ Reusable HTML fragments. Daily newsletters are content-only: they include `lib/s
 | [`scenario-block`](#scenario-block) | economy | — |
 | [`benchmark-bar-chart`](#benchmark-bar-chart) | ai-dev | bar chart |
 | [`projekt-ideen-twiced`](#projekt-ideen-twiced) | ai-usecases | — |
-| [`freiburg-match-card`](#freiburg-match-card) | football | — |
-| [`standings-mini-table`](#standings-mini-table) | football (optional teaser) | — |
-| [`standings-full-table`](#standings-full-table) | football (**mandatory** Bundesliga + Brasileirão) | — |
-| [`form-curve`](#form-curve) | football | — |
 | [`weather-card`](#weather-card) | family | — |
 | [`wochenend-pick-card`](#wochenend-pick-card) | family | — |
 | [`activity-table`](#activity-table) | family | — |
@@ -225,123 +221,6 @@ Used by: ai-usecases (closing section) · CDN: none · Slot: body section, last
 
 ---
 
-## `freiburg-match-card`
-
-Used by: football · CDN: none · Slot: `.dashboard` (left, top card)
-
-```html
-<article class="match-card freiburg">
-  <div class="match-head">
-    <span class="match-club">SC Freiburg</span>
-    <span class="match-comp">{{Bundesliga}}</span>
-  </div>
-  <div class="match-result">
-    <span class="match-label">Letztes Spiel</span>
-    <strong>{{SCF 2:1 Gegner}}</strong> · {{datum}}
-  </div>
-  <div class="match-next">
-    <span class="match-label">Nächstes Spiel</span>
-    <strong>{{Gegner}}</strong> · {{datum}} · {{H/A}}
-  </div>
-</article>
-```
-
----
-
-## `standings-mini-table`
-
-Used by: football (compact top-N teaser, optional) · CDN: none · Slot: dashboard card
-
-For at-a-glance dashboard summaries. Daniel has explicitly asked for full tables in the body — use [`standings-full-table`](#standings-full-table) below for the Bundesliga and Brasileirão sections. This mini variant is only for dashboard teasers if you want one.
-
-```html
-<article class="fx-card">
-  <div class="fx-pair">{{Bundesliga}} · Top 3</div>
-  <table class="mini-table">
-    <thead><tr><th>#</th><th>Verein</th><th>Pkt</th><th>TD</th></tr></thead>
-    <tbody>
-      <tr><td>1</td><td>{{Team1}}</td><td>{{P1}}</td><td>{{TD1}}</td></tr>
-      <tr><td>2</td><td>{{Team2}}</td><td>{{P2}}</td><td>{{TD2}}</td></tr>
-      <tr><td>3</td><td>{{Team3}}</td><td>{{P3}}</td><td>{{TD3}}</td></tr>
-    </tbody>
-  </table>
-</article>
-```
-
-## `standings-full-table`
-
-Used by: football (Bundesliga + Brasileirão Série A — **mandatory in every brief**) · CDN: none · Slot: body section
-
-**Required every day.** Complete league standings — all 18 teams (Bundesliga) or 20 teams (Brasileirão Série A). Use `data-zone` on each `<tr>` to colour-code the rank cell:
-
-- `ucl`  — Champions League / Libertadores group stage
-- `el`   — Europa League / Libertadores qualifying
-- `conf` — Conference League / Copa Sudamericana
-- `play` — Relegation play-off
-- `rel`  — Direct relegation
-
-Add `class="highlight"` on SC Freiburg's row (Bundesliga) to make it stand out.
-
-**Bundesliga zones (current convention):** rows 1–4 = `ucl`, row 5 = `el`, row 6 = `conf`, row 16 = `play`, rows 17–18 = `rel`.
-
-**Brasileirão Série A zones (current convention):** rows 1–4 = `ucl` (Libertadores group), rows 5–6 = `el` (Libertadores pre), rows 7–12 = `conf` (Sudamericana), rows 17–20 = `rel`.
-
-If zone conventions change (new UEFA/CBF rules), adapt the row tagging.
-
-```html
-<div class="standings-table-wrap">
-  <h3>Bundesliga · Tabelle nach Spieltag {{N}} (Stand {{DD.MM.YYYY HH:MM}}, Quelle: kicker.de)</h3>
-  <table class="standings-table">
-    <thead>
-      <tr><th>#</th><th>Verein</th><th>Sp</th><th>S</th><th>U</th><th>N</th><th>Tore</th><th>TD</th><th>Pkt</th></tr>
-    </thead>
-    <tbody>
-      <tr data-zone="ucl"><td>1</td><td>{{Team}}</td><td>33</td><td>24</td><td>7</td><td>2</td><td>89:31</td><td>+58</td><td>79</td></tr>
-      <tr data-zone="ucl"><td>2</td><td>{{Team}}</td><td>33</td><td>23</td><td>5</td><td>5</td><td>91:43</td><td>+48</td><td>74</td></tr>
-      <tr data-zone="ucl"><td>3</td><td>{{Team}}</td><td>33</td><td>22</td><td>4</td><td>7</td><td>78:39</td><td>+39</td><td>70</td></tr>
-      <tr data-zone="ucl"><td>4</td><td>{{Team}}</td><td>33</td><td>19</td><td>8</td><td>6</td><td>72:38</td><td>+34</td><td>65</td></tr>
-      <tr data-zone="el"><td>5</td><td>{{Team}}</td><td>33</td><td>17</td><td>11</td><td>5</td><td>67:42</td><td>+25</td><td>62</td></tr>
-      <tr data-zone="conf"><td>6</td><td>{{Team}}</td><td>33</td><td>14</td><td>11</td><td>8</td><td>54:42</td><td>+12</td><td>53</td></tr>
-      <tr class="highlight"><td>7</td><td>SC Freiburg</td><td>33</td><td>13</td><td>9</td><td>11</td><td>43:48</td><td>−5</td><td>48</td></tr>
-      <!-- continue through row 18 -->
-      <tr data-zone="play"><td>16</td><td>{{Team}}</td><td>33</td><td>9</td><td>7</td><td>17</td><td>34:55</td><td>−21</td><td>34</td></tr>
-      <tr data-zone="rel"><td>17</td><td>{{Team}}</td><td>33</td><td>4</td><td>6</td><td>23</td><td>36:76</td><td>−40</td><td>18</td></tr>
-      <tr data-zone="rel"><td>18</td><td>{{Team}}</td><td>33</td><td>3</td><td>7</td><td>23</td><td>32:78</td><td>−46</td><td>16</td></tr>
-    </tbody>
-  </table>
-  <div class="standings-legend">
-    <span class="ucl">Champions League</span>
-    <span class="el">Europa League</span>
-    <span class="conf">Conference League</span>
-    <span class="play">Relegations-Playoff</span>
-    <span class="rel">Abstieg</span>
-  </div>
-</div>
-```
-
-For Brasileirão swap labels in the legend: `Libertadores`, `Libertadores Pré`, `Sudamericana`, (no play-off in BR Série A), `Rebaixamento`.
-
----
-
-## `form-curve`
-
-Used by: football (Freiburg's last 5) · CDN: none · Slot: body section
-
-```html
-<div class="form-curve">
-  <div class="form-label">Form (letzte 5)</div>
-  <div class="form-dots">
-    <span class="dot win"  title="Sieg gg Augsburg 2:1">S</span>
-    <span class="dot draw" title="Remis gg Mainz 1:1">U</span>
-    <span class="dot loss" title="Niederlage gg BVB 0:2">N</span>
-    <span class="dot win"  title="…">S</span>
-    <span class="dot win"  title="…">S</span>
-  </div>
-</div>
-```
-
----
-
 ## `weather-card`
 
 Used by: family · CDN: none · Slot: `.dashboard` (left, top card)
@@ -459,7 +338,7 @@ Keep the **Market-Pulse** blurb as a normal `.callout` or short `<p>` *above* th
 
 ## `event-timeline-7day`
 
-Used by: software, ai-dev, ai-usecases, football, family, jobs · CDN: none · Slot: full-width band, directly below the TL;DR band (above the per-category dashboard, or — for software / ai-dev / ai-usecases — directly above the body-grid)
+Used by: software, ai-dev, ai-usecases, family, jobs · CDN: none · Slot: full-width band, directly below the TL;DR band (above the per-category dashboard, or — for software / ai-dev / ai-usecases — directly above the body-grid)
 
 **Layout:** vertical day-list. Each `.tl-col` is one ROW (not a column), with date on left, dot on the vertical line in the middle, events on the right. Add as many days as needed — typical 7–9.
 

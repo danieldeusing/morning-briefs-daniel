@@ -8,8 +8,8 @@ implements in task #58.
 ## The contract
 
 Create `.claude/hooks/brief_gate_modules/<category>.py` where `<category>` is the
-exact folder name (`economy`, `software`, `ai-dev`, `ai-usecases`, `football`,
-`family`, `jobs`, `learn-language`, `motorsport`, `stocks-crypto`).
+exact folder name (`economy`, `software`, `ai-dev`, `ai-usecases`,
+`family`, `jobs`, `learn-language`).
 
 The module MUST define one function:
 
@@ -59,10 +59,9 @@ the framework coerces them to `Finding`.
 
 **Default to `warn`.** Warnings inform; they never stop the edit. Reserve
 `level="block"` for issues that are *liability- or money-critical* — a brief that
-ships with one is materially wrong, not merely imperfect. The two blocking checks
-mandated for Phase 0 (already implemented here as reference modules):
+ships with one is materially wrong, not merely imperfect. The canonical blocking
+check, already implemented here as a reference module:
 
-- **stocks-crypto** → missing risk/disclaimer text (`stocks-crypto.py`).
 - **economy** → fabricated or undated FX series in a chart data block (`economy.py`).
 
 Everything else (tone, depth, source count, length) is a warning.
@@ -83,9 +82,9 @@ from brief_gate import Finding
 
 def check_brief(ctx):
     out = []
-    if "<table" not in ctx.body.lower():           # category needs a standings table
-        out.append(Finding("missing-standings",
-                            "Football brief has no standings <table>.", level="warn"))
+    if "<table" not in ctx.body.lower():           # category needs a data table
+        out.append(Finding("missing-table",
+                            "Brief has no data <table>.", level="warn"))
     return out
 ```
 

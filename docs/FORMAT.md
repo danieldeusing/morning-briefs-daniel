@@ -30,7 +30,7 @@ The chip-tag label inside `<span class="chip [hot|good]">…</span>` translates 
 
 ## File paths
 - HTML output: `public/<category>/<lang>/{{YYYY-MM-DD}}.html` (relative to the project root — everything served lives under `public/`).
-- `<category>` ∈ `economy`, `software`, `ai-dev`, `ai-usecases`, `football`, `family`, `jobs`, `learn-language`.
+- `<category>` ∈ `economy`, `software`, `ai-dev`, `ai-usecases`, `family`, `jobs`, `learn-language`.
 - `<lang>` ∈ `de`, `en`, `pt`, `es`.
 
 A successful run emits **four files** per category per day (one per language). Each file is a complete standalone HTML document with the same body structure — only the visible text differs. No markdown twin.
@@ -84,7 +84,6 @@ The reference files:
 | software | `event-timeline-7day` |
 | ai-dev | `event-timeline-7day` · `benchmark-bar-chart` (when a benchmark moves) |
 | ai-usecases | `event-timeline-7day` · `projekt-ideen-twiced` (closing) |
-| football | `standings-full-table` (Bundesliga + Brasileirão; +UCL/EL on matchdays, +WM-tables during a World Cup) · `event-timeline-7day` |
 | family | `weather-card` · `wochenend-pick-card` · `activity-table` · `event-timeline-7day` |
 | jobs | `jobs-board` (full-width paginated listings, sorted by fit) · `event-timeline-7day` |
 | learn-language | `vocab-list` (full-width four-cell rows + `<details>` conjugation drawer; `.speak` voice buttons per word) |
@@ -127,7 +126,6 @@ Set via `<body class="cat-{category}">`. The accent colours are baked into `lib/
 | `software`        | `#3a6ea5` | `#6fa1d8` |
 | `ai-dev`          | `#6a4ea0` | `#9d83cf` |
 | `ai-usecases`     | `#2d8a87` | `#6ec0bc` |
-| `football`        | `#2e7a3f` | `#6ab97e` |
 | `family`          | `#c08735` | `#e0a85a` |
 | `jobs`            | `#4a6680` | `#87a6c4` |
 | `learn-language`  | `#9c3858` | `#d18299` |
@@ -143,14 +141,13 @@ The page reads top-to-bottom as an inverted pyramid: scan tools first, then per-
 
 1. **Masthead** — date, weekday, location, one-line headline.
 2. **TL;DR band** (full width, sibling of `.body-grid` — NOT inside the body-grid). Opens with an optional `<p class="lead">` editorial frame (drop cap in accent), followed by 6–12 bullets, each starting with `<span class="chip [hot|good]">TAG</span>`. No box chrome — the whole section IS the executive summary, with weight from typography alone. Bullets render in two scan-columns on wide viewports. The voice-reader 🔊 button on the `<h2>` reads the lead and all bullets in order.
-3. **Wochenausblick / Event-Horizont band** (full width). `event-timeline-7day` for software/ai-dev/ai-usecases/football/family/jobs; `event-timeline-multistage` for economy. The "what do I need to plan around?" scan.
+3. **Wochenausblick / Event-Horizont band** (full width). `event-timeline-7day` for software/ai-dev/ai-usecases/family/jobs; `event-timeline-multistage` for economy. The "what do I need to plan around?" scan.
 4. **Per-category dashboard** (optional — only for categories with specialised cards):
    - **economy** → `.dashboard` (FX-card-set + fx-detail-panel) + `.strip` (R$/h calculator).
-   - **football** → `.dashboard` (Bundesliga + Brasileirão `standings-full-table` side-by-side; add UCL/EL tables on matchdays, WM-tables during a WC).
    - **family** → `.dashboard` (weather-card + wochenend-pick-card).
    - **jobs** → no `.dashboard`; a full-width `jobs-board` (direct child of `.shell`, like the timeline) holds all listings with pagination, sorted by fit score.
    - **software / ai-dev / ai-usecases** → no dashboard. The timeline band goes straight into the body-grid. The day's headline stories are written as full sections inside the body-grid — there's no intermediate "Top-Stories" tier.
-5. **Body-grid** — deep-dive sections. 3 columns for content-dense newsletters (economy, software, ai-dev, ai-usecases); `body-grid.cols-2` (2 columns) for tighter ones (family, football, jobs). **TL;DR is no longer inside the body-grid** — it's the top band.
+5. **Body-grid** — deep-dive sections. 3 columns for content-dense newsletters (economy, software, ai-dev, ai-usecases); `body-grid.cols-2` (2 columns) for tighter ones (family, jobs). **TL;DR is no longer inside the body-grid** — it's the top band.
 
 ## Rules
 - Every non-trivial claim gets a source link.

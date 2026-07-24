@@ -13,8 +13,8 @@ description: >
   "get the dengue count from the gov PDF", "pull the SWE-Bench score", "the
   source is 403ing", "this page is JS-rendered", "add a fallback source",
   "EUR/BRL for today's brief", "scrape the standings". Especially relevant for
-  economy (FX), family (gov PDFs), ai-dev (benchmark leaderboards), football and
-  motorsport (standings) — but useful for any sourced number.
+  economy (FX), family (gov PDFs), ai-dev (benchmark leaderboards) — but useful
+  for any sourced number.
 ---
 
 # fetch-with-fallback
@@ -120,8 +120,6 @@ Notes that save you debugging:
 - **ai-dev** — benchmark leaderboards: SWE-Bench, LiveCodeBench, LMArena. These
   are often JS-rendered — put a static/JSON endpoint first if one exists, the
   rendered page last (the engine will flag and skip a pure JS shell).
-- **football / motorsport** — Brasileirão / Bundesliga / F1 standings: an API or
-  static table first, the scrape last.
 
 ## What this skill is NOT
 
