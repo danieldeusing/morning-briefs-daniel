@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-07-25</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-07-25</span>
+  </div>
+
+  <h1 class="masthead-title">MCP goes stateless on Tuesday — and breaks the old spec</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Today isn't about a new model — it's about plugs and price, the two things that hit your daily workflow harder than any benchmark. On Tuesday, the MCP specification <strong>2026-07-28</strong> drops: the biggest overhaul since launch, the protocol goes stateless, and the <code>initialize</code> handshake plus the session ID disappear — with explicit breaking changes. Five weeks later, on August 31, Claude Sonnet 5's launch pricing expires and token costs jump 50%. I also ran down the circulating "82.1% on SWE-bench Verified, first model over 80" claim — it doesn't hold up. And GitHub lets an open-weight model into the Copilot picker for the first time.</p>
+    <ul>
+      <li><span class="chip hot">MCP</span> <strong>Final spec 2026-07-28</strong> drops on Tuesday: "the biggest overhaul of the protocol since launch." The core goes <strong>stateless</strong> — the <code>initialize</code>/<code>initialized</code> handshake and the <code>Mcp-Session-Id</code> header disappear, and any request can land on any server instance.</li>
+      <li><span class="chip hot">MCP</span> <strong>Breaking changes, explicit</strong>: the <code>2025-11-25</code> initialize flow and session-based routing stop working. Tasks moves out of the core into an extension framework (<code>tasks/get</code>, <code>tasks/update</code>, <code>tasks/cancel</code>); Roots, Sampling, and Logging are deprecated with a 12-month grace period.</li>
+      <li><span class="chip">Claude</span> <strong>Sonnet 5 price cliff on Aug 31</strong>: currently <span class="stat">$2</span>/<span class="stat">$10</span> per million input/output tokens, rising to <span class="stat">$3</span>/<span class="stat">$15</span> on September 1 — plus 50% on both sides, on the same unchanged model.</li>
+      <li><span class="chip">Bench</span> <strong>The 82.1% doesn't hold up.</strong> Anthropic's own announcement page (checked July 25) doesn't cite a single SWE-bench figure; the dated BenchLM aggregate has Sonnet 5 at <span class="stat">85.2%</span>, <strong>rank 6</strong> — behind five Anthropic models. "First model over 80%" is simply wrong on this board: eight entries are above 80.</li>
+      <li><span class="chip">Bench</span> <strong>Independent second opinions</strong> on Sonnet 5: Artificial Analysis Intelligence Index <span class="stat">53</span> points; Arena.ai WebDev rank 10 at <span class="stat">1541</span> ±11. Strong, but not the top.</li>
+      <li><span class="chip good">OSS</span> <strong>Kimi K2.7 Code in GitHub Copilot</strong> (Jul 1) — per GitHub, "the first open-weight model offered as a selectable option in the Copilot model picker." <span class="stat">$0.95</span>/<span class="stat">$4.00</span> per million tokens, roughly a third to half of the proprietary options next to it.</li>
+      <li><span class="chip">Local</span> <strong>NVIDIA Nemotron-Labs-TwoTower</strong> (Jul 1): 2.42x throughput at 98.7% of base quality, open weights on Hugging Face. But it's a base model with no instruction tuning, and code/math lag behind the reference — no tool for your coding chain today.</li>
+      <li><span class="chip">Tool</span> <strong>Roundup</strong>: Cursor Router since Jul 22, Windsurf finally "Devin Desktop," Continue.dev discontinued, OpenHands 1.0 on LiteLLM, Cline with headless CLI 2.0 — and Aider's board still stuck on Nov 20, 2025.</li>
+      <li><span class="chip">Source</span> <strong>Sourcing note</strong>: swebench.com still wasn't readable as a table today either; the bench figures below come from a dated aggregate plus two independent boards. All flagged as such.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">From the Sonnet 5 launch to the price cliff — with the protocol break in between</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Tue Jun 30</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Sonnet 5 available</span>
+          <span>"Execution Layer" for multi-step SE work</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed Jul 1</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Copilot: Kimi K2.7 Code selectable</span>
+          <span>NVIDIA Nemotron-Labs-TwoTower</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri Jul 17</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cursor in Slack: plan up front, multi-repo</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun Jul 19</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Qwen 3.8 announced — weights "soon"</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed Jul 22</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cursor Router in Auto-Mode</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Sat Jul 25</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>MCP countdown: three days left</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue Jul 28</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>MCP final spec 2026-07-28</span>
+          <span>stateless · breaking changes</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mon Aug 31</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Sonnet 5 launch pricing ends</span>
+          <span>$2/10 → $3/15 per million tokens</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section>
+        <h2>MCP throws out the handshake</h2>
+
+        <article class="news-item">
+          <p>On <strong>Tuesday, July 28</strong>, the final MCP specification lands with the date label <code>2026-07-28</code>. The project's blog calls it "the biggest overhaul of the protocol since launch" — and its core is a sentence that sounds more harmless than it is: <strong>"MCP is now stateless at the protocol level."</strong> Concretely, the <code>initialize</code>/<code>initialized</code> handshake and the <code>Mcp-Session-Id</code> header go away. Servers no longer need sticky sessions or shared session storage; "any MCP request can land on any server instance" — behind a perfectly ordinary load balancer. The release candidate was already frozen on <strong>May 21</strong>, with a ten-week validation window for SDK maintainers — so the change has been signposted for a long time, just not loudly.</p>
+          <span class="src"><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/">blog.modelcontextprotocol.io</a> · As of 2026-07-25</span>
+        </article>
+
+        <div class="eli5">
+          <strong class="eli5-term">Stateless:</strong> Until now, an MCP client had to log in with the server, get a session number, and then had to land on that <em>same</em> server process every time, because only that process knew who was talking. Think of a coat check: without your ticket and that exact attendant, you don't get your coat back. Stateless means every request carries everything it needs, and any attendant can handle it. As an operator, that's a relief — multiple instances, an ordinary load balancer, no session store. As the author of an existing server, it's work, because the old login flow disappears with nothing to replace it.
+        </div>
+
+        <div class="mechanism">
+          <span class="step">Request</span><span class="arrow">→</span><span class="step">Load balancer</span><span class="arrow">→</span><span class="step">any instance</span>
+        </div>
+
+        <article class="news-item">
+          <h3>What else is moving</h3>
+          <p><strong>Tasks</strong> — the pattern for long-running work — moves out of the protocol core into an <strong>extension framework</strong> and gets rebuilt around stateless operations: the client drives the task forward itself via <code>tasks/get</code>, <code>tasks/update</code>, and <code>tasks/cancel</code>. New on top: <strong>MCP Apps</strong>, server-rendered UI templates in a sandbox. On authorization, six proposals pull practice closer to OAuth 2.0/OpenID Connect, including mandatory <code>iss</code> validation and an <code>application_type</code> field at client registration. And three old acquaintances are <strong>deprecated</strong> — Roots, Sampling, and Logging, each with a twelve-month grace period.</p>
+          <span class="src"><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/">blog.modelcontextprotocol.io</a> · As of 2026-07-25</span>
+        </article>
+
+        <div class="callout warn">
+          <span class="callout-label">What this means for you</span> The spec says it bluntly: <strong>"This release contains breaking changes."</strong> The <code>2025-11-25</code> initialize flow and session-based routing stop working. In practice: a self-built MCP server on the old spec keeps talking to old clients — but not to new ones, and vice versa. Three things to do before Tuesday: (1) check which spec version your MCP SDK currently implements, (2) if you use Tasks, plan for the move into the extension lifecycle, (3) switch clients that match on error code <code>-32002</code> over to <code>-32602</code>. None of this is dramatic — but it doesn't happen on its own, and it happens Tuesday.
+        </div>
+
+        <div class="callout info">
+          <span class="callout-label">A number that's circulating wrong</span> This week's summaries repeatedly claim the new spec "mandates OAuth 2.1." That's <em>not</em> what the spec announcement says: it talks about hardening along <strong>OAuth 2.0/OpenID Connect</strong>, with mandatory <code>iss</code> validation and <code>application_type</code>. That's a different thing from a version jump to 2.1 — and a good example of how a secondary summary can make a spec sound more precise than it actually is.
+        </div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>Sonnet 5: five weeks to the price cliff</h2>
+
+        <article class="news-item">
+          <p><strong>Claude Sonnet 5</strong> has been out since <strong>June 30</strong>, and Anthropic explicitly doesn't market it as a better chat model but as an <em>"Execution Layer for multi-step software engineering work"</em> that "handles sustained coding, tool use, and debugging well." On top come adjustable <strong>effort levels</strong>: per call, you set how much thinking budget the model is allowed to burn, trading cost against thoroughness. That's exactly the dial you actually need in an agent loop — the difference between "think briefly, rename the variable" and "grind through the repo for an hour."</p>
+          <span class="src"><a href="https://www.anthropic.com/news/claude-sonnet-5">anthropic.com</a> · As of 2026-07-25</span>
+        </article>
+
+        <article class="news-item">
+          <h3>The date worth writing down</h3>
+          <p>Launch pricing holds <strong>through August 31, 2026</strong>: <span class="stat">$2</span> per million input tokens, <span class="stat">$10</span> per million output tokens. After that, the standard rate applies: <span class="stat">$3</span>/<span class="stat">$15</span> — <strong>plus 50% on both sides</strong>, on the same unchanged model. Artificial Analysis lists the same $2.00/$10.00 for the current window that Anthropic cites; the two sources agree. Anyone wiring Sonnet 5 into a pipeline right now is budgeting for a price that disappears in five weeks. My advice: measure now how many tokens a typical run actually pulls while it's cheap — then in September you'll know whether to stay on Sonnet 5, dial the effort level down, or push parts of the chain to a cheaper model.</p>
+          <span class="src"><a href="https://www.anthropic.com/news/claude-sonnet-5">anthropic.com</a> · <a href="https://artificialanalysis.ai/models/claude-sonnet-5">artificialanalysis.ai</a> · As of 2026-07-25</span>
+        </article>
+      </section>
+
+      <section>
+        <h2>The 82.1% doesn't hold up</h2>
+
+        <article class="news-item">
+          <p>A number has been circulating since launch: Sonnet 5 reportedly hits <strong>82.1% on SWE-bench Verified</strong>, making it "the first model over 80%." Three observations. First: the figure isn't on <strong>Anthropic's own announcement page at all</strong> — today's check finds not a single SWE-bench value on the page. It traces back to a tech blog from launch day that summarized Anthropic's messaging. Second: the <strong>BenchLM aggregate</strong> for SWE-bench Verified (as of <strong>July 24</strong>) has Sonnet 5 at <span class="stat">85.2%</span> — three points <em>above</em> the widely quoted number. On a benchmark with a fixed 500-task set, two figures for the same model shouldn't sit three points apart; but that's exactly what happens once runs with different harnesses and thinking budgets circulate under the same name.</p>
+          <span class="src"><a href="https://www.anthropic.com/news/claude-sonnet-5">anthropic.com</a> · <a href="https://benchlm.ai/benchmarks/sweVerified">benchlm.ai</a> · As of 2026-07-25</span>
+        </article>
+
+        <article class="news-item">
+          <p>Third, and this is the real point: "first model over 80%" is <strong>demonstrably false</strong> on this board. Sonnet 5 sits at <strong>rank 6</strong> there, behind Claude Opus 5 (96%), Mythos 5 (95.5%), Fable 5 (95%), Opus 4.8 (88.6%), and Opus 4.7 Adaptive (87.6%) — and just ahead of GPT-5.3 Codex (85%). Eight entries on the board sit above 80. Sonnet 5 is a very good model at a fraction of the Opus price, but it isn't the top and never was. The launch phrasing was a snapshot with a very narrowly drawn comparison group.</p>
+          <span class="src"><a href="https://benchlm.ai/benchmarks/sweVerified">benchlm.ai</a> · As of 2026-07-24</span>
+        </article>
+
+        <div class="eli5">
+          <strong class="eli5-term">SWE-bench Verified:</strong> 500 human-vetted, real GitHub bug reports from open-source Python projects. The model gets the repo and the bug, writes a patch — and only counts if the project's tests pass afterward. Not multiple choice, but "does the code run or not." The catch: the task set is public and fixed, so it's trainable; and the score depends heavily on the harness around it — how many attempts, how much context, how much thinking time. That's why two "SWE-bench Verified numbers" for the same model often sit several points apart.
+        </div>
+
+        <div class="bench-wrap" data-component="benchmark-chart">
+          <div class="bench-head">SWE-bench Verified — Top 8, BenchLM aggregate, as of 2026-07-24</div>
+          <div class="bench-chart-wrap"><canvas></canvas></div>
+        </div>
+
+        <article class="news-item">
+          <p>Two independent second opinions place Sonnet 5 consistently: on the <strong>Artificial Analysis Intelligence Index</strong>, it scores (Adaptive Reasoning, Max Effort) <span class="stat">53</span> points — per Artificial Analysis itself, "only 2–3 points" behind the top. On <strong>Arena.ai</strong>, it sits at <strong>rank 10</strong> in the WebDev category with <span class="stat">1541</span> ±11 — that's a human vote on outputs, not a test run, so it measures something different: perceived quality rather than passed tests. Both together paint the same picture as the bench board: upper tier, not the throne.</p>
+          <span class="src"><a href="https://artificialanalysis.ai/models/claude-sonnet-5">artificialanalysis.ai</a> · <a href="https://arena.ai/leaderboard">arena.ai</a> · As of 2026-07-25</span>
+        </article>
+
+        <div class="callout warn">
+          <span class="callout-label">Sourcing, honestly</span> The official board at <strong>swebench.com/#verified</strong> still wasn't readable as a table on this run either — the page loads, but the numbers don't come with it. The figures above therefore come from a <em>dated aggregate</em> (BenchLM, as of July 24), not the official leaderboard; treat them accordingly. And the <strong>Aider Polyglot board</strong> remains dead: last updated <strong>November 20, 2025</strong>, over eight months ago. If its top scores cross your feed (gpt-5 high 88.0%), they're not a signal for this week.
+        </div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>Copilot lets an open model in for the first time</h2>
+
+        <article class="news-item">
+          <p>Since <strong>July 1</strong>, <strong>Kimi K2.7 Code</strong> from Moonshot AI has been in GitHub Copilot's model picker. GitHub's changelog frames it as a turning point in its own words: it's <em>"the first open-weight model offered as a selectable option in the Copilot model picker."</em> It's rolling out first to Copilot Pro, Pro+, and Max; Business and Enterprise follow "in the coming weeks" — and are <strong>off</strong> by default there. So anyone working in a corporate context has to get it enabled first; that's not a footnote, it's the usual governance friction point for models of Chinese origin.</p>
+          <span class="src"><a href="https://github.blog/changelog/2026-07-01-kimi-k2-7-is-now-available-in-github-copilot/">github.blog</a> · As of 2026-07-25</span>
+        </article>
+
+        <article class="news-item">
+          <p>The specs: a <strong>Mixture-of-Experts</strong> model with roughly a trillion parameters total (10<sup>12</sup>), of which about <strong>32B are active</strong> per token, a <strong>256K</strong> context window, and a forced thinking mode. Pricing: <span class="stat">$0.95</span> per million input and <span class="stat">$4.00</span> per million output tokens — per reporting, "less than half" of the proprietary options in the same picker. For comparison elsewhere in this brief: Sonnet 5 costs $2/$10 today and $3/$15 from September. For output tokens, where the money gets spent in agent work, that makes Kimi roughly a quarter of the September Sonnet price. <span class="chip good">Worth trying</span> <strong>Why try it:</strong> if you have a task class that produces a lot of text and needs little genius — generating tests, docstrings, migration boilerplate — this is the cheapest serious lever this month offers, and you don't have to leave your IDE to pull it.</p>
+          <span class="src"><a href="https://github.blog/changelog/2026-07-01-kimi-k2-7-is-now-available-in-github-copilot/">github.blog</a> · <a href="https://www.techtimes.com/articles/319556/20260702/open-weight-ai-enters-github-copilot-kimi-k27-code-costs-less-audits-differently.htm">techtimes.com</a> · As of 2026-07-25</span>
+        </article>
+
+        <div class="eli5">
+          <strong class="eli5-term">Mixture-of-Experts (MoE):</strong> The model isn't one big brain but many specialists; for each word, only a small slice of them wakes up. Like a medical building with a hundred specialists, where two stand up for your case and the rest keep sleeping. That's why Kimi can be "a trillion parameters big" and still cheap: only the active handful gets paid for and computed — here, roughly 32 billion. The price for that is memory: the sleeping specialists still all have to sit in RAM, which is why models like this practically don't run locally on a laptop.
+        </div>
+      </section>
+
+      <section>
+        <h2>Open weights: lots of movement, little of it for coding</h2>
+
+        <article class="news-item">
+          <p>NVIDIA released <strong>Nemotron-Labs-TwoTower</strong> on <strong>July 1</strong> — a diffusion language model on a frozen autoregressive backbone, with open weights under the NVIDIA Nemotron Open Model License on Hugging Face. The headline figure everywhere: <strong>2.42x wall-clock throughput at 98.7%</strong> of the autoregressive reference model's quality. The denoiser trained on ~2.1 trillion tokens, the backbone on 25 trillion; ~60B parameters total, ~3B active per tower.</p>
+          <span class="src"><a href="https://www.marktechpost.com/2026/07/01/nvidia-releases-nemotron-labs-twotower/">marktechpost.com</a> · As of 2026-07-25</span>
+        </article>
+
+        <div class="eli5">
+          <strong class="eli5-term">Diffusion language model:</strong> Ordinary language models write word by word, left to right, like someone typing a sentence. A diffusion model starts with noisy gibberish and sharpens the whole paragraph in several passes at once — more like a Polaroid developing than a line being typed. Upside: multiple spots form in parallel, which is faster. Downside: for things where each step must logically build on the last one — code and math — you pay for that in accuracy.
+        </div>
+
+        <article class="news-item">
+          <p>And that's exactly why this gets a short entry: the source itself says it's a <strong>base model with no instruction tuning</strong>, "not specifically positioned for coding," and that <strong>code and math measurably lose ground</strong> against the reference, while general knowledge stays roughly in line. For your toolchain, this is nothing today. What's interesting is it as a bet on the architecture: if diffusion closes the code gap, latency suddenly becomes a dial instead of a constant. Watch, don't install.</p>
+          <span class="src"><a href="https://www.marktechpost.com/2026/07/01/nvidia-releases-nemotron-labs-twotower/">marktechpost.com</a> · As of 2026-07-25</span>
+        </article>
+
+        <article class="news-item">
+          <p>On the other side of the open-weights front: <strong>Qwen 3.8</strong> was announced on <strong>July 19</strong> — a 2.4-trillion-parameter stack that Alibaba says keeps training continuously, reachable for now only as Qwen3.8-Max-Preview via token plan and Qoder. Open weights are promised "soon," with no date and no license. Until then, this is an announcement, not an open model — only weights you can actually download count here.</p>
+        </article>
+      </section>
+
+      <section>
+        <h2>Quiet in the shadows</h2>
+        <article class="news-item">
+          <p>The mandatory sweep through the rest of the field. <strong>Cursor</strong> is the only tool with fresh movement: the <strong>Router</strong> in Auto-Mode since <strong>July 22</strong> (automatically sends every request to the right model, tiers Intelligence/Balance/Cost) and the beefed-up Slack integration since <strong>July 17</strong> (shows the plan before starting, works across multiple repos and channels). <strong>Windsurf</strong> is finally history: rolled out as "Devin Desktop" via update since June 2, the old Cascade engine sunset as of <strong>July 1</strong>, successor is the Rust-rewritten Devin Local. <strong>Continue.dev</strong> is the obituary of the month — acquired by Cursor, active development ended with the final 2.0 release in June. <strong>OpenHands</strong> has moved its 1.0 Software Agent SDK onto LiteLLM, so it now talks to over 100 providers with no code change; <strong>Cline</strong> has its headless CLI 2.0 with JSON output for CI/CD pipelines. <strong>Aider</strong> isn't moving: board still stuck on Nov 20, 2025.</p>
+          <span class="src"><a href="https://cursor.com/changelog">cursor.com</a> · <a href="https://www.openhands.dev/blog/open-source-ai-coding-agents">openhands.dev</a> · As of 2026-07-25</span>
+        </article>
+
+        <div class="callout info">
+          <span class="callout-label">Honestly: not verified</span> For <strong>JetBrains AI Assistant</strong>, <strong>Plandex</strong>, <strong>Bolt.new</strong>, and the Devin cloud product beyond the Windsurf rebuild, this run found <em>no</em> reliable movement this week — no dated release, no confirmed version. I'm deliberately not writing a version number here rather than guessing one. For JetBrains, the search results came back visibly stale (they cited 2025 models as "current") — that's exactly the case where a line of not-knowing is worth more than a line of half-knowing.
+        </div>
+
+        <div class="callout info">
+          <span class="callout-label">Elsewhere</span> Not here, but in the neighboring briefs: EU regulation and non-AI software in the <strong>software</strong> brief, applied AI in business and government in the <strong>ai-usecases</strong> brief.
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Saturday, July twenty-fifth. Today, for once, the story isn't a new model — it's about plugs and price, the two things that hit your daily workflow harder than any benchmark.</p>
+  <p>The big story is three days out. On Tuesday, the final MCP specification lands, carrying the date label July twenty-eighth. The project's blog calls it the biggest overhaul of the protocol since launch, and the heart of it is a single sentence: MCP is now stateless at the protocol level. The login handshake and the session number in the header disappear, with nothing replacing them.</p>
+  <p>Picture it like a coat check. Until now, you needed a ticket and had to go back to the same attendant every time, because only that person knew which coat was yours. Going forward, every request carries what it needs, and any attendant can handle it. For operators, that's a relief: multiple instances, an ordinary load balancer, no shared session store.</p>
+  <p>The catch is spelled out just as clearly in the announcement: this release contains breaking changes. The old initialize flow and session-based routing stop working. On top of that, the pattern for long-running tasks moves out of the protocol core into an extension framework, and three old building blocks — Roots, Sampling, and Logging — are deprecated with a twelve-month grace period. Anyone running their own MCP server should check before Tuesday which spec version their SDK currently implements. One more thing: several of this week's summaries claim the new spec mandates OAuth two point one. The spec page itself doesn't say that — it talks about hardening along OAuth two point zero.</p>
+  <p>The second date is August thirty-first. That's when Claude Sonnet five's launch pricing expires. Right now it costs two dollars per million input tokens and ten dollars per million output tokens; from September, that becomes three and fifteen. That's fifty percent more on both sides, on the same unchanged model. My advice: measure now how many tokens a typical run actually pulls while it's still cheap. Then in September you'll know whether to stay put, dial down the thinking budget, or push parts of the chain onto a cheaper model.</p>
+  <p>A number has been circulating about Sonnet five since launch, and it doesn't hold up. The claim is eighty-two point one percent on SWE-bench Verified, making it the first model over eighty percent. First, that figure isn't on Anthropic's own announcement page at all; today's check finds not a single SWE-bench number there. Second, a dated aggregate called BenchLM has the same model at eighty-five point two percent — three points higher. Third, and this is the real point: first model over eighty is simply wrong on this board. Sonnet five sits at rank six there, behind five other Claude models, and eight entries sit above eighty.</p>
+  <p>Two independent second opinions place it consistently. On the Artificial Analysis index, Sonnet five scores fifty-three points and rank five; on Arena dot a-i, it sits at rank ten in the WebDev category. Upper tier, but not the throne. Honestly: the official SWE-bench board still wasn't readable as a table today, so these numbers come from a dated aggregate instead. And the Aider board hasn't been updated since last November.</p>
+  <p>The third story is a small turning point. Since July first, Kimi K two point seven Code has been in GitHub Copilot's model picker. GitHub itself calls it the first open-weight model offered there as a selectable option. It costs zero point ninety-five dollars per million input tokens and four dollars per million output tokens — and for output tokens, where the money gets spent in agent work, that's roughly a quarter of what Sonnet five will cost from September. In business plans, though, it's only available later, and it's off by default there.</p>
+  <p>On the open-weights side, there was a lot of movement, but little of it for coding. NVIDIA's new diffusion language model hits two point four two times the throughput at nearly unchanged quality, but it's a base model with no fine-tuning, and code and math specifically lose ground measurably. Watch, don't install. Qwen three point eight was announced, but its weights remain only promised, with no date and no license.</p>
+  <p>Finally, the roundup. Cursor is the only tool with fresh movement — a router in auto mode and a beefed-up Slack integration. Windsurf has finally become Devin Desktop, Continue dot dev has ended active development, OpenHands and Cline have rebuilt their foundations, and Aider stands still. For JetBrains, Plandex, and Bolt dot new, this run found no reliable movement — better to write nothing than a guessed version number. On Tuesday we'll know how bumpy the MCP transition gets in practice; that's likely to shape the next brief.</p>
+</div>
+
+<script type="application/json" id="bench-data">
+{"labels": ["Claude Opus 5","Claude Mythos 5","Claude Fable 5","Claude Opus 4.8","Claude Opus 4.7 (Adaptive)","Claude Sonnet 5","GPT-5.3 Codex","Ornith-1.0-397B"],
+ "data":   [96.0, 95.5, 95.0, 88.6, 87.6, 85.2, 85.0, 82.4],
+ "max":    100,
+ "unit":   " %"}
+</script>
+
+</body>
+</html>
