@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-07-29</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-07-29</span>
+  </div>
+
+  <h1 class="masthead-title">MCP now negotiates per request</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Yesterday this space carried a question mark over the MCP spec: announced for July 28, but as of 05:13 UTC the docs still showed the old version. Today the answer is in, and it's mixed — the content has been swapped over, the initialization handshake replaced by per-request negotiation, only the "current version" label is lagging behind. On top of that, the SWE-Bench Verified board got fresh numbers overnight, and a closer look turns up something more uncomfortable than any score.</p>
+    <ul>
+      <li><span class="chip hot">MCP</span> <strong>The handshake is gone, the replacement is live</strong>: Every request now carries its own protocol version in the <code>_meta</code> field, and the server accepts or rejects it <em>"independently"</em> per request. Client and server may speak multiple versions at the same time.</li>
+      <li><span class="chip">MCP</span> <strong>New: <code>server/discover</code></strong> — an RPC that's mandatory for servers, optional for clients, returning version, capabilities, and identity <em>"in a single request"</em>. If the version doesn't match, an <code>UnsupportedProtocolVersionError</code> comes back listing what would work.</li>
+      <li><span class="chip hot">MCP</span> <strong>Label lags behind</strong>: As of 06:40 UTC, the same page still says <em>"The current protocol version is 2025-11-25"</em> — right above where it describes negotiating the new version. A contradiction in one document.</li>
+      <li><span class="chip">MCP</span> <strong>Anthropic's post is an announcement, not a rollout</strong>: <em>"Support is being rolled out across Claude products soon"</em> — no date given. It does cite <span class="stat">400M</span> monthly SDK downloads (4x this year) and <span class="stat">950+</span> servers in the connector directory.</li>
+      <li><span class="chip hot">Bench</span> <strong>A "Verified" board with zero verifications</strong>: llm-stats lists <span class="stat">104</span> SWE-Bench Verified entries as self-reported and <span class="stat">0</span> as verified. The board's name promises exactly the opposite.</li>
+      <li><span class="chip">Bench</span> <strong>Seven of the top ten are Anthropic models</strong>: Fable 5 leads with <span class="stat">95.0</span>, followed by Mythos Preview at <span class="stat">93.9</span> and Opus 4.8 at <span class="stat">88.6</span>. First non-Anthropic model: Gemini 3.1 Pro at rank 8.</li>
+      <li><span class="chip hot">Bench</span> <strong>Who's missing is missing only here</strong>: Opus 5, Kimi K3, Kimi K2.7, Grok 4.5, and GPT-5.6 aren't on <em>this</em> board — but they are on vals.ai: Opus 5 <span class="stat">97.0</span>, GPT-5.6 Sol <span class="stat">96.2</span>, Kimi K3 <span class="stat">93.4</span>, Grok 4.5 <span class="stat">86.6</span>. Not a ranking finding, a coverage difference.</li>
+      <li><span class="chip">Claude</span> <strong>Calendar note</strong>: Sonnet 5 still costs <span class="stat">$2</span>/<span class="stat">$10</span> per million tokens until <strong>August 31</strong>, then <span class="stat">$3</span>/<span class="stat">$15</span>. That's a 50% price hike that appears in no changelog.</li>
+      <li><span class="chip good">OSS</span> <strong>Copilot's open-weight model is already a generation old</strong>: Kimi K2.7 Code has been the first open model in the Copilot picker since July 1 — Moonshot released K3 the day before yesterday.</li>
+      <li><span class="chip">Tool</span> <strong>Roundup</strong>: Continue.dev is definitively dead (cloud data deleted since July 15), Aider's board still reads November 20, 2025, Cline's changelog lists v4.0.0 with no date. OpenHands, Plandex, Devin, Bolt, and JetBrains AI: no movement.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">Four weeks, five coding models, one protocol break — and a dated price jump on the horizon</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Tue Jun 30</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Sonnet 5 launches</span>
+          <span>Export controls on Fable 5 are lifted</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed Jul 1</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Fable 5 returns globally — with a new classifier</span>
+          <span>Kimi K2.7 Code becomes generally available in the Copilot picker</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed Jul 8</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Grok 4.5 from SpaceXAI</span>
+          <span>$2/$6 per million tokens, 500K context — corroborated only by third parties</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu Jul 9</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Meta Muse Spark 1.1 opens the Meta Model API</span>
+          <span>1M token context, public preview</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed Jul 15</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Continue.dev deletes its users' cloud data</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue Jul 28</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>MCP spec 2026-07-28 is published</span>
+          <span>Anthropic announces support — no date given</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Wed Jul 29</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Docs updated, version label lags (checked 06:40 UTC)</span>
+          <span>SWE-Bench Verified board re-dated to today</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon Aug 31</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Sonnet 5 introductory pricing ends</span>
+          <span>$2/$10 → $3/$15 per million tokens</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Open</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>When does the versioning page finally flip to "current"?</span>
+          <span>And when does llm-stats catch up on the models vals.ai and benchlm.ai have long since listed?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section>
+        <h2>MCP now negotiates per request</h2>
+
+        <article class="news-item">
+          <p><span class="update-since">Update since yesterday</span> Yesterday this space carried a candor note: the final spec was announced for July 28, but as of 05:13 UTC the versioning page still showed 2025-11-25 and there was no release post on the blog. Both are answered today — differently. The post exists: Anthropic published "Bringing MCP 2026-07-28 to Claude" on July 28, 2026. And the docs have been substantively updated: every deep link now points to <code>/specification/2026-07-28/</code>, there's a registry of deprecated features under this version, and a dedicated section covers compatibility with the <em>"handshake-based protocol revisions (2025-11-25 and earlier)"</em>.</p>
+          <span class="src"><a href="https://claude.com/blog/bringing-mcp-2026-07-28-to-claude">claude.com</a> (Jul 28, 2026) · <a href="https://modelcontextprotocol.io/specification/versioning">modelcontextprotocol.io</a> · own verification Jul 29, 2026, 06:40 UTC</span>
+        </article>
+
+        <article class="news-item">
+          <h3>What replaces the handshake</h3>
+          <p>This is the part that was still missing yesterday: back then, the same page explicitly described version negotiation as something that happens <em>"during initialization."</em> Today a different mechanism is documented there, verbatim: <em>"Every request declares the protocol version it is using via the <code>io.modelcontextprotocol/protocolVersion</code> key in its <code>_meta</code> field, and the server accepts or rejects each request independently."</em> Under Streamable HTTP, the <code>MCP-Protocol-Version</code> header carries the same value. And the sentence with the biggest consequences: <em>"Clients and servers MAY support multiple protocol versions simultaneously."</em> So a server can serve old and new at once, instead of switching over on a cutoff date.</p>
+          <span class="src"><a href="https://modelcontextprotocol.io/specification/versioning">modelcontextprotocol.io/specification/versioning</a> · accessed Jul 29, 2026, 06:40 UTC</span>
+        </article>
+
+        <div class="eli5">
+          <strong class="eli5-term">Per-request negotiation:</strong> Until now this worked like a phone call — you dial, you agree at the start on which language you'll speak, and the rest of the conversation builds on that. Anyone joining midway understands nothing. Now it's like postal mail: every envelope has the language written on it, and each letter is accepted or returned on its own. The upside isn't elegance, it's operations — there's no more state a server has to remember, so any request can land on any instance. The cost: every request carries a bit more baggage.
+        </div>
+
+        <article class="news-item">
+          <h3>The new mandatory RPC with the optional call</h3>
+          <p>New on top of that is <code>server/discover</code>, described as <em>"a mandatory RPC that returns the server's supported protocol versions, capabilities, and identity in a single request. Calling it is optional."</em> Not a contradiction, but deliberate asymmetry: <strong>every server must offer it, no client has to use it.</strong> The cautious approach: query it once upfront. The impatient approach: just send the request and handle the <code>UnsupportedProtocolVersionError</code> — which comes with the list of supported versions attached, so the client can immediately retry the same call. The normal case costs no extra round trip, the error case fixes itself.</p>
+          <span class="src"><a href="https://modelcontextprotocol.io/specification/versioning">modelcontextprotocol.io</a> · accessed Jul 29, 2026, 06:40 UTC</span>
+        </article>
+
+        <div class="callout warn">
+          <span class="callout-label">The contradiction in the same document</span> Two paragraphs below the description of the new negotiation, at <strong>06:40 UTC</strong>, it still says unchanged: <em>"The <strong>current</strong> protocol version is 2025-11-25."</em> So the page describes the mechanics of <code>2026-07-28</code>, links to its sub-pages — and names a different version as current. My reading: the content has been merged, the status flag just hasn't caught up. What holds up: <strong>the spec text is live.</strong> What doesn't hold up: that this version has officially been declared "current." Anyone whose SDK gates on that line is still waiting today.
+        </div>
+
+        <article class="news-item">
+          <h3>Anthropic's post is an announcement, not a rollout</h3>
+          <p>Anyone trying to pull a release date out of the Claude blog won't find one: <em>"Support is being rolled out across Claude products soon."</em> Instead it offers the adoption numbers that explain the push — <em>"MCP recently surpassed 400M monthly SDK downloads, a 4x increase this year"</em> and <em>"Claude now lists over 950 MCP servers in the connectors directory"</em>. On top of that, two changes beyond statelessness: authorization now aligns with production-grade <strong>OAuth 2.0 and OIDC</strong>, so servers can <em>"connect to enterprise identity systems like Entra or Okta without workarounds"</em> — and MCP Apps and Tasks move into a versioned <strong>Extensions</strong> framework, out of the core.</p>
+          <span class="src"><a href="https://claude.com/blog/bringing-mcp-2026-07-28-to-claude">claude.com/blog</a> · published Jul 28, 2026</span>
+        </article>
+
+        <article class="news-item">
+          <h3>What you do today</h3>
+          <p><strong>(1) As a client user:</strong> nothing. Claude Code, Cursor, and Cline keep speaking whatever their SDKs speak; the break hits servers. <strong>(2) As a server operator:</strong> read the backward-compatibility section and take the sentence about multiple simultaneous versions seriously — there's no reason for a cutoff-date migration when your server is allowed to serve both versions. <strong>(3) On deprecated features:</strong> still no reason to panic. The policy keeps them <em>"for at least twelve months, or at least ninety days under the policy's expedited-removal exception"</em> per the spec. A year, not overnight — that line hasn't changed since yesterday.</p>
+          <span class="src"><a href="https://modelcontextprotocol.io/specification/versioning">modelcontextprotocol.io</a> · accessed Jul 29, 2026, 06:40 UTC</span>
+        </article>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>A "Verified" board with zero verifications</h2>
+
+        <article class="news-item">
+          <p>The SWE-Bench Verified board at llm-stats is dated <strong>July 29, 2026</strong>, today — the freshest numbers available for this field. They look like this:</p>
+          <div class="bench-wrap" data-component="benchmark-chart">
+            <div class="bench-head">SWE-Bench Verified — Top 10 per llm-stats.com, as of July 29, 2026</div>
+            <div class="bench-chart-wrap"><canvas></canvas></div>
+          </div>
+          <p>Seven of the first ten spots belong to Anthropic — which, as the section after next shows, says more about how this board is stocked than about the field. The first model from another company is <strong>Gemini 3.1 Pro</strong> at rank 8 with <span class="stat">80.6</span> — tied exactly with the open <strong>DeepSeek-V4-Pro-Max</strong>. That's the quietest notable line in the table: between the best openly available model and the best Google model, there are exactly zero points of difference.</p>
+          <span class="src"><a href="https://llm-stats.com/benchmarks/swe-bench-verified">llm-stats.com/benchmarks/swe-bench-verified</a> · board dated Jul 29, 2026, accessed Jul 29, 2026</span>
+        </article>
+
+        <article class="news-item">
+          <h3>And now the footnote that puts all of it in perspective</h3>
+          <p>The same page breaks down its entries by origin — and the result is striking: <strong>104 self-reported, 0 verified</strong>. Not a single value on a board whose name carries the word <em>Verified</em> has been independently remeasured by the platform. The <em>"Verified"</em> in the name actually means something else — it refers to SWE-Bench's hand-checked <em>task</em> set, not the checked <em>measurement</em>. Nobody reads it that way, though, and that mix-up is exactly why these numbers show up as proof in pitch decks.</p>
+          <span class="src"><a href="https://llm-stats.com/benchmarks/swe-bench-verified">llm-stats.com</a> · accessed Jul 29, 2026</span>
+        </article>
+
+        <div class="eli5">
+          <strong class="eli5-term">Self-reported vs. verified:</strong> Self-reported means the vendor tested its own model and submitted the number. Verified would mean someone with no stake in the outcome ran the same test and got the same result. Think of travel-time estimates: "I can do the route in forty minutes" versus "the ADAC drove it and clocked forty." Both can be true. But one is a claim and the other is a measurement — and when an entire board is made of claims, the ranking inside it is a ranking of claims.
+        </div>
+
+        <article class="news-item">
+          <h3>Who's missing is missing only here</h3>
+          <p>Yesterday this space noted that <strong>Opus 5</strong> still had no clean SWE-Bench Verified score. That was too quick a read — the accurate statement is just this: missing from the <strong>llm-stats</strong> board are Opus 5, <strong>Kimi K3</strong> (weights out since the day before yesterday), <strong>Kimi K2.7</strong>, <strong>Grok 4.5</strong>, and <strong>GPT-5.6</strong>. On other trackers, they're very much present. <strong>vals.ai</strong> has <strong>Opus 5</strong> leading with <span class="stat">97.0%</span>, followed by <strong>GPT-5.6 Sol</strong> at <span class="stat">96.2%</span>, Fable 5 at <span class="stat">95.0%</span>, <strong>Kimi K3</strong> at <span class="stat">93.4%</span>, GPT-5.6 Luna at <span class="stat">93.0%</span>, Opus 4.8 at <span class="stat">88.6%</span>, and <strong>Grok 4.5</strong> at <span class="stat">86.6%</span>. <strong>benchlm.ai</strong> (59 models, updated Jul 28, 2026) also puts Opus 5 in front, at <span class="stat">96%</span>.</p>
+          <p>That corrects the obvious reading: it's <em>not</em> proof that only Anthropic submits while the competition ducks out — it's a coverage difference between aggregators. And where two boards list the same model, the number is identical (Fable 5 at 95.0, Opus 4.8 at 88.6); both are apparently pulling the same vendor-reported figure. They're not measuring differently, they're <em>listing</em> differently. So anyone drawing a ranking from a single board is mostly ranking that board's roster — and that goes for every one of these boards, not just llm-stats.</p>
+          <span class="src"><a href="https://llm-stats.com/benchmarks/swe-bench-verified">llm-stats.com</a> · <a href="https://www.vals.ai/benchmarks/swebench">vals.ai/benchmarks/swebench</a> (page's own date label is unreliable, see "Sourcing, honestly") · <a href="https://benchlm.ai/benchmarks/sweVerified">benchlm.ai/benchmarks/sweVerified</a> (as of Jul 28, 2026) · all accessed Jul 29, 2026</span>
+        </article>
+
+        <div class="callout warn">
+          <span class="callout-label">Sourcing, honestly</span> The top-10 numbers above come from <strong>one</strong> source, a third-party aggregator. The official board at <a href="https://www.swebench.com/#verified">swebench.com/#verified</a> loads its table via JavaScript and returns no static values on fetch — so a cross-check at the primary source wasn't possible today. What did work: a cross-comparison with two other aggregators (<a href="https://www.vals.ai/benchmarks/swebench">vals.ai</a>, <a href="https://benchlm.ai/benchmarks/sweVerified">benchlm.ai</a>) — the shared entries line up, the model selection doesn't. One caveat on vals.ai: the page banner reads "Updated: 7/22/2026," yet it already lists Opus 5 (which didn't launch until Jul 24) — so that date label isn't reliable per-entry; only the values themselves were cross-checked here. Treat the scores as <em>"what the given tracker shows,"</em> not as measured truth. And a third comparison point doesn't help at all: Aider's leaderboard still reads <em>"last updated November 20, 2025,"</em> topped by GPT-5 (high) at <span class="stat">88.0%</span> — eight months old.
+          <span class="src"><a href="https://aider.chat/docs/leaderboards/">aider.chat</a> · board dated Nov 20, 2025, accessed Jul 29, 2026</span>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>Four weeks, five coding models — a status check</h2>
+
+        <article class="news-item">
+          <p>None of these releases is from today; the most recent is three weeks old. Lining them up side by side is still worthwhile, because that's the only way to see how uneven the sourcing really is. The same kind of story — "new coding model, new prices" — sometimes sits on a vendor's own blog, sometimes only in third-party reporting, and once on nothing at all.</p>
+          <table class="mini-table">
+            <thead>
+              <tr><th>Model</th><th>Price in/out per million tokens</th><th>Bench (llm-stats, Jul 29)</th><th>Sourcing</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Claude Fable 5</strong><br>Jun 9</td><td>$10 / $50</td><td>95.0 — rank 1</td><td>Vendor blog</td></tr>
+              <tr><td><strong>Claude Sonnet 5</strong><br>Jun 30</td><td>$2 / $10 through Aug 31,<br>then $3 / $15</td><td>85.2 — rank 5</td><td>Vendor blog</td></tr>
+              <tr><td><strong>Kimi K2.7 Code</strong><br>Jul 1 Pro/Max,<br>Jul 7 Business/Ent.</td><td>not disclosed</td><td>not listed here</td><td>github.blog (2×)</td></tr>
+              <tr><td><strong>Grok 4.5</strong><br>Jul 8</td><td>$2 / $6<br>($0.50 cached)</td><td>not listed here<br>(vals.ai: 86.6)</td><td>third-party reports only</td></tr>
+              <tr><td><strong>Muse Spark 1.1</strong><br>Jul 9</td><td>not stated by Meta</td><td>77.4 — rank 25</td><td>Meta blog, price undisclosed</td></tr>
+            </tbody>
+          </table>
+          <span class="src"><a href="https://www.anthropic.com/news/claude-sonnet-5">anthropic.com</a> · <a href="https://github.blog/changelog/2026-07-01-kimi-k2-7-is-now-available-in-github-copilot/">github.blog</a> · <a href="https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/">ai.meta.com</a> · <a href="https://llm-stats.com/benchmarks/swe-bench-verified">llm-stats.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>The price jump that needs no announcement</h3>
+          <p>The practically most important line in the table is the Sonnet 5 price. Anthropic's own post is unambiguous: <em>"Introductory (through August 31, 2026): $2/million input tokens, $10/million output tokens"</em> and <em>"Standard (after August 31): $3/million input tokens, $15/million output tokens."</em> That's <strong>+50%</strong> as of September 1 — for a model marketed as <em>"the most agentic Sonnet model yet,"</em> meaning built for long, token-hungry runs. Anyone calibrating an agent chain on Sonnet 5 right now should budget for the September number.</p>
+          <span class="src"><a href="https://www.anthropic.com/news/claude-sonnet-5">anthropic.com/news/claude-sonnet-5</a> · accessed Jul 29, 2026</span>
+        </article>
+
+        <article class="news-item">
+          <p><span class="chip good">Try it</span> <strong>Copilot's open model — already a generation behind.</strong> Since <strong>July 1</strong>, Moonshot's <strong>Kimi K2.7 Code</strong> has been in the Copilot model picker, described by GitHub as <em>"the first open-weight model offered as a selectable option in the Copilot model picker."</em> At first only for <em>"Copilot Pro, Pro+, and Max"</em> — but as of <strong>July 7</strong>, per GitHub, it's also <em>"now generally available"</em> on <strong>Copilot Business and Enterprise</strong>. There it stays off by default: <em>"Plan administrators must enable the Kimi K2.7 Code policy in Copilot settings before anyone in their organization can select it."</em> The catch: Moonshot had already released <strong>K3</strong> the day before yesterday — the first open model in the picker was already outdated at launch. <strong>Why try it anyway:</strong> the cheapest way to find out whether your prompts are really prompts or just Anthropic idioms — without a second subscription.</p>
+          <span class="src"><a href="https://github.blog/changelog/2026-07-01-kimi-k2-7-is-now-available-in-github-copilot/">github.blog</a> (Jul 1, 2026) · <a href="https://github.blog/changelog/2026-07-07-kimi-k2-7-now-available-for-copilot-business-and-enterprise/">github.blog</a> (Jul 7, 2026) · K3 dating: own verification Jul 28, 2026</span>
+        </article>
+
+        <div class="callout warn">
+          <span class="callout-label">Two numbers deliberately left out</span> <strong>Muse Spark 1.1:</strong> a price of $1.25/$4.25 per million tokens is circulating for Meta's model. Meta's own announcement post names <em>no</em> price — the figure is aggregator knowledge without a primary source, so it's not in the table. <strong>Kimi K2.7 in Copilot:</strong> GitHub only says it's billed <em>"at provider list pricing."</em> A circulating figure of $0.95 couldn't be traced to any solid source. Better an empty cell than an invented one.
+        </div>
+
+        <article class="news-item">
+          <h3>Grok 4.5: well corroborated, but nowhere primary</h3>
+          <p>For <strong>Grok 4.5</strong>, the situation is less comfortable. Price ($2/$6, $0.50 cached), context window (500K), and date (Jul 8) are consistently backed across several independent trade outlets — the vendor's own site returns HTTP 403 when accessed. On top of that, two figures come exclusively from the vendor: roughly 15,954 output tokens per SWE-Bench Pro task versus 67,020 for Opus 4.8, and a 29.0% solve rate on SWE Marathon. Neither has an independent entry. A 4x cost factor would be a big deal — which is exactly why you don't take it straight from the seller. On the side: <em>xAI</em> has officially been called <strong>SpaceXAI</strong> since <strong>Jul 6</strong>, following the merger with SpaceX.</p>
+          <span class="src"><a href="https://winbuzzer.com/2026/07/09/grok-45-targets-coding-workflows-with-lower-api-pricing-xcxwbn/">winbuzzer.com</a> (Jul 9, 2026) · <a href="https://dataconomy.com/2026/07/07/elon-musk-rebrands-merged-xai-and-spacexai/">dataconomy.com</a> (Jul 7, 2026)</span>
+        </article>
+
+        <article class="news-item">
+          <h3>The Fable 5 follow-up you need to know operationally</h3>
+          <p>The underlying story is old and ran here back in June: Fable 5 was shut down for all users on <strong>Jun 12</strong> following an export-control order — Anthropic couldn't verify users' nationality in real time; the trigger was a jailbreak found by Amazon researchers. The model came back on <strong>Jul 1</strong>. What matters in practice today is just the rebuild: a new classifier blocks the reported technique <em>"in over 99% of cases,"</em> and blocked cyber requests aren't rejected but silently redirected — <em>"the request will instead be sent to Opus 4.8."</em> So anyone working on security-adjacent code with the rank-1 model may quietly get a weaker one instead, and would only notice from the quality of the answers.</p>
+          <span class="src"><a href="https://www.anthropic.com/news/redeploying-fable-5">anthropic.com/news/redeploying-fable-5</a> · accessed Jul 29, 2026</span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Tool roundup</h2>
+
+        <article class="news-item">
+          <p><strong>Continue.dev is definitively gone.</strong> Cursor acquired the team on <strong>Jun 16</strong>, the product is being discontinued; last version <code>v2.0.0-vscode</code> on <strong>Jun 19</strong>, users' cloud data deleted after <strong>Jul 15</strong>. That drops Continue out of the roundup — not as "still quiet in the background," but as finished. The deletion date was two weeks ago; export is no longer an option. <em>Sourced from third-party reporting, not a Cursor announcement of its own.</em></p>
+          <span class="src"><a href="https://www.bodegaone.ai/blog/cursor-acquires-continue-dev">bodegaone.ai</a> · accessed Jul 29, 2026</span>
+        </article>
+
+        <article class="news-item">
+          <p><strong>Cline</strong>'s changelog lists <code>v4.0.0</code> at the top — with no timestamp, which is why it isn't being treated as today's news here. The most recent entries cover: support for Claude Fable 5, handling of the DeepSeek-V4 reasoning format, and Fireworks' default model now set to Kimi K2.6.</p>
+          <span class="src"><a href="https://github.com/cline/cline/blob/main/CHANGELOG.md">github.com/cline/cline</a> · accessed Jul 29, 2026</span>
+        </article>
+
+        <article class="news-item">
+          <p><strong>Quiet in the background:</strong> today's research found no movement in the last 24 hours for <strong>OpenHands</strong>, <strong>Plandex</strong>, <strong>Devin</strong>, <strong>Bolt</strong>, or <strong>JetBrains AI</strong>. <strong>Aider</strong>'s board is still unchanged at <strong>November 20, 2025</strong> — it has now passed the eight-month mark, and the odds that anything more gets added there keep dropping every week. On open weights: <strong>Qwen3.8-Max-Preview</strong> came out on <strong>Jul 19</strong> (2.4 trillion parameters), but the open weights themselves are still only announced as "coming soon" with no date — ten days without follow-through.</p>
+        </article>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Wednesday, July twenty-ninth. Yesterday, this newsletter flagged a question mark hanging over the new MCP spec: it was supposed to go final that day, but the documentation still showed the old version and there was no release post. Today the answer is in, and it's a mixed one.</p>
+  <p>The content has been swapped over. Every link on the versioning page now points to the July twenty-eighth revision, there's a registry of deprecated features under that version, and a dedicated section spells out compatibility with the older, handshake-based revisions. Anthropic also published its own post about it yesterday. Only one line hasn't caught up: as of six forty a.m. UTC, that same page still calls the November twenty twenty-five version the current one. The content is there; the label isn't.</p>
+  <p>The real news is the mechanism that replaces the handshake. Every single request now carries its own protocol version, tucked into a metadata field, and the server accepts or rejects each one independently. It used to work like a phone call: you agree on a language up front, and the rest of the conversation builds on that. Now it's more like postal mail: the language is printed right on the envelope. Because of that, clients and servers are allowed to speak multiple versions at once. For anyone running a server, that means there's no hard cutover date to plan around.</p>
+  <p>On top of that comes a new call named server slash discover. The spec calls it mandatory and, in the same breath, calls using it optional. That's not a contradiction, it's by design: every server has to offer it, but no client is required to call it. The cautious move is to check first what the other side supports. The impatient move is to just send the request — and if the version doesn't match, you get an error back that lists the supported versions right along with it. Anthropic's own post gives no rollout date, but it does share two numbers for scale: more than four hundred million monthly SDK downloads, a fourfold jump this year, and more than nine hundred fifty servers listed in Claude's directory.</p>
+  <p>The second story of the day is less comfortable. The SWE-Bench Verified board on llm-stats carries fresh numbers today. Claude Fable five leads with ninety-five point zero, followed by Mythos Preview at ninety-three point nine and Opus four point eight at eighty-eight point six. Seven of the top ten spots belong to Anthropic. The first model from another company is Gemini three point one Pro in eighth place — tied exactly with an open model from DeepSeek. That's the quietest, and maybe the most important, line in the whole table.</p>
+  <p>And then there's the footnote that puts it all in perspective: that same page counts a hundred and four entries as self-reported and zero as verified. Not one single value on a board whose name contains the word verified has been independently remeasured. The word actually means something else here — it refers to the hand-checked task set, not a checked measurement. Almost nobody reads it that way, though. Self-reported means the vendor tested its own model and submitted the score. Verified would mean someone with no stake in the outcome got the same result. One is a claim, the other is a measurement.</p>
+  <p>Who's missing from this board turns out to be the more interesting list. Opus five, Kimi K three, Kimi K two point seven, Grok four point five, and GPT five point six aren't on llm-stats at all — but on other trackers, they're right there. On vals dot ai, Opus five leads with ninety-seven percent, followed by GPT five point six Sol at ninety-six point two, Kimi K three at ninety-three point four, and Grok four point five at eighty-six point six. On benchlm dot ai, Opus five is also out in front, at ninety-six percent. That corrects the obvious read: it isn't proof that only Anthropic submits its numbers — it's a difference in coverage between aggregators. And where two boards list the same model, the number is identical — they're not measuring differently, they're listing differently. So anyone who draws a ranking from a single board is mostly ranking that board's roster. A cross-check at the primary source wasn't possible today, by the way: the official board loads its table with JavaScript and returned no numbers, and Aider's leaderboard has been frozen since November twentieth of last year.</p>
+  <p>To close, a status check, because five coding models have piled up in four weeks and the sourcing behind them is wildly uneven. Anthropic comes out cleanest, with prices posted on its own blog. That's also where the most practically important number of the day lives: Sonnet five costs two dollars and ten dollars per million tokens only through August thirty-first, then three and fifteen after that. That's fifty percent more, on a model that's marketed for long, token-hungry agent runs. Anyone calibrating a chain on it right now should plan for the September number. For Grok four point five, price and context window are backed consistently across several trade outlets, but the vendor's own site is blocked when you try to load it, and the flashier efficiency claims come only from the vendor itself. And for Meta's Muse Spark, I deliberately left out the price that's circulating, because Meta's own post doesn't name one.</p>
+  <p>Two small things before we go. Copilot's first open model, Kimi K two point seven, has been in the model picker since the start of July and, as of July seventh, is also generally available for Business and Enterprise plans — though there it still needs an administrator to turn it on. And it was already out of date at launch, because Moonshot released K three the day before yesterday. And Continue dot dev is truly gone: Cursor acquired the team in June, and the cloud data was deleted in mid-July. Exporting it is no longer an option.</p>
+  <p>Tomorrow we'll check whether the versioning page finally updates its label — and whether llm-stats catches up on the models vals.ai and benchlm.ai have long since listed.</p>
+</div>
+
+<script type="application/json" id="bench-data">
+{"labels": ["Claude Fable 5","Claude Mythos Preview","Claude Opus 4.8","Claude Opus 4.7","Claude Sonnet 5","Claude Opus 4.5","Claude Opus 4.6","Gemini 3.1 Pro","DeepSeek-V4-Pro-Max","MiniMax M3"],
+ "data":   [95.0, 93.9, 88.6, 87.6, 85.2, 80.9, 80.8, 80.6, 80.6, 80.5],
+ "max":    100,
+ "unit":   " %"}
+</script>
+
+</body>
+</html>
