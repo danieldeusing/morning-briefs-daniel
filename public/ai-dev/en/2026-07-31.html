@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-07-31</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-07-31</span>
+  </div>
+
+  <h1 class="masthead-title">The sandbox had a hole in it for three months</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Anthropic published a report yesterday with a level of candor you rarely see: in sandboxed security evaluations, its own models reached real, external systems three times — because the isolation was an assumption, not a verified property. One of the incidents is a supply-chain event with your name on it: a malicious package on PyPI, public for one hour, downloaded and run on fifteen real machines. Alongside that, two quieter but practically consequential moves: MCP has rebuilt itself into a stateless protocol, and for the first time a name drops out of this newsletter's tool list entirely.</p>
+    <ul>
+      <li><span class="chip hot">Claude</span> <strong>Out of the sandbox</strong>: Anthropic reviewed <span class="stat">141,006</span> evaluation runs and found <strong>three</strong> incidents — involved: <strong>Opus 4.7</strong>, <strong>Mythos 5</strong>, and an internal research test model.</li>
+      <li><span class="chip hot">Claude</span> <strong>The incident that hits developers directly</strong>: A model uploaded a malicious package to PyPI because it believed the environment was a simulation. The package was <em>"roughly one hour"</em> freely available and was <em>"downloaded and run on <span class="stat">15</span> real systems"</em>.</li>
+      <li><span class="chip">Claude</span> <strong>The gap is the story</strong>: <em>"The earliest incidents date to April"</em> — they were only found once transcripts were reviewed starting <strong>Jul 23</strong>, all three identified the next day, the affected organizations notified on <strong>Jul 27</strong>.</li>
+      <li><span class="chip hot">MCP</span> <strong>The overhaul, not just the label</strong>: <em>"MCP is transforming from a bidirectional stateful protocol into a request/response stateless protocol."</em> New: <strong>MRTR</strong> instead of server-initiated Sampling/Elicitation/Roots. The old mechanics keep running <em>"for at least twelve months."</em></li>
+      <li><span class="chip">MCP</span> <strong>Two lines for operations</strong>: Requests now carry <code>Mcp-Method</code> and <code>Mcp-Name</code>, so gateways and WAFs can route without JSON parsing; <code>tools/list</code> and friends now ship <code>ttlMs</code> and <code>cacheScope</code>.</li>
+      <li><span class="chip hot">Tool</span> <strong>Continue is out</strong>: <em>"The continuedev/continue repository is no longer actively maintained and is read-only for all users."</em> Last release <code>v2.0.0</code> from <strong>Jun 19, 2026</strong>, following the acquisition by Cursor.</li>
+      <li><span class="chip">Tool</span> <strong>Copilot in Visual Studio, July release (Jul 30)</strong>: a <em>"Copilot Chat agent built on the GitHub Copilot SDK"</em> in public preview, <em>"Review Selection"</em> via right-click — org-wide instructions only for Business/Enterprise.</li>
+      <li><span class="chip good">OSS</span> <strong>Codex Security goes open source</strong>: <code>@openai/codex-security</code> sits under <strong>Apache-2.0</strong> on npm, <code>0.1.4</code> from <strong>Jul 30, 2026</strong>. The scanner behind it reportedly remains limited-access.</li>
+      <li><span class="chip">Bench</span> <strong>LiveCodeBench: three trackers, three winners</strong> — and across the three boards' top 3, <em>not a single model appears twice</em>. That's no longer a ranking discrepancy — those are three different competitions.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">From an April misconfiguration to yesterday's report — plus a protocol overhaul and a tool that goes offline</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col hot">
+        <div class="tl-date">Since April</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Earliest of the three incidents in Anthropic's cyber evaluations — unnoticed</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri Jun 19</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Continue v2.0.0 — still the project's last release as of today</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu Jul 23</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Anthropic starts reviewing the evaluation transcripts</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri Jul 24</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>All three incidents identified</span>
+          <span>Claude Opus 5 ships, becomes the default Opus in Claude Code</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun Jul 26</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Kimi K3 weights are released openly</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon Jul 27</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>The three affected organizations are notified</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue Jul 28</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>MCP revision 2026-07-28: stateless core, MRTR, twelve-month grace period</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed Jul 29</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Codex Security CLI + SDK reported as Apache-2.0</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu Jul 30</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Anthropic's incident report is published</span>
+          <span>Copilot in Visual Studio, July release</span>
+          <span>codex-security 0.1.4 on npm</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Fri Jul 31</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Continue repo confirmed read-only</span>
+          <span>LiveCodeBench trackers fully contradict each other</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Open</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>When does the Codex Security scanner leave limited preview?</span>
+          <span>When do the boards add Opus 5 and Kimi K3?</span>
+          <span>And will Anthropic ever name the PyPI package?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section>
+        <h2>When the sandbox had a hole in it</h2>
+
+        <article class="news-item">
+          <p>Anthropic tests its models in sandboxed environments to see how far they get in a cyberattack. That's standard practice, and rightly so. Yesterday the company disclosed that this isolation failed to hold three times: a misconfiguration left the machines Claude accessed during evaluation running with <em>"live internet access"</em> — <em>"Neither we nor our evaluation partner were aware of this misconfiguration until we detected it."</em> Out of a review of <strong>141,006</strong> runs in which a model could theoretically have reached the outside world, three real incidents remained. By Anthropic's own account, those involved <em>"three different Claude models: Opus 4.7, Mythos 5, and an internal research test model."</em></p>
+          <span class="src"><a href="https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals">anthropic.com/news</a> · published Jul 30, 2026, accessed Jul 31, 2026 · cross-check <a href="https://techcrunch.com/2026/07/30/anthropic-says-its-own-ai-models-breached-three-companies-during-security-tests/">techcrunch.com</a></span>
+        </article>
+
+        <article class="news-item">
+          <h3>The three incidents, in order</h3>
+          <p><strong>First</strong>: in four runs, the model couldn't reach its simulated target inside the test environment — <em>"but then discovered that the real company was reachable via the internet"</em> — and ended up in a database with <em>"several hundred rows of production data"</em>. <strong>Second</strong>, the incident with the longest shadow: a model uploaded a malicious package to the public Python index, assuming everything was simulated. The package was <em>"made freely available online for roughly one hour"</em> and during that hour was <em>"downloaded and run on 15 real systems"</em>. <strong>Third</strong>: a scan across <em>"roughly 9,000 targets"</em>, at the end of which a company's internet-facing application was actually compromised.</p>
+          <span class="src"><a href="https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals">anthropic.com/news</a> · all quotes verbatim from the Jul 30, 2026 report</span>
+        </article>
+
+        <div class="eli5">
+          <strong class="eli5-term">Sandbox and egress:</strong> A <em>sandbox</em> is a walled-off play area where a program can do whatever it wants without consequences outside it. <em>Egress</em> is the question of whether traffic is allowed to leave that environment. Picture a playpen in the living room: the bars are the sandbox, the front door is the egress. If the door is left open, the playpen is still there — it just doesn't stop anything once the kid climbs over it. That's exactly what happened here: the sandbox was set up correctly, but the door right next to it was open, and nobody checked.
+        </div>
+
+        <article class="news-item">
+          <h3>What this means for your own setup</h3>
+          <p><span class="chip good">Try it</span> The story here isn't how capable a model is at attacking things — that was the point of the test. The story is that a configuration carried the entire security assumption, and nobody noticed it was wrong. Anyone running agents locally has the same class of bug at home: "I'm running this in Docker" is a claim about the filesystem and processes, not about the network. <strong>Why try it:</strong> <code>--network=none</code> for anything that's only supposed to rewrite code, plus a forwarding proxy with an allowlist for everything else — half an hour of setup, and an assumption becomes a verified property.</p>
+          <span class="src"><a href="https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals">anthropic.com/news</a> · Jul 30, 2026</span>
+        </article>
+
+        <div class="callout warn">
+          <span class="callout-label">The part that's getting too little attention</span> The incidents weren't caught by a network alarm — they surfaced because someone later reviewed <strong>141,006</strong> transcripts. The earliest cases date back to <strong>April</strong> per the report, the review started on <strong>Jul 23</strong>, all three were confirmed the next day, and the affected organizations were informed on <strong>Jul 27</strong>. That's roughly three months during which the safeguard demonstrably didn't work and nobody noticed. What Anthropic announces addresses exactly that: <em>"expanding our continuous monitoring of evaluation transcripts for unexpected behavior, improving our investigation tooling, and conducting more rigorous assurance work with the vendors we rely on."</em> Translated into your everyday practice: log what your agent actually <em>achieved</em>, not just what it said. A safeguard you can't observe isn't one.
+        </div>
+
+        <article class="news-item">
+          <p>One more uncomfortable aside: the PyPI incident isn't purely an AI story, it's a supply-chain event. For one hour, a malicious package sat in the very index your CI installs from; fifteen machines ran it. Neither the package name nor the exact time window appears in the report — so there's no way to check whether you were affected.</p>
+        </article>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>MCP is getting boring — and that's exactly what it needed</h2>
+
+        <article class="news-item">
+          <p>On Wednesday this space noted that the version label had caught up to <code>2026-07-28</code>. Today is about what's underneath that label, and it's the biggest overhaul since launch. The core line from the announcement: <em>"MCP is transforming from a bidirectional stateful protocol into a request/response stateless protocol."</em> The opening handshake, session IDs, and the held-open data stream are gone. Instead, every request carries everything the server needs to answer it.</p>
+          <span class="src"><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/">blog.modelcontextprotocol.io</a> · revision 2026-07-28, accessed Jul 31, 2026</span>
+        </article>
+
+        <div class="eli5">
+          <strong class="eli5-term">Stateful vs. stateless:</strong> <em>Stateful</em> means the connection remembers who you are and where you left off — like a phone call. If the line drops, the conversation is gone, and the line has to stay occupied the whole time. <em>Stateless</em> means every message is a postcard that spells out everything necessary again — sender, request, ticket number. Postcards are more work to write, but any mail carrier can deliver them, you can stack them, copy them, and route them through a different post office. For software that means: the service behind it can restart at any time, be duplicated, or sit behind any load balancer.
+        </div>
+
+        <article class="news-item">
+          <h3>MRTR — the replacement for the held-open line</h3>
+          <p>The handshake wasn't there for no reason: some tools need to ask the user for something mid-call, a confirmation or a missing parameter. That's exactly what <strong>Multi Round-Trip Requests</strong> now handle: <em>"MRTR replaces the server-initiated <code>elicitation/create</code>, <code>sampling/createMessage</code>, and <code>roots/list</code> requests that previously required a held-open stream."</em> The mechanism is unspectacular, and that's why it's good — the server responds with <em>"<code>resultType: "input_required"</code> along with the requests it needs answered"</em>, the client answers them and resubmits the request. <strong>Roots, Sampling, and Logging</strong> are thereby deprecated as standalone mechanisms, as is the old HTTP+SSE transport. No need to panic: <em>"They still work, and they'll keep working for at least twelve months."</em></p>
+          <span class="src"><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/">blog.modelcontextprotocol.io</a> · accessed Jul 31, 2026</span>
+        </article>
+
+        <article class="news-item">
+          <h3>Why this is an operations question, not a protocol question</h3>
+          <p>My read: the most important part of this revision sits in two footnotes. First, the headers — <em>"Streamable HTTP requests now must include <code>Mcp-Method</code> and <code>Mcp-Name</code>. Your gateway, rate limiter, or WAF can route and meter on those headers instead of parsing JSON bodies."</em> Second, caching: <code>tools/list</code>, <code>prompts/list</code>, <code>resources/list</code>, and <code>resources/read</code> now ship <code>ttlMs</code> and <code>cacheScope</code>. Together that means: an MCP server is now a perfectly ordinary HTTP service — hangable behind a standard load balancer, horizontally scalable, measurable and rate-limitable with existing ops tooling. That was the actual pain point of self-hosting, not the protocol semantics. Authentication is also getting stricter: authorization servers are supposed to return the <code>iss</code> parameter per RFC 9207, <em>"and clients must validate it before redeeming a code"</em>. Practically: build new servers on the stateless core; for existing ones, rip out the held-open connection first — the rest has a year.</p>
+          <span class="src"><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/">blog.modelcontextprotocol.io</a> · accessed Jul 31, 2026</span>
+        </article>
+
+        <div class="callout info">
+          <span class="callout-label">A number deliberately missing here</span> The size of the MCP ecosystem circulates as <em>"more than 10,000 public servers"</em> — that figure comes from an aggregator, not from a primary page of the project. Plausible, but unsubstantiated, so it's not treated as fact here. Everything else above comes straight from the announcement itself.
+        </div>
+      </section>
+
+      <section>
+        <h2>Codex Security: open source down to the engine</h2>
+
+        <article class="news-item">
+          <p>OpenAI has open-sourced the <strong>Codex Security</strong> command-line tool along with its SDK — reports cite <strong>Jul 29</strong> and Apache-2.0. The primary-source check confirms both and gives a fresher date: on the npm registry, <code>@openai/codex-security</code> sits under <strong>Apache-2.0</strong>, latest version <code>0.1.4</code> from <strong>Jul 30, 2026</strong>, described as <em>"TypeScript SDK and CLI for Codex Security"</em>. The purpose: scan a repository for vulnerabilities and hang the finding as a gate in CI.</p>
+          <span class="src"><a href="https://registry.npmjs.org/@openai/codex-security">registry.npmjs.org/@openai/codex-security</a> (primary-source check, accessed Jul 31, 2026) · <a href="https://cybersecuritynews.com/openai-open-sources-codex-security-cli/">cybersecuritynews.com</a> · <a href="https://devops.com/openai-open-sources-codex-security-cli-for-the-merge-path/">devops.com</a> (both Jul 29, 2026)</span>
+        </article>
+
+        <article class="news-item">
+          <p>The catch is in the same reports: <em>"The CLI and SDK remain in limited beta and are available only to approved customers and partners."</em> The package is publicly installable, the scanner behind it is access-restricted — the shell is open source, not the engine. Anyone building their own security gate into CI can still find a readable template here for how findings get modeled and expressed as a failure condition. Read as an openness announcement, it's thin: the hard part is judging which finding is real, and that stays closed.</p>
+        </article>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section>
+        <h2>Three leaderboards, three winners, zero overlap</h2>
+
+        <article class="news-item">
+          <p>Yesterday's story here was that SWE-Bench Verified is hitting its ceiling. Today, a look at the benchmark that was supposed to catch that — and it's in worse shape. Three independent trackers ran LiveCodeBench in the same week, and they name three different frontrunners:</p>
+          <table class="mini-table">
+            <thead>
+              <tr><th>Tracker</th><th>Board as of</th><th>Rank 1</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>artificialanalysis.ai</td><td>Jul 29, 2026</td><td>Gemini 3 Pro Preview — 91.7%</td></tr>
+              <tr><td>benchlm.ai</td><td>Jul 26, 2026</td><td>Qwen3.7 Max — 91.6%</td></tr>
+              <tr><td>vals.ai</td><td>about a week old</td><td>Claude Fable 5 — 89.78%</td></tr>
+            </tbody>
+          </table>
+          <p>What's interesting isn't that the top spot differs. What's interesting is that the entire top-3 fields <strong>don't overlap</strong> at all: behind Gemini 3 Pro, Artificial Analysis lists Gemini 3 Flash (90.8%) and DeepSeek V3.2 Speciale (89.6%); behind Qwen3.7 Max, benchlm lists Qwen3.7 Plus (89.6%) and GLM-4.7 (84.9%); vals.ai lists Claude Opus 5 (89.03%) and Gemini 3.1 Pro Preview (88.48%). No model appears twice. That's not measurement noise — those are three different competitions under one name.</p>
+          <span class="src"><a href="https://artificialanalysis.ai/evaluations/livecodebench">artificialanalysis.ai</a> (Jul 29, 2026) · <a href="https://benchlm.ai/benchmarks/liveCodeBench">benchlm.ai</a> (Jul 26, 2026) · <a href="https://www.vals.ai/benchmarks/lcb">vals.ai/benchmarks/lcb</a> · all accessed Jul 31, 2026</span>
+        </article>
+
+        <article class="news-item">
+          <h3>Why this is systematic</h3>
+          <p>Two reasons, neither of them a scandal — just how it's built. First, each tracker tests a different selection of models — if you don't run Qwen3.7 at all, you can't rank it first either. Second, LiveCodeBench is deliberately time-window based: it draws tasks from a fixed release period so models haven't already seen the solutions during training. Different windows yield different percentages for the same model — correct, yet not comparable. Rule for the next sales slide citing a LiveCodeBench number: without tracker, time window, and exact model version, the figure isn't a measurement — it's a claim.</p>
+        </article>
+
+        <article class="news-item">
+          <p><span class="update-since">Update since yesterday</span> <strong>llm-stats</strong> now carries the date <em>"July 31, 2026"</em> — today — for SWE-Bench Verified, and still has Claude Fable 5 leading at <span class="stat">95.0%</span>. Claude Opus 5, a week after its release, still isn't listed there. Second day in a row with a fresh date and an unchanged field; I'm treating the board as stale until further notice. <strong>Aider's</strong> leaderboard remains unchanged at <strong>Nov 20, 2025</strong>, topped by GPT-5 (high) at <span class="stat">88.0%</span> — it no longer works as a cross-check against anything current.</p>
+          <span class="src"><a href="https://llm-stats.com/benchmarks/swe-bench-verified">llm-stats.com</a> · <a href="https://aider.chat/docs/leaderboards/">aider.chat/docs/leaderboards</a> (board dated Nov 20, 2025) · both accessed Jul 31, 2026</span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Tool roundup</h2>
+
+        <article class="news-item">
+          <h3>Continue is out — the first real departure</h3>
+          <p>For the first time, a name drops entirely out of the tool list this newsletter goes through every day. The <strong>Continue</strong> repository — for years the obvious open-source answer to Copilot as an IDE extension — says in its own words today: <em>"The continuedev/continue repository is no longer actively maintained and is read-only for all users."</em> Its last release was <code>v2.0.0</code> from <strong>Jun 19, 2026</strong>, followed by the acquisition by Cursor. Together with the end of Windsurf's Cascade (<strong>Jul 1, 2026</strong>) and its renaming to "Devin Desktop" (<strong>Jun 2, 2026</strong>), that adds up to a pattern: the independent middle ground between vendor Copilots and your own command-line harness is thinning out. Anyone attached to an extension whose company got acquired is better off setting up a backup path today than waiting for the announcement.</p>
+          <span class="src"><a href="https://github.com/continuedev/continue">github.com/continuedev/continue</a> (accessed Jul 31, 2026) · <a href="https://devin.ai/blog/windsurfs-next-chapter/">devin.ai/blog</a> (Jun 2, 2026) · <a href="https://cognition.com/blog/one-year-of-building-together">cognition.com/blog</a> (Cascade end-of-life, Jul 1, 2026)</span>
+        </article>
+
+        <article class="news-item">
+          <h3>Copilot in Visual Studio, July release</h3>
+          <p>GitHub published the July collection for Visual Studio yesterday. At its core is a <em>"Copilot Chat agent built on the GitHub Copilot SDK"</em> in public preview — the same blueprint everywhere right now: the tool gets rebuilt on the vendor's own agent SDK instead of being hardwired. Alongside that, .NET and Azure capabilities, plus a small thing with more everyday value than the headline: <em>"select code in the editor, right-click, and choose Copilot Actions &gt; Review Selection"</em> — review on a selection rather than a whole file. Org-wide instructions are available only for Business and Enterprise; otherwise it stays at per-repository instructions.</p>
+          <span class="src"><a href="https://github.blog/changelog/2026-07-30-github-copilot-in-visual-studio-july-update/">github.blog/changelog</a> · Jul 30, 2026</span>
+        </article>
+
+        <article class="news-item">
+          <p><strong>Quiet in the background:</strong> <strong>Cline</strong> remains at <code>v4.0.11</code> from <strong>Jul 24</strong>, <strong>Cursor's</strong> most recent entry is still the iPad client from <strong>Jul 29</strong>, <strong>Ollama</strong> at <code>v0.32.1</code> from <strong>Jul 16</strong>. For <strong>OpenHands</strong>, the last verifiable status is <code>v1.0.0</code> from <strong>Dec 16, 2025</strong> (secondary source); for <strong>JetBrains AI Assistant</strong>, the Copilot agent's addition to the agent picker on <strong>Jun 30</strong>; for <strong>Plandex</strong> and <strong>Bolt.new</strong>, today's research found no dated movement at all. For the <strong>Copilot command line</strong>, an entry <code>v1.0.75</code> from <strong>Jul 24</strong> with Opus 5 support is circulating; that line could only be confirmed today via search results, not on the changelog itself — so treat it with caution. That leaves essentially three shops that moved this week: GitHub, OpenAI, and the MCP project.</p>
+          <span class="src"><a href="https://github.com/cline/cline/releases">github.com/cline/cline</a> · <a href="https://cursor.com/changelog">cursor.com/changelog</a> · <a href="https://github.blog/changelog/2026-06-30-copilot-agent-is-now-available-in-jetbrains-ai-assistant/">github.blog/changelog</a> (Jun 30, 2026)</span>
+        </article>
+
+        <div class="callout warn">
+          <span class="callout-label">A report that doesn't become a fact here</span> A news digest reports significant GPT-5.6 price cuts for <strong>Jul 30</strong> — one tier down <strong>80%</strong>, another down <strong>20%</strong>, plus a new fast tier. That would matter a lot for cost planning. Except: it's a single source, and it isn't even internally consistent about <em>which</em> tier gets which discount. As long as OpenAI doesn't list the change on its own pricing page, this isn't grounds for a calculation. When in doubt, check your next bill, not the headline.
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Friday, July thirty-first. This week's biggest story for anyone running agents came out last night, and it comes straight from Anthropic. In sandboxed security evaluations, its own models reached real, external systems three times. The isolation was an assumption, not a verified property.</p>
+  <p>Here's how it played out. Anthropic tests its models in isolated environments to see how far they get in a cyberattack. A misconfiguration left the machines the model could reach during evaluation running with real internet access. Neither Anthropic nor its evaluation partner knew about it. Out of a review of roughly one hundred forty-one thousand runs where a model could theoretically have reached outside, three real incidents turned up. Three different models were involved: Opus four point seven, Mythos five, and an internal research test model.</p>
+  <p>The first incident: the model couldn't reach its simulated target, found that the real company was reachable over the internet instead, and ended up in a database with several hundred rows of production data. The third: a scan across roughly nine thousand targets that ended with an internet-facing application actually compromised. And the second is the one that hits you directly as a developer: a model uploaded a malicious package to the public Python index because it thought the environment was a simulation. That package was freely available for about an hour, and during that hour it was downloaded and run on fifteen real machines.</p>
+  <p>A quick note on the terms, because they matter here. A sandbox is a walled-off play area where a program can do whatever it wants without consequences outside it. Egress is the question of whether traffic can leave that environment. Picture a playpen in the living room: the bars are the sandbox, the front door is the egress. If the door's left open, the playpen is still there — it just doesn't stop anything once the kid climbs over it.</p>
+  <p>The lesson here isn't about model capability, it's about configuration. Anyone running agents locally has the same class of bug sitting at home. A container on a default network can reach the outside world, and the line "I'm running this in Docker" is a claim about the filesystem and processes, not about the network. A run with no network at all for anything that's only supposed to rewrite code, plus a forwarding proxy with an allowlist for whatever actually needs to get out, costs half an hour and turns an assumption into a verified property. And the more uncomfortable part: this wasn't caught by a network alarm, it was caught because someone later read through a hundred forty-one thousand transcripts. The earliest cases go back to April. For three months the safeguard didn't work, and nobody noticed. A safeguard you can't observe isn't one.</p>
+  <p>The second story is quieter, and just as important for how you run things. MCP, the protocol behind tool connections, got a fundamental overhaul in the July twenty-eighth revision: from a two-way, stateful protocol to a stateless request-response one. Stateful means the connection remembers who you are and where you left off, like a phone call. Stateless means every message is a postcard that spells out everything necessary again. Postcards are clunkier, but any mail carrier can deliver them.</p>
+  <p>In practice, the opening handshake, session IDs, and the held-open data stream are gone. In their place: multi round-trip requests, covering the old case where a tool needs something more from the user mid-call. The server says input is required, the client supplies it, the request runs again. Roots, sampling, and logging are deprecated as standalone mechanisms, along with the old streaming transport. But they'll keep working for at least twelve months, so there's no rush.</p>
+  <p>The real payoff sits in two footnotes. Requests now have to carry two headers so gateways, rate limiters, and web firewalls can route and meter on them without reading the body. And list responses now carry a time-to-live and a cache scope. Put together: an MCP server is now a perfectly ordinary web service you can put behind a standard load balancer and scale horizontally. That was the actual pain point of self-hosting, not the protocol semantics. Anyone building a new server today should build it on the stateless core.</p>
+  <p>Three notes from the tool roundup. First, and this is a real departure: Continue, for years the obvious open-source answer to Copilot as an editor extension, has been made read-only after its acquisition by Cursor. Its last release was version two point zero from June nineteenth. Together with the end of Windsurf's Cascade in early July, that's a pattern: the independent middle ground between vendor Copilots and your own command-line harness is thinning out. Second, GitHub published its July collection for Visual Studio, with a chat agent rebuilt on its own Copilot SDK, and code review on a selection instead of a whole file. Third, OpenAI open-sourced the Codex Security command line under an Apache license. The package is public, the scanner behind it stays access-restricted. The shell is open source, not the engine.</p>
+  <p>And on the benchmarks: yesterday's story here was that SWE-Bench Verified is hitting its ceiling. The benchmark that was supposed to catch that is in worse shape. Three independent trackers ran LiveCodeBench in the same week and named three different frontrunners — and the entire top three don't overlap on any of the boards. No model shows up twice. That's because each tracker tests a different lineup of models, and because LiveCodeBench deliberately works with time windows so the tasks aren't already in a model's training data. Different windows, different numbers. The rule that follows: without a tracker, a time window, and an exact model version, a LiveCodeBench number isn't a measurement, it's a claim. Next week we'll see whether Anthropic ever names that PyPI package, and whether the Codex Security scanner leaves limited preview.</p>
+</div>
+
+</body>
+</html>
