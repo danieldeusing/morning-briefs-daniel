@@ -709,8 +709,14 @@
     border-radius: var(--radius-inline); letter-spacing: 0.04em; margin-right: 0.2rem;
     text-transform: uppercase; vertical-align: middle;
   }
-  .tldr-card-body .chip.hot  { background: rgba(182, 64, 47, 0.18); color: #b6402f; }
-  .tldr-card-body .chip.good { background: rgba(63, 122, 79, 0.18); color: #3f7a4f; }
+  /* Same two rules as .chip.hot/.chip.good in lib/styles.css — the dashboard does not
+     load styles.css, so it restates them. Tokens, not the literals that were here
+     (#b6402f / #3f7a4f: single hexes on a four-theme page, measuring 3.06–3.83:1).
+     The tint is 10%, not the 18% it was: the ink sits on its OWN tint, which is a
+     surface the design system never measured — at 18% the composite is 4.15:1 on
+     warm and 4.23:1 on paper, under AA. Measured worst case at 10% is 4.66:1. */
+  .tldr-card-body .chip.hot  { background: color-mix(in srgb, var(--warn) 10%, transparent); color: var(--warn); }
+  .tldr-card-body .chip.good { background: color-mix(in srgb, var(--good) 10%, transparent); color: var(--good); }
   /* Suppress the external-link arrow inside TL;DR snippets — too noisy. */
   .tldr-card-body a[href^="http"]::after { content: none; }
   /* "+N weitere" overflow marker — the home snapshot caps the TL;DR at a few

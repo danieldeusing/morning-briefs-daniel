@@ -115,7 +115,18 @@
   --chip:      var(--secondary);
   --chip-fg:   var(--secondary-foreground);
   --warn:      var(--destructive);
-  --good:      #3f9a55; /* positive accent — no core token; a mid green that reads on all 4 themes */
+  /* The positive accent IS a core token — --success, since design 0.3.0. It is
+     declared four times below rather than once because the admissible luminance
+     bands for the light and the dark themes do not overlap, so no single hex can
+     serve all four: the #3f9a55 this replaced measured 2.76:1 on warm (the
+     default) and 3.06:1 on paper against AA's 4.5:1, while --success measures
+     5.16 / 10.76 / 10.84 / 5.36.
+     The hex is a var() FALLBACK, not a value — briefs loads the design system
+     UNPINNED, and jsDelivr can serve a browser a cached build for seven days, so
+     a build predating 0.3.0 would otherwise leave --good undefined and paint the
+     .dot.win / .tl-dot backgrounds transparent. Each fallback is that theme's own
+     published --success, so even the degraded path clears AA. */
+  --good:      var(--success, #1a6b2e);
   --cat-accent-2:  var(--primary);
 
   /* ── Per-category accent layer — a thin identity over the shared --primary.
@@ -135,6 +146,12 @@
   --cat-accent:      var(--c-economy);
   --cat-accent-text: var(--c-economy-text);
 }
+
+/* --good's fallback, per theme — see the note in :root. The token wins whenever the
+   design system's stylesheet actually carries it; these only cover a stale build. */
+html[data-theme="green"] { --good: var(--success, #4ade80); }
+html[data-theme="mono"]  { --good: var(--success, #4ade80); }
+html[data-theme="paper"] { --good: var(--success, #1a7031); }
 
 /* Per-newsletter accent alias — set the active --cat-accent from the body class. */
 body.cat-economy        { --cat-accent: var(--c-economy);        --cat-accent-text: var(--c-economy-text); }
