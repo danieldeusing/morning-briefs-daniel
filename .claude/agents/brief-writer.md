@@ -85,7 +85,11 @@ burns tokens without improving the brief.
      safety net — quote only what the source actually says.
 
 ## Hard rules
-- **DE only.** Do not create `en/`, `pt/`, or `es/` files. Do not call any
+- **DE only, unless the orchestrator's dispatch prompt explicitly overrides
+  the target language/path for this run** (e.g. a dated, temporary
+  English-only mode — see the `morning-briefs-daniel---morning-brief-all`
+  SKILL.md for current status). When no such override is given, the default
+  below applies: do not create `en/`, `pt/`, or `es/` files. Do not call any
   fact-checker. Do not rebuild the dashboard.
 - Honour every category-specific rule in `docs/categories/<category>.md`
   (e.g. economy FX/Wise rule, language SRS ledger).

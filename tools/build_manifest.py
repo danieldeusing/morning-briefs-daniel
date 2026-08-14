@@ -284,14 +284,19 @@ def verify_index() -> int:
     for c in manifest.get("categories", []):
         for e in c.get("entries", []):
             langs = e.get("langs")
-            if not isinstance(langs, list) or "de" not in langs:
+            # DE used to be mandatory-canonical; since 2026-08-13 a category may
+            # run English-only (temporary token-saving mode, see the
+            # scheduled-task SKILL.md) — so just require *some* language file,
+            # not 'de' specifically. build_manifest()'s own headline/tldr
+            # fallback already handles any-language entries fine.
+            if not isinstance(langs, list) or not langs:
                 bad_langs.append(f"{c.get('id')}/{e.get('date')}")
     if bad_langs:
         failures.append("langs")
         shown = ", ".join(bad_langs[:5]) + (" …" if len(bad_langs) > 5 else "")
-        print(f"  [✗] {len(bad_langs)} entr{'y' if len(bad_langs)==1 else 'ies'} missing 'de' in langs: {shown}")
+        print(f"  [✗] {len(bad_langs)} entr{'y' if len(bad_langs)==1 else 'ies'} with no language files: {shown}")
     else:
-        print("  [✓] every entry's langs includes 'de'")
+        print("  [✓] every entry has at least one language file")
 
     # Real document tags only (a leading word boundary excludes the substring
     # hits inside JS strings/comments like "latestTldrHtml" or "print-dialog").

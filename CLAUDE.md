@@ -4,6 +4,16 @@ Daily multi-newsletter generator. Ten category newsletters + one dashboard,
 all served from a single static folder. Canonical language is German; every
 brief is translated into EN, PT-BR, and es-MX.
 
+> **Temporary mode, active since 2026-08-13:** to save tokens, the routine
+> currently writes **English only** (no DE/PT/ES) and **skips the `language`
+> (learn-language) category** entirely. This is a toggle, not a redesign — the
+> full instructions for the normal DE-canonical + EN/PT/ES + all-categories
+> flow are kept intact in the orchestrator SKILL.md
+> (`~/.claude/scheduled-tasks/morning-briefs-daniel---morning-brief-all/SKILL.md`,
+> see the "TEMPORARY MODE OVERRIDE" block there) and can be re-enabled by
+> deleting that block. Everything else in this file below still describes the
+> normal/full architecture.
+
 ## Layout
 
 The repo root holds two kinds of content: what gets served at
