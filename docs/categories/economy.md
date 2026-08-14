@@ -39,6 +39,18 @@ Heute ist {{date}}. Schreibe Daniels Wirtschaft-Newsletter.
 - Umtausch erfolgt periodisch und FX-getrieben (Timing mit etwas Spielraum), darum
   ist der EUR/BRL-Kurs für den Umtausch-Zeitpunkt direkt entscheidungsrelevant.
 
+# Priorität (Daniel, 2026-08-14 explizit bestätigt)
+**Diese Kategorie bekommt die höchste Recherche-Tiefe aller sieben Newsletter,
+jeden Tag — nicht nur montags.** Das betrifft besonders die Analyst-Anker
+(`# Analyst-Anker` unten): die dort mit „Pflicht Montag" markierte
+12-Monats-Recherche ist der *Minimalstandard* für Montag, nicht die Obergrenze
+für die übrige Woche — Fokus-Survey und mindestens zwei Sell-side-Quellen
+sollten so oft wie am jeweiligen Tag sinnvoll verfügbar neu geprüft bzw.
+referenziert werden, damit sowohl die kurzfristige (diese Woche) als auch die
+langfristige (12 Monate, plus struktureller 2-3-Jahres-Blick wo die Recherche
+das hergibt) Einschätzung an jedem Tag auf echten, datierten Quellen steht statt
+nur an Wochentagen mit weniger Zeitdruck.
+
 # Kern-Job
 **Ziel: Verständnis, nicht Verdict.** Newsletter ist Analyst, nicht Berater. Daniel soll seine eigene Sicht bilden.
 

@@ -11608,14 +11608,17 @@ window.__MANIFESTS = {
 
   function urlFor(catId, date, lang) {
     const cat = M.categories.find(c => c.id === catId);
-    let useLang = 'de';
-    if (cat) {
-      const entry = cat.entries.find(e => e.date === date);
-      if (entry && Array.isArray(entry.langs) && entry.langs.includes(lang)) {
-        useLang = lang;
-      }
+    const entry = cat && cat.entries.find(e => e.date === date);
+    if (entry && Array.isArray(entry.langs) && entry.langs.length) {
+      // Prefer the requested language; else DE if this entry has it; else
+      // whatever language this entry actually has (DE isn't guaranteed —
+      // the 2026-08-13/14 English-only mode produced entries with no DE file).
+      const useLang = entry.langs.includes(lang)
+        ? lang
+        : (entry.langs.includes('de') ? 'de' : entry.langs[0]);
+      return catId + '/' + useLang + '/' + date + '.html';
     }
-    return catId + '/' + useLang + '/' + date + '.html';
+    return catId + '/de/' + date + '.html';
   }
 
   function headlineFor(entry, lang) {
@@ -11910,10 +11913,15 @@ window.__MANIFESTS = {
       const tldrHtml = tldrFor(cat, currentLang);
 
       // Fallback flag: the active language has no file for this date, so the
-      // card is showing the DE original. Surface a small "DE" chip so the
-      // reader knows the snapshot isn't in their chosen language.
-      const usesFallback = currentLang !== 'de' && latest
-        && Array.isArray(latest.langs) && !latest.langs.includes(currentLang);
+      // card falls back to whichever language this entry actually has (DE
+      // isn't guaranteed — some dates were English-only, see urlFor()).
+      // Surface a small chip naming that language so the reader knows the
+      // snapshot isn't in their chosen language.
+      let fallbackLang = null;
+      if (latest && Array.isArray(latest.langs) && latest.langs.length
+        && !latest.langs.includes(currentLang)) {
+        fallbackLang = latest.langs.includes('de') ? 'de' : latest.langs[0];
+      }
 
       // Three states: full TL;DR loaded · entry exists but TL;DR not yet
       // extracted · no entry at all (the scheduled task hasn't produced one).
@@ -11938,7 +11946,7 @@ window.__MANIFESTS = {
           <span class="tile-icon" aria-hidden="true">${cat.icon}</span>
           <span class="tile-name">${cat.label}</span>
           <span class="tile-date">${dateStr}</span>
-          ${usesFallback ? '<span class="fallback-flag" title="Keine Übersetzung für diesen Tag — DE-Original">DE</span>' : ''}
+          ${fallbackLang ? `<span class="fallback-flag" title="Keine Übersetzung für diesen Tag — ${fallbackLang.toUpperCase()}-Original">${fallbackLang.toUpperCase()}</span>` : ''}
         </header>
         ${headline ? `<div class="tldr-card-headline">${headline}</div>` : ''}
         ${bodyHtml}
