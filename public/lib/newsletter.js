@@ -162,13 +162,14 @@
     if (!SERIES) return;
     const C = cssColors();
     const defaultColors = { eurbrl: C.warn, usdbrl: C.accent, dxy: C.accent2 };
-    Object.keys(SERIES).forEach(k => {
+    const pairKeys = Object.keys(SERIES).filter(k => SERIES[k] && typeof SERIES[k] === 'object');
+    pairKeys.forEach(k => {
       if (!SERIES[k].color) SERIES[k].color = defaultColors[k] || C.accent;
     });
 
     // Sparklines
     const sparks = {};
-    Object.keys(SERIES).forEach(key => {
+    pairKeys.forEach(key => {
       const ctx = document.getElementById('spark-' + key);
       if (!ctx) return;
       const s = SERIES[key];
@@ -189,7 +190,7 @@
     // Detail chart
     const detailCanvas = document.getElementById('detail-chart');
     if (!detailCanvas) return;
-    const firstPair = Object.keys(SERIES)[0];
+    const firstPair = pairKeys[0];
     let currentPair = firstPair, currentRange = 'W';
 
     const detail = new Chart(detailCanvas, {
