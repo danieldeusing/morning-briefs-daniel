@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-09-03</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Donnerstag, 03.09.2026</span>
+    <span class="dot">·</span>
+    <span>Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">Der Angriff steckt im .git-Ordner, nicht im Code</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Ein Repository, das man nur <em>anschaut</em>, führt Code aus — und zwar nicht der Quelltext darin, sondern die Konfigurationsdatei daneben. Die Sicherheitsfirma <strong>Manifold</strong> hat gezeigt, dass sieben verbreitete Kommandozeilen-Coding-Agenten genau darauf hereinfallen: Ein Eintrag in <code>.git/config</code> reicht, damit der Agent beim ersten Blick ins Verzeichnis einen fremden Befehl mit den vollen Rechten des angemeldeten Benutzers startet, ohne Rückfrage, bei einem Teil der Werkzeuge sogar noch vor der Anmeldung. Anthropic, OpenAI, Cursor und Block haben nachgezogen; <strong>Qwen Code</strong> und <strong>Grok Build</strong> standen gestern noch offen. Und weil ein ruhiger Tag selten allein kommt: Der KEV-Katalog, der hier gestern noch als seit Montag zulauffrei stand, hat gestern Nachmittag <strong>sieben</strong> Einträge auf einmal genommen — darunter eine 9,8er in <strong>JFrog Artifactory</strong>, mit der sich Angreifer selbst Admin-Token ausstellen, und darüber noch eine glatte <strong>10,0</strong> in <strong>Kestra</strong>: Fernsteuerung mit Root-Rechten, ganz ohne Anmeldung.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>GitSpawn</strong>: <strong>acht</strong> Schwachstellen in <strong>sieben</strong> CLI-Coding-Agenten — ein <code>core.fsmonitor</code>-Eintrag im mitgelieferten <code>.git</code>-Verzeichnis führt beim ersten <code>git status</code> fremden Code aus. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Patch-Stand</strong>: Claude Code bestätigt auf <strong>2.1.193</strong>, behoben in <strong>2.1.196</strong> — nur für den fsmonitor-Pfad. <strong>Qwen Code</strong> und <strong>Grok Build</strong> waren am <strong>02.09.</strong> noch ohne Fix. <span class="chip">Global</span></li>
+      <li><span class="chip good">Sec</span> <strong>Entwarnung beim Transport</strong>: <code>clone</code>, <code>fetch</code> und <code>pull</code> übertragen niemals eine fremde <code>.git/config</code>. Es braucht ein ZIP, ein Netzlaufwerk, einen Sync-Ordner oder einen Stick. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>CISA KEV</strong>: <strong>sieben</strong> Einträge am <strong>02.09.</strong> — nach Tagen ohne Zulauf. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>JFrog Artifactory</strong>: <strong>CVE-2026-82329</strong>, <strong>CVSS 9,8</strong>, Patch am <strong>28.08.</strong>, beobachtete Ausnutzung ab dem <strong>01.09.</strong> — nur selbst betriebene Instanzen. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Kestra</strong>: <strong>CVE-2026-49869</strong>, <strong>CVSS 10,0</strong> — unauthentifizierte Fernsteuerung mit Root-Rechten über einen Auth-Filter, der jeden auf <code>/configs</code> endenden Pfad durchlässt. <strong>Behoben in 1.0.45 / 1.3.21</strong>. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Starlette</strong>: <strong>CVE-2026-48710</strong> — ungeprüfter <code>Host</code>-Header verschiebt den Pfad und hebelt pfadbasierte Zugriffsprüfungen aus. Trifft den Unterbau jeder FastAPI-App; behoben ab <strong>1.0.1</strong>. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>LiteLLM</strong>: <strong>CVE-2026-59822</strong> (<strong>8,8</strong>) — ein erfundener <code>Authorization</code>-Header reicht am MCP-Endpunkt; behoben in <strong>1.84.0</strong>. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulierung</span> <strong>CRA</strong>: in <strong>acht Tagen</strong> greift die Meldepflicht — <strong>24 h</strong> Frühwarnung und <strong>72 h</strong> Zwischenbericht für beide Spuren; Abschlussbericht <strong>14 Tage</strong> nach dem Fix (ausgenutzte Schwachstellen) bzw. <strong>1 Monat</strong> nach dem 72-h-Bericht (schwere Vorfälle). Alles über die ENISA-Plattform. <span class="chip">EU</span></li>
+      <li><span class="chip good">Release</span> <strong>pnpm 12</strong> nachgemessen: bis zu <strong>90 %</strong> schnellere Installationen, Fußabdruck aus Store und <code>node_modules</code> um <strong>52,5 %</strong> kleiner. <span class="chip">Global</span></li>
+      <li><span class="chip">Browser</span> <strong>Firefox 155</strong>: unter der Haube <strong>Happy Eyeballs v3</strong> und <strong>QUIC v2</strong> für HTTP/3 — der interessantere Teil des Releases. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Eine terminarme Woche — der harte Termin liegt einen Tag hinter ihrem Ende: am 11.09. beginnt die CRA-Meldepflicht über die ENISA-Plattform.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Do 03.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heute</span>
+          <span>Kestra auf 1.0.45 / 1.3.21 heben — CVSS 10,0, aktiv ausgenutzt, hat Vorrang</span>
+          <span>Die sieben KEV-Einträge vom 02.09. laufen in die Scanner</span>
+          <span>Artifactory-Versionsstand gegen die sechs Fix-Linien vom 28.08. abgleichen</span>
+          <span>Qwen Code und Grok Build: Patch-Stand nachsehen — beide waren gestern offen</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fr 04.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Nichts terminiert</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sa 05.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Nichts terminiert</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">So 06.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Nichts terminiert</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mo 07.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Letzte volle Arbeitswoche vor der CRA-Meldepflicht beginnt</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 08.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Nichts terminiert</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 09.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Vorletzter Werktag vor dem 11.09. — Meldeweg und Zuständigkeit sollten bis dahin auf Papier stehen</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>GitSpawn: Das Repository startet den Agenten, nicht umgekehrt</h2>
+        <p>Die Sicherheitsfirma <strong>Manifold</strong> hat eine Angriffsmöglichkeit über manipulierte git-Repositories gefunden und daraus <strong>acht Schwachstellen</strong> in <strong>sieben</strong> Kommandozeilen-Coding-Agenten gemeldet: <strong>Claude Code</strong>, <strong>Codex</strong>, <strong>Cursor</strong>, <strong>goose</strong>, <strong>Hermes Agent</strong>, <strong>Qwen Code</strong> und <strong>Grok Build</strong>. Der Trick steckt nicht im Quelltext des Repos, sondern in der Datei daneben — und er braucht keinen einzigen Klick des Nutzers, nur dessen Aufmerksamkeit für einen Ordner.</p>
+        <div class="eli5"><strong class="eli5-term">fsmonitor:</strong> Bei großen Repositories ist es teuer, wenn git für jedes <code>git status</code> den kompletten Dateibaum abläuft. Deshalb darf man in der git-Konfiguration ein Hilfsprogramm hinterlegen, das git stattdessen sagt, was sich geändert hat: <code>fsmonitor = &lt;Befehl&gt;</code>. Wie ein Hausmeister, der dir eine Liste der Räume gibt, in denen jemand war, statt dass du selbst durch alle Türen läufst. Nur steht die Telefonnummer dieses Hausmeisters in einer Datei, die im Repository-Ordner mitgeliefert werden kann.</div>
+        <p>Damit ist der Ablauf erzählt: git aktualisiert beim ersten Kommando seinen Index und ruft dazu den in <code>core.fsmonitor</code> hinterlegten Befehl auf. Ein Coding-Agent wiederum ruft <code>git status</code> und <code>git diff</code> von sich aus im Hintergrund auf, sobald er ein Verzeichnis kennenlernt — das ist keine Fehlfunktion, sondern genau sein Job. Der fremde Befehl läuft dann mit den vollen Rechten des angemeldeten Benutzers, ohne Freigabedialog, bei einem Teil der Werkzeuge sogar, bevor der Agent überhaupt angemeldet ist.</p>
+        <div class="mechanism"><span class="step">präpariertes .git/config</span><span class="arrow">→</span><span class="step">Agent sieht den Ordner</span><span class="arrow">→</span><span class="step">git status im Hintergrund</span><span class="arrow">→</span><span class="step">Index-Refresh ruft fsmonitor</span><span class="arrow">→</span><span class="step">fremder Befehl läuft</span></div>
+        <p>Eine Einschränkung ging in den ersten Meldungen unter, und sie ist die wichtigste: <strong>Über normales git verbreitet sich das nicht.</strong> Ein <code>git clone</code>, <code>fetch</code> oder <code>pull</code> überträgt niemals eine fremde <code>.git/config</code> — der Angreifer muss das <code>.git</code>-Verzeichnis <em>im Ganzen</em> zustellen. Als ZIP oder Tarball, über ein geteiltes Netzlaufwerk, einen Sync-Ordner oder einen Stick. Das ist kein Wurm, sondern eine Falle, in die man hineinlaufen muss.</p>
+        <div class="callout info"><span class="callout-label">Wo das realistisch passiert</span> „Schau dir mal unser Projekt an" als Mail-Anhang. Ein Kunden-Repo im geteilten Drive-Ordner. Ein wiederhergestelltes Backup. Ein Beispielprojekt aus einem Tutorial, das als Archiv statt als Klon kommt. Alles Wege, auf denen ein Projektordner samt <code>.git</code> ankommt — und alle vier fühlen sich harmlos an, weil man ja „nur reinschaut".</div>
+        <table class="mini-table">
+          <thead><tr><th>Werkzeug</th><th>Stand</th></tr></thead>
+          <tbody>
+            <tr><td>Claude Code</td><td>bestätigt auf 2.1.193, behoben in 2.1.196 — nur der <code>core.fsmonitor</code>-Pfad</td></tr>
+            <tr><td>goose (Block)</td><td>CVE-2026-72718, CVSS-4.0-Basiswert 7,0 — behoben in 1.44.0</td></tr>
+            <tr><td>Codex, Cursor</td><td>gepatcht</td></tr>
+            <tr><td>Qwen Code, Grok Build</td><td>Stand 01./02.09. ohne Fix</td></tr>
+          </tbody>
+        </table>
+        <p>Nicht vollständig geschlossen ist die Sache selbst dort, wo gepatcht wurde: Anthropic hat den fsmonitor-Weg beseitigt, einen ähnlichen über <code>claude ultraview</code> laut heise aber noch nicht. Für <strong>Hermes Agent</strong> habe ich heute keinen belastbaren Patch-Stand gefunden — im Bericht gelistet, hier nicht bestätigt.</p>
+        <p><strong>Meine Sicht:</strong> Der Reflex, das unter „KI-Lücke" abzulegen, führt in die Irre. Der Fehler liegt nicht im Modell und nicht im Agenten-Konzept, sondern in einer Annahme, die aus der Zeit vor den Agenten stammt: dass ein Repository-Ordner Daten sind. Ist er nicht — die Konfiguration darin war noch nie eine Vertrauensgrenze. Neu ist nur die Häufigkeit. Ein Mensch tippt <code>git status</code> bewusst; ein Agent tut es reflexhaft, dutzendfach, in jedem Verzeichnis, auf das man ihn zeigen lässt. Damit wird aus „einmal reinschauen" beiläufig Codeausführung. Die praktische Konsequenz ist unspektakulär und kostet zwei Sekunden: Kommt ein Projekt als Archiv statt als Klon, vor dem ersten Öffnen das <code>.git</code>-Verzeichnis löschen und selbst neu initialisieren — oder wenigstens <code>git config --get core.fsmonitor</code> fragen. Fremde <code>.git</code>-Ordner gehören in dieselbe Schublade wie fremde Binärdateien.</p>
+        <span class="src"><a href="https://www.heise.de/news/KI-Agenten-fuehren-git-Schadcode-beim-Starten-automatisch-aus-11437165.html">heise.de</a> (Update 02.09., 07:23 Uhr) · <a href="https://thehackernews.com/2026/09/malicious-git-configs-can-make-claude.html">thehackernews.com</a> (Versionsstände, CVE-2026-72718)</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Artifactory: Wer sich Admin-Token ausstellt, besitzt die Lieferkette</h2>
+        <p><strong>CVE-2026-82329</strong> in <strong>JFrog Artifactory</strong> ist eine fehlerhafte Authentifizierung mit <strong>CVSS 9,8</strong> — der Bereich, in dem „unauthentifiziert, aus der Ferne, ohne Nutzerinteraktion" zusammenkommen. JFrog hat sie am <strong>28.08.2026</strong> geschlossen, verteilt über sechs Versionslinien (<strong>7.111.21</strong>, <strong>7.117.28</strong>, <strong>7.125.20</strong>, <strong>7.133.29</strong>, <strong>7.146.38</strong>, <strong>7.161.20</strong>). Vier Tage später, am <strong>01.09.</strong>, meldete WatchTowr aktive Ausnutzung; gestern nahm CISA die Lücke in den KEV-Katalog auf. Betroffen sind ausschließlich selbst betriebene Instanzen, nicht die SaaS-Variante.</p>
+        <div class="eli5"><strong class="eli5-term">Artefakt-Repository:</strong> Das ist das Lager, aus dem ein Build seine Bausteine holt und in das er das fertige Ergebnis legt — jars, npm-Pakete, Docker-Images, dazu die Zugangsdaten für die vorgelagerten Registries. Wie das Zentrallager einer Bäckereikette: Wer dort ans Mehl kommt, muss keine einzige Filiale mehr betreten.</div>
+        <p>Was die Angreifer damit taten, ist die eigentliche Nachricht. Laut WatchTowr stellten sie sich <strong>Admin-Token</strong> aus und lasen anschließend Benutzer, Gruppen, hinterlegte Zugangsdaten und föderierte Zugänge aus; in einer begrenzten Zahl von Fällen legten sie sich zusätzlich Administratorkonten als Hintertür an. Das ist kein Datendiebstahl-Vorfall, das ist ein Schlüsselbund-Vorfall.</p>
+        <p><strong>Meine Sicht:</strong> „Nur Self-hosted betroffen" klingt nach Entwarnung und ist im Mittelstand das Gegenteil — selbst betrieben läuft genau dort, wo Compliance-Gründe gegen SaaS sprachen. Wichtiger ist aber die Reihenfolge der Ereignisse: Patch am 28., Ausnutzung am 1., Katalogeintrag am 2. Wer erst gestern auf den Katalogeintrag hin reagiert hat, hatte das Fenster seit dem 28.08. offen — und ein Patch wirft niemanden hinaus, der in diesem Fenster schon ein Token geprägt hat. Der Versionsabgleich ist deshalb nur der erste Schritt; der zweite ist, alles zu rotieren, was die Kiste im Zugriff hatte: Registry-Zugänge, Signaturschlüssel, Spiegel-Credentials, föderierte Verbindungen. Und der dritte ist der unangenehme Blick in die Zugriffsprotokolle auf neue Administratorkonten. <span class="update-since">Anmerkung zur Quellenlage</span> Zur Verbreitung von Artifactory kursieren griffige Reichweiten-Zahlen; ich gebe sie hier nicht wieder, weil sie sich gestern auf keine benennbare Primärquelle zurückführen ließen.</p>
+        <span class="src"><a href="https://www.csoonline.com/article/4217534/exploited-jfrog-artifactory-bug-puts-software-supply-chain-on-alert.html">csoonline.com</a> (CVSS 9,8) · <a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-critical-jfrog-artifactory-flaw-to-forge-admin-tokens/">bleepingcomputer.com</a> (Patch-Versionen, 28.08.) · <a href="https://www.securityweek.com/critical-jfrog-artifactory-vulnerability-reportedly-exploited-in-the-wild/">securityweek.com</a> (Ausnutzung) · <a href="https://www.cisa.gov/news-events/alerts/2026/09/02/cisa-adds-seven-known-exploited-vulnerabilities-catalog">cisa.gov</a> (KEV, 02.09.)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Sechs weitere KEV-Einträge — zwei davon im Python-Unterbau</h2>
+        <p>An dieser Stelle stand gestern noch: „seit dem 31.08. kein Zulauf". Das hat sich am Nachmittag erledigt — <strong>CISA</strong> nahm am <strong>02.09.</strong> sieben Schwachstellen auf einmal in den Katalog der bekannt ausgenutzten Lücken auf. Ein festes Fristdatum nennt die Meldung nicht; sie verweist auf die Bindende Anweisung <strong>BOD 26-04</strong>, die Behörden zur „rapid remediation" hochriskanter Lücken verpflichtet. Neben Artifactory sind das diese sechs.</p>
+
+        <h3>Starlette — CVE-2026-48710</h3>
+        <p>Starlette setzt die Eigenschaft <code>request.url</code> aus dem vom Client geschickten <code>Host</code>-Header und dem Pfad zusammen und parst das Ergebnis neu — ohne den Header zu prüfen. Wer <code>/</code>, <code>?</code> oder <code>#</code> in den Host schmuggelt, verschiebt damit die Grenze zwischen Host, Pfad und Query. Die Anwendung sieht dann einen anderen Pfad als der Router, und jede Middleware, die anhand des Pfads über Zugriff entscheidet, entscheidet über den falschen. Behoben ab <strong>1.0.1</strong>, das den Host gegen RFC 9112 §3.2 und RFC 3986 §3.2.2 prüft und im Zweifel auf <code>scope["server"]</code> zurückfällt.</p>
+        <div class="eli5"><strong class="eli5-term">Header-Schmuggel:</strong> Der Browser sagt dem Server in einer eigenen Zeile, welchen Host er meint. Klebt der Server diese Zeile ungeprüft mit dem Pfad zusammen, kann man in die Zeile ein Schrägstrich-Zeichen schmuggeln und damit den Pfad verändern — wie wenn man auf den Briefumschlag hinter die Straße noch eine zweite Adresse schreibt und der Postbote die zweite nimmt.</div>
+        <p>Das ist der Eintrag mit der größten Nähe zu dieser Werkbank: Starlette ist der Unterbau, auf dem <strong>FastAPI</strong> läuft — man hat es im Lockfile, ohne es je bewusst installiert zu haben. Und der Fehler trifft ausgerechnet das Muster, das in FastAPI-Projekten am häufigsten für Autorisierung gebaut wird: Middleware, die auf den Pfad schaut.</p>
+
+        <h3>LiteLLM — CVE-2026-59822 (CVSS 8,8)</h3>
+        <p>Der MCP-Streamable-HTTP-Endpunkt von LiteLLM hatte einen Rückfallpfad: Schlug die Prüfung des LiteLLM-Schlüssels fehl, ersetzte ein OAuth2-Passthrough sie durch ein leeres <code>UserAPIKeyAuth()</code>-Objekt. Ein frei erfundener <code>Authorization</code>-Header reichte damit, um ohne gültigen Schlüssel an die angebundenen Werkzeuge zu kommen. Behoben in <strong>1.84.0</strong>. Der Fehler ist so alt wie die Softwaretechnik — ein Fehlerpfad, der auf „irgendwie weiter" statt auf „abbrechen" endet. Neu ist nur, was am anderen Ende hängt: ein Endpunkt, der echte Aktionen ausführt.</p>
+
+        <h3>Kestra — CVE-2026-49869 (CVSS 10,0)</h3>
+        <p>Der schwerste Eintrag des ganzen Katalogtags steht nicht bei JFrog, sondern hier: <strong>CVSS 10,0</strong>, das theoretische Maximum. Im Workflow-Orchestrator <strong>Kestra</strong> entscheidet der <code>AuthenticationFilter</code> per Endungsprüfung — endet der angefragte Pfad auf <code>/configs</code>, wird die Anfrage ohne Anmeldung durchgelassen. Wer diese Zeichenkette einfach hinten an eine beliebige andere Adresse hängt, steht damit unauthentifiziert in der vollen API, und über die standardmäßig mitgelieferten Skript-Plugins in einer Kommandoausführung <em>mit Root-Rechten</em>. CISA führt die Lücke seit dem <strong>02.09.</strong> als aktiv ausgenutzt.</p>
+        <div class="callout warn"><span class="callout-label">Handeln</span> <strong>Behoben in 1.0.45 und 1.3.21</strong> — verwundbar ist alles bis einschließlich <strong>1.3.20</strong>. Das Advisory läuft unter der Kennung <code>GHSA-5vc5-wxxq-3fjx</code> und nicht unter der CVE-Nummer; wer nur nach „CVE-2026-49869" sucht, findet es nicht. Wer Kestra selbst betreibt, spielt das heute vor allem anderen ein.</div>
+
+        <h3>SonicWall SMA1000 und Sangoma Switchvox</h3>
+        <p><strong>CVE-2026-83548</strong> (Server-Side Request Forgery) und <strong>CVE-2026-83549</strong> (OS-Command-Injection) in SonicWalls SMA1000-Appliances, dazu <strong>CVE-2026-9586</strong> (SQL-Injection) in Sangomas Switchvox-Telefonanlage. VPN-Appliance und PBX — Geräteklassen, die hier niemand im Keller stehen hat. Sie stehen trotzdem in diesem Brief, weil KEV-Aufnahmen vollständig gehören: Was heute in einer fremden Branche ausgenutzt wird, taucht übermorgen in der Bestandsliste eines Kunden auf.</p>
+        <span class="src"><a href="https://www.cisa.gov/news-events/alerts/2026/09/02/cisa-adds-seven-known-exploited-vulnerabilities-catalog">cisa.gov</a> (KEV-Aufnahme, 02.09.) · <a href="https://advisories.gitlab.com/pypi/starlette/CVE-2026-48710/">advisories.gitlab.com</a> (Starlette) · <a href="https://advisories.gitlab.com/pypi/litellm/CVE-2026-59822/">advisories.gitlab.com</a> (LiteLLM) · <a href="https://github.com/kestra-io/kestra/security/advisories/GHSA-5vc5-wxxq-3fjx">github.com/kestra-io</a> (Advisory GHSA-5vc5-wxxq-3fjx, CVSS 10,0, Fix 1.0.45/1.3.21)</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Cyber Resilience Act: in acht Tagen läuft die Uhr</h2>
+        <p>Am <strong>11.09.2026</strong> greift der erste harte Teil des <strong>Cyber Resilience Act</strong> — die Meldepflicht. Wer ein Produkt mit digitalen Elementen auf dem EU-Markt bereitstellt, muss ab dann eine aktiv ausgenutzte Schwachstelle oder einen schweren Sicherheitsvorfall über die <strong>Single Reporting Platform</strong> der ENISA melden. Die Fristen sind gestaffelt und laufen in <em>zwei getrennten Spuren</em>. Gemeinsam ist beiden der Anfang: <strong>24 Stunden</strong> für die Frühwarnung, <strong>72 Stunden</strong> für den Zwischenbericht. Danach trennen sie sich — bei einer aktiv ausgenutzten Schwachstelle folgt der Abschlussbericht spätestens <strong>14 Tage</strong>, nachdem eine Behebung oder Abhilfemaßnahme verfügbar ist; bei einem schweren Sicherheitsvorfall dagegen erst <strong>innerhalb eines Monats</strong> nach dem 72-Stunden-Bericht. Der Rest der Verordnung gilt erst ab dem <strong>11.12.2027</strong>.</p>
+        <p>Wer genau darunter fällt, entscheidet der Anwendungsbereich der Verordnung — und das ist die Frage, die man <em>jetzt</em> einmal für sich beantworten sollte, nicht im Ernstfall um drei Uhr nachts. Für eine Ein-Mann-Werkstatt, die Software in die EU ausliefert, ist die Antwort selten so beruhigend, wie man sie gern hätte.</p>
+        <div class="callout warn"><span class="callout-label">Achtung</span> Die 24-Stunden-Frist ist kein technisches, sondern ein organisatorisches Problem. Sie fragt: Wer entscheidet, dass eine Lücke „aktiv ausgenutzt" ist? Wer hat einen Zugang zur ENISA-Plattform — und hat den schon mal jemand geöffnet? Wer schreibt den Text, wenn die Meldung am Samstag fällig wird? Drei Antworten, die vor dem 11.09. auf einer halben Seite stehen sollten.</div>
+        <p><strong>Meine Sicht:</strong> Von allen CRA-Pflichten ist die Meldepflicht die billigste — sie verlangt keine Umbauten am Produkt, keine Zertifizierung, keine Konformitätsbewertung. Und trotzdem ist sie die, an der die meisten scheitern werden, weil sie nicht schwer ist, sondern <em>schnell</em>. Wer glaubt, die Kommission würde bei den ersten Verstößen nachsichtig sein, sollte sich anschauen, wie die parallele Digitalregulierung gelaufen ist: Am <strong>05.12.2025</strong> verhängte die EU-Kommission gegen <strong>X</strong> ein Bußgeld von <strong>120 Mio. €</strong> wegen Transparenzverstößen unter dem Digital Services Act — täuschendes Verifizierungs-Design, unzureichendes Werbearchiv, kein Forschungsdatenzugang. Das ist alte Nachricht und gehört ausdrücklich nicht in diese Woche; es ist nur der brauchbarste verfügbare Maßstab dafür, wie ernst diese Verordnungsfamilie gemeint ist.</p>
+        <span class="src"><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">digital-strategy.ec.europa.eu</a> (Fristen beider Spuren, Primärquelle) · <a href="https://www.crowell.com/en/insights/client-alerts/eu-cyber-resilience-act-countdown-11-september-2026-incidentvulnerability-reporting-deadline-is-less-than-100-days-away">crowell.com</a> (Stichtag 11.09.) · <a href="https://iapp.org/news/a/european-commission-fines-x-120m-euros-for-dsa-violations">iapp.org</a> (DSA-Bußgeld, 05.12.2025)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert</h2>
+        <p><strong>pnpm 12, nachgemessen</strong>: Zum Rust-Rewrite vom <strong>26.08.</strong> liegen jetzt Zahlen vor. Socket.dev misst Installationen, die in einzelnen Fällen <strong>bis zu 90 %</strong> schneller laufen, und einen kombinierten Fußabdruck aus Store und <code>node_modules</code>, der auf dem Testsystem von <strong>3,891 GB</strong> auf <strong>1,850 GB</strong> fiel — <strong>52,5 %</strong> weniger. Beides sind Messwerte eines Systems, keine garantierten Werte; die Größenordnung deckt sich mit dem, was heise unabhängig davon berichtet. Kommandos, Flags und Lockfile-Format bleiben die von Version 11.<sup>[1]</sup></p>
+        <p><strong>Firefox 155, der Netzwerk-Teil</strong>: Die sichtbare Änderung des Releases vom <strong>01.09.</strong> — die Zahl blockierter Tracker in der Adressleiste — ist die uninteressantere. Unter der Haube kommen <strong>Happy Eyeballs v3</strong> und die Aushandlung von <strong>QUIC v2</strong> für HTTP/3 dazu. Mit dieser Version wechselt Firefox außerdem vom Vier- auf den Zwei-Wochen-Takt.<sup>[2]</sup></p>
+        <div class="eli5"><strong class="eli5-term">Happy Eyeballs:</strong> Ein Server ist oft über IPv6 <em>und</em> IPv4 erreichbar, und manchmal ist einer der beiden Wege kaputt oder lahm. Statt nacheinander zu probieren und in den Timeout zu laufen, baut der Browser mehrere Verbindungen parallel auf und nimmt die, die zuerst antwortet — wie sich an der Supermarktkasse gleichzeitig in zwei Schlangen zu stellen. Version 3 verteilt das über mehrere Adressen und Protokollvarianten.</div>
+        <p><strong>Stille Ecken</strong>: Bei <strong>Spring</strong>/<strong>Spring Boot</strong>, <strong>Angular</strong> und <strong>PostgreSQL</strong> steht in diesem Fenster kein Release an — geprüft, nicht übersehen. <strong>Brasilien</strong>: kein datierter BR-Tech-Fund im 24-Stunden-Fenster; die Suche brachte nur undatierte Trend-Stücke, und ein solches erfinde ich mir nicht zum Tagesthema.</p>
+        <div class="callout info"><span class="callout-label">Quellenlage</span> <code>golem.de</code> liefert Crawlern derzeit nur eine Cookie-Wand ohne Artikeltext — die deutschsprachige Abdeckung stützt sich heute allein auf heise. <code>cisa.gov</code> war dagegen erreichbar; der KEV-Stand oben stammt aus der Primärquelle, nicht aus einem Spiegel wie gestern.</div>
+        <div class="footnotes">
+          <ol>
+            <li><a href="https://socket.dev/blog/pnpm-12">socket.dev</a> (Messwerte, 26.08.) · <a href="https://www.heise.de/en/news/Package-manager-pnpm-12-speeds-itself-up-with-Rust-11436496.html">heise.de</a> (Gegenprobe)</li>
+            <li><a href="https://www.firefox.com/en-US/firefox/155.0/releasenotes/">firefox.com</a> (Release-Notes 155.0, 01.09.)</li>
+          </ol>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Donnerstag, der dritte September. Der Tag hat zwei Geschichten, und beide handeln davon, dass etwas Vertrautes plötzlich eine Angriffsfläche ist.</p>
+  <p>Die erste kommt von der Sicherheitsfirma Manifold. Sie hat acht Schwachstellen in sieben Kommandozeilen-Werkzeugen für KI-gestütztes Programmieren gemeldet, darunter Claude Code, Codex, Cursor und goose. Der Angriff steckt nicht im Quelltext eines Repositorys, sondern in der Konfigurationsdatei daneben. Git erlaubt es, dort ein Hilfsprogramm zu hinterlegen, das dem Werkzeug meldet, welche Dateien sich geändert haben — das spart bei großen Projekten viel Zeit. Trägt jemand dort einen beliebigen Befehl ein, führt git ihn aus, sobald es seinen Index aktualisiert.</p>
+  <p>Und genau das tut ein Coding-Agent von sich aus. Er ruft im Hintergrund den Status und die Unterschiede ab, sobald er ein Verzeichnis kennenlernt. Der fremde Befehl läuft dann mit den vollen Rechten des angemeldeten Benutzers, ohne Rückfrage, bei einem Teil der Werkzeuge sogar vor der Anmeldung.</p>
+  <p>Eine Einschränkung ist wichtig, und sie ging in den ersten Meldungen unter: Über normales git verbreitet sich das nicht. Ein Klon, ein Fetch oder ein Pull übertragen niemals eine fremde Konfigurationsdatei. Der Angreifer muss den versteckten git-Ordner im Ganzen zustellen — als Archiv im Mail-Anhang, über ein geteiltes Netzlaufwerk, einen Sync-Ordner oder einen Stick. Das ist kein Wurm, sondern eine Falle, in die man hineinlaufen muss.</p>
+  <p>Der Patch-Stand ist gemischt. Anthropic hat den Weg über den Dateiwächter geschlossen, einen ähnlichen aber noch nicht. Bei goose ist es in Version eins Punkt vierundvierzig Null behoben. Qwen Code und Grok Build waren gestern noch offen. Meine Sicht dazu: Das als KI-Lücke abzulegen führt in die Irre. Der Fehler liegt in einer Annahme aus der Zeit vor den Agenten — dass ein Projektordner Daten sind. Ist er nicht. Neu ist nur die Häufigkeit: Ein Mensch tippt den Status-Befehl bewusst, ein Agent reflexhaft, dutzendfach. Kommt ein Projekt als Archiv statt als Klon, gehört der versteckte git-Ordner vor dem ersten Öffnen gelöscht.</p>
+  <p>Die zweite Geschichte ist ein Katalogeintrag. An dieser Stelle stand gestern noch, die amerikanische Cyberbehörde habe seit Montag nichts Neues in ihr Verzeichnis der aktiv ausgenutzten Lücken aufgenommen. Gestern Nachmittag kamen sieben auf einmal. Die schwerste betrifft JFrog Artifactory, das Lager, aus dem ein Build seine Bausteine holt: eine fehlerhafte Authentifizierung mit einer Bewertung von neun Komma acht. JFrog hat sie am achtundzwanzigsten August in sechs Versionslinien geschlossen. Vier Tage später wurde aktive Ausnutzung beobachtet. Angreifer stellten sich Admin-Token aus, lasen Benutzer, Gruppen, hinterlegte Zugangsdaten und föderierte Zugänge aus und legten sich in einzelnen Fällen Administratorkonten als Hintertür an.</p>
+  <p>Meine Sicht dazu: Dass nur selbst betriebene Instanzen betroffen sind, klingt nach Entwarnung und ist im Mittelstand das Gegenteil — selbst betrieben läuft genau dort, wo Compliance-Gründe gegen die Cloud sprachen. Und ein Patch wirft niemanden hinaus, der vorher schon ein Token geprägt hat. Der Versionsabgleich ist deshalb nur der erste Schritt. Der zweite ist, alles zu rotieren, was diese Maschine im Zugriff hatte: Registry-Zugänge, Signaturschlüssel, föderierte Verbindungen. Der dritte ist der Blick in die Protokolle auf neue Administratorkonten.</p>
+  <p>Zwei der übrigen Einträge treffen den Python-Unterbau. Starlette, die Schicht, auf der FastAPI läuft, baute die Adresse einer Anfrage aus dem ungeprüften Host-Feld des Clients zusammen. Wer dort ein Schrägstrich-Zeichen einschmuggelt, verschiebt die Grenze zwischen Host und Pfad — und jede Zwischenschicht, die anhand des Pfads über Zugriff entscheidet, entscheidet über den falschen. Behoben ab Version eins Punkt null Punkt eins. Bei LiteLLM wiederum ersetzte ein Rückfallpfad die fehlgeschlagene Schlüsselprüfung durch ein leeres Berechtigungsobjekt, sodass ein frei erfundener Autorisierungs-Header genügte. Behoben in Version eins Punkt vierundachtzig Null. Der schwerste Fall steht aber beim Workflow-Werkzeug Kestra: Bewertung glatte zehn Punkt null, das theoretische Maximum. Der Anmelde-Filter prüft nur, ob ein Pfad auf Schrägstrich configs endet, und lässt ihn dann durch — wer diese Endung an eine beliebige Adresse hängt, steht ohne Anmeldung in der vollen Schnittstelle und über die mitgelieferten Skript-Bausteine in einer Kommandoausführung mit Root-Rechten. Behoben in den Versionen eins Punkt null Punkt fünfundvierzig und eins Punkt drei Punkt einundzwanzig; verwundbar ist alles bis einschließlich eins Punkt drei Punkt zwanzig.</p>
+  <p>Zum Schluss der Blick nach vorn. In acht Tagen, am elften September, greift der erste harte Teil des europäischen Cyber Resilience Act: die Meldepflicht. Vierundzwanzig Stunden für die Frühwarnung und zweiundsiebzig Stunden für den Zwischenbericht gelten für beide Spuren. Danach trennen sie sich: Bei einer aktiv ausgenutzten Schwachstelle folgt der Abschlussbericht spätestens vierzehn Tage, nachdem eine Behebung verfügbar ist; bei einem schweren Sicherheitsvorfall dagegen innerhalb eines Monats nach dem Zweiundsiebzig-Stunden-Bericht. Alles über die Meldeplattform der ENISA. Das ist kein technisches, sondern ein organisatorisches Problem: Wer entscheidet, dass eine Lücke aktiv ausgenutzt wird, wer hat einen Zugang zur Plattform, und wer schreibt den Text, wenn die Meldung am Samstag fällig wird. Drei Antworten, die vor dem elften auf einer halben Seite stehen sollten. Der Brief von morgen wird vermutlich damit anfangen, ob Qwen Code und Grok Build ihren Patch nachgeliefert haben.</p>
+</div>
+
+</body>
+</html>
