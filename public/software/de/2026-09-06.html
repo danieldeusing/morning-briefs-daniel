@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-09-06</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Sonntag, 06.09.2026</span>
+    <span class="dot">·</span>
+    <span>Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">Ein Kommentar veröffentlichte zehn vergiftete Versionen</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Der Sonntag ist ruhig — im Katalog der aktiv ausgenutzten Lücken ist seit Freitag nichts dazugekommen. Umso mehr Platz für die zwei Fälle, die diese Woche untergegangen sind, weil auf ihnen kein „Zero-Day"-Etikett klebt. Der erste: Bei einem npm-Paket mit rund <strong>150.000 Downloads pro Woche</strong> reichte ein <em>Kommentar unter einem fremden Pull Request</em>, um zehn verseuchte Versionen zu veröffentlichen — mit gültigem Herkunftsnachweis aus GitHub Actions. Der zweite: PostgreSQL hat einen <strong>zwölf Jahre alten</strong> Fehler geschlossen, bei dem ein Replikations-Konto den Server eine beliebige Bibliothek laden lässt. Beide Male stimmte die Berechtigung und nicht die Absicht. Ab Freitag ist genau das in der EU eine Meldefrage.</p>
+    <ul>
+      <li><span class="chip hot">OSS</span> <strong>@7nohe/openapi-react-query-codegen</strong>: <strong>zehn</strong> bösartige Versionen am <strong>28.08.</strong> zwischen <strong>20:00</strong> und <strong>20:21 UTC</strong>, in zwei Wellen. Reichweite: rund <strong>150.000</strong> Downloads/Woche. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Der Auslöser war ein Kommentar</strong>: Der Release-Workflow hing an <code>issue_comment</code> ohne Prüfung, <em>wer</em> kommentiert. PR aus einem Fork aufmachen, „npm publish" darunter schreiben — fertig. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Die Signatur war korrekt</strong>: Veröffentlicht wurde über npm Trusted Publishing, die Pakete tragen gültige Provenance auf das echte Repo und den echten Workflow. Der Nachweis belegt das <em>Wo</em>, nicht das <em>Was</em>. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Der Payload</strong> durchsucht Projektdateien, Prozessspeicher, Cloud-Metadaten und CI-Variablen nach Tokens, prüft sie auf Gültigkeit und legt sie verschlüsselt in eigens angelegten <strong>öffentlichen</strong> GitHub-Repos ab. <span class="chip">Global</span></li>
+      <li><span class="chip hot">OSS</span> <strong>Und er schreibt Hintergrundbefehle in die Einstellungen von KI-Coding-Assistenten</strong> — Persistenz an einer Stelle, die niemand im Code-Review anschaut. <span class="chip">Global</span></li>
+      <li><span class="chip good">Sec</span> <strong>Saubere Stände</strong>: <strong>0.5.3 · 1.6.2 · 2.2.0 · 3.0.2</strong>. Pinnen, Lockfile neu bauen, Tokens rotieren — in dieser Reihenfolge erst nach dem Isolieren. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>PostgreSQL „PostGREShell"</strong>: <strong>CVE-2026-6471</strong>, <strong>CVSS 7,2</strong>. Ein Konto mit <code>REPLICATION</code> lässt den Server eine beliebige Bibliothek als Output-Plugin laden — Code läuft als Postgres-Systemnutzer. Behoben seit <strong>13.08.</strong> <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Der Fix ist ein neuer Schalter</strong>: <code>output_plugin_libraries</code>, Default <code>pgoutput, test_decoding</code>. Wer <code>wal2json</code> oder <code>decoderbufs</code> fährt, muss ihn nach dem Upgrade setzen — sonst steht die CDC-Strecke. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>KEV-Stand heute</strong>: Die Fristen für JFrog, Kestra, SonicWall und Sangoma sind <strong>gestern</strong> abgelaufen; Starlette und LiteLLM laufen bis <strong>16.09.</strong>, der Chrome-V8-Fall bis <strong>18.09.</strong> Am Wochenende kam nichts dazu. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>Defender „ShieldBreak"</strong>: seit <strong>11.08.</strong> öffentlicher PoC für einen Bypass des Juli-Patches (<strong>CVE-2026-50656</strong>, <strong>7,8</strong>) — laut Fachpresse bis heute kein separater Fix. Lokale Rechteausweitung, kein Fernzugriff. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Regulierung</span> <strong>Ab Freitag, 11.09.</strong>, läuft die CRA-Uhr: <strong>24 h</strong> Frühwarnung, <strong>72 h</strong> Meldung, <strong>14 Tage</strong> Abschluss. Ab dann ist eine verseuchte Abhängigkeit im ausgelieferten Produkt eine Frist, keine Geschmacksfrage. <span class="chip">EU</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Ein leeres Wochenende, dann zwei harte Termine: Chrome 153 am Dienstag, die CRA-Meldepflicht am Freitag. Die nächsten KEV-Fristen (16.09. und 18.09.) und der JDK-27-Termin (15.09.) liegen hinter diesem Fenster und stehen deshalb im Text, nicht in dieser Spur.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">So 06.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heute</span>
+          <span>Kein neuer KEV-Eintrag seit dem 04.09. — Katalog heute Morgen direkt geprüft</span>
+          <span>Guter Sonntag für einen Lockfile-Durchlauf auf die zehn vergifteten codegen-Versionen</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mo 07.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Eigene Release-Workflows durchsehen: Trigger, Autoren-Prüfung, welche Ref ausgecheckt wird</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Di 08.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Chrome 153 stabil — ab hier alle zwei Wochen ein Milestone statt alle vier</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 09.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Nichts terminiert</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Do 10.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Letzter Werktag vor der CRA-Meldepflicht — Meldeweg und Bereitschaft sollten stehen</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Fr 11.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CRA Artikel 14: Meldepflicht beginnt</span>
+          <span>Die erste 24-Stunden-Uhr läuft direkt ins Wochenende</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sa 12.09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Nichts terminiert — die nächsten KEV-Fristen sind der 16.09. und der 18.09.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Ein Kommentar unter einem fremden Pull Request war das Release</h2>
+        <p>Das betroffene Paket ist <code>@7nohe/openapi-react-query-codegen</code> — der Generator, der aus einer OpenAPI-Spezifikation fertige TanStack-Query-Hooks für React baut. Also genau die Art Werkzeug, das man einmal einrichtet und dann nie wieder anschaut. Am <strong>28. August</strong> erschienen dort zwischen <strong>20:00:43</strong> und <strong>20:20:53 UTC</strong> zehn Versionen mit Schadcode, in zwei Wellen rund zwanzig Minuten auseinander. Das Paket zieht etwa <strong>150.000 Downloads pro Woche</strong>.</p>
+        <p>Der Weg hinein ist die eigentliche Nachricht, und er ist unangenehm banal. Der Release-Workflow im Repository reagierte auf <code>issue_comment</code> — er ließ sich also durch einen Kommentar auslösen. Was fehlte, war die Prüfung, <em>wer</em> da kommentiert. Damit genügte: einen Pull Request aus einem eigenen Fork aufmachen, darunter „npm publish" schreiben. Der Workflow checkte daraufhin den Code <em>aus diesem fremden Pull Request</em> aus, führte <code>pnpm install</code> aus und veröffentlichte das Ergebnis. Kein gestohlenes Maintainer-Passwort, kein abgegriffenes langlebiges npm-Token — die Pipeline hat einfach getan, was sie sollte.</p>
+        <div class="eli5"><strong class="eli5-term"><code>issue_comment</code>-Trigger:</strong> GitHub Actions kann einen Ablauf starten, wenn jemand einen Kommentar schreibt — praktisch, weil das Team dann per „/deploy" oder „npm publish" aus der Diskussion heraus veröffentlichen kann. Ohne Autoren-Prüfung ist das eine Türklingel, die auf der Straße hängt und an der jeder einen Zettel hinterlassen darf, den das Haus danach wörtlich ausführt.</div>
+        <p>Betroffen sind <strong>0.5.4, 0.5.5, 1.6.3, 1.6.4, 2.2.1, 2.2.2, 3.0.3, 3.0.4</strong> plus zwei <code>0.0.0-*</code>-Vorabversionen. Saubere Stände darunter: <strong>0.5.3, 1.6.2, 2.2.0, 3.0.2</strong>.</p>
+        <div class="callout warn"><span class="callout-label">Reihenfolge zählt</span> Wer eine der Versionen installiert hatte, behandelt den Rechner oder den Runner als kompromittiert — und zwar in dieser Reihenfolge: erst isolieren und Spuren sichern, dann Persistenz entfernen, <em>danach</em> Tokens prüfen und rotieren. Wer zuerst rotiert, verrät dem Angreifer, dass er entdeckt wurde, und verliert die Beweise gleich mit.</div>
+        <span class="src"><a href="https://www.stepsecurity.io/blog/7nohe-openapi-react-query-codegen-compromised-npm-publishing-workflow">stepsecurity.io</a> (Workflow-Analyse, Versionsliste, Zeitstempel) · <a href="https://cybersecuritynews.com/popular-npm-package-2/">cybersecuritynews.com</a> (Reichweite, Payload, Vorgehen) · Erstanalyse: <a href="https://socket.dev/blog/openapi-react-query-codegen-npm-compromise">socket.dev</a> — Stand 06.09.</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Provenance beweist das Wo, nicht das Was</h2>
+        <p>Der Teil, an dem sich die eigene Praxis messen lassen muss: Diese zehn Versionen wurden über <strong>npm Trusted Publishing</strong> veröffentlicht. Sie tragen also einen gültigen Herkunftsnachweis, der sie an das echte Repository und die echte <code>release.yml</code> bindet. Wer die Provenance geprüft hätte, hätte ein grünes Häkchen gesehen. Der Build lief am richtigen Ort, mit dem richtigen Workflow — und mit dem Code eines Fremden.</p>
+        <div class="eli5"><strong class="eli5-term">Provenance / Trusted Publishing:</strong> Statt ein langlebiges Veröffentlichungs-Token im Repo zu hinterlegen, lässt sich der Build-Dienst von der Registry direkt ausweisen; das Paket bekommt einen Nachweis, aus welchem Repo und welchem Workflow es gebaut wurde. Das ist das Siegel auf dem Paket: Es beweist, dass die Sendung aus der richtigen Fabrik kommt. Was in der Kiste liegt, sagt es nicht.</div>
+        <p>Die Lehre ist nicht „Trusted Publishing ist schlecht" — es bleibt der bessere Weg als ein ewiges Token in den Repository-Secrets. Die Lehre ist, dass die Sicherheitsfrage umgezogen ist: nicht mehr „wer hat das Token?", sondern <strong>„was kann den Workflow auslösen, und welchen Code checkt er dabei aus?"</strong>. Provenance ist Authentifizierung, nicht Autorisierung.</p>
+        <div class="mechanism"><span class="step">Kommentar von außen</span><span class="arrow">→</span><span class="step">Fork-Code ausgecheckt</span><span class="arrow">→</span><span class="step">OIDC-Token im Job</span><span class="arrow">→</span><span class="step">gültig signiertes Paket</span></div>
+        <p>Vier Punkte, die man am eigenen Repo in einer halben Stunde abhaken kann: Kommentar-Trigger auf Maintainer einschränken (Autoren-Zuordnung explizit prüfen); niemals fremden Pull-Request-Code in einem Job auschecken, der Veröffentlichungsrechte hält; nur aus einem geschützten Branch mit Review veröffentlichen; und den ausgehenden Netzwerkverkehr während <code>install</code> begrenzen, damit ein <code>preinstall</code>-Hook nirgendwohin telefonieren kann.</p>
+        <span class="src"><a href="https://www.stepsecurity.io/blog/7nohe-openapi-react-query-codegen-compromised-npm-publishing-workflow">stepsecurity.io</a> — Härtungs-Empfehlungen und Provenance-Einordnung, Stand 06.09.</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Der Payload schreibt in die Konfiguration der KI-Assistenten</h2>
+        <p>Was die zehn Versionen beim Installieren taten, ist Standard-Handwerk mit einem neuen Detail. Standard: ein verschleierter Lader entpackt eine zweite Stufe, die Projektdateien, Prozessspeicher, Cloud-Metadaten-Dienste und CI-Variablen nach Tokens durchsucht, deren Gültigkeit gleich testet und die Beute verschlüsselt in <strong>eigens angelegten öffentlichen GitHub-Repositories</strong> ablegt. Öffentlich, weil das keine Firewall-Regel bricht: Nach außen sieht das aus wie ein Push zu GitHub.</p>
+        <p>Neu ist der letzte Schritt. Die Schadsoftware verändert GitHub-Actions-Workflows, beobachtet Tokens auf macOS und Linux — und hängt Hintergrundbefehle in die <strong>Einstellungen von KI-Coding-Assistenten</strong>. Das ist der Punkt, an dem das hier ein Software-Thema ist und kein KI-Thema: Die Assistenz-Schicht ist zu einem Ort geworden, an dem ein Befehl jeden Neustart überlebt. Eine geänderte <code>.bashrc</code> fällt im Zweifel auf. Eine Zeile mehr in einer Werkzeug-Konfiguration, die ohnehin ständig automatisch umgeschrieben wird und die kaum jemand versioniert, fällt nicht auf.</p>
+        <p>Praktische Konsequenz: Die Einstellungsdateien der lokalen Agenten- und Assistenz-Werkzeuge gehören in dieselbe Prüfliste wie Shell-Profile, Cron und die Workflows im Repo. Wenn das lokal nicht versioniert ist, ist heute ein guter Tag dafür — man kann nur diffen, was eine Vorgeschichte hat.</p>
+        <span class="src"><a href="https://cybersecuritynews.com/popular-npm-package-2/">cybersecuritynews.com</a> — Payload-Verhalten und Exfiltrationsweg, Stand 06.09.</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PostGREShell: zwölf Jahre alt, und der Fix ist ein neuer Schalter</h2>
+        <p><strong>CVE-2026-6471</strong>, in der Fachpresse „PostGREShell" getauft, sitzt im Kern-Server und trägt <strong>CVSS 7,2</strong> (<code>AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H</code>). Die offizielle Beschreibung ist knapp: Eine fehlende Autorisierungsprüfung im Logical Decoding erlaubt es einem <em>Nicht</em>-Superuser mit <code>REPLICATION</code>-Recht, jede für das Betriebssystem-Konto des Servers sichtbare Datei per <code>dlopen</code> zu laden — über die Wahl des Decoding-Plugins. Damit läuft beliebiger Code unter dem Postgres-Systemnutzer. Behoben ist das seit dem <strong>13.08.</strong> in <strong>18.6, 17.11, 16.15, 15.19 und 14.24</strong>.</p>
+        <div class="eli5"><strong class="eli5-term">Logical Decoding &amp; <code>dlopen</code>:</strong> Postgres schreibt jede Änderung zuerst in ein Journal. „Logical Decoding" übersetzt dieses Journal in lesbare Änderungssätze, damit andere Systeme mitlesen können — das ist die Technik hinter Change-Data-Capture. Welcher Übersetzer benutzt wird, sagt der Client an; <code>dlopen</code> ist der Systembefehl „lade diese Bibliothek und führe sie aus". Zusammen also: Man bittet den Bibliothekar um einen Dolmetscher und darf ihm dafür die Adresse eines beliebigen Buchs im Haus nennen — er holt es und liest vor, was drinsteht, mit seiner Stimme.</div>
+        <p>Der Fehler ist alt: Logical Decoding kam mit <strong>9.4 im Jahr 2014</strong>, die fehlende Prüfung war von Anfang an dabei. Ausnutzbar ist er nur mit einem Konto, das das <code>REPLICATION</code>-Attribut trägt, auf einem Server mit <code>wal_level = logical</code>. Das klingt nach einer hohen Hürde und ist in der Praxis oft keine: Genau dieses Konto legt man an, wenn Debezium, Airbyte oder ein eigener CDC-Verbraucher mitlesen sollen — und genau dessen Passwort liegt dann als Zeichenkette in einer Konfiguration oder in einem CI-Secret. Kurz: Es ist der Kontotyp, den der Payload von nebenan sammelt.</p>
+        <p>Bemerkenswert ist die Form des Fixes. Statt nur den Pfad zu filtern, führt Postgres einen neuen Server-Parameter ein: <code>output_plugin_libraries</code> „lists the libraries installed in <code>dynamic_library_path</code> that are also trusted for use as logical output plugins by replication clients. Any logical decoding or replication requests for other libraries will be refused." Voreinstellung: <code>pgoutput, test_decoding</code>. Das heißt im Klartext — wer ein eigenes Output-Plugin fährt, etwa <code>wal2json</code> oder <code>decoderbufs</code>, dessen Replikationsstrecke bricht nach dem Upgrade, bis der Parameter gesetzt ist. Ein Sicherheitspatch, der eine funktionierende Pipeline anhalten kann, ist genau der, den man nicht am Freitagabend einspielt.</p>
+        <p>Nicht verwechseln mit dem <code>pg_dump</code>-Fund aus demselben Release vom 13.08., der hier am Samstag stand: gleicher Zug, anderer Waggon — der eine sitzt im Client, dieser im Server.</p>
+        <span class="src"><a href="https://www.postgresql.org/support/security/CVE-2026-6471/">postgresql.org</a> (Beschreibung, CVSS, Versionsstände) · <a href="https://www.postgresql.org/docs/18/runtime-config-replication.html">postgresql.org/docs</a> (<code>output_plugin_libraries</code>) · <a href="https://thehackernews.com/2026/09/postgresql-fixes-12-year-old-logical.html">thehackernews.com</a> (Einordnung, Alter des Fehlers)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Stand der offenen KEV-Fälle: vier Fristen sind gestern verfallen</h2>
+        <p>Direkt im Katalog nachgesehen, Stand heute Morgen: Seit dem <strong>04.09.</strong> ist kein Eintrag dazugekommen — das Wochenende war auch bei der US-Behörde leer. Von den acht Einträgen der laufenden Woche sind fünf durch: <strong>CVE-2026-82329</strong> (JFrog Artifactory), <strong>CVE-2026-49869</strong> (Kestra), <strong>CVE-2026-83548</strong> und <strong>CVE-2026-83549</strong> (SonicWall SMA1000) sowie <strong>CVE-2026-9586</strong> (Sangoma Switchvox) hatten alle den <strong>05.09.</strong> als Frist. Offen bleiben <strong>CVE-2026-48710</strong> (Starlette) und <strong>CVE-2026-59822</strong> (LiteLLM) bis zum <strong>16.09.</strong> sowie der Chrome-V8-Fall <strong>CVE-2026-85046</strong> bis zum <strong>18.09.</strong></p>
+        <p>Die Fristen gelten formal nur für US-Bundesbehörden, sind aber die brauchbarste öffentliche Uhr, die es gibt — und eine abgelaufene Frist ist keine Entwarnung, sondern eine Verschiebung des Zielprofils. Ab dem Punkt, an dem die gut geführte Hälfte gepatcht hat, lohnt sich Massen-Scannen <em>mehr</em>, nicht weniger: Wer jetzt noch antwortet, hat vermutlich auch sonst niemanden, der hinschaut. Den längsten Hebel hat dabei die Artifactory-Nummer — wer sich dort Admin-Token ausstellt, sitzt an der Stelle, durch die alle Artefakte laufen.</p>
+        <span class="src"><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov</a> — KEV-Katalog, direkt abgerufen am 06.09.2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Defender: ein PoC seit vier Wochen, kein eigener Patch</h2>
+        <p>Ein Fall, der als offene Frage im Brief steht statt als Meldung. Am <strong>11./12. August</strong> hat ein Forscher öffentlich einen Proof-of-Concept veröffentlicht, der den Juli-Patch für <strong>CVE-2026-50656</strong> („RoguePlanet") in der Defender-Engine vollständig umgehen soll; das Ganze läuft in der Fachpresse als „ShieldBreak". Die Grundlücke trägt <strong>CVSS 7,8</strong> und ist eine <em>lokale</em> Rechteausweitung — man braucht also bereits einen Fuß auf der Maschine. Nach dem, was die Sicherheitspresse berichtet, listet der Security Update Guide für die CVE weiterhin das Juli-Engine-Update als Abhilfe; einen separaten Fix für den Bypass gibt es bislang nicht.</p>
+        <div class="callout info"><span class="callout-label">Belegstand</span> Diese Meldung steht auf Sekundärquellen — eine eigene Microsoft-Bestätigung für den Bypass ließ sich nicht finden, und eine neue CVE-Nummer dafür existiert nicht. Sie steht hier deshalb mit Datum und Herkunft und nicht als bestätigter Versionsstand.</div>
+        <p>Warum es trotzdem hierhin gehört: Der Payload aus der linken Spalte landet als normaler Benutzer auf einem Entwickler-Notebook. Was ihm fehlt, ist der Schritt nach oben — und ein öffentlich verfügbarer Bypass des Endpunktschutzes ist die bequemste Variante davon.</p>
+        <span class="src">Sekundärquellen (thehackernews.com, bleepingcomputer.com, malwarebytes.com), PoC-Veröffentlichung 11.08.2026 — Stand der Recherche 06.09.</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Ab Freitag ist die verseuchte Abhängigkeit eine Frist</h2>
+        <p>Am <strong>11.09.</strong> beginnt in der EU die Meldepflicht aus <strong>Artikel 14</strong> des Cyber Resilience Act. Die Kaskade steht seit Monaten fest: bei einer <em>aktiv ausgenutzten Schwachstelle</em> eine Frühwarnung an ENISA und das zuständige nationale CSIRT binnen <strong>24 Stunden</strong>, ein ausführlicher Bericht binnen <strong>72 Stunden</strong>, ein Abschlussbericht <strong>14 Tage</strong> nachdem eine Korrektur verfügbar ist; bei einem <em>schweren Vorfall</em> ebenfalls 24 h und 72 h, der Abschluss dann nach <strong>einem Monat</strong>.</p>
+        <p>Neu ist heute nicht die Regel, sondern wie gut sie zum Rest dieser Ausgabe passt. Nimm den npm-Fall und verschiebe ihn um zwei Wochen: Ein Hersteller liefert ein Produkt aus, in dem eine der zehn vergifteten Versionen steckt, und der Code wird nachweislich ausgenutzt. Bis Donnerstag ist das eine Frage von Anstand. Ab Freitag ist es eine Uhr. Die praktisch schwierigste Zahl steht dabei in keinem Rechtstext: Der 11. ist ein Freitag, die erste 24-Stunden-Frist endet also am Samstag. Zu klären ist diese Woche deshalb nicht „sind wir betroffen?", sondern „wer darf am Wochenende eine Meldung absetzen, ohne vorher drei Leute zu suchen?".</p>
+        <span class="src"><a href="https://www.crowell.com/en/insights/client-alerts/eu-cyber-resilience-act-countdown-11-september-2026-incidentvulnerability-reporting-deadline-is-less-than-100-days-away">crowell.com</a> — Fristen-Kaskade und Stichtag</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert</h2>
+        <p><strong>Chrome 153 am Dienstag:</strong> Ab dem <strong>08.09.</strong> erscheint Stable alle zwei statt alle vier Wochen; Dev und Canary bleiben unverändert, Extended Stable bleibt bei acht Wochen. Für diese Woche heißt das vor allem: gepinnte Browser-Versionen in der Testautomatisierung veralten ab Dienstag doppelt so schnell.<sup><a href="https://developer.chrome.com/blog/chrome-two-week-release">[Chrome]</a></sup></p>
+        <p><strong>JDK 27 in neun Tagen:</strong> Der GA-Termin ist der <strong>15.09.</strong> Im Gepäck: G1 als Standard-Garbage-Collector in allen Umgebungen, ein hybrider post-quanten Schlüsseltausch für TLS 1.3, Structured Concurrency in der siebten Vorschau und Compact Object Headers als Voreinstellung. Für einen Spring-Stack ist der letzte Punkt der interessanteste, weil er ohne Code-Änderung Heap spart.<sup><a href="https://www.infoq.com/news/2026/08/java-27-so-far/">[InfoQ]</a></sup></p>
+        <p><strong>Next.js, weiterhin offen bei Selbst-Hostern:</strong> Die beiden kritischen RCE-Lücken vom <strong>25.08.</strong> — darunter <strong>CVE-2026-75604</strong> (<strong>CVSS 9,0</strong>, Pfad-Traversal auf Windows-Hosts) — sind in <strong>16.3.3</strong> und <strong>15.5.24</strong> behoben. Kein neuer Stand, aber der Fall, bei dem eine verwaltete Plattform automatisch nachzieht und ein eigener Container eben nicht.<sup><a href="https://nextjs.org/blog/august-2026-security-release">[Next.js]</a></sup></p>
+        <p><strong>Was diese Woche nicht passiert ist:</strong> Bei Caddy und Tailscale gab es keine neuen Veröffentlichungen, und weder aus der deutschen OSS-Ecke noch aus der brasilianischen Entwicklerszene kam etwas, das hier hingehört — die Recherche über heise, golem, tecnoblog und Convergência Digital fand nur Unternehmens- und Finanzmeldungen. Lieber eine ehrliche Lücke als eine aufgeblasene Zeile.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Sonntag, der sechste September. Der Nachrichtentag selbst ist leer — im amerikanischen Katalog der aktiv ausgenutzten Schwachstellen ist seit Freitag kein Eintrag dazugekommen. Genau deshalb gehören heute die zwei Fälle nach vorne, die unter der Woche durchgerutscht sind, weil auf ihnen kein Zero-Day-Etikett klebt.</p>
+  <p>Der erste betrifft ein Werkzeug aus dem React-Alltag: den Generator, der aus einer OpenAPI-Beschreibung fertige Abfrage-Hooks baut. Er zieht rund einhundertfünfzigtausend Downloads pro Woche. Am achtundzwanzigsten August erschienen dort innerhalb von einundzwanzig Minuten zehn Versionen mit Schadcode, in zwei Wellen.</p>
+  <p>Der Weg hinein ist die eigentliche Geschichte. Der Veröffentlichungs-Ablauf im Repository ließ sich durch einen Kommentar starten, und niemand prüfte, wer da kommentiert. Es genügte also, einen Pull Request aus einem eigenen Fork aufzumachen und darunter npm publish zu schreiben. Der Ablauf holte sich daraufhin den Code aus genau diesem fremden Pull Request, installierte ihn und veröffentlichte das Ergebnis. Kein gestohlenes Passwort, kein abgegriffenes Token — die Pipeline hat getan, wozu sie gebaut war.</p>
+  <p>Jetzt kommt der Teil, an dem sich die eigene Praxis messen lassen muss. Veröffentlicht wurde über das moderne Verfahren mit Herkunftsnachweis, also ohne dauerhaftes Token im Repository. Die zehn Versionen tragen deshalb einen gültigen Nachweis auf das echte Repository und den echten Ablauf. Wer geprüft hätte, hätte ein grünes Häkchen gesehen. Der Nachweis belegt eben nur, aus welcher Fabrik die Sendung kommt, nicht, was in der Kiste liegt. Er ist Authentifizierung, keine Berechtigung. Die Sicherheitsfrage lautet damit nicht mehr, wer das Token hat, sondern was den Ablauf auslösen kann und welchen Code er dabei ausbaut.</p>
+  <p>Vier Punkte lassen sich am eigenen Repository in einer halben Stunde abhaken. Kommentar-Auslöser nur für Wartende zulassen. Fremden Pull-Request-Code niemals in einem Schritt auschecken, der Veröffentlichungsrechte hält. Nur aus einem geschützten Branch veröffentlichen. Und den ausgehenden Netzwerkverkehr während der Installation begrenzen. Die sauberen Paketstände sind übrigens null Punkt fünf Punkt drei, eins Punkt sechs Punkt zwei, zwei Punkt zwei Punkt null und drei Punkt null Punkt zwei.</p>
+  <p>Was der Schadcode tat, ist zum größten Teil Handwerk von der Stange: Er durchsucht Projektdateien, Prozessspeicher, Cloud-Metadaten und die Variablen der Bauumgebung nach Zugangsdaten, testet sie auf Gültigkeit und legt die Beute verschlüsselt in eigens angelegten öffentlichen Repositories ab. Öffentlich, weil das von außen aussieht wie ein ganz normaler Push. Neu ist der letzte Schritt: Er hängt Hintergrundbefehle in die Einstellungen von KI-Coding-Assistenten. Die Assistenz-Schicht ist damit ein Ort geworden, an dem ein Befehl jeden Neustart überlebt. Eine veränderte Shell-Konfiguration fällt auf. Eine Zeile mehr in einer Werkzeug-Einstellung, die sich ohnehin ständig selbst umschreibt und die kaum jemand versioniert, fällt nicht auf.</p>
+  <p>Der zweite Fall ist zwölf Jahre alt. PostgreSQL hat am dreizehnten August eine fehlende Berechtigungsprüfung im sogenannten Logical Decoding geschlossen, dem Verfahren hinter Change Data Capture. Der Schweregrad liegt bei sieben Komma zwei. Ein Konto mit Replikationsrecht darf sich aussuchen, welche Übersetzer-Bibliothek der Server lädt — und konnte dabei jede Datei angeben, die das Betriebssystem-Konto des Servers sieht. Der Server lädt sie und führt aus, was drinsteht. Das klingt nach hoher Hürde, ist aber genau das Konto, das man für Debezium oder Airbyte anlegt und dessen Passwort dann in einer Konfigurationsdatei steht. Also genau die Art Zugangsdaten, die der Schadcode von eben einsammelt.</p>
+  <p>Interessant ist die Form des Fixes: Postgres führt einen neuen Serverparameter ein, der auflistet, welche Bibliotheken überhaupt als Output-Plugin erlaubt sind. Voreingestellt sind nur zwei. Wer ein eigenes Plugin fährt, etwa wal2json, dessen Replikationsstrecke steht nach dem Upgrade still, bis der Parameter gesetzt ist. Ein Sicherheitspatch, der eine laufende Pipeline anhalten kann, ist genau der, den man nicht am Freitagabend einspielt. Behoben ist das in achtzehn Punkt sechs, siebzehn Punkt elf, sechzehn Punkt fünfzehn, fünfzehn Punkt neunzehn und vierzehn Punkt vierundzwanzig.</p>
+  <p>Zum Sicherheitsstapel noch drei kurze Sachen. Vier Umsetzungsfristen sind gestern verfallen — Artifactory, Kestra, SonicWall und Sangoma; offen bleiben Starlette und LiteLLM bis zum sechzehnten und der Chrome-Fall bis zum achtzehnten September. Eine abgelaufene Frist ist dabei keine Entwarnung: Ab dem Moment, in dem die gut geführte Hälfte gepatcht hat, lohnt sich massenhaftes Scannen für Angreifer eher mehr als weniger. Und beim Windows-Endpunktschutz kursiert seit dem elften August ein öffentlicher Machbarkeitsnachweis, der den Juli-Patch umgehen soll; einen eigenen Fix dafür gibt es nach Stand der Fachpresse bis heute nicht. Das ist eine lokale Rechteausweitung — also genau das Puzzleteil, das nach einem Lieferketten-Treffer auf dem Notebook noch fehlt.</p>
+  <p>Die Woche hat dann zwei feste Termine. Am Dienstag erscheint Chrome hundertdreiundfünfzig und startet den Zwei-Wochen-Takt. Und am Freitag beginnt in der EU die Meldepflicht aus dem Cyber Resilience Act: vierundzwanzig Stunden für die Frühwarnung, zweiundsiebzig für den ausführlichen Bericht, vierzehn Tage für den Abschluss. Ab dann ist eine verseuchte Abhängigkeit im ausgelieferten Produkt keine Geschmacksfrage mehr, sondern eine Uhr — und weil der elfte ein Freitag ist, endet die erste Frist an einem Samstag. Der Brief von morgen dürfte davon leben, ob jemand die Chrome-Umstellung noch verschiebt.</p>
+</div>
+
+</body>
+</html>
