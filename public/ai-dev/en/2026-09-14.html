@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-09-14</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-09-14</span>
+  </div>
+  <h1 class="masthead-title">Your agent's sandbox is a promise, not a wall</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">The week doesn't start with a launch, but with a disclosure. A Tel Aviv startup found the same bug in Claude Code and in Cursor's CLI: a repository you merely open can break out of the tool's sandbox and run commands on your machine as your own user — without anyone asking your permission. Both holes are patched, and the second analysis has been public since Saturday. What's interesting now isn't the hole itself, but what it reveals about how these tools are built: the sandbox contained the command the model invokes — not the commands the tool itself issues on the side. And because the same harness turns up on the attacker's side this week too, this isn't a niche topic for security people, but the question of how much trust an agentic tool actually deserves.</p>
+    <ul>
+      <li><span class="chip hot">Tool</span> <strong>"Beltdown": a foreign repo is enough</strong> to break out of Claude Code's macOS sandbox and run code as your privileged user — with no permission prompt. Fully fixed on Aug 26 in <code>2.1.247</code>; the CLI is at <code>2.1.270</code> today, so anyone not frozen on an old version is covered.</li>
+      <li><span class="chip hot">Tool</span> <strong>"Beltdown2": the same root cause in Cursor CLI</strong> — Cursor does lock down its shell tool, but the harness's own git ran outside the sandbox. Fixed in build <code>2026.08.04-aaa8809</code>; the analysis has been public since Sep 12.</li>
+      <li><span class="chip">Security</span> <strong>The mechanism in one sentence</strong>: a repository is allowed to register, in its own <code>.git/config</code>, a program that git launches on its next call. That exact call came from the tool itself — and therefore from outside the cage.</li>
+      <li><span class="chip">Tool</span> <strong>Response times diverge sharply</strong>: Cursor eight days (Jul 27 → Aug 4), Anthropic from Jul 13 to Aug 26 — with an incomplete interim fix on Aug 6. The gap in between says more than the calendar does.</li>
+      <li><span class="chip">OpenAI</span> <strong>On the Codex question, a contradiction remains</strong>: a secondary source names Codex as a third affected vendor, while Accomplish's own Beltdown2 write-up explicitly praises Codex as already hardened against exactly this attack pattern. Neither finding has a CVE number.</li>
+      <li><span class="chip hot">Security</span> <strong>Same harness, other side</strong>: the PaperCut campaign ran hundreds of agents inside an OpenAI Codex harness, powered by a DeepSeek model. Victim counts and patch status are in today's <em>software</em> brief.</li>
+      <li><span class="chip">Bench</span> <strong>SWE-Bench Verified is maxed out at the top</strong> — two aggregators give the same model 96% and 97%, the official board still returns no rows on a fetch, and Aider's list has been frozen since 2025-11-20. So, again, no bar chart.</li>
+      <li><span class="chip good">Tool</span> <strong>Only move in the toolbox</strong>: Cline Desktop <code>v0.0.27</code> yesterday at 22:28 UTC. Claude Code unchanged at <code>2.1.270</code>, OpenHands <code>v1.18.0</code>, Ollama <code>v0.34.0</code>.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">Two disclosure chains in the rearview mirror — and the one date when model IDs flip</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col hot">
+        <div class="tl-date">Mon Jul 13 – Wed Aug 26</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>The Beltdown chain (Claude Code)</span>
+          <span>Jul 13 reported, triaged same day</span>
+          <span>Aug 6 partial fix in 2.1.223 — incomplete</span>
+          <span>Aug 26 full fix in 2.1.247</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon Jul 27 – Tue Aug 4</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>The Beltdown2 chain (Cursor CLI)</span>
+          <span>Jul 27 PoC reported, Aug 4 fix in build 2026.08.04-aaa8809</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat Sep 12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Accomplish publishes the Beltdown2 analysis</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun Sep 13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cline Desktop v0.0.27, 22:28 UTC</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Mon Sep 14</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Claude Code unchanged at 2.1.270 (pulled Sep 14)</span>
+          <span>No new harness release since last night</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue Sep 15 – Sun Sep 20</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>No confirmed dates</span>
+          <span>Open: whether Accomplish follows up with a third piece on Codex</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Fri Oct 2</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GitHub Copilot: model deprecations take effect</span>
+          <span>Gemini 3.5/3.6 Flash → 3.8 Flash, Opus 4.7 → Opus 5, Kimi K2.7 Code → K3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>A foreign repo, and the sandbox is open <span class="h2-refs">[1]</span></h2>
+        <p>Accomplish, a Tel Aviv startup that has so far operated in stealth mode, reported to Anthropic on Jul 13 what it calls "Beltdown." The line from the analysis that matters: an untrusted repository opened in Claude Code "can escape the macOS sandbox and execute commands on your machine as your privileged user, without a permission prompt."</p>
+        <div class="eli5">
+          <strong class="eli5-term">Sandbox:</strong> a pen you build around a program so it can only reach the files and commands you allow — like a playpen: the kid can touch anything inside it, but not the outlet. For a coding agent, the playpen is the answer to the uncomfortable question of why you let a language model issue shell commands at all. Take it away, and the difference between "the model suggests a command" and "the model runs it as you" disappears.
+        </div>
+        <p>The way out runs through a git quirk older than all this agent business: a repository's <code>.git/config</code> file is allowed to specify which program git should launch as <code>core.fsmonitor</code> — ostensibly a speed-up that reports which files have changed. So whoever supplies a repo also decides which program your git launches. Claude Code, while auto-loading its skills, ran a <code>git ls-files</code> call — and that call didn't run inside the pen, but next to it.</p>
+        <div class="mechanism">
+          <span class="step">foreign repo</span><span class="arrow">→</span><span class="step">.git/config</span><span class="arrow">→</span><span class="step">core.fsmonitor</span><span class="arrow">→</span><span class="step">harness's git call</span><span class="arrow">→</span><span class="step">code outside the sandbox</span>
+        </div>
+        <p>The fix came in two stages: a partial fix on Aug 6 in version <code>2.1.223</code> that didn't close the hole, and the full fix on Aug 26 in <code>2.1.247</code>. In practical terms for Daniel's machine: everything from <code>2.1.247</code> onward is covered, and the CLI is at <code>2.1.270</code> today. It only stays relevant where a version is deliberately pinned — in CI images, in container layers, in an "it works, don't touch it" setup nobody has touched since July.</p>
+        <span class="src">[1] <a href="https://www.accomplish.ai/blog/beltdown-escaping-the-claude-code-sandbox/">accomplish.ai</a> — "Beltdown: Escaping the Claude Code Sandbox," mechanism and dated disclosure table, accessed 2026-09-14</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Beltdown2: the same root cause at Cursor <span class="h2-refs">[2]</span></h2>
+        <p>On Jul 27, two weeks after the first report, the same attack went to Anysphere — the company behind Cursor. The result: the same picture in a differently built tool. Cursor does lock down its shell tool, via a dedicated component called <code>cursorsandbox</code>. Only, according to the analysis, "the harness's own internal git runs outside the sandbox and honors <code>core.fsmonitor</code> hooks supplied by the repository" — and does so "regardless of the permission mode."</p>
+        <p>That clause is the real finding of the day. The permission settings users argue over — auto-approve yes or no, which commands can run without a prompt — don't apply here at all, because the dangerous call doesn't come from the model. It comes from the tool that's supposed to supervise the model.</p>
+        <p>My read: both harnesses locked up the obvious and overlooked the taken-for-granted. What got locked up was what the model does — the unpredictable part. What didn't get locked up was what the harness itself does on the side: reading repos, listing files, gathering context. That counted as the harness's own, trusted code. But it isn't, once that code's input comes from a foreign repository. It's fixed in Cursor CLI <code>2026.08.04-aaa8809</code>.</p>
+        <span class="src">[2] <a href="https://www.accomplish.ai/blog/beltdown2-escaping-the-cursor-cli-sandbox/">accomplish.ai</a> — "Beltdown2: Escaping the Cursor CLI Sandbox," published 2026-09-12, accessed 2026-09-14; source for mechanism, report date Jul 27, and fix build</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Eight days versus forty-four — response time becomes a selection criterion <span class="h2-refs">[3]</span></h2>
+        <p>Side by side: Cursor took eight days from report (Jul 27) to fix (Aug 4). At Anthropic, forty-four days lie between the report (Jul 13, triaged the same day) and the full fix (Aug 26); the trade press citing this speaks of "roughly 50 days and 30 releases," which includes the time up to publication.<sup>[3]</sup></p>
+        <p>The calendar isn't even the sore point here. Six weeks for a sandbox escape is ugly, but closing a hole cleanly can take time. More uncomfortable is that <em>a fix had already shipped on Aug 6 that didn't close the gap</em>. For three weeks, then, there was a state where the vendor could consider the problem handled while the attack kept working. That's the part I'd note when choosing a tool — not the days, but the question of whether a vendor checks its own fixes against the original exploit.</p>
+        <div class="callout warn">
+          <span class="callout-label">Context</span> This comparison comes from the finder itself — a party with an interest in the attention — and covers just two findings. It isn't a security department's track record. What's solid is the dated tables in both original analyses; the "50 days / 30 releases" phrasing comes from secondary coverage.
+        </div>
+        <div class="callout info">
+          <span class="callout-label">Contradiction</span> Whether OpenAI's Codex was also affected can't be cleanly answered today. Upstarts Media's summary names Claude Code, Codex, and Cursor as the three products Accomplish reported to.<sup>[3]</sup> But Accomplish's own Beltdown2 write-up specifically praises "OpenAI Codex, Kilo Code, and now Cursor" for having hardened every git call the harness makes — that is, protection against exactly this attack pattern.<sup>[2]</sup> There's no public Accomplish analysis of Codex specifically. Most likely resolution: two different findings, not this one. What's certain is only that both statements stand as written. And: <strong>neither finding has a CVE number assigned</strong> — anyone looking for one to put in a ticket will look in vain.
+        </div>
+        <span class="src">[3] <a href="https://www.upstartsmedia.com/p/accomplish-claims-leaky-sandboxes-in-claude-codex-cursor">upstartsmedia.com</a> — article from 2026-09-10, accessed 2026-09-14; source for the company, founders, and the response-time comparison (beyond the paywalled summary)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Same architecture, other side: the harness as an attack tool <span class="h2-refs">[4]</span></h2>
+        <p>So the Beltdown story doesn't read as theory, a second event from this week belongs alongside it — though only for its tooling angle; the security side, with victim counts and patch status, is covered today in the <em>software</em> brief.</p>
+        <p>In the campaign against PaperCut print servers, the attacker didn't use some homebuilt scripting rig, but the same toolkit we discuss here every day: a DeepSeek model, running inside an OpenAI Codex harness, plus a memory service called Hindsight and an orchestration interface called AionUi — hundreds of autonomous agents in parallel, with eleven organizations compromised within the first 26 seconds, according to the analyses.<sup>[4]</sup></p>
+        <p>What this means for the tooling debate: the harness is no longer a developer convenience you pick by taste. It's infrastructure, in both directions. Using one means accepting an execution environment on your machine that processes foreign input — and that same environment, on the other side, scales an attack across hundreds of targets. This isn't an argument against agentic tools. It's an argument for reading their sandbox promises for what they are: product features, not security boundaries.</p>
+        <span class="src">[4] <a href="https://www.greynoise.io/blog/ai-orchestrated-campaign-against-papercut-ng-mf">greynoise.io</a> — "Agents Gone Wild: An AI-Orchestrated Global Campaign Against PaperCut NG/MF" · <a href="https://thehackernews.com/2026/09/papercut-attacker-uses-hundreds-of-ai.html">thehackernews.com</a> — 09/2026, cross-check for the harness composition; both via search hits from 2026-09-14, not fetched directly</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Verified is maxed out at the top — and it can't be proven <span class="h2-refs">[5][6][7]</span></h2>
+        <p>The state of SWE-Bench Verified, the test coding models have measured themselves against for years: the top sits around 96 to 97 percent. Today, that's as precise as it gets, and that's the actual point. One dated aggregator (as of Sep 10) lists Claude Opus 5 at 96%, followed by Mythos 5 at 95.5% and Fable 5 at 95%.<sup>[5]</sup> A second aggregator puts the same model at 97.00%.<sup>[6]</sup> A one-point difference on the same exam, and neither list is the official one.</p>
+        <p>Because the official one delivers nothing: fetching <code>swebench.com/verified.html</code> still returns no table rows today, since the page loads its data via JavaScript.<sup>[7]</sup> Aider's leaderboard still carries "Last Updated: November 20, 2025" and knows none of the current models.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Benchmark saturation:</strong> if everyone in a class scores 96 out of 100 on a test, the grade no longer says anything about the students — only about the test. Past that point, you're measuring residual error and chance, not skill. With SWE-Bench Verified, there's the added wrinkle that the tasks come from public GitHub bug reports: the longer a collection has been online, the more likely a model has already seen the solutions during training. A rise from 95 to 96 percent is therefore not a measure of progress, but noise with marketing value.
+        </div>
+        <p>The practical consequence for choosing a tool: picking a coding model by its Verified score today means picking by a metric with no discriminating power anymore. The harder successor benchmarks — and measurements on your own repo — are more informative by now. And once again: no bar chart in this brief, because four numbers from three sources would look like a result and would really just be a claim.</p>
+        <span class="src">[5] <a href="https://benchlm.ai/benchmarks/swe-bench-verified">benchlm.ai</a> — page state 2026-09-10, aggregator, not a primary measurement · [6] Vals.ai at 97.00% for the same model, evidenced only via a search hit from 2026-09-14, not fetched directly · [7] <a href="https://www.swebench.com/verified.html">swebench.com</a> — accessed 2026-09-14, no table rows · <a href="https://aider.chat/docs/leaderboards/">aider.chat</a> — "Last Updated: November 20, 2025"</span>
+      </section>
+
+      <section class="news-item">
+        <h2>A2A at CrewAI: documented, not announced <span class="h2-refs">[8]</span></h2>
+        <p>A note with no news value but real practical value: CrewAI's documentation now treats agent-to-agent delegation as a first-class feature — agents "delegate tasks to remote A2A agents and/or act as A2A-compliant server agents" themselves. The default is protocol version 0.3.0, with JSON-RPC, gRPC, and HTTP+JSON available as transports, and six authentication methods from bearer tokens to HTTP digest.<sup>[8]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">A2A:</strong> a way for agents to talk to each other. So far, an agent talks to tools (reading files, running commands) — A2A instead governs how it hands a task off to a <em>different</em> agent, one running somewhere else and not owned by it. Like handing a case to another department: you send the file over with the request instead of looking it up yourself. The value here is less about the technology than about the boundary — a foreign agent is a service with its own login, not a subroutine in your own process.
+        </div>
+        <p>No dated event, no release post — this is the documentation's current, gradually evolved state, and that's how it's presented here. Still worth mentioning, because it touches the same boundary as the two sandbox findings above: once tasks go to agents outside your own process, authentication stops being optional and becomes mandatory. Six auth methods in the docs are a better signal of maturity than any announcement.</p>
+        <span class="src">[8] <a href="https://docs.crewai.com/en/learn/a2a-agent-delegation">docs.crewai.com</a> — A2A agent delegation, accessed 2026-09-14; source for protocol version, transports, auth methods, and the AMP note</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Roll call: who moved</h2>
+        <p>The round through the tool list, all version states freshly pulled today; anything sourced only from search hits is flagged as such.</p>
+        <ul>
+          <li><strong>Cline</strong> — Desktop <code>v0.0.27</code> from Sep 13, 22:28 UTC. The only move since yesterday; the streak picked back up after two quiet days.</li>
+          <li><strong>Claude Code</strong> — unchanged at <code>2.1.270</code> (pulled Sep 14). The changelog carries no per-version dates, so the release date itself can't be verified.</li>
+          <li><strong>OpenHands</strong> — <code>v1.18.0</code> from Sep 11, 18:27 UTC. No movement.</li>
+          <li><strong>Ollama</strong> — <code>v0.34.0</code> from Sep 5. No movement.</li>
+          <li><strong>Aider</strong> — <code>v0.86.0</code> from 2025-08-09, thirteen months old. Archive.</li>
+          <li><strong>Plandex</strong> — <code>cli/v2.2.1</code> from 2025-07-16. Archive.</li>
+          <li><strong>Cursor</strong> — no new changelog event; "Projects" (Sep 10) and self-hosted machines (Sep 2) were covered in the Sep 11 and Sep 12 briefs. Today, only the sandbox fix counts.</li>
+          <li><strong>GitHub Copilot</strong> — nothing new; the Oct 2 deprecations remain the hard date.</li>
+          <li><strong>Continue.dev</strong> — discontinued; active development ended with the 2.0 final in June 2026. Only one source, so this is presented as a status, not a news item.</li>
+          <li><strong>JetBrains AI, Devin/Cognition, MCP ecosystem</strong> — nothing dated in this pass. No guessing here.</li>
+        </ul>
+        <p>The picture holds: Cline and OpenHands ship on a steady cadence, Aider and Plandex are archives, and the two vendors that had to ship a sandbox fix this week happen to be the ones with the most users. Release cadence and security maturity are simply two different things.</p>
+        <span class="src"><a href="https://api.github.com/repos/cline/cline/releases">github.com/cline/cline</a> · <a href="https://api.github.com/repos/All-Hands-AI/OpenHands/releases/latest">All-Hands-AI/OpenHands</a> · <a href="https://api.github.com/repos/ollama/ollama/releases/latest">ollama/ollama</a> · <a href="https://api.github.com/repos/Aider-AI/aider/releases/latest">Aider-AI/aider</a> · <a href="https://api.github.com/repos/plandex-ai/plandex/releases/latest">plandex-ai/plandex</a> · <a href="https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md">Claude Code CHANGELOG</a> — all accessed 2026-09-14</span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Monday, September fourteenth. The week doesn't open with a launch — it opens with a disclosure, and of all things, it hits the two tools running on this machine every day.</p>
+  <p>A Tel Aviv startup called Accomplish found a hole in Claude Code it's calling Beltdown. Open an untrusted repository in Claude Code, and you can trigger a sandbox breakout: code then runs on your own machine, under your own account, without anyone asking permission first. The path there runs through an old git quirk. A repository's config file gets to say which program git should launch as its file-watcher. So whoever hands you the repo also gets a say in what your own git executes. And Claude Code, while loading its skills, fired off exactly that kind of git call — outside the cage.</p>
+  <p>It's fixed now, in two stages: a partial fix on August sixth that wasn't enough, and the full fix on August twenty-sixth in version two-one-two-forty-seven. Anyone working today is covered — the command line sits at two-one-two-seventy. It only stays a live issue anywhere a version is deliberately pinned: in container images, in build pipelines, in a setup nobody's touched since July.</p>
+  <p>On Saturday came the second write-up, Beltdown two, describing the same root cause in Cursor's command line. Cursor really does lock down its shell tool. But the tool's own git ran outside that lockdown and accepted whatever configuration the repository shipped — regardless of which permission mode you'd set. That's the finding that reaches beyond both individual cases. In each one, what got locked up was what the model does, the unpredictable part. What didn't get locked up was what the tool itself does on the side: listing files, gathering context, reading repos. That part counted as the tool's own, trusted code — but it isn't, once its input comes from a foreign repository.</p>
+  <p>The response times are wildly different. Cursor took eight days, from the report on July twenty-seventh to the fix on August fourth. At Anthropic, forty-four days sit between the report and the full fix — cited in trade press as roughly fifty days and thirty releases. But what matters more to me than the calendar is this: on August sixth, a fix had already shipped that didn't close the hole. For three weeks, then, the vendor could have believed the problem was handled while the attack kept working. One caveat, though: this comparison comes from the finder itself and covers just two cases — it's not a scorecard.</p>
+  <p>One question stays open today. A summary from Upstarts Media names Claude Code, Codex, and Cursor as the three products Accomplish reported to. But Accomplish's own write-up specifically praises Codex for already hardening every git call the harness makes — protection against exactly this pattern. There's no public Codex analysis from Accomplish. Most likely, these are two separate findings. What's certain is only that both statements are on record as written. And neither finding has a CVE number attached.</p>
+  <p>That the sandbox question isn't just theory shows up in a second event this week. In the attack campaign against PaperCut print servers, the attacker didn't build its own rig — it used the same toolkit we talk about here every day: a DeepSeek model inside an OpenAI Codex harness, plus a memory service and an orchestration interface, running hundreds of autonomous agents in parallel. Today's software brief covers the victim counts and patch status. For us, the takeaway stands: the harness is infrastructure, and it cuts both ways.</p>
+  <p>On the leaderboards, the state worth noting down is short. The top of SWE-Bench Verified sits at roughly ninety-six to ninety-seven percent, and that's as precise as it gets: two aggregators give the same model different numbers, the official board still returns no rows when you fetch it, and Aider's list has been frozen since November twenty twenty-five. When everyone in a class scores ninety-six out of a hundred, you're measuring residual error and chance, not skill anymore. Which is why, again, there's no bar chart in today's brief.</p>
+  <p>In the roll call through the tools, there's exactly one move: Cline Desktop zero-oh-twenty-seven, last night at twenty-two twenty-eight UTC. Claude Code unchanged, OpenHands dated September eleventh, Ollama the fifth. Aider and Plandex stay archives, Continue is discontinued. And one item with no news value but real practical value: CrewAI's documentation now treats delegation to outside agents as a first-class feature, with six authentication methods — which says more about maturity than any announcement would.</p>
+  <p>Still on the calendar: October second, when several models drop out of GitHub Copilot. Tomorrow we'll see whether the new week picks up the pace in the toolbox — and whether Accomplish follows up with a third write-up that finally settles the Codex question.</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-09-14</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-09-14</span>
+  </div>
+  <h1 class="masthead-title">Die Sandbox deines Agenten ist eine Zusage, keine Mauer</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Die Woche beginnt nicht mit einem Start, sondern mit einer Offenlegung. Ein Startup aus Tel Aviv hat in Claude Code und in Cursors CLI denselben Fehler gefunden: Ein Repository, das du nur öffnest, kann aus der Sandbox des Werkzeugs ausbrechen und auf deinem Rechner Befehle unter deinem Benutzer ausführen — ohne dass dich irgendjemand um Erlaubnis fragt. Beide Lücken sind gepatcht, die zweite Analyse ist seit Samstag öffentlich. Interessant ist deshalb nicht mehr das Loch, sondern was es über die Bauweise dieser Werkzeuge verrät: Die Sandbox umschloss den Befehl, den das Modell aufruft — nicht die Befehle, die das Werkzeug selbst nebenbei absetzt. Und weil derselbe Harness diese Woche auch auf der Angreiferseite auftaucht, ist das kein Nischenthema für Sicherheitsleute, sondern die Frage, wie viel Vertrauen ein Agenten-Werkzeug überhaupt verdient.</p>
+    <ul>
+      <li><span class="chip hot">Tool</span> <strong>„Beltdown": ein fremdes Repo reicht</strong>, um aus Claude Codes macOS-Sandbox auszubrechen und Code als dein privilegierter Benutzer laufen zu lassen — ohne Erlaubnis-Abfrage. Vollständig behoben am 26.08. in <code>2.1.247</code>; die CLI steht heute auf <code>2.1.270</code>, wer nicht eingefroren ist, ist also versorgt.</li>
+      <li><span class="chip hot">Tool</span> <strong>„Beltdown2": dieselbe Wurzel bei Cursor CLI</strong> — Cursor sperrt das Shell-Werkzeug ein, aber das <em>eigene</em> <code>git</code> des Harness lief außerhalb der Sandbox. Behoben in Build <code>2026.08.04-aaa8809</code>, die Analyse dazu ist seit dem 12.09. öffentlich.</li>
+      <li><span class="chip">Sicherheit</span> <strong>Der Mechanismus in einem Satz</strong>: Ein Repository darf in seiner eigenen <code>.git/config</code> ein Programm eintragen, das <code>git</code> beim nächsten Aufruf startet. Genau dieser Aufruf kam vom Werkzeug selbst — und damit von außerhalb des Käfigs.</li>
+      <li><span class="chip">Tool</span> <strong>Die Reaktionszeiten gehen weit auseinander</strong>: Cursor acht Tage (27.07. → 04.08.), Anthropic vom 13.07. bis zum 26.08. — mit einem unvollständigen Zwischen-Fix am 06.08. Die Lücke dazwischen ist aussagekräftiger als der Kalender.</li>
+      <li><span class="chip">OpenAI</span> <strong>Zur Codex-Frage bleibt es bei einem Widerspruch</strong>: Eine Sekundärquelle nennt Codex als dritten betroffenen Anbieter, während Accomplishs eigener Beltdown2-Text Codex ausdrücklich als bereits abgehärtet gegen genau diese Bauart lobt. Für keinen der beiden Funde existiert eine CVE-Nummer.</li>
+      <li><span class="chip hot">Sicherheit</span> <strong>Derselbe Harness, andere Seite</strong>: Die PaperCut-Kampagne lief mit Hunderten Agenten in einem OpenAI-Codex-Harness, angetrieben von einem DeepSeek-Modell. Opferzahlen und Patch-Stand stehen im heutigen <em>software</em>-Brief.</li>
+      <li><span class="chip">Bench</span> <strong>SWE-Bench Verified ist oben ausgereizt</strong> — zwei Aggregatoren geben für dasselbe Modell 96 % und 97 % an, das offizielle Board liefert beim Abruf weiter keine Zeilen, Aiders Liste steht seit dem 20.11.2025 still. Deshalb erneut kein Balkendiagramm.</li>
+      <li><span class="chip good">Tool</span> <strong>Einzige Bewegung im Werkzeugkasten</strong>: Cline Desktop <code>v0.0.27</code> gestern 22:28 UTC. Claude Code unverändert <code>2.1.270</code>, OpenHands <code>v1.18.0</code>, Ollama <code>v0.34.0</code>.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event-Horizont</div>
+      <div class="timeline-sub">Zwei Offenlegungs-Ketten im Rückspiegel — und der eine Termin, an dem Modell-IDs kippen</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col hot">
+        <div class="tl-date">Mo 13.07. – Mi 26.08.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Die Beltdown-Kette (Claude Code)</span>
+          <span>13.07. gemeldet, am selben Tag triagiert</span>
+          <span>06.08. Teil-Fix in 2.1.223 — unvollständig</span>
+          <span>26.08. vollständiger Fix in 2.1.247</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mo 27.07. – Di 04.08.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Die Beltdown2-Kette (Cursor CLI)</span>
+          <span>27.07. PoC gemeldet, 04.08. Fix in Build 2026.08.04-aaa8809</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sa 12.09.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Accomplish veröffentlicht die Beltdown2-Analyse</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">So 13.09.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cline Desktop v0.0.27, 22:28 UTC</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Mo 14.09.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heute</span>
+          <span>Claude Code unverändert bei 2.1.270 (Abruf 14.09.)</span>
+          <span>Kein neues Harness-Release seit gestern Abend</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 15. – So 20.09.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Keine bestätigten Termine</span>
+          <span>Offen: ob Accomplish einen dritten Text zu Codex nachlegt</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Fr 02.10.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GitHub Copilot: Modell-Abkündigungen wirksam</span>
+          <span>Gemini 3.5/3.6 Flash → 3.8 Flash, Opus 4.7 → Opus 5, Kimi K2.7 Code → K3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Ein fremdes Repo, und die Sandbox ist offen <span class="h2-refs">[1]</span></h2>
+        <p>Accomplish, ein Startup aus Tel Aviv, das bislang im Stealth-Modus arbeitet, hat am 13.07. an Anthropic gemeldet, was es „Beltdown" nennt. Der Satz aus der Analyse, um den es geht: Ein nicht vertrauenswürdiges Repository, das man in Claude Code öffnet, „kann aus der macOS-Sandbox ausbrechen und Befehle auf deinem Rechner als dein privilegierter Benutzer ausführen, ohne Erlaubnis-Abfrage".</p>
+        <div class="eli5">
+          <strong class="eli5-term">Sandbox:</strong> Ein Gehege, das man um ein Programm zieht, damit es nur an die Dateien und Befehle kommt, die man ihm zugesteht — wie ein Laufstall: Das Kind darf darin alles anfassen, aber nicht an die Steckdose. Bei einem Coding-Agenten ist der Laufstall die Antwort auf die unangenehme Frage, warum man ein Sprachmodell überhaupt Shell-Befehle absetzen lässt. Fällt er weg, ist der Unterschied zwischen „das Modell schlägt einen Befehl vor" und „das Modell führt ihn als du aus" verschwunden.
+        </div>
+        <p>Der Weg hinaus führt über eine Eigenheit von git, die älter ist als der ganze Agenten-Kram: In der Datei <code>.git/config</code> eines Repositories darf stehen, welches Programm git als <code>core.fsmonitor</code> starten soll — eigentlich ein Beschleuniger, der meldet, welche Dateien sich geändert haben. Wer ein Repo bereitstellt, bestimmt also, welches Programm dein git startet. Claude Code lud beim automatischen Einlesen seiner Skills ein <code>git ls-files</code> — und dieser Aufruf lief nicht im Gehege, sondern daneben.</p>
+        <div class="mechanism">
+          <span class="step">fremdes Repo</span><span class="arrow">→</span><span class="step">.git/config</span><span class="arrow">→</span><span class="step">core.fsmonitor</span><span class="arrow">→</span><span class="step">git-Aufruf des Harness</span><span class="arrow">→</span><span class="step">Code außerhalb der Sandbox</span>
+        </div>
+        <p>Die Behebung kam in zwei Stufen: ein Teil-Fix am 06.08. in Version <code>2.1.223</code>, der die Lücke nicht schloss, und der vollständige Fix am 26.08. in <code>2.1.247</code>. Praktisch heißt das für Daniels Rechner: alles ab <code>2.1.247</code> ist versorgt, und die CLI liegt heute bei <code>2.1.270</code>. Relevant bleibt es nur dort, wo eine Version bewusst festgehalten wird — in CI-Images, in Container-Layern, in einem „läuft doch"-Setup, das seit Juli niemand angefasst hat.</p>
+        <span class="src">[1] <a href="https://www.accomplish.ai/blog/beltdown-escaping-the-claude-code-sandbox/">accomplish.ai</a> — „Beltdown: Escaping the Claude Code Sandbox", Mechanismus und datierte Offenlegungs-Tabelle, abgerufen 14.09.2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Beltdown2: bei Cursor dieselbe Wurzel <span class="h2-refs">[2]</span></h2>
+        <p>Am 27.07., zwei Wochen nach der ersten Meldung, ging derselbe Angriff an Anysphere — die Firma hinter Cursor. Ergebnis: dasselbe Bild in einem anders gebauten Werkzeug. Cursor sperrt sein Shell-Werkzeug tatsächlich ein, über eine eigene Komponente namens <code>cursorsandbox</code>. Nur läuft laut Analyse „das interne git des Harness selbst außerhalb der Sandbox und respektiert vom Repository mitgelieferte <code>core.fsmonitor</code>-Hooks" — und zwar „unabhängig vom Berechtigungsmodus".</p>
+        <p>Dieser Halbsatz ist der eigentliche Befund des Tages. Die Erlaubnis-Einstellungen, über die Nutzer sich streiten — Auto-Approve ja oder nein, welche Befehle ohne Nachfrage laufen dürfen —, greifen an dieser Stelle überhaupt nicht, weil der gefährliche Aufruf gar nicht vom Modell kommt. Er kommt vom Werkzeug, das das Modell beaufsichtigen soll.</p>
+        <p>Meine Lesart: Beide Harnesses haben das Offensichtliche eingesperrt und das Selbstverständliche übersehen. Eingesperrt wurde, was das Modell tut — der unberechenbare Teil. Nicht eingesperrt wurde, was der Harness selbst nebenbei tut: Repos einlesen, Dateien auflisten, Kontext einsammeln. Das galt als eigener, vertrauenswürdiger Code. Ist es aber nicht, sobald die Eingabe dieses Codes aus einem fremden Repository stammt. Behoben ist es in Cursor CLI <code>2026.08.04-aaa8809</code>.</p>
+        <span class="src">[2] <a href="https://www.accomplish.ai/blog/beltdown2-escaping-the-cursor-cli-sandbox/">accomplish.ai</a> — „Beltdown2: Escaping the Cursor CLI Sandbox", veröffentlicht 12.09.2026, abgerufen 14.09.2026; Quelle für Mechanismus, Meldedatum 27.07. und Fix-Build</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Acht Tage gegen vierundvierzig — Reaktionszeit wird zum Auswahlkriterium <span class="h2-refs">[3]</span></h2>
+        <p>Die Zahlen nebeneinander: Cursor hat vom Bericht (27.07.) bis zum Fix (04.08.) acht Tage gebraucht. Bei Anthropic liegen zwischen Meldung (13.07., am selben Tag triagiert) und vollständigem Fix (26.08.) vierundvierzig Tage; die zitierende Fachpresse spricht von „rund 50 Tagen und 30 Releases", was die Zeit bis zur Veröffentlichung einschließt.<sup>[3]</sup></p>
+        <p>Der Kalender ist dabei nicht einmal der wunde Punkt. Sechs Wochen für einen Sandbox-Ausbruch sind unschön, aber ein Loch sauber zu schließen kann dauern. Unangenehmer ist, <em>dass am 06.08. bereits ein Fix ausgeliefert wurde, der die Lücke nicht schloss</em>. Drei Wochen lang gab es also einen Stand, in dem der Hersteller das Problem für behandelt halten konnte und der Angriff weiter funktionierte. Das ist der Teil, den ich mir bei der Werkzeugwahl notieren würde — nicht die Tage, sondern die Frage, ob ein Haus seine eigenen Fixes gegen den Original-Exploit nachprüft.</p>
+        <div class="callout warn">
+          <span class="callout-label">Einordnung</span> Dieser Vergleich stammt vom Finder selbst, also von einer Partei mit Interesse an der Aufmerksamkeit, und er umfasst zwei Funde. Daraus wird keine Bilanz einer Sicherheits-Abteilung. Belastbar sind die datierten Tabellen in beiden Original-Analysen; die „50 Tage / 30 Releases"-Formulierung stammt aus der Sekundärberichterstattung.
+        </div>
+        <div class="callout info">
+          <span class="callout-label">Widerspruch</span> Ob auch OpenAIs Codex betroffen war, lässt sich heute nicht sauber beantworten. Die Zusammenfassung von Upstarts Media nennt Claude Code, Codex und Cursor als die drei Produkte, bei denen Accomplish gemeldet hat.<sup>[3]</sup> Accomplishs eigener Beltdown2-Text lobt aber ausgerechnet „OpenAI Codex, Kilo Code und jetzt Cursor" dafür, <em>jeden</em> git-Aufruf des Harness abgehärtet zu haben — also Schutz gegen genau diese Bauart.<sup>[2]</sup> Eine eigene Accomplish-Analyse zu Codex gibt es öffentlich nicht. Wahrscheinlichste Auflösung: zwei verschiedene Funde, nicht dieser hier. Sicher ist nur, dass beide Sätze so dastehen. Und: <strong>für keinen der beiden Funde ist eine CVE-Nummer vergeben</strong> — wer nach einer sucht, um sie in ein Ticket zu schreiben, sucht vergeblich.
+        </div>
+        <span class="src">[3] <a href="https://www.upstartsmedia.com/p/accomplish-claims-leaky-sandboxes-in-claude-codex-cursor">upstartsmedia.com</a> — Artikel vom 10.09.2026, abgerufen 14.09.2026; Quelle für Firma, Gründer und die Reaktionszeit-Gegenüberstellung (jenseits der Zusammenfassung hinter Bezahlschranke)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Dieselbe Bauweise, andere Seite: der Harness als Angriffsgerät <span class="h2-refs">[4]</span></h2>
+        <p>Damit die Beltdown-Geschichte nicht als Theorie durchgeht, gehört ein zweiter Vorgang dieser Woche danebengelegt — allerdings nur in seinem Werkzeug-Aspekt, die Sicherheits-Seite mit Opferzahlen und Patch-Ständen behandelt heute der <em>software</em>-Brief.</p>
+        <p>In der Kampagne gegen PaperCut-Druckserver hat der Angreifer nicht etwa ein selbstgebautes Skript-Gerüst verwendet, sondern denselben Baukasten, den wir hier täglich besprechen: ein DeepSeek-Modell, laufend in einem OpenAI-Codex-Harness, dazu ein Gedächtnisdienst namens Hindsight und eine Orchestrierungs-Oberfläche namens AionUi — Hunderte autonomer Agenten parallel, laut den Auswertungen elf kompromittierte Organisationen in den ersten 26 Sekunden.<sup>[4]</sup></p>
+        <p>Was das für die Werkzeugdebatte bedeutet: Der Harness ist keine Entwickler-Bequemlichkeit mehr, die man nach Geschmack wählt. Er ist Infrastruktur, in beide Richtungen. Wer ihn einsetzt, akzeptiert eine Ausführungsumgebung auf seinem Rechner, die fremde Eingaben verarbeitet — und dieselbe Umgebung skaliert auf der Gegenseite einen Angriff auf Hunderte Ziele. Das ist kein Argument gegen agentische Werkzeuge. Es ist ein Argument dafür, ihre Sandbox-Versprechen als das zu lesen, was sie sind: Produktmerkmale, keine Sicherheitsgrenzen.</p>
+        <span class="src">[4] <a href="https://www.greynoise.io/blog/ai-orchestrated-campaign-against-papercut-ng-mf">greynoise.io</a> — „Agents Gone Wild: An AI-Orchestrated Global Campaign Against PaperCut NG/MF" · <a href="https://thehackernews.com/2026/09/papercut-attacker-uses-hundreds-of-ai.html">thehackernews.com</a> — 09/2026, Gegenprobe zur Harness-Zusammensetzung; beides über Suchtreffer vom 14.09.2026, nicht direkt abgerufen</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Verified ist oben ausgereizt — nachweisen lässt es sich nicht <span class="h2-refs">[5][6][7]</span></h2>
+        <p>Der Stand bei SWE-Bench Verified, dem Test, an dem sich Coding-Modelle seit Jahren messen: Die Spitze liegt bei rund 96 bis 97 Prozent. Genauer geht es heute nicht, und das ist der eigentliche Punkt. Ein datierter Aggregator (Stand 10.09.) führt Claude Opus 5 mit 96 %, dahinter Mythos 5 mit 95,5 % und Fable 5 mit 95 %.<sup>[5]</sup> Ein zweiter Aggregator nennt für dasselbe Modell 97,00 %.<sup>[6]</sup> Ein Prozentpunkt Unterschied bei derselben Prüfung, und keine der beiden Listen ist die amtliche.</p>
+        <p>Die amtliche liefert nämlich nichts: Der Abruf von <code>swebench.com/verified.html</code> ergibt auch heute keine Tabellenzeilen, weil die Seite ihre Daten per JavaScript nachlädt.<sup>[7]</sup> Aiders Bestenliste trägt weiterhin „Last Updated: November 20, 2025" und kennt keines der aktuellen Modelle.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Sättigung eines Benchmarks:</strong> Wenn in einer Klassenarbeit alle 96 von 100 Punkten holen, sagt die Note nichts mehr über die Schüler — nur noch etwas über die Arbeit. Ab diesem Punkt misst man Restfehler und Zufall, nicht Können. Bei SWE-Bench Verified kommt dazu, dass die Aufgaben aus öffentlichen GitHub-Fehlerberichten stammen: Je länger eine Sammlung im Netz steht, desto wahrscheinlicher hat ein Modell die Lösungen beim Training schon gesehen. Ein Aufstieg von 95 auf 96 Prozent ist deshalb kein Fortschrittsmaß, sondern Rauschen mit Marketing-Wert.
+        </div>
+        <p>Praktische Folge für die Werkzeugwahl: Wer heute ein Coding-Modell nach der Verified-Zahl auswählt, wählt nach einer Kennzahl ohne Unterscheidungskraft. Aussagekräftiger sind inzwischen die härteren Nachfolge-Sammlungen — und Messungen am eigenen Repo. Und wieder gilt: kein Balkendiagramm in diesem Brief, weil vier Zahlen aus drei Quellen wie ein Ergebnis aussähen und eine Behauptung wären.</p>
+        <span class="src">[5] <a href="https://benchlm.ai/benchmarks/swe-bench-verified">benchlm.ai</a> — Seitenstand 10.09.2026, Aggregator, keine Primärmessung · [6] Vals.ai mit 97,00 % für dasselbe Modell, nur über einen Suchtreffer vom 14.09.2026 belegt, nicht direkt abgerufen · [7] <a href="https://www.swebench.com/verified.html">swebench.com</a> — Abruf 14.09.2026 ohne Tabellenzeilen · <a href="https://aider.chat/docs/leaderboards/">aider.chat</a> — „Last Updated: November 20, 2025"</span>
+      </section>
+
+      <section class="news-item">
+        <h2>A2A bei CrewAI: dokumentiert, nicht angekündigt <span class="h2-refs">[8]</span></h2>
+        <p>Ein Hinweis ohne Nachrichtenwert, aber mit Gebrauchswert: CrewAI führt Agent-to-Agent-Delegation inzwischen als erstklassiges Mittel in der Dokumentation — Agenten „delegieren Aufgaben an entfernte A2A-Agenten und/oder treten selbst als A2A-konforme Server-Agenten auf". Voreingestellt ist Protokollversion 0.3.0, als Transport stehen JSON-RPC, gRPC und HTTP+JSON zur Wahl, für die Authentifizierung sechs Verfahren von Bearer-Token bis HTTP-Digest.<sup>[8]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">A2A:</strong> Ein Umgangston zwischen Agenten. Bisher redet ein Agent mit Werkzeugen (Dateien lesen, Befehle ausführen) — A2A regelt, wie er stattdessen einem <em>anderen</em> Agenten eine Aufgabe übergibt, der irgendwo anders läuft und ihm nicht gehört. Wie die Übergabe an eine Fachabteilung: Man schickt den Vorgang samt Auftrag rüber statt selbst nachzuschlagen. Der Nutzen liegt weniger in der Technik als in der Grenze — ein fremder Agent ist ein Dienst mit eigener Anmeldung, nicht ein Unterprogramm im eigenen Prozess.
+        </div>
+        <p>Kein datiertes Ereignis, kein Release-Post — das ist gewachsener Doku-Stand, und so steht es hier. Erwähnenswert ist es trotzdem, weil es dieselbe Grenzziehung betrifft wie die beiden Sandbox-Funde oben: Sobald Aufgaben an Agenten außerhalb des eigenen Prozesses gehen, wird Authentifizierung zur Pflicht statt zur Kür. Sechs Auth-Verfahren in der Doku sind ein besseres Signal für Reife als jede Ankündigung.</p>
+        <span class="src">[8] <a href="https://docs.crewai.com/en/learn/a2a-agent-delegation">docs.crewai.com</a> — A2A-Agent-Delegation, abgerufen 14.09.2026; Quelle für Protokollversion, Transporte, Auth-Verfahren und den AMP-Hinweis</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Pflicht-Runde: wer sich bewegt hat</h2>
+        <p>Die Runde durch die Werkzeugliste, alle Versionsstände heute frisch abgerufen; was nur aus Suchtreffern stammt, ist gekennzeichnet.</p>
+        <ul>
+          <li><strong>Cline</strong> — Desktop <code>v0.0.27</code> vom 13.09., 22:28 UTC. Einzige Bewegung seit gestern; die Serie hat nach zwei Pausentagen wieder angezogen.</li>
+          <li><strong>Claude Code</strong> — unverändert <code>2.1.270</code> (Abruf 14.09.). Der Changelog führt keine Daten je Version, das Release-Datum lässt sich also nicht belegen.</li>
+          <li><strong>OpenHands</strong> — <code>v1.18.0</code> vom 11.09., 18:27 UTC. Keine Bewegung.</li>
+          <li><strong>Ollama</strong> — <code>v0.34.0</code> vom 05.09. Keine Bewegung.</li>
+          <li><strong>Aider</strong> — <code>v0.86.0</code> vom 09.08.2025, dreizehn Monate alt. Archiv.</li>
+          <li><strong>Plandex</strong> — <code>cli/v2.2.1</code> vom 16.07.2025. Archiv.</li>
+          <li><strong>Cursor</strong> — kein neues Changelog-Ereignis; „Projects" (10.09.) und selbst gehostete Maschinen (02.09.) standen in den Briefen vom 11. und 12.09. Heute zählt nur der Sandbox-Fix.</li>
+          <li><strong>GitHub Copilot</strong> — nichts Neues; die Abkündigungen am 02.10. bleiben der harte Termin.</li>
+          <li><strong>Continue.dev</strong> — eingestellt; die aktive Entwicklung endete mit dem 2.0-Final im Juni 2026. Nur eine Quelle, deshalb als Status und nicht als Meldung.</li>
+          <li><strong>JetBrains AI, Devin/Cognition, MCP-Ökosystem</strong> — nichts Datiertes in diesem Durchgang. Wird hier nicht geraten.</li>
+        </ul>
+        <p>Das Bild hält: Cline und OpenHands liefern getaktet, Aider und Plandex sind Archive, und die beiden Häuser, die diese Woche einen Sandbox-Fix ausliefern mussten, sind ausgerechnet die mit den meisten Nutzern. Wartungstempo und Sicherheitsreife sind eben zwei verschiedene Größen.</p>
+        <span class="src"><a href="https://api.github.com/repos/cline/cline/releases">github.com/cline/cline</a> · <a href="https://api.github.com/repos/All-Hands-AI/OpenHands/releases/latest">All-Hands-AI/OpenHands</a> · <a href="https://api.github.com/repos/ollama/ollama/releases/latest">ollama/ollama</a> · <a href="https://api.github.com/repos/Aider-AI/aider/releases/latest">Aider-AI/aider</a> · <a href="https://api.github.com/repos/plandex-ai/plandex/releases/latest">plandex-ai/plandex</a> · <a href="https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md">Claude Code CHANGELOG</a> — alle abgerufen 14.09.2026</span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Montag, der vierzehnte September. Die Woche beginnt nicht mit einem Start, sondern mit einer Offenlegung — und die betrifft ausgerechnet die beiden Werkzeuge, die auf diesem Rechner täglich laufen.</p>
+  <p>Ein Startup aus Tel Aviv namens Accomplish hat in Claude Code eine Lücke gefunden, die es Beltdown nennt. Wer ein fremdes Repository in Claude Code öffnet, kann sich damit einen Ausbruch aus der Sandbox einfangen: Code läuft dann auf dem eigenen Rechner unter dem eigenen Benutzer, ohne dass vorher irgendjemand um Erlaubnis fragt. Der Weg dahin führt über eine alte git-Eigenheit. In der Konfigurationsdatei eines Repositories darf stehen, welches Programm git als Dateiwächter starten soll. Wer das Repo bereitstellt, bestimmt also mit, was dein git ausführt. Und Claude Code setzte beim Einlesen seiner Skills genau so einen git-Aufruf ab — außerhalb des Käfigs.</p>
+  <p>Behoben ist das in zwei Stufen: ein Teil-Fix am sechsten August, der nicht ausreichte, und der vollständige Fix am sechsundzwanzigsten August in Version zwei Punkt eins Punkt zweihundertsiebenundvierzig. Wer heute arbeitet, ist versorgt, die Befehlszeile steht bei zwei Punkt eins Punkt zweihundertsiebzig. Ein Thema bleibt es nur dort, wo eine Version bewusst eingefroren ist: in Container-Abbildern, in Bau-Pipelines, in einem Aufbau, den seit Juli niemand angefasst hat.</p>
+  <p>Am Samstag kam der zweite Text nach, Beltdown zwei, und der beschreibt dieselbe Wurzel bei Cursors Befehlszeile. Cursor sperrt sein Shell-Werkzeug tatsächlich ein. Aber das eigene git des Werkzeugs lief außerhalb dieser Sperre und akzeptierte die vom Repository mitgelieferte Konfiguration — und zwar unabhängig davon, welchen Berechtigungsmodus man eingestellt hat. Das ist der Befund, der über beide Fälle hinausreicht. Eingesperrt wurde jeweils, was das Modell tut, also der unberechenbare Teil. Nicht eingesperrt wurde, was das Werkzeug selbst nebenbei erledigt: Dateien auflisten, Kontext einsammeln, Repos einlesen. Dieser Teil galt als eigener, vertrauenswürdiger Code — ist es aber nicht, sobald seine Eingabe aus einem fremden Repository stammt.</p>
+  <p>Die Reaktionszeiten gehen weit auseinander. Cursor brauchte vom Bericht am siebenundzwanzigsten Juli bis zum Fix am vierten August acht Tage. Bei Anthropic liegen zwischen Meldung und vollständigem Fix vierundvierzig Tage, in der Fachpresse zitiert als rund fünfzig Tage und dreißig Releases. Wichtiger als der Kalender ist für mich aber etwas anderes: Dass am sechsten August bereits ein Fix ausgeliefert wurde, der die Lücke nicht schloss. Drei Wochen lang gab es also einen Stand, in dem der Hersteller das Problem für erledigt halten konnte und der Angriff weiterlief. Dazu die Einordnung: Der Vergleich stammt vom Finder selbst und umfasst zwei Funde — eine Bilanz ist das nicht.</p>
+  <p>Eine Frage bleibt heute offen. Eine Zusammenfassung von Upstarts Media nennt Claude Code, Codex und Cursor als die drei Produkte, bei denen Accomplish gemeldet hat. Accomplishs eigener Text lobt Codex aber ausdrücklich dafür, jeden git-Aufruf des Harness bereits abgehärtet zu haben — also Schutz gegen genau diese Bauart. Eine eigene Codex-Analyse gibt es öffentlich nicht. Wahrscheinlich sind das zwei verschiedene Funde. Sicher ist nur, dass beide Sätze so dastehen. Und für keinen der beiden Funde ist eine CVE-Nummer vergeben.</p>
+  <p>Dass die Sandbox-Frage keine Theorie ist, zeigt ein zweiter Vorgang dieser Woche. In der Angriffskampagne gegen PaperCut-Druckserver hat der Angreifer kein selbstgebautes Gerüst verwendet, sondern denselben Baukasten, über den wir hier täglich reden: ein DeepSeek-Modell in einem OpenAI-Codex-Harness, dazu einen Gedächtnisdienst und eine Orchestrierungs-Oberfläche, um Hunderte autonome Agenten parallel laufen zu lassen. Die Opferzahlen und den Patch-Stand behandelt heute der Software-Brief. Für uns bleibt die Schlussfolgerung: Der Harness ist Infrastruktur, und zwar in beide Richtungen.</p>
+  <p>Bei den Ranglisten ist der Stand zum Mitschreiben kurz. Die Spitze von SWE-Bench Verified liegt bei rund sechsundneunzig bis siebenundneunzig Prozent, und genauer geht es nicht: Zwei Aggregatoren geben für dasselbe Modell unterschiedliche Werte an, das offizielle Board liefert beim Abruf weiterhin keine Zeilen, und Aiders Liste steht seit November zweitausendfünfundzwanzig still. Wenn in einer Klassenarbeit alle sechsundneunzig von hundert Punkten holen, misst man Restfehler und Zufall, nicht mehr Können. Deshalb steht auch heute kein Balkendiagramm im Brief.</p>
+  <p>In der Pflicht-Runde durch die Werkzeuge gibt es genau eine Bewegung: Cline Desktop null Punkt null Punkt siebenundzwanzig, gestern Abend um zweiundzwanzig Uhr achtundzwanzig UTC. Claude Code unverändert, OpenHands vom elften September, Ollama vom fünften. Aider und Plandex bleiben Archive, Continue ist eingestellt. Dazu ein Hinweis ohne Nachrichtenwert, aber mit Gebrauchswert: CrewAI führt die Delegation an fremde Agenten inzwischen als erstklassiges Mittel in der Dokumentation, mit sechs Authentifizierungs-Verfahren — was über Reife mehr sagt als jede Ankündigung.</p>
+  <p>Vorgemerkt bleibt der zweite Oktober, an dem mehrere Modelle aus GitHub Copilot herausfallen. Morgen sehen wir, ob die neue Woche im Werkzeugkasten Tempo aufnimmt — und ob Accomplish einen dritten Text nachlegt, der die Codex-Frage endlich beantwortet.</p>
+</div>
+
+</body>
+</html>
