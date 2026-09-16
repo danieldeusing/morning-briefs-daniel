@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-09-16</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-09-16</span>
+  </div>
+  <h1 class="masthead-title">The Cache Is the Bill</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">What actually moved in AI coding this September isn't capability — it's the price of reading the same thing twice. Claude Fable 5.1 and GPT-6 Astra carry the exact same price tag — $10 input, $50 output per million tokens. They differ in exactly one place: what a reused context costs. $0.25 at Anthropic, $1.00 at OpenAI, per million. That's the line that keeps recurring in a long agent session — and, of all days, today Claude Code fixes a bug that was quietly throwing that same cache away. Look further down and you find DeepSeek-V4.1-Flash, open-weight, at $0.003. Three orders of magnitude on the same line. On an independent leaderboard, none of the three models appears.</p>
+    <ul>
+      <li><span class="chip hot">Claude</span> <strong>Fable 5.1 cuts cache-read pricing by 75%</strong> to $0.25 per million tokens, with an unchanged sticker of $10 / $50. That's the only pricing change — and the one most relevant to Claude Code.</li>
+      <li><span class="chip hot">OpenAI</span> <strong>GPT-6 Astra has the same sticker — but a $1.00 cache-read</strong>, four times as much. Above 272,000 input tokens, Astra jumps to $20 / $2 / $75.</li>
+      <li><span class="chip good">Tool</span> <strong>Claude Code 2.1.273 landed today</strong> and, among other things, fixes <code>/login</code>, <code>/upgrade</code>, and <code>/extra-usage</code> discarding earlier reasoning and thereby forcing a prompt-cache rewrite.</li>
+      <li><span class="chip hot">OSS</span> <strong>DeepSeek-V4.1-Flash, open weights</strong>: 552B parameters, of which 8B are active on read and 16B on write. $0.15 / $0.60 off-peak, cache hit $0.003.</li>
+      <li><span class="chip">Bench</span> <strong>74.2% versus 74.1%</strong> on DeepSWE v1.1 — V4.1-Flash narrowly ahead of Astra. Both vendor-reported, neither independently verified.</li>
+      <li><span class="chip">Bench</span> <strong>None of the three appears on SWE-Bench Verified</strong>. The top spot stays with "Claude Fable 5" — without the point-one — at 0.950, per a secondary aggregator stamped today.</li>
+      <li><span class="chip">Tool</span> <strong>Cursor Projects since Sep 10</strong>: a coordinator agent in the cloud that delegates to sub-agents. Yesterday this brief said "nothing new at Cursor" — that was wrong, correction below.</li>
+      <li><span class="chip">OSS</span> <strong>Qwen3.8-Max-0902 from Sep 2</strong> — a post-training refresh of the 2.4-trillion-parameter MoE, an open text checkpoint under its own license.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">Sixteen days into September — and the only date already fixed</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Tue Sep 1</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Fable 5.1 released</span>
+          <span>Cache-read −75% to $0.25</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed Sep 2</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Qwen3.8-Max-0902</span>
+          <span>Cursor: self-hosted machines</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu Sep 10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Three releases in one day</span>
+          <span>GPT-6 Astra</span>
+          <span>DeepSeek-V4.1-Flash</span>
+          <span>Cursor Projects</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue Sep 15</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.272</span>
+          <span>this brief mistakenly reported "nothing new at Cursor"</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Wed Sep 16</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Claude Code 2.1.273 with cache fix</span>
+          <span>SWE-Bench Verified snapshot re-stamped</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed Sep 30</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Docusign MCP server goes globally generally available</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Same sticker, quadruple the cache <span class="h2-refs">[1][2][3]</span></h2>
+        <p>Anthropic released Claude Fable 5.1 on Sep 1, and the only pricing change from Fable 5 sits in a line that won't show up on any marketing slide: "Cache reads now cost $0.25 per million tokens, 75% less than Fable 5."<sup>[1]</sup> Input and output stay at $10 and $50 per million tokens.<sup>[1]</sup> OpenAI's GPT-6 Astra, released Sep 10, carries, per the official developer pricing page, the <em>exact same</em> sticker — $10 input, $50 output — and charges $1.00 per million for cached input.<sup>[2]</sup> That's four times as much.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Prompt cache and cache-read:</strong> A language model has no memory between two calls. On every new turn in a session, the tool sends the entire prior history along again — your files, your rules, every previous reply. The provider is allowed to remember and reuse the part it already digested; that's the cache. Like a contractor who leaves his tools at your place overnight instead of packing them up every morning. The <em>cache-read</em> is the rate for that reused part — usually a tenth of the input price. That's exactly Astra's $1.00. Anthropic, at $0.25, is at a fortieth.
+        </div>
+        <table class="mini-table">
+          <thead><tr><th>Model (per million tokens)</th><th>Input</th><th>Cache-read</th><th>Output</th></tr></thead>
+          <tbody>
+            <tr><td>Claude Fable 5.1</td><td>$10.00</td><td>$0.25</td><td>$50.00</td></tr>
+            <tr><td>GPT-6 Astra, standard</td><td>$10.00</td><td>$1.00</td><td>$50.00</td></tr>
+            <tr><td>GPT-6 Astra, &gt; 272K context</td><td>$20.00</td><td>$2.00</td><td>$75.00</td></tr>
+            <tr><td>DeepSeek-V4.1-Flash, off-peak</td><td>$0.15</td><td>$0.003</td><td>$0.60</td></tr>
+          </tbody>
+        </table>
+        <p>Why this is more than a footnote: in an agent session, the reused share grows with every turn. Turn one sends the context once, turn twenty sends it for the twentieth time — and from turn two on, almost all of it is cache. You pay the input line once; you pay the cache line again on every turn. That's why, over a long run across a large repository, the cache-read isn't the smallest line item — it's the one that repeats the most.</p>
+        <p>Where I'd hold back: nobody's output price has moved, and that's exactly where agentic coding burns the most — tokens written, not read. $50 per million output stands unchanged at both companies. The cache cut is a real win, but it's a discount on the cheapest line of the bill. Anyone who actually wants to cut costs trims output, not input. And one more caveat: a cache has to <em>hit</em> to save you anything. Change something near the start of your context — a rule, a file, a timestamp — and everything after it is invalidated, and you pay the full input price again.</p>
+        <span class="src">[1] <a href="https://www.anthropic.com/claude/fable">anthropic.com</a> — Fable 5.1 page, release date Sep 1, 2026, pricing and cache-read, accessed Sep 16, 2026 · [2] <a href="https://developers.openai.com/api/docs/pricing">developers.openai.com</a> — official API pricing table for GPT-6 Astra, accessed Sep 16, 2026 · [3] <a href="https://venturebeat.com/technology/anthropics-claude-fable-5-1-and-mythos-5-1-arrive-with-a-75-cost-reduction-for-fable-cache-reads">venturebeat.com</a> — independent confirmation of the 75% cut</span>
+      </section>
+
+      <section class="news-item">
+        <h2>And today Claude Code fixes that exact cache <span class="h2-refs">[4]</span></h2>
+        <p>As of today, Claude Code sits at <code>2.1.273</code>, one build above yesterday. The changelog entry that ties into the pricing story above reads, in substance: <code>/login</code>, <code>/upgrade</code>, and <code>/extra-usage</code> discarded earlier reasoning from the conversation — and thereby triggered a rewrite of the prompt cache.<sup>[4]</sup> So anyone who topped up their quota mid-session had, until today, been blowing up their own cache and then paying full input price again afterward, without noticing.</p>
+        <p>This is the kind of bug that shows up in no benchmark and still shows up on the bill. It's also a neat illustration of how tightly price and tool are now coupled: a rate is only as good as the harness that hits it.</p>
+        <p>The rest of this build is routine maintenance with two useful points: a notice when an MCP server drops mid-session and automatic reconnection gives up — previously the only sign was tools going missing — and the ability to spin off a session started with <code>--remote-control</code> from the Claude app as a background session.<sup>[4]</sup></p>
+        <span class="src">[4] <a href="https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md">Claude Code CHANGELOG</a> — as of 2.1.273, accessed Sep 16, 2026. The changelog doesn't carry a date per version.</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>DeepSeek-V4.1-Flash: open weights, two orders of magnitude down <span class="h2-refs">[5][6][7]</span></h2>
+        <p>On the same Sep 10 as Astra, DeepSeek released V4.1-Flash with open weights.<sup>[5]</sup> The architecture is the real news: a 552-billion-parameter MoE in a new causal encoder-decoder layout, where "only 8B active parameters compute for input and 16B for output."<sup>[5]</sup> Reading and writing run over paths of different width — and reading is the cheaper one.</p>
+        <div class="eli5">
+          <strong class="eli5-term">MoE and active parameters:</strong> The model holds 552 billion weights in total but computes with only a small slice of them for each individual token. Like a library with five hundred shelves where only two get opened per question: the whole building needs the space, but only those two shelves cost time. That's how a model can be enormous and still run cheap — memory footprint scales with the total count, price scales with the active parameters.
+        </div>
+        <p>The official API's prices turn that architectural trick into a number: $0.15 input and $0.60 output per million tokens off-peak, $0.30 and $1.20 during peak hours — peak hours being 01:00–04:00 and 06:00–10:00 UTC, Monday through Friday.<sup>[7]</sup> A cache hit costs $0.003 off-peak. Against Astra's standard rate, that's roughly a sixty-seventh of the input price and an eighty-third of the output price; on the cache-read line, even Anthropic's reduced price still sits about eighty times higher.</p>
+        <p>Reported alongside that is 74.2% on DeepSWE v1.1 — just above the 74.1% OpenAI reports for Astra — and a Codeforces rating of 3471.<sup>[6]</sup> I wouldn't take that lead seriously: 0.1 percentage points sits within the noise on any coding benchmark, both numbers come from the vendors themselves, and neither has been independently remeasured. What's notable isn't the ranking — it's that an open-weight model shows up in the same line at all, for a sixty-seventh of the price.</p>
+        <div class="callout warn">
+          <span class="callout-label">Open</span> Which license the weights carry can't be confirmed today. The DeepSeek page didn't name a license text on retrieval; one secondary source mentions MIT, without a second confirmation. For anything headed into client code, that's the point to settle before downloading — not after.
+        </div>
+        <p><span class="chip good">Try this</span> The test worth running isn't the benchmark, it's the off-peak bill: run a real agent task once on V4.1-Flash and once on your usual model, and put the two bills side by side. At this price gap, the open model doesn't need to be equally good to be worth it — it just needs to be good enough.</p>
+        <span class="src">[5] <a href="https://deepseek.com/en/news/deepseek-v4-1-flash/">deepseek.com</a> — announcement from Sep 10, 2026, architecture and active parameters · [6] <a href="https://api-docs.deepseek.com/updates/">api-docs.deepseek.com</a> — DeepSWE v1.1 74.2 and Codeforces 3471, accessed Sep 16, 2026 · [7] <a href="https://api-docs.deepseek.com/quick_start/pricing">api-docs.deepseek.com</a> — official pricing table with peak and off-peak hours</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>What's independently measured today — and what isn't <span class="h2-refs">[8][9][10]</span></h2>
+        <p>Three models put out coding numbers this month: Astra with 57.9% on Terminal-Bench 4.0, 74.1% on DeepSWE v1.1, and 72.6% on OSWorld 2.0 against 65.7% for predecessor GPT-5.6 Sol<sup>[8]</sup>; V4.1-Flash with 74.2% on DeepSWE; Fable 5.1 with a comparison table on its own page. On the list this brief normally relies on — SWE-Bench Verified — none of these three appears.</p>
+        <p>Today's stamped snapshot leads with "Claude Fable 5" — <em>without</em> the point-one — at 0.950, followed by Claude Mythos Preview at 0.939 and Claude Opus 4.8 at 0.886; DeepSeek shows up with V4-Pro-Max at 0.806 and V4-Flash-Max at 0.790.<sup>[9]</sup> These numbers, though, come from a secondary aggregator: the primary page, swebench.com, loads its Verified table via JavaScript and returned only the empty shell on today's retrieval.<sup>[10]</sup> I'm carrying them as single-sourced and unverified — usable for the question "who's even listed," not for a decimal-point comparison.</p>
+        <p>The second usual reference is out entirely: Aider's leaderboard still carries the stamp "Last Updated: November 20, 2025" and leads with gpt-5 (high) at 88.0%.<sup>[10]</sup> Ten months old, it knows none of the models this brief covers today.</p>
+        <p>My reading, uncomfortable but honest: for the three September models, there currently exists <strong>no</strong> measurement that doesn't come from the vendor itself. That doesn't mean the numbers are wrong — it means they carry no evidentiary weight. So no bar chart appears in the brief today either: it would claim a comparability the data doesn't support.</p>
+        <span class="src">[8] <a href="https://www.infoq.com/news/2026/09/openai-gpt6-astra/">infoq.com</a> — release date and the figures reported by OpenAI; openai.com returned a 403 on retrieval · [9] <a href="https://llm-stats.com/benchmarks/swe-bench-verified">llm-stats.com</a> — secondary aggregator, page stamp "Last Updated: September 16, 2026" · [10] <a href="https://aider.chat/docs/leaderboards/">aider.chat</a> — stamp Nov 20, 2025 · <a href="https://www.swebench.com/">swebench.com</a> — returned no values on retrieval</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Correction: Cursor did move, after all <span class="h2-refs">[11]</span></h2>
+        <p>Yesterday's mandatory round said "Cursor — nothing new today." That was wrong. The changelog, for Sep 10: "Today we're launching Projects in Cursor. Projects lets you take on larger bodies of work, such as a feature, a migration, or a full app."<sup>[11]</sup> A coordinator agent plans the work and hands out sub-tasks to sub-agents, with shared context across cloud and local machines. Added to that, since Sep 2, self-hosted machines that keep tool execution entirely inside your own network.<sup>[11]</sup></p>
+        <p>In substance, this is the same shift as the pricing story above, just one level up: the bottleneck is no longer whether a model can solve a task, but who manages the context over days, without anyone having to leave a laptop open. A coordinator that delegates is exactly the workflow where the cache line explodes — every sub-agent gets context, every turn sends it again.</p>
+        <div class="mechanism">
+          <span class="step">Task</span><span class="arrow">→</span><span class="step">Coordinator plans</span><span class="arrow">→</span><span class="step">n sub-agents</span><span class="arrow">→</span><span class="step">n × context per turn</span>
+        </div>
+        <p>What bothers me about it: the more of this runs in the vendor's cloud, the less visibility you have into what you're paying for. That makes the self-hosted machines the more interesting of the two announcements — it's the only one that hands control back instead of giving up more of it.</p>
+        <span class="src">[11] <a href="https://cursor.com/changelog">cursor.com/changelog</a> — "Projects" entry from Sep 10, 2026 and "Self-hosted Machines" entry from Sep 2, 2026, accessed Sep 16, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Mandatory round: who moved</h2>
+        <p>Only what's flagged as such was freshly checked today. Everything else carries its last verified state.</p>
+        <ul>
+          <li><strong>Claude Code</strong> — <code>2.1.273</code>, checked today. One build above yesterday, with the cache fix above.</li>
+          <li><strong>Cursor</strong> — Projects on Sep 10, self-hosted machines on Sep 2, both confirmed today against the changelog.</li>
+          <li><strong>Qwen</strong> — Qwen3.8-Max-0902 from Sep 2, a post-training refresh of Qwen3.8-Max, which was released Aug 3: 2.4 trillion parameters as a MoE, an open checkpoint for text only, under its own "Qwen3.8-Max License." Confirmed via secondary sources, not an Alibaba primary page.</li>
+          <li><strong>Aider</strong> — leaderboard unchanged from Nov 20, 2025. Still unusable as a reference.</li>
+          <li><strong>Cline, Continue, OpenHands, Plandex, Bolt.new, JetBrains AI, GitHub Copilot</strong> — no freshly dated release found this round. The states named yesterday (Cline Desktop <code>v0.0.27</code> from Sep 13, OpenHands <code>v1.18.0</code> from Sep 11, Ollama <code>v0.34.0</code> from Sep 5) <em>weren't</em> rechecked today and stand as of Sep 15. Nothing gets extrapolated here.</li>
+          <li><strong>Devin / Cognition</strong> — no new dated announcement. The last hard data point remains the renaming of Windsurf to Devin Desktop on Jun 2, 2026, with Cascade discontinued Jul 1.</li>
+          <li><strong>MCP</strong> — per the Sep 4 announcement, Docusign's server goes globally generally available on Sep 30. The Jul 28 spec revision had turned a remote MCP server into an ordinary HTTP application; the roadmap update dates from Aug 22.</li>
+        </ul>
+        <p>Today's picture: the toolbox itself still barely moves — one patch at Claude Code, otherwise quiet. What moved were the price tags and the layer above them. That's no coincidence: when editors become interchangeable and models fight over a tenth of a percentage point, the bill decides.</p>
+        <span class="src"><a href="https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md">Claude Code CHANGELOG</a> · <a href="https://cursor.com/changelog">cursor.com/changelog</a> — both accessed Sep 16, 2026 · <a href="https://aider.chat/docs/leaderboards/">aider.chat</a> · <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/">blog.modelcontextprotocol.io</a> · <a href="https://modelcontextprotocol.io/development/roadmap">modelcontextprotocol.io</a></span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Wednesday, September sixteenth. What actually moved in AI coding this month isn't how capable the models are — it's the price of reading the same context over and over again.</p>
+  <p>Here's the story in order. Anthropic released Claude Fable five point one on September first. The sticker price didn't change: ten dollars per million input tokens, fifty dollars per million output tokens. Exactly one line changed. A cache read now costs twenty-five cents per million tokens, seventy-five percent less than Fable five.</p>
+  <p>A cache read works like this. A language model has no memory between two calls. On every new turn in a session, the tool sends the entire prior history along again — your files, your rules, every previous reply. The provider is allowed to remember and reuse the part it already digested. Like a contractor who leaves his tools at your place overnight instead of packing them up every morning. That reused part gets its own, cheaper rate — usually a tenth of the input price.</p>
+  <p>Now the comparison that makes this interesting. OpenAI's GPT six Astra, released on September tenth, carries, per its official pricing page, the exact same sticker: ten dollars input, fifty dollars output. And it charges one dollar per million for cached input. That's four times as much. Two models with an identical price tag differ at exactly the line that keeps recurring in a long agent session. Turn one sends the context once. Turn twenty sends it for the twentieth time — and from the second turn on, almost all of it is cache.</p>
+  <p>Two caveats, so this doesn't sound too clean. First: nobody's output price moved, and that's exactly where agentic coding burns the most money. The cache cut is a real win, but it's a discount on the cheapest line of the bill. Second: a cache has to hit to save you anything. Change something near the start of your context, and everything after it is invalidated — you're back to paying full price.</p>
+  <p>Which is exactly what today's Claude Code entry is about. Version two-one-two-seven-three fixes, among other things, the login, upgrade, and extra-usage commands discarding earlier reasoning from the conversation — and thereby forcing a rewrite of the prompt cache. So anyone who topped up their quota mid-session had, until today, been quietly blowing up their own cache and paying full input price again without noticing. That's the kind of bug that shows up in no leaderboard and still shows up on the bill.</p>
+  <p>Look further down the price list and you find DeepSeek. V four point one Flash came out on that same September tenth, with open weights. Five hundred fifty-two billion parameters in total, but per token only eight billion compute on the read side and sixteen billion on the write side. Like a library with five hundred shelves where only two get opened per question: the whole building needs the space, but only those two shelves cost time. The price follows the architecture — fifteen cents input and sixty cents output per million tokens off-peak, and a cache hit costs three-tenths of a cent. Against Astra's standard rate, that's roughly a sixty-seventh of the input price.</p>
+  <p>The benchmark picture around all this is thin, and that needs saying plainly. DeepSeek reports seventy-four point two percent on DeepSWE; OpenAI reports seventy-four point one for Astra. A tenth of a percentage point is noise on any coding test, and both numbers come from the vendors themselves. On SWE-Bench Verified, the list this brief normally relies on, none of the three September models appears at all. The top spot still belongs to Claude Fable five — without the point-one — at zero point nine five zero, and even that number today comes only from a secondary aggregator, because the primary page loads its table by JavaScript and came back empty on this pull. Aider's leaderboard still carries a November twenty twenty-five stamp. So right now there is no measurement of these three models that doesn't come from the seller. That's why no bar chart runs in the brief today either.</p>
+  <p>One correction, on ourselves. Yesterday's mandatory round said there was nothing new at Cursor. That was wrong. Cursor launched Projects on September tenth: a coordinator agent plans larger pieces of work and hands out sub-tasks to sub-agents, with shared context across cloud and local machines. On top of that, September second brought self-hosted machines that keep tool execution inside your own network. Of the two, the second is the more interesting move, because it's the only one that hands control back instead of giving more of it away.</p>
+  <p>Elsewhere in the toolbox, it's quiet again. Cline, OpenHands, Continue, Copilot, and JetBrains had nothing freshly dated this round, and nothing gets invented here just to fill the section. Marked on the calendar: September thirtieth, when Docusign's MCP server goes generally available. Tomorrow we'll see whether any of the vendors finally produces the first independently measured number for one of this month's models.</p>
+</div>
+
+</body>
+</html>
