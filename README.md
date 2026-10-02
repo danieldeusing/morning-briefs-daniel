@@ -46,4 +46,4 @@ Requires a 1Password service-account token (`OP_SERVICE_TOKEN`) in a `.env` file
 
 ## License
 
-No license — all rights reserved. This is a personal project shared for reference.
+[MIT](LICENSE).
