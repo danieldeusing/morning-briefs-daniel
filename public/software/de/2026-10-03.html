@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-03</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-10-03</span>
+    <span class="dot">·</span>
+    <span>Samstag, 03.10.2026 · Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">Die Schwachstellen-Melder wurden selbst gehackt</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Die Geschichte des Tages hat eine böse Pointe. Das niederländische DIVD lebt davon, verwundbare Systeme zu finden und deren Betreiber zu warnen. Jetzt ist es selbst über zwei verkettete Zero-Days in seinem Ticketsystem Zammad eingebrochen worden. Nach eigener Einschätzung war ein KI-Agent der Angreifer: schnell, laut und chaotisch. Die CISA hat beide Lücken gestern in ihren Katalog aufgenommen, mit einer Frist von nur drei Tagen. Daneben laufen drei Kampagnen weiter: FortiMail, Citrix NetScaler und eine WordPress-Core-Lücke, nach der gerade Zehntausende IP-Adressen scannen. Die gute Nachricht kommt aus dem Stack: Caddy 2.11.6 und ein Tailscale-Update machen den Alltag leichter, und MongoDB 9.0 ist GA.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>DIVD gehackt</strong> über zwei Zammad-Zero-Days (CVE-2026-102489 + -102490). Erbeutet wurden die E-Mail-Adressen der Freiwilligen. Seit 02.10. im KEV-Katalog. <span class="chip">EU</span></li>
+      <li><span class="chip hot">Sec</span> <strong>FortiMail</strong> CVE-2026-104286, <span class="stat">CVSS 9,8</span>: Die CISA-Frist läuft morgen ab, für einige Zweige fehlt der Fix weiter. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Citrix NetScaler</strong>: zwei Zero-Days mit <span class="stat">CVSS v4 9,5</span>, werden seit 27.09. weltweit ausgenutzt. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>WordPress Core</strong> CVE-2026-87902 (<span class="stat">CVSS 9,2</span>), ohne Login ausnutzbar. CrowdSec zählt <span class="stat">30.813</span> scannende IPs. Fix ab 7.1.2. <span class="chip">Web</span></li>
+      <li><span class="chip good">Release</span> <strong>MongoDB 9.0</strong> ist seit 29.09. GA. Laut Hersteller bis zu doppelter Durchsatz, und Atlas Infinite trennt Rechenleistung von Speicher. <span class="chip">Global</span></li>
+      <li><span class="chip good">Infra</span> <strong>Caddy 2.11.6</strong> (01.10.) bringt den Matcher <code>url_pattern</code>, Schutz gegen Slowloris und einen HTTP/3-Fix für Tailscale-Links.</li>
+      <li><span class="chip good">Infra</span> <strong>Tailscale</strong> (29.09.): Der PAM-Webclient teilt jetzt eine Browser-Sitzung über alle Tabs, es gibt keine neue Anmeldung pro Dienst mehr.</li>
+      <li><span class="chip">Regulierung</span> <strong>CRA</strong>: Die 24-Stunden-Meldepflicht für ausgenutzte Lücken gilt seit 11.09. Der DIVD-Fall zeigt, wie schnell diese Frist eng wird. <span class="chip">EU</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Zwei CISA-Fristen am Wochenende, danach eine ruhige Woche ohne datierte Releases. Alle Fristen gelten für US-Bundesbehörden. Sie zeigen aber gut, wie dringend die CISA eine Lücke einstuft.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Sa 03.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heute: Tag der Deutschen Einheit, Feiertag in DE</span>
+          <span>Zammad-CVEs seit gestern im KEV-Katalog</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">So 04.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA-Frist FortiMail CVE-2026-104286</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mo 05.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA-Frist Zammad CVE-2026-102489 und CVE-2026-102490</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 06.10 – Fr 09.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Keine datierten Termine. Offen ist, wann Fortinet die fehlenden FortiMail-Fixes nachliefert.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>DIVD: Wie ein Agent die Schwachstellen-Jäger gehackt hat</h2>
+        <p>Das <strong>Dutch Institute for Vulnerability Disclosure (DIVD)</strong> ist ein Verein, der verwundbare Systeme im Netz aufspürt und deren Betreiber warnt. Laut The Register (01.10.) ist er selbst Opfer geworden. Der Einstieg lief über sein Ticketsystem <strong>Zammad</strong>, und zwar über zwei Lücken, die zu diesem Zeitpunkt niemand kannte. Erbeutet hat der Angreifer die E-Mail-Adressen der freiwilligen Mitarbeiter. Das DIVD warnt selbst vor der Folge: Mit diesen Adressen kann sich jemand leichter als „DIVD'er“ ausgeben. Für einen Verein, dessen Warnungen man glauben soll, ist genau das der empfindliche Punkt.</p>
+        <p>Die beiden Lücken: <strong>CVE-2026-102489</strong> ist ein Session-Fixation-Fehler, über den ein nicht angemeldeter Angreifer Code ausführen und Sitzungen anderer Nutzer abgreifen kann. <strong>CVE-2026-102490</strong> erlaubt einem lokalen Nutzer, sich zu root hochzuarbeiten. Die erste Lücke öffnet also die Tür, die zweite den Generalschlüssel. Die CISA hat beide am <strong>02.10.</strong> in den KEV-Katalog aufgenommen. Die Frist für US-Bundesbehörden endet schon am <strong>05.10.</strong></p>
+        <div class="mechanism">
+          <span class="step">Session Fixation (CVE-…102489)</span><span class="arrow">→</span><span class="step">Code-Ausführung ohne Login</span><span class="arrow">→</span><span class="step">Rechte-Ausweitung auf root (CVE-…102490)</span><span class="arrow">→</span><span class="step">E-Mail-Adressen abgezogen</span>
+        </div>
+        <div class="eli5">
+          <strong class="eli5-term">Session Fixation:</strong> Nach dem Login merkt sich eine Web-App den Nutzer über eine Sitzungs-ID, so wie eine Garderobenmarke. Bei Session Fixation drückt der Angreifer dem Opfer vorher eine Marke in die Hand, deren Nummer er selbst kennt. Meldet sich das Opfer an, gilt diese Marke plötzlich als „angemeldet“, und der Angreifer holt mit seiner Kopie die Jacke ab.
+        </div>
+        <p>Interessant ist die Einschätzung des DIVD zum Täter. Die Vorgehensweise deute auf einen <strong>Angriff durch einen KI-Agenten</strong> hin: „loud and very very messy“. Der Agent habe jeden nächsten Schritt selbst gewählt, „at the speed of light“, und in seinen Angriffsskripten Kommentare hinterlassen, die das eigene Vorgehen rechtfertigen. Das ist eine Einschätzung des Opfers, keine forensische Zuordnung. Sie passt aber zu dem, was man erwarten würde.</p>
+        <div class="callout info">
+          <span class="callout-label">Was ich nicht prüfen konnte</span> Die CVE-Nummern stimmen in zwei unabhängigen Quellen überein, im KEV-Feed der CISA und bei The Register. Zammads eigene Advisory-Seite zu diesen beiden Lücken war in dieser Recherche aber nicht abrufbar, und die NVD-Detailseite lud nicht. Welche Zammad-Version den Fix enthält, steht deshalb hier nicht. Wer Zammad betreibt, holt sich diese Angabe direkt beim Hersteller.
+        </div>
+        <p>Meine Sicht: Die KI-Pointe ist der Aufhänger, aber nicht die Lehre. Die Lehre ist, dass ein Helpdesk-System Kronjuwelen enthält: Kontakte, Kundenkorrespondenz und oft auch Zugangsdaten in Tickets. Trotzdem steht es häufig ohne VPN im Netz, weil Kunden es erreichen sollen. Und „laut und chaotisch“ ist für Verteidiger eine gute Nachricht. Wer seine Logs liest, sieht so einen Angriff. Das Problem ist das Tempo: Zwischen Einbruch und Datenabfluss bleibt kaum Zeit für einen Menschen, der erst am Montag ins Postfach schaut.</p>
+        <p class="byline">Die Agenten-Seite der Geschichte (Werkzeuge, Modelle, Abwehr) ist Thema des ai-dev-Briefs. Hier geht es um die Software, die aufgebrochen wurde.</p>
+        <span class="src"><a href="https://www.theregister.com/security/2026/10/01/ai-agents-hacked-the-hackers-stealing-email-addresses-from-security-research-org/5300652">theregister.com</a> · <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">cisa.gov (KEV-Feed, 02.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Drei Tage Frist: das neue KEV-Tempo</h2>
+        <p>Ein Detail aus dem KEV-Feed verdient eine eigene Notiz. Bei allen sechs Einträgen, die in diesem Brief vorkommen, liegt die Frist für US-Bundesbehörden genau <strong>drei Tage</strong> nach der Aufnahme. WordPress wurde am 25.09. aufgenommen, mit Frist 28.09. Citrix kam am 27.09., Frist 30.09. FortiMail kam am 01.10., Frist 04.10. Zammad kam am 02.10., Frist 05.10. Als Grundlage nennt der Feed eine Direktive „BOD 26-04“.</p>
+        <p>Für Teams außerhalb der US-Verwaltung ist das keine Pflicht, aber ein guter Maßstab. Wenn die CISA ihren eigenen Behörden drei Tage gibt, ist „im nächsten Wartungsfenster in drei Wochen“ für ein Gerät am Netzrand keine ernsthafte Antwort mehr.</p>
+        <span class="src"><a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">cisa.gov (KEV-Feed, Version 2026.10.02)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Citrix NetScaler: zwei Zero-Days, eine davon in der Standardkonfiguration</h2>
+        <p>Citrix hat am <strong>27.09.</strong> mit dem Bulletin <strong>CTX697096</strong> bestätigt, dass zwei Lücken in <strong>NetScaler</strong> gegen ungepatchte Installationen ausgenutzt werden. Beide tragen <span class="stat">CVSS v4.0 9,5</span>. <strong>CVE-2026-88771</strong> ist eine fehlende Eingabeprüfung, über die ein nicht angemeldeter Angreifer beliebige Befehle ausführt. <strong>CVE-2026-88772</strong> ist ein Speicherfehler, der zu Code-Ausführung oder Absturz führt.</p>
+        <p>Die zweite Lücke braucht DTLS. Das klingt nach einer Einschränkung, ist aber keine: Auf VPN-Virtual-Servern ist DTLS laut The Hacker News standardmäßig an. Die CISA hat beide Lücken am selben Tag in den KEV-Katalog aufgenommen. Die Behördenfrist (30.09.) ist schon abgelaufen.</p>
+        <div class="callout warn">
+          <span class="callout-label">Achtung</span> Bei NetScaler gilt die bekannte Regel: Ein Patch schließt die Tür, wirft aber niemanden hinaus, der schon drin ist. Wer zwischen dem 27.09. und dem Patch ungeschützt am Netz war, sucht nach Spuren. Die verfügbaren Fix-Versionen stehen in CTX697096, die konnte ich hier nicht direkt prüfen.
+        </div>
+        <p>Meine Sicht: Gateway-Appliances sind seit Jahren ein Lieblingseinstieg, und diese Woche stehen mit Citrix und Fortinet gleich zwei solcher Marken im Katalog. Wer kann, sollte den VPN-Zugang hinter eine Zero-Trust-Schicht wie Tailscale oder Cloudflare Access legen, statt eine Appliance mit offener Login-Seite ins Internet zu stellen.</p>
+        <span class="src"><a href="https://thehackernews.com/2026/09/cisa-says-attackers-are-exploiting-two.html">thehackernews.com</a> · <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">cisa.gov (KEV)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>FortiMail: CISA-Frist morgen, Fix weiter unvollständig</h2>
+        <p>Das Update zu gestern: <strong>CVE-2026-104286</strong> (<span class="stat">CVSS 9,8</span>, Path Traversal, ohne Login ausnutzbar) wird weiter aktiv ausgenutzt. Betroffen sind FortiMail <strong>8.0.0–8.0.1</strong>, <strong>7.6.0–7.6.6</strong>, <strong>7.4.0–7.4.8</strong> und <strong>7.2.0–7.2.9</strong>. Für einige Zweige führt Fortinet laut The Register die Fixes noch als „upcoming“. Die CISA-Frist für US-Behörden endet morgen, am <strong>04.10.</strong></p>
+        <p>Neue Fakten gibt es seit gestern nicht. Was gestern galt, gilt weiter: Management-Oberfläche vom Internet trennen, nach Spuren suchen und den Fix einspielen, sobald es ihn für den eigenen Zweig gibt.</p>
+        <span class="src"><a href="https://www.theregister.com/security/2026/10/02/fortinet-sounds-the-alarm-over-actively-exploited-fortimail-zero-day/5300803">theregister.com</a> · <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">cisa.gov (KEV)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>WordPress Core: eine Lücke ohne Plugin, ohne Login, mit Massen-Scans</h2>
+        <p>Die meisten WordPress-Katastrophen kommen aus Plugins. Diese nicht. <strong>CVE-2026-87902</strong> (<span class="stat">CVSS 9,2</span>) steckt im Core, genauer in der Auflösung der Seiten-Templates, und betrifft die Versionen <strong>4.7.0 bis 7.1.1</strong>. Laut Security Affairs braucht ein Angreifer weder ein Konto noch ein Cookie noch ein verwundbares Plugin. Auf manchen Servern führt die Lücke über die PEAR-Datei <code>pearcmd.php</code> bis zur Code-Ausführung.</p>
+        <p>Der Fix ist da: <strong>7.1.2</strong>, <strong>7.0.6</strong>, <strong>6.9.9</strong> und <strong>6.8.10</strong>, zurückportiert bis <strong>4.7.37</strong>. Die CISA hat die Lücke am 25.09. in den KEV-Katalog aufgenommen. CrowdSec hat seit dem <strong>23.09.</strong> <span class="stat">30.813</span> verschiedene IP-Adressen gezählt, die passende Exploit-Anfragen schicken.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Local File Inclusion (LFI):</strong> Die Anwendung soll eine Template-Datei laden, und der Angreifer bringt sie dazu, stattdessen eine ganz andere Datei vom selben Server zu laden und auszuführen. Liegt dort ein passendes Werkzeug wie <code>pearcmd.php</code>, wird aus „Datei lesen“ schnell „Befehle ausführen“.
+        </div>
+        <p>Meine Sicht: WordPress aktualisiert Minor-Versionen meist automatisch, also sind die meisten Seiten wohl schon sicher. Gefährdet sind die Seiten, bei denen jemand die Auto-Updates abgeschaltet hat: alte Kunden-Projekte, Staging-Instanzen und die Landingpage von 2019. Die Härtung, die bleibt: PEAR gehört nicht auf einen Webserver, der es nicht braucht.</p>
+        <span class="src"><a href="https://securityaffairs.com/?p=199564">securityaffairs.com</a> · <a href="https://www.crowdsec.net/vulntracking-report/cve-2026-87902-wordpress-vulnerability">crowdsec.net</a> · <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">cisa.gov (KEV)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Caddy 2.11.6: kleines Release, drei nützliche Dinge</h2>
+        <p>Caddy hat am <strong>01.10.</strong> Version <strong>2.11.6</strong> veröffentlicht. Drei Punkte stechen heraus:</p>
+        <ul>
+          <li><strong>Matcher <code>url_pattern</code></strong>: Routen lassen sich nach dem Web-Standard URLPattern beschreiben, also mit derselben Syntax, die man aus dem Browser kennt.</li>
+          <li><strong>Schutz gegen Slowloris</strong> über Leerlauf-Timeouts beim Lesen und Schreiben.</li>
+          <li><strong>HTTP/3 über Links mit kleiner MTU</strong>: Der Fix behebt laut Release Notes ausdrücklich die Kompatibilität mit Tailscale.</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">Slowloris:</strong> Der Angreifer öffnet sehr viele Verbindungen und schickt auf jeder nur alle paar Sekunden ein Byte. Der Server wartet höflich auf jede einzelne, bis keine freien Plätze mehr übrig sind. Ein Leerlauf-Timeout heißt: Wer zu lange schweigt, fliegt raus.
+        </div>
+        <p>Meine Sicht: Der MTU-Fix ist für jeden Caddy-hinter-Tailscale-Aufbau der eigentliche Grund für das Update. Ein Tailscale-Tunnel hat eine kleinere MTU als normales Ethernet. Passen die Pakete von HTTP/3 über QUIC nicht in diese MTU, bleiben Verbindungen typischerweise hängen, ohne klare Fehlermeldung. Solche Fehler kosten bei der Suche gern einen Nachmittag.</p>
+        <span class="src"><a href="https://github.com/caddyserver/caddy/releases">github.com/caddyserver</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Tailscale: eine Anmeldung statt einer pro Tab</h2>
+        <p>Laut Changelog vom <strong>29.09.</strong> verhält sich der PAM-Webclient unter <code>my.tailscale.com</code> jetzt wie <em>ein</em> gemeinsames Browser-Gerät über alle Tabs. Wer mehrere Dienste im Tailnet über den Browser öffnet, muss sich nicht mehr bei jedem neu anmelden. Das ist klein, aber es nimmt einer Sicherheitsfunktion die Reibung. Genau so wird aus „sollten wir einführen“ ein „nutzen wir“.</p>
+        <span class="src"><a href="https://tailscale.com/changelog">tailscale.com/changelog</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>MongoDB 9.0 ist GA, und Atlas trennt Rechenleistung von Speicher</h2>
+        <p>Gestern stand MongoDB 9.0 hier nur als Randnotiz. Jetzt liegt die Pressemitteilung vor: GA seit <strong>29.09.</strong>, laut Hersteller <span class="stat">bis zu 2×</span> Durchsatz, <span class="stat">35 %</span> schnellere Lesezugriffe und <span class="stat">30 %</span> schnellere Updates. Dazu kommt <strong>Atlas Infinite</strong> (Public Preview), ein Cluster-Typ, der Rechenleistung und Speicher trennt. Laut Constellation Research skaliert er <span class="stat">über 96 %</span> schneller, und jeder Shard fasst <span class="stat">10×</span> mehr Speicher. Die Anwendung muss dafür nicht umgeschrieben werden.</p>
+        <p>Meine Sicht: Alle Zahlen sind Herstellerangaben aus einem Launch, keine unabhängigen Messungen. Interessant ist die Richtung: Die Trennung von Rechenleistung und Speicher haben Postgres-Varianten wie Neon und Aurora vorgemacht. Jetzt zieht der Dokumenten-Platzhirsch nach. Das ist eher ein Signal für Architektur-Entscheidungen als ein Grund zum Migrieren.</p>
+        <span class="src"><a href="https://mongodb.com/company/newsroom/press-releases/mongodb-launches-mongodb-9-0-the-best-version-ever-built-and-atlas-infinite-for-ai-scale-demand">mongodb.com</a> · <a href="https://www.constellationr.com/insights/news/mongodb-launches-atlas-agent-engine-atlas-infinite-mongodb-90-goes-ga">constellationr.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: Wie sich 24 Stunden im Ernstfall anfühlen</h2>
+        <p>Seit dem <strong>11.09.</strong> gilt für Hersteller von Produkten im Geltungsbereich des <strong>Cyber Resilience Act</strong> eine gestufte Meldepflicht: Sowohl für aktiv ausgenutzte Schwachstellen als auch für schwere Vorfälle muss zuerst binnen <strong>24 Stunden</strong> eine Frühwarnung raus. Es folgt eine detaillierte Meldung nach <strong>72 Stunden</strong> und ein Abschlussbericht — bei Schwachstellen nach 14 Tagen, bei Vorfällen nach einem Monat. Das gilt auch für Produkte, die schon auf dem Markt sind. Der DIVD-Fall zeigt, warum das ernst wird: Zwischen Einbruch, Aufnahme in den KEV-Katalog und Behördenfrist lagen nur wenige Tage. Wer Software in der EU verkauft und einen Zero-Day im eigenen Produkt hat, muss also melden, bevor der Fix fertig ist.</p>
+        <p>Zur Frist für die harmonisierten Normen gibt es widersprüchliche Angaben. Eine Quelle nennt weiter den 30.10.2026, gestern stand hier eine Verschiebung um zwei Monate. Bis das geklärt ist, nenne ich kein Datum.</p>
+        <span class="src"><a href="https://sam-solutions.com/?p=33576">sam-solutions.com</a> · <a href="https://www.cyberresilienceact.eu/state-of-play.html">cyberresilienceact.eu</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert und bewusst leer</h2>
+        <ul>
+          <li><strong>PostgreSQL</strong>: kein neues Release. Die letzten Minor-Versionen kamen am 13.08. mit 28 Sicherheits-Fixes, das nächste planmäßige Release ist am <strong>12.11.</strong> <a href="https://www.postgresql.org/about/news/postgresql-186-1711-1615-1519-1424-and-19-beta-3-released-3365/">postgresql.org</a></li>
+          <li><strong>Java 27</strong> (GA 15.09.) war gestern Thema: G1 überall als Standard, Post-Quanten-TLS, kein LTS. Neues gibt es nicht.</li>
+          <li><strong>npm-Lieferkette</strong>: Es gibt keine neue Welle. Was gerade über „Shai-Hulud“ kursiert, sind die Kampagnen von 2025 und April 2026.</li>
+          <li><strong>Angular / React</strong>: Ich habe kein datiertes Release aus den letzten Tagen gefunden.</li>
+          <li><strong>Docker / containerd</strong>: Diesmal nicht geprüft. Das ist eine Lücke in dieser Recherche und kein Zeichen, dass es dort ruhig ist.</li>
+          <li><strong>Brasilien und DE-OSS</strong>: nichts Datiertes mit Software-Substanz.</li>
+          <li><strong>Für den ai-dev-Brief</strong>: Der neue Headless-Browser Lightpanda und Eclipses „Sovereign AI Foundation“ (beide heise, 02.10.) sind KI-Themen und stehen dort.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>Was heute zwanzig Minuten wert ist</h2>
+        <p><strong>Erstens Zammad</strong>, falls es irgendwo läuft, auch bei einem Kunden: Prüfen, ob die Instanz aus dem Internet erreichbar ist, und beim Hersteller nach der gefixten Version schauen. Danach in die Logs schauen, denn ein lauter Agent hinterlässt laute Spuren. <strong>Zweitens</strong> eine schnelle Runde über alte WordPress-Instanzen mit abgeschalteten Auto-Updates. <strong>Drittens</strong>, für Caddy-mit-Tailscale-Setups: 2.11.6 einspielen, wenn es passt.</p>
+        <p>Nicht auf die Liste gehört Hektik wegen MongoDB 9.0. Am Montag interessiert vor allem, ob Fortinet die fehlenden FortiMail-Fixes nachgeliefert hat und ob Zammad eine eigene Advisory zu den beiden Lücken veröffentlicht.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Samstag, der dritte Oktober, Feiertag in Deutschland. Die Geschichte des Tages hat eine böse Pointe: Ausgerechnet eine Organisation, die anderen ihre Sicherheitslücken meldet, wurde selbst gehackt.</p>
+  <p>Es geht um das niederländische DIVD, das Dutch Institute for Vulnerability Disclosure. Laut The Register sind Angreifer über das Ticketsystem Zammad eingedrungen. Sie haben zwei bis dahin unbekannte Lücken verkettet: Die erste erlaubt ohne Anmeldung das Ausführen von Code, die zweite macht daraus Root-Rechte. Erbeutet wurden die E-Mail-Adressen der freiwilligen Mitarbeiter. Das DIVD warnt, dass sich damit jemand leichter als einer der ihren ausgeben kann. Nach eigener Einschätzung war der Angreifer ein KI-Agent, schnell, laut und sehr chaotisch. Die amerikanische Behörde CISA hat beide Lücken gestern in ihren Katalog der ausgenutzten Schwachstellen aufgenommen. Eine Einschränkung: Zammads eigene Advisory konnte ich nicht einsehen, deshalb nenne ich keine gefixte Version.</p>
+  <p>Ein Detail aus diesem Katalog fällt auf. Bei allen Lücken in diesem Brief gibt die CISA ihren eigenen Behörden nur drei Tage Zeit. Für alle anderen ist das ein guter Maßstab: Bei einem Gerät am Netzrand reicht das Wartungsfenster in drei Wochen nicht mehr.</p>
+  <p>Zwei solcher Geräte stehen diese Woche im Katalog. Citrix hat am siebenundzwanzigsten September zwei Zero-Days in NetScaler bestätigt, beide mit der Wertung neun Komma fünf. Eine davon braucht DTLS, und das ist auf VPN-Servern standardmäßig an. Bei Fortinets FortiMail läuft morgen die Behördenfrist ab, und für einige Versionszweige gibt es immer noch keinen Fix.</p>
+  <p>Dazu kommt WordPress, und diesmal liegt es nicht an einem Plugin. Eine Lücke im Kern erlaubt ohne Anmeldung das Einbinden fremder Dateien und auf manchen Servern sogar das Ausführen von Code. Laut CrowdSec haben seit dem dreiundzwanzigsten September über dreißigtausend verschiedene IP-Adressen danach gescannt. Der Fix steckt in Version sieben Punkt eins Punkt zwei und in Rückportierungen bis vier Punkt sieben Punkt siebenunddreißig. Gefährdet sind vor allem alte Seiten mit abgeschalteten Auto-Updates.</p>
+  <p>Aus dem eigenen Stack gibt es Gutes. Caddy zwei Punkt elf Punkt sechs bringt einen neuen Matcher nach dem Web-Standard URLPattern, einen Schutz gegen langsame Verbindungs-Angriffe und einen Fix für HTTP drei über Tailscale-Tunnel. Und Tailscale selbst hat seinen Browser-Zugang vereinfacht: eine Anmeldung für alle Tabs statt einer pro Dienst.</p>
+  <p>MongoDB neun ist seit dem neunundzwanzigsten September allgemein verfügbar. Der Hersteller verspricht bis zu doppelten Durchsatz und mit Atlas Infinite eine Trennung von Rechenleistung und Speicher. Das sind Herstellerangaben, keine unabhängigen Messungen.</p>
+  <p>In Europa gilt seit dem elften September die Meldepflicht des Cyber Resilience Act: vierundzwanzig Stunden für ausgenutzte Lücken. Der DIVD-Fall zeigt, wie wenig Zeit das ist.</p>
+  <p>Für heute reicht das: Zammad prüfen, falls es irgendwo läuft, und alte WordPress-Seiten durchsehen. Am Montag geht es um die Frage, ob Fortinet die fehlenden Fixes nachgeliefert hat und ob Zammad eine eigene Advisory veröffentlicht.</p>
+</div>
+
+</body>
+</html>
