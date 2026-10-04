@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-04</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-04</span>
+    <span class="dot">·</span>
+    <span>Sunday, 2026-10-04 · Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">NetScaler: patched and still open</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">A week after the patch for two NetScaler zero-days, heise reports a third flaw. It reportedly hits even fully patched devices, crashes them, and lets attackers run code. There's no fix yet. That's today's story, and it shows a pattern: anyone running network appliances at the edge is in permanent patch mode right now. Cisco SD-WAN, FortiMail, and Zammad sit in the same list, and two CISA deadlines fall today and tomorrow. Away from security, it's a good Sunday for developers: systemd learns OCI containers, EDG open-sources its C++ frontend, and Python 3.10 reaches its end. And Siemens shows that a free license is no promise about the future.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Citrix NetScaler</strong>: new zero-day, no CVE and no patch, according to heise (Oct 3) hitting even fully patched devices. Single-source only. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Cisco Catalyst SD-WAN Manager</strong> CVE-2026-76504, <span class="stat">CVSS 9.8</span>: login bypass via one URL-encoded letter, actively exploited. <span class="chip">USA</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Apple CoreGraphics</strong> CVE-2026-86950, <span class="stat">CVSS 8.8</span>: targeted attacks, fixed in iOS 26.7.1 and macOS Tahoe 26.7.1. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>CISA deadlines</strong>: FortiMail today, Zammad tomorrow. <span class="chip">USA</span></li>
+      <li><span class="chip good">Sec</span> <strong>Killsec taken down</strong>: prosecutors and Hamburg's state police arrest three suspects, including a 16-year-old. <span class="chip">DE</span></li>
+      <li><span class="chip">OSS</span> <strong>Siemens shuts down OpenRadioss</strong>: repo gone, AGPL code stays free, but the vendor is out. <span class="chip">DE</span></li>
+      <li><span class="chip good">Infra</span> <strong>systemd</strong>: mstack launches OCI images as nspawn containers, and Varlink gets an HTTPS bridge. <span class="chip">EU</span></li>
+      <li><span class="chip">Release</span> <strong>Python 3.10.22</strong> is the last release in the 3.10 series. No more security fixes after this. <span class="chip">Global</span></li>
+      <li><span class="chip good">OSS</span> <strong>EDG C++ frontend</strong> is open source now, maintained by the C++ Alliance. <span class="chip">USA</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">Two CISA deadlines at the start of the week, then only open questions with no date. The deadlines apply to US federal agencies, but they're a good signal for how urgent CISA rates a flaw.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Sun 10/04</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>CISA deadline FortiMail CVE-2026-104286</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mon 10/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA deadline Zammad CVE-2026-102489 and CVE-2026-102490</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 10/06 – Sat 10/10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>No dated events. Open question: when will Citrix ship a fix for the new NetScaler flaw, and will it get a CVE number?</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>NetScaler: the third zero-day in a week</h2>
+        <p>For reference: on <strong>September 27</strong>, Citrix closed two flaws in NetScaler ADC and Gateway, <strong>CVE-2026-88771</strong> and <strong>CVE-2026-88772</strong>, both rated <span class="stat">CVSS v4 9.5</span>. The first needs no special configuration, the second just needs DTLS, which is on by default on VPN servers. According to Citrix, both had already been exploited for weeks before the patch.<sup>[1]</sup> Shadowserver counted around <span class="stat">22,000</span> reachable instances, about <span class="stat">3,000</span> of them in Germany, ranking second behind the US.<sup>[2]</sup></p>
+        <p>Now the follow-up. heise reported on <strong>October 3 at 10:23 a.m.</strong> a new flaw that hits even the current, fully patched NetScaler version.<sup>[3]</sup> Attackers flood the system with SAML login requests. The devices crash or reboot, and in the worse case, malicious code runs afterward. One researcher found a downloaded malware file on their honeypot, and the watchTowr Labs team reproduced the attack. According to heise, there's no CVE number and no patch yet. Citrix's advice is brief: affected customers should contact support.</p>
+        <p>My take: this year, NetScaler is no longer a product you patch and forget. It's a construction site you check every week. Anyone seeing spontaneous reboots in their logs should take them seriously, even if the patch level looks green.</p>
+        <div class="eli5">
+          <strong class="eli5-term">SAML:</strong> A standard for "log in once, access everything." The company login issues a kind of signed ID card, and the NetScaler gateway checks it. That check step is apparently the attack surface here: send enough broken ID cards and you can knock the bouncer over.
+        </div>
+        <div class="callout warn">
+          <span class="callout-label">Single source</span> The new flaw is so far only documented by the heise article, which relies on a honeypot operator and watchTowr. I found no Citrix advisory or KEV entry for it. The two older CVEs, by contrast, are confirmed in multiple places.
+        </div>
+        <span class="src">[1] <a href="https://thehackernews.com/2026/09/warning-two-unpatched-citrix-netscaler.html">thehackernews.com</a> · [2] <a href="https://thenextweb.com/news/citrix-netscaler-zero-days-cve-2026-88771-exploited">thenextweb.com</a> · [3] <a href="https://www.heise.de/news/Netscaler-Admins-aufgepasst-Zero-Day-verursacht-Crashes-und-Codeausfuehrung-11474971.html">heise.de (Oct 3)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cisco SD-WAN Manager: one letter is enough</h2>
+        <p>On <strong>September 30</strong>, Cisco disclosed an actively exploited flaw in <strong>Catalyst SD-WAN Manager</strong>: <strong>CVE-2026-76504</strong>, <span class="stat">CVSS 9.8</span>.<sup>[1]</sup> The trick is almost embarrassingly simple. The attacker encodes the letter "j" in the login path <code>j_security_check</code> as a URL character. The rule meant to protect that path then fails to recognize it. Result: API access with admin rights, no login required.<sup>[2]</sup> According to secondary sources, the flaw has been in CISA's KEV catalog since Sep 30.</p>
+        <p>For developers, this is a lesson even without Cisco in the stack. Anyone building access rules from text comparisons on URLs must normalize first, turning <code>%6A</code> into <code>j</code>. Otherwise, the firewall sees a different path than the backend does. Spring Security and many reverse proxies have had exactly this class of bug before.</p>
+        <div class="eli5">
+          <strong class="eli5-term">URL encoding:</strong> Any character in a web address can also be written as a percent code, "j" for example as <code>%6A</code>. To the server, both mean the same thing. But if the bouncer only checks for the spelling "j," a guest can simply walk in using "%6A."
+        </div>
+        <span class="src">[1] <a href="https://thehackernews.com/2026/09/cisco-warns-of-attackers-exploiting.html">thehackernews.com</a> · [2] <a href="https://www.cisecurity.org/advisory/a-vulnerability-in-cisco-catalyst-sd-wan-manager-could-allow-for-authentication-bypass_2026-105">cisecurity.org</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Apple CoreGraphics: one crafted file is enough</h2>
+        <p>Apple has fixed <strong>CVE-2026-86950</strong>, an out-of-bounds write in <strong>CoreGraphics</strong> (<span class="stat">CVSS 8.8</span>). A single crafted file is enough to run code. According to Apple, the flaw was used in attacks on specific individuals; Meta Product Security found it.<sup>[1]</sup> CISA has listed it in the KEV catalog since Sep 29. The fix is in <strong>iOS/iPadOS 26.7.1</strong>, <strong>macOS Sequoia 15.8.1</strong>, and <strong>macOS Tahoe 26.7.1</strong>.<sup>[2]</sup></p>
+        <p>"Targeted attacks" usually means journalists, activists, diplomats. For most of us, that's no reason to panic, but it's a reason not to let the update sit for three weeks. CoreGraphics renders images and PDFs everywhere in the system, including in previews.</p>
+        <span class="src">[1] <a href="https://thehackernews.com/2026/09/apple-patches-coregraphics-flaw.html">thehackernews.com</a> · [2] <a href="https://securityaffairs.com/?p=200069">securityaffairs.com</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Deadline corner: FortiMail today, Zammad tomorrow</h2>
+        <h3>FortiMail CVE-2026-104286</h3>
+        <p>This path-traversal flaw lets an unauthenticated attacker write arbitrary files. CISA added it to the KEV catalog on <strong>Oct 1</strong>, and the deadline for US agencies ends <strong>today, Oct 4</strong>.<sup>[1]</sup> This flaw has already been covered here twice. The only thing new today is the date. For this research, the KEV feed was the only freshly checked source. Whether Fortinet has shipped missing fixes for some branches remains open.</p>
+        <h3>Zammad CVE-2026-102489 and -102490</h3>
+        <p>This is the chain used to breach the Dutch DIVD on <strong>Sep 21</strong> (see yesterday). New today is the version detail: <strong>Zammad 6.3.0 through 6.5.4</strong> is vulnerable. The 7.0.0 through 7.1.3 series is technically affected, but reportedly not exploitable due to its runtime environment.<sup>[2]</sup> CVSS for the first flaw: <span class="stat">9.4</span>. The KEV deadline ends <strong>tomorrow, Oct 5</strong>.</p>
+        <p>Anyone running Zammad 6.x for a client now has a clear answer to "do we need to do this?" Yes.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">cisa.gov (KEV feed, accessed Oct 4)</a> · [2] <a href="https://app.opencve.io/cve/CVE-2026-102489">opencve.io</a> · <a href="https://www.secnews.gr/en/737093/dictyaki-paraviasi-divd-zammad/">secnews.gr</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Killsec taken down, Hamburg leads</h2>
+        <p>Good news from Germany: prosecutors and <strong>Hamburg's state police (LKA)</strong> dismantled the ransomware group <strong>Killsec</strong> in "Operation Killswitch," heise reported on <strong>Oct 1</strong>.<sup>[1]</sup> Three people were arrested, including a 16- and an 18-year-old. One teenager is considered the lead suspect. The group reportedly operated as "ransomware as a service" since around 2024, with roughly <span class="stat">1,000</span> attacks worldwide and at least <span class="stat">70</span> in Germany. <em>(Confirmed only via heise, no second source found.)</em></p>
+        <p>Investigators searched eight sites across Greece, Romania, Spain, and the UK, seized five servers, and secured <span class="stat">110 TB</span> of data. The dark-web leak site now shows a warning banner. According to the report, the entry point was often poorly secured cloud storage. That's the unglamorous lesson here: no zero-day, just open buckets.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Ransomware as a service:</strong> A small core group builds the extortion software and infrastructure. "Partners" rent the package, attack companies, and hand over a share of the ransom. Like a franchise, just criminal.
+        </div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Ransomwaregruppe-Killsec-ausgehoben-Teenager-als-Hauptverdaechtiger-11473281.html">heise.de (Oct 1)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Graykey stops the clock on an iPhone</h2>
+        <p>Since iOS 18, an iPhone reboots if it hasn't been unlocked in three days. After that, it's in "Before First Unlock" state, and forensic tools barely get at the data. According to 404 Media, cited by heise on <strong>Oct 2</strong>, <strong>Graykey</strong> from Magnet Forensics can bypass that reboot.<sup>[1]</sup> The claim is based on an internal company video from early 2025. Security researcher Jiska Classen suspects the tool manipulates the device's clock so the three-day counter never runs out. <em>(Confirmed only via heise/404 Media, no second source found.)</em></p>
+        <p>The video is old; the report is new. The practical countermeasure stays simple: anyone who fully powers off a device before a search is immediately in the protected state.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Automatischer-iPhone-Reboot-Forensik-Firma-soll-Zeit-anhalten-11473517.html">heise.de (Oct 2)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>RSA signatures: weaker than thought, but not broken</h2>
+        <p>Researchers at UC San Diego and INRIA Nancy forged 1024-bit RSA signatures without knowing the key.<sup>[1]</sup> The cost: <span class="stat">1,380</span> CPU-core-years over five months and around 2<sup>32</sup> requests to an HSM that dutifully kept signing. The bigger takeaway goes beyond the demo: RSA with a "signing oracle" is <span class="stat">15 to 30 bits</span> weaker, for keys from 1024 to 4096 bits, than the usual factoring-based estimates assume.<sup>[2]</sup></p>
+        <p>My read: nothing changes day to day, as long as no stranger can request billions of signatures from you. But it's one more argument to finally retire 1024-bit legacy systems and use Ed25519 or ECDSA in new ones. heise's headline sums it up well: "cracks RSA signatures — a little."</p>
+        <div class="eli5">
+          <strong class="eli5-term">Signing oracle:</strong> A device or service that signs any data on request with a secret key, such as a hardware security module (HSM). The attacker never sees the key. But from enough signatures, they can derive knowledge that lets them forge a signature for something the device never actually signed.
+        </div>
+        <span class="src">[1] <a href="https://eprint.iacr.org/2026/2131">eprint.iacr.org</a> · [2] <a href="https://www.schneier.com/blog/archives/2026/09/new-attack-against-rsa.html">schneier.com</a> · <a href="https://www.heise.de/news/Kryptografie-Forscher-demonstrieren-neuartigen-Angriff-auf-RSA-11474271.html">heise.de (Oct 2)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Siemens shuts down OpenRadioss</h2>
+        <p>Altair had released the crash simulator <strong>OpenRadioss</strong> under the GNU AGPL in 2022. Siemens bought Altair in March 2025 and has now discontinued the project, heise reported on <strong>Oct 2</strong>.<sup>[1]</sup> The GitHub organization no longer shows any public repositories. Instead of open source, there's now a "Shared Source" program for selected research partners, with development continuing in the commercial Simcenter Radioss.</p>
+        <p>Code already released under AGPL stays free. heise puts the real point well: a free license secures rights to the published code, but neither access to the repo nor the vendor's continued participation. That's the actual lesson for any company building on vendor OSS: check whether a community exists beyond the vendor. If not, the project is a product decision that can flip at any time.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Open-Source-mit-Ablaufdatum-Siemens-aendert-Kurs-bei-Radioss-11473978.html">heise.de (Oct 2)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>EDG open-sources its C++ frontend</h2>
+        <p>The <strong>Edison Design Group</strong> released the source code of its C/C++ frontend on <strong>Oct 1</strong>.<sup>[1]</sup> The frontend reads C and C++ code, checks it, and builds an internal intermediate representation from it. Many analysis tools and commercial compilers have had this under the hood for decades. The repo also includes backends that emit C/C++ again, plus a prelinker for templates. The nonprofit C++ Alliance takes over maintenance. EDG chief John Spicer hopes it becomes a third foundational tool alongside GCC and Clang.</p>
+        <p>For Java and TypeScript people, this might sound distant. But it's one of the rare stories where a company opens up code instead of closing it off. The contrast with Siemens on the same day is almost too neat.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/C-Frontend-geoeffnet-EDGs-Code-ist-jetzt-fuer-alle-da-11472805.html">heise.de (Oct 1)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>systemd: OCI containers without Docker, and an API over HTTPS</h2>
+        <p>At the "All Systems Go!" conference in Berlin, Lennart Poettering showed two things on <strong>Oct 1</strong>.<sup>[1]</sup> First, <strong>mstack</strong>: a format that lets systemd launch OCI images directly as nspawn containers. An image's layers land as an OverlayFS stack in a <code>.mstack/</code> directory. Available from systemd 260, included in Fedora 45 and Ubuntu 26.10. Poettering frames this not against Docker or Podman, but against runc as the runtime underneath them.</p>
+        <p>Second, the <strong>Varlink HTTP bridge</strong>.<sup>[2]</sup> systemd already speaks Varlink internally — JSON over a socket — to start units, set the hostname, reboot. The bridge makes that reachable over HTTPS, Polkit checks permissions, and the bridge itself runs without root. Alongside it comes <strong>systemd-report</strong>, which actively pushes metrics like CPU, RAM, and processes outward.</p>
+        <p>My take: for a small homelab running Docker Compose, nothing changes tomorrow. But in the medium term, systemd becomes a container host and a management API in one. Anyone managing Linux servers via Ansible and SSH should keep an eye on the Varlink bridge.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/mstack-OCI-Container-mit-systemd-ausfuehren-11472047.html">heise.de (mstack, Oct 1)</a> · [2] <a href="https://www.heise.de/news/Eine-API-fuer-Linux-Remote-Verwaltung-mit-systemd-11472737.html">heise.de (Varlink, Oct 1)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Python 3.10 is done</h2>
+        <p><strong>Python 3.10.22</strong> is, according to heise, the last release in the 3.10 series, five years after it launched.<sup>[1]</sup> No more security fixes are coming. The recommendation: move to Python 3.14. Anyone running FastAPI services in Docker images based on <code>python:3.10-slim</code> now has a concrete task for the coming weeks. Jumping four versions is usually harmless, but not always: old C extensions and pinned dependencies are the usual stumbling blocks.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Developer-Haeppchen-Rust-wird-variadisch-Qt-kann-HarmonyOS-Python-3-10-geht-11473875.html">heise.de (Oct 3)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Briefly noted</h2>
+        <ul>
+          <li><strong>Rust 1.99.0</strong> (Oct 1) stabilizes variadic functions for the "C" and "C-unwind" ABIs. <strong>Git 2.56</strong> adds <code>git add --resolved</code>, which stages only resolved conflicts. <strong>Qt 6.12</strong> supports HarmonyOS as an LTS platform for the first time. <span class="src"><a href="https://www.heise.de/news/Developer-Haeppchen-Rust-wird-variadisch-Qt-kann-HarmonyOS-Python-3-10-geht-11473875.html">heise.de</a></span></li>
+          <li><strong>Pangolin 1.24</strong>: the self-hosted reverse proxy gets "Exit Nodes" and becomes a VPN gateway, including for general internet traffic. For homelabs, an alternative to Cloudflare Tunnel plus a Tailscale exit node, all in one. <span class="src"><a href="https://www.heise.de/news/Reverse-Proxy-fuers-Homelab-Pangolin-1-24-bringt-Selbstbau-VPN-11472441.html">heise.de (Oct 1)</a></span></li>
+          <li><strong>1Password 7.10.4 for Mac</strong> removes the Classic browser extension. That removes the last way to use 1Password locally in the browser without the cloud. heise advises skipping the update for anyone who wants to stay on the local-only setup. <em>(Confirmed only via heise.)</em> <span class="src"><a href="https://www.heise.de/news/1Password-7-Update-fuer-macOS-killt-Unterstuetzung-fuer-Browser-Plug-in-11473487.html">heise.de (Oct 2)</a></span></li>
+          <li><strong>Windows 11 26H2</strong> turns on settings backup by default on eligible devices. Devices in the EU are exempt because of the DMA. <span class="src"><a href="https://www.heise.de/news/Windows-Einstellungsbackup-wird-Standardoption-in-Windows-11-26H2-11472775.html">heise.de (Oct 1)</a></span></li>
+          <li><strong>Austria, NISG 2026</strong>: the national NIS2 implementation applies to companies with 50-plus employees or €10M in revenue ("important entities"); starting in October, fines of up to <span class="stat">€7 million</span> or 1.4% of global turnover are possible. The often-quoted €10 million figure only applies to larger "essential entities" (250-plus employees or €50M-plus revenue). Anyone with clients in Austria should know this. Germany is not affected by this rule. <span class="src"><a href="https://www.boerse-express.com/news/articles/nisg-2026-bussgelder-bis-zehn-millionen-euro-ab-oktober-921926">boerse-express.com</a></span></li>
+          <li><strong>Deliberately empty</strong>: no new releases from Spring, Angular, React, PostgreSQL, Caddy, or Tailscale in this research. Brazil: no software story with substance found.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>What's worth twenty minutes today</h2>
+        <p><strong>First, NetScaler</strong>, if you run one anywhere: check logs for unexpected reboots since Sep 27 and watch for a Citrix advisory on the new flaw. <strong>Second</strong>, a quick search across your own repos for <code>python:3.10</code> in Dockerfiles and CI configs. <strong>Third</strong>, for Apple devices: install iOS 26.7.1 and macOS 26.7.1.</p>
+        <p>What doesn't belong on the list is panic over the RSA study. On Monday, the main question is whether the new NetScaler flaw gets a CVE number and a KEV entry.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Sunday, October fourth. Today's top story: Citrix NetScaler has yet another zero-day, and this time, according to heise, it hits devices that are already fully patched.</p>
+  <p>Quick recap: on September twenty-seventh, Citrix closed two critical flaws that had already been exploited for weeks. Around twenty-two thousand devices were reachable online, about three thousand of them in Germany. Now heise reports a third flaw. Attackers flood the system with SAML login requests, the devices crash, and in the worst case, malicious code runs afterward. There's no patch and no CVE number yet. So far, this report rests on a single source.</p>
+  <p>At Cisco, one letter is all it takes. In the Catalyst SD-WAN Manager, attackers bypass the login by encoding the letter j in the login address as a percent code. The security rule then fails to recognize the path, and the attacker gets admin access to the API. The flaw carries a CVSS score of nine point eight and is being actively exploited.</p>
+  <p>Apple has closed a flaw in CoreGraphics that was used in targeted attacks on specific individuals. A single crafted file is enough. The fix is in iOS twenty-six point seven point one and the matching macOS updates.</p>
+  <p>Two deadlines from the US agency CISA are running out: today for FortiMail, tomorrow for the Zammad flaws that were used to breach the Dutch organization DIVD. For Zammad, versions six point three through six point five point four are vulnerable.</p>
+  <p>Good news comes out of Hamburg. Prosecutors and the state police dismantled the ransomware group Killsec. Three suspects were arrested, including a sixteen-year-old. The group is believed to have carried out around a thousand attacks worldwide, at least seventy of them in Germany.</p>
+  <p>In open source, two companies went opposite directions on the same day. Siemens discontinued the OpenRadioss project and pulled down the repository. The code already released stays free, but the vendor is out. The Edison Design Group went the other way and open-sourced its C plus plus frontend.</p>
+  <p>For the stack: systemd can now launch OCI containers directly with mstack and gets a management API over HTTPS. And Python three point ten has reached its end, with version three point ten point twenty-two as the final release. Anyone still running Docker images on three point ten should start planning the move now.</p>
+  <p>On Monday, one question matters most: will the new NetScaler flaw get a CVE number, a patch, and an entry in CISA's catalog?</p>
+</div>
+
+</body>
+</html>
