@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-10-05</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-05</span>
+  </div>
+
+  <h1 class="masthead-title">Five Security Agents in One Year — and GitHub Throttles Automated Bug Reports</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Quiet weekend: no lab and no coding tool has shipped anything new since Friday. So today's issue steps back to look at a pattern that's built up over the whole year. With <strong>Codex Security Cloud</strong>, OpenAI now also has an agent that continuously scans repositories for security holes — after Anthropic, Replit, Cognition, and Cursor. The same day, GitHub introduced <strong>rate limits for vulnerability reports</strong>, because maintainers are drowning in "low-quality and automated" reports. The two belong together.</p>
+    <ul>
+      <li><span class="chip hot">OpenAI</span> <strong>Codex Security Cloud</strong> (Research Preview): continuous scans with a threat model; findings get reproduced in a sandbox before they're reported. Billed by the token.</li>
+      <li><span class="chip hot">Tool</span> <strong>GitHub</strong> caps private vulnerability reports per account and now requires a proof of concept via a form.</li>
+      <li><span class="chip">Tool</span> <strong>Security agents, 2026</strong>: Claude Code Security (Feb 20), Replit (Apr 21), Devin Security Swarm (Jul 7), Cursor Security Review (Sep 23), Codex (Sep 29).</li>
+      <li><span class="chip">Claude</span> A <strong>1M-token context</strong> is now standard for Opus 5.5 and Sonnet 5.5; Gemini 3.8 Flash takes 1,048,576 tokens.</li>
+      <li><span class="chip">Claude</span> <strong>Sonnet 5.5 after one week</strong>: ahead of Opus 5.5 on Terminal-Bench, behind it on CursorBench. No clear winner.</li>
+      <li><span class="chip">Bench</span> <strong>DeepSeek V4-Pro-0813</strong>: per Vals AI, 96.40% on SWE-Bench Verified, rank 2 and the best open model.</li>
+      <li><span class="chip">OSS</span> <strong>Cline</strong> shipped five releases on Oct 2 most recently, <strong>OpenHands</strong> v1.24.0 from Sep 25, <strong>Cursor</strong> quiet since Sep 23.</li>
+      <li><span class="chip">MCP</span> No dated MCP story this week.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">A full week in review, a deadline 14 days out</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Mon Sep 28</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Sonnet 5.5, same day in Copilot</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue Sep 29</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>OpenAI DevDay: Codex Security Cloud</span>
+          <span>GPT-6.1 Sol in Copilot</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu Oct 1</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GitHub: rate limits for vulnerability reports</span>
+          <span>Claude Code Mods</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri Oct 2</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cline: five releases</span>
+          <span>Copilot wave 1: models dropped</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Mon Oct 5</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today: quiet</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mon Oct 19</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Copilot wave 2: GPT-5.5, among others, dropped</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Security agents: the experiment becomes a category</h2>
+        <p>On <strong>September 29</strong>, OpenAI introduced <strong>Codex Security Cloud</strong> at DevDay; Channel Insider covered it in detail on Oct 1.<sup>[1]</sup> The tool "runs scheduled security scans in the cloud" and reads a repository first to understand how the application is built. Only then does it look for vulnerabilities.<sup>[1]</sup></p>
+        <p>Three details are more interesting than the announcement itself:</p>
+        <ul>
+          <li><strong>Threat model:</strong> Codex builds "an editable threat model around attacker entry points and trust boundaries." So you can correct it.<sup>[1]</sup></li>
+          <li><strong>Reproducing before reporting:</strong> every finding gets reproduced in an isolated environment first. Only then does a human see it. Confirmed findings come with a suggested patch, but "developers still decide what reaches the codebase."<sup>[1]</sup></li>
+          <li><strong>Billing:</strong> by the token — and "scans pause when funding is unavailable." Available for ChatGPT Pro, Business, Enterprise, and Edu, as a Research Preview.<sup>[1]</sup></li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">Threat model:</strong> A list of where an attacker could get into your software — login, API, file upload — and which boundaries they'd then have to cross. Like a floor plan of a house where you mark the doors, windows, and the path to the safe. Anyone who knows the floor plan searches with purpose instead of everywhere.
+        </div>
+        <p>That makes OpenAI late to this, not early. This year's list:</p>
+        <table>
+          <thead><tr><th>Agent</th><th>Launch</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td>Claude Code Security</td><td>Feb 20, 2026</td><td>Research Preview for Enterprise and Team<sup>[2]</sup></td></tr>
+            <tr><td>Replit Security Agent</td><td>Apr 21, 2026</td><td>Scan and dependency audit before publishing<sup>[3]</sup></td></tr>
+            <tr><td>Devin Security Swarm</td><td>Jul 7, 2026</td><td>Per Cognition, found 36 of 50 real GHSA vulnerabilities<sup>[4]</sup></td></tr>
+            <tr><td>Cursor Security Review</td><td>Sep 23, 2026</td><td>Checks pull requests for injection and auth bypass<sup>[5]</sup></td></tr>
+            <tr><td>Codex Security Cloud</td><td>Sep 29, 2026</td><td>Continuous scanning, findings confirmed in sandbox<sup>[1]</sup></td></tr>
+          </tbody>
+        </table>
+        <p class="byline">Launch dates 1-3 confirmed only via secondary sources; the Devin figure is a vendor claim.</p>
+        <p>My read: five vendors, one year, the same idea. Writing code is now a commodity; what's being sold is checking it. The decisive difference between these tools isn't how much they find, but whether they prove a finding before reporting it. A scanner that spits out 200 suspects costs you an afternoon. One that delivers three reproduced vulnerabilities with a patch saves you one. Codex and Devin promise the latter — nobody has measured that independently yet.</p>
+        <p><span class="chip good">Worth trying</span> Anyone testing one of these agents: take a repo with a known, already-fixed vulnerability, roll it back to the old state, and see whether the agent finds it. That's your own benchmark, and it's more honest than any vendor figure.</p>
+        <span class="src">[1] <a href="https://www.channelinsider.com/ai/news-openai-codex-security-cloud/">channelinsider.com</a>, Oct 1, 2026, accessed Oct 5, 2026 · [2] <a href="https://blockchain.news/ainews/claude-code-security-launch-anthropic-s-ai-finds-vulnerabilities-and-suggests-patches-early-analysis-for-2026-enterprise-appsec">blockchain.news</a>, accessed Oct 5, 2026 · [3] <a href="https://blogs.apievangelist.com/blogs/replit-2026-04-21-meet-replit-security-agent/">blogs.apievangelist.com</a>, accessed Oct 5, 2026 · [4] <a href="https://cognition.com/blog/introducing-devin-security-swarm">cognition.com</a> — vendor claim · [5] <a href="https://cursor.com/changelog">cursor.com/changelog</a>, entry from Sep 23, 2026, accessed Oct 5, 2026</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>The other side: GitHub throttles automated bug reports</h2>
+        <p>On <strong>Oct 1</strong>, two days after DevDay, GitHub published two changes to private vulnerability reports. The first caps how many reports a single account can submit. The reasoning is in the changelog: "Open source maintainers are receiving more low-quality and automated vulnerability reports, which can bury the reports that matter."<sup>[1]</sup></p>
+        <p>The second replaces the free-text field with a form that asks for the details, "including a reproducible proof of concept."<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Private vulnerability report:</strong> A confidential channel on GitHub where someone reports a security flaw to the maintainers without making it public. Like a mailbox just for the building super, instead of a note on the bulletin board. Flood the mailbox with flyers, and the super can no longer find the one letter that matters.
+        </div>
+        <p>GitHub doesn't say where the automated reports come from. But the timing is striking: vendors are currently selling mass vulnerability discovery, and the largest open-source platform builds in a brake on mass reporting the same day. The demand for a reproducible proof of concept is exactly the bar the security agents will have to clear.</p>
+        <p>My view: anyone who turns a security agent loose on someone else's open-source project and reports the findings unchecked is the problem, not the solution. The mandatory form is the right call. Nothing changes for your own repo — except that as a maintainer, you now have better tools against report spam.</p>
+        <span class="src">[1] <a href="https://github.blog/changelog/2026-10-01-rate-limits-for-private-vulnerability-reports">github.blog/changelog</a>, Oct 1, 2026 — primary source · [2] <a href="https://github.blog/changelog/2026-10-01-structured-forms-for-private-vulnerability-reports">github.blog/changelog</a>, Oct 1, 2026 — primary source, both accessed Oct 5, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>1 million tokens: no longer a special feature</h2>
+        <p>Per the model pages, <strong>Claude Opus 5.5</strong> (since Sep 22) and <strong>Claude Sonnet 5.5</strong> (since Sep 28) each take <span class="stat">1,000,000</span> tokens of input and output up to <span class="stat">128,000</span> tokens.<sup>[1]</sup> <strong>Gemini 3.8 Flash</strong> (since Sep 2) takes <span class="stat">1,048,576</span> tokens, at a launch price of $0.75 input and $3.75 output per million tokens; standard pricing kicks in on Jan 1, 2027.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Context window:</strong> How much text the model has "in view" at once — code, docs, chat history. A million tokens is roughly a mid-sized repository. Like a desk: a bigger one holds everything at once, but that doesn't automatically help you find the right sheet of paper faster.
+        </div>
+        <p>My read: size is no longer a differentiator. Three questions matter instead. First: does the model still find the right spot in a full window? There's no independent measurement for that this round. Second: what does re-reading cost? For Sonnet 5.5, a cache read costs $0.20 per million tokens, a tenth of normal input.<sup>[3]</sup> Third: does your agent even need this? A targeted <code>grep</code> plus 50,000 tokens often beats a million tokens of noise.</p>
+        <span class="src">[1] <a href="https://llm-stats.com/">llm-stats.com</a> / apxml.com — via search summary only · [2] <a href="https://cursor.com/docs/models/gemini-3-8-flash">cursor.com/docs</a> / pricepertoken.com — via search summary only · [3] <a href="https://www.digitalapplied.com/blog/claude-sonnet-5-5-launch-pricing-benchmarks-2026">digitalapplied.com</a>, accessed Oct 5, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Sonnet 5.5 after one week: two benchmarks, two winners</h2>
+        <p>The week didn't change the picture around Sonnet 5.5, but it sharpened it. On <strong>Terminal-Bench 4.0</strong>, Sonnet 5.5 leads Opus 5.5, <span class="stat">70.6%</span> to 66.4%. On <strong>CursorBench 4.0</strong>, it's the reverse: Sonnet 5.5 (Low Effort) scores <span class="stat">55.5%</span>, Opus 5.5 scores 57.8%.<sup>[1]</sup> Both are vendor figures from the release table, with no independent entry.</p>
+        <p>Sonnet 5.5 still costs $2 input and $10 output per million tokens, Opus 5.5 $4 and $20.<sup>[1][2]</sup> In GitHub Copilot, Sonnet 5.5 has been generally available since Sep 28; GPT-6.1 Sol followed on Sep 29.<sup>[3]</sup></p>
+        <p>My view: two tests, two winners, a gap of a few points each way — that reads as "equally good, half the price." Sonnet 5.5 remains the sensible default in Claude Code. Opus pays off where a mistake is expensive: architecture, migrations, planning.</p>
+        <span class="src">[1] <a href="https://www.digitalapplied.com/blog/claude-sonnet-5-5-launch-pricing-benchmarks-2026">digitalapplied.com</a>, accessed Oct 5, 2026 · [2] aiweekly.co / vellum.ai — Opus pricing via search summary only · [3] <a href="https://github.blog/changelog/month/09-2026/">github.blog/changelog</a>, September 2026 — primary source</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Bench note: SWE-Bench Verified with no clear leader</h2>
+        <p>The directly fetched page from <strong>Vals AI</strong> lists <strong>DeepSeek V4-Pro-0813</strong> (released Aug 13) at <span class="stat">96.40%</span> (±0.83) on SWE-Bench Verified — the best open model, at rank 2 of the leaderboard (the rank count shifts intraday; 82 models listed as of Oct 5).<sup>[1]</sup> The official table at swebench.com again returned no values on this fetch.<sup>[3]</sup></p>
+        <p>The only certainty: DeepSeek V4-Pro-0813 is the strongest open model on this test. With an uncertainty of ±0.83, the exact rank is barely answerable anyway — and scores above 96% suggest the test is saturated.</p>
+        <p>The <strong>Aider leaderboard</strong> still sits at <strong>Nov 20, 2025</strong>, with "gpt-5 (high)" on top at 88.0%.<sup>[4]</sup> Not current.</p>
+        <span class="src">[1] <a href="https://www.vals.ai/models/deepseek_deepseek-v4-pro-0813">vals.ai</a>, accessed Oct 5, 2026 · [3] <a href="https://www.swebench.com/">swebench.com</a>, no values as of Oct 5, 2026 · [4] <a href="https://aider.chat/docs/leaderboards/">aider.chat/docs/leaderboards</a> — dated Nov 20, 2025</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Mandatory round: the toolbox</h2>
+        <ul>
+          <li><strong>GitHub Copilot</strong> — last entries from Oct 2 (code review API, wave 1 of model removals); nothing new Oct 3-5.<sup>[1]</sup> Wave 2 follows on Oct 19.</li>
+          <li><strong>Claude Code</strong> — last update was Mods (Oct 1): "A mod can rewrite a prompt, add new UI, replace a built-in feature." No entry since.<sup>[2]</sup></li>
+          <li><strong>OpenAI Codex</strong> — alongside Security Cloud at DevDay: cloud execution that keeps running after you close your laptop, and a paid "Ultrafast" tier that OpenAI says runs up to eight times faster. Secondary source only.<sup>[3]</sup></li>
+          <li><strong>Cursor</strong> — quiet since "Rollouts and Security Review" (Sep 23).<sup>[4]</sup></li>
+          <li><strong>Cline</strong> — five releases on Oct 2, including SDK <span class="stat">v0.0.90</span>, Desktop v0.0.43, and CLI v3.0.68.<sup>[5]</sup></li>
+          <li><strong>OpenHands</strong> — <span class="stat">v1.24.0</span> from Sep 25.<sup>[6]</sup></li>
+          <li><strong>Devin</strong> — no new dated product found since Security Swarm (Jul 7).</li>
+          <li><strong>Replit</strong> — Security Agent since April, nothing dated found since.</li>
+          <li><strong>JetBrains</strong> — Mellum2 (open 12B model, June) remains the last major step.</li>
+          <li><strong>Aider, Bolt, Plandex, Continue</strong> — no dated release found in September or October.</li>
+        </ul>
+        <span class="src">[1] <a href="https://github.blog/changelog/month/10-2026/">github.blog/changelog</a> · [2] <a href="https://releasebot.io/updates/anthropic/claude">releasebot.io</a> · [3] aiidelist.com / digitaltoday.co.kr — via search summary only · [4] <a href="https://cursor.com/changelog">cursor.com/changelog</a> · [5] <a href="https://github.com/cline/cline/releases">github.com/cline/cline/releases</a> · [6] <a href="https://github.com/All-Hands-AI/OpenHands/releases">github.com/All-Hands-AI/OpenHands/releases</a> — primary sources except [3], accessed Oct 5, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Local: quiet</h2>
+        <p>No new open-weights coding model this week. The benchmark remains <strong>DeepSeek V4-Pro-0813</strong> (see Bench Note) — though that doesn't run on a normal developer machine. Nothing changes today for Ollama users.</p>
+      </section>
+
+      <section class="news-item">
+        <h2>What's not in today's issue</h2>
+        <p><strong>No bar chart.</strong> There's no shared, independently measured benchmark for the new models.</p>
+        <p><strong>No old news as new:</strong> the combined Codex/ChatGPT desktop app (Jul 9), JetBrains Mellum2, Microsoft's MAI-Code-1-Flash, and MiniMax M3 (all June) are three to four months old.</p>
+        <p><strong>Claude for Government</strong> (generally available since Sep 30) belongs in the applications brief.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Monday, October fifth. The weekend was quiet: no lab and no coding tool shipped anything new since Friday. So today's issue steps back to look at a pattern that's been building all year.</p>
+  <p>OpenAI introduced Codex Security Cloud at DevDay. The tool scans repositories for security holes on an ongoing basis. It first builds a threat model — basically a map of where an attacker could get in. Every finding gets reproduced in an isolated environment before a human ever sees it. Billing runs by the token, and when the budget runs dry, the scans pause.</p>
+  <p>That makes OpenAI late to the party, not early. Anthropic launched Claude Code Security back in February, Replit rolled out its Security Agent in April, Cognition's Devin Security Swarm followed in July, and Cursor shipped its Security Review in September. Five vendors, one year, the same idea. The real question is whether an agent proves a finding before it reports it — and nobody's measured that independently yet.</p>
+  <p>The flip side of the story is sitting in GitHub's changelog. On October first, GitHub capped the number of private vulnerability reports each account can file. Its reasoning: maintainers are getting buried under low-quality, automated reports, and the important ones get lost in the pile. A new form now demands a reproducible proof of concept — exactly the bar the security agents should have to clear too.</p>
+  <p>A quick word on context: Claude Opus and Sonnet five point five now take in a million tokens each, and Gemini three point eight Flash matches that. Size on its own stopped being a selling point. What matters more is whether a model can still find the right spot in a full window, and what it costs to read that window again.</p>
+  <p>One week into Sonnet five point five: it leads Opus on Terminal-Bench, trails it a bit on CursorBench. Both numbers come from the vendor. At half the price, Sonnet stays the sensible default, with Opus reserved for the expensive decisions.</p>
+  <p>On SWE-Bench Verified, Vals AI ranks DeepSeek V4 Pro at ninety-six point four percent — the best open model, and second place overall. A different aggregator puts it in first. At gaps that small, the test is basically saturated.</p>
+  <p>In the toolbox, Cline was the busiest, with five releases on Friday; OpenHands' last update landed September twenty-fifth; Cursor's been quiet since September twenty-third. Tomorrow we'll see whether the new week brings any movement, and in two weeks Copilot drops its next round of models.</p>
+</div>
+
+</body>
+</html>

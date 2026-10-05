@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-05</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-05</span>
+    <span class="dot">·</span>
+    <span>Monday, 2026-10-05 · Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">NetScaler: the flaw now has a number, a patch, and a deadline</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Yesterday's open question here was whether the new NetScaler flaw would get a CVE number, a patch, and a KEV entry. The answer is a triple yes: CVE-2026-88779, fixes since Sunday morning, and CISA set Wednesday as the deadline. The unpleasant part: anyone who dutifully patched in September has to do it again. On top of that, today the Zammad deadline runs out, and FortiMail is overdue. Away from the appliances, it's an instructive week: Spectre hits JIT compilers including GraalVM, Microsoft doesn't know why Azure VPNs failed in 18 regions, and the Netherlands is building its government desktop on NixOS.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Citrix NetScaler</strong> CVE-2026-88779, <span class="stat">CVSS 4.0: 8.7</span>: SAML buffer overflow, patch since Oct 4, KEV deadline Wed Oct 7. The September patch level isn't enough. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Zammad</strong> CVE-2026-102489/-102490: the KEV deadline runs out today. This is the chain from the DIVD hack. <span class="chip">DE</span></li>
+      <li><span class="chip">Sec</span> <strong>FortiMail</strong> CVE-2026-104286, <span class="stat">CVSS 9.8</span>: deadline passed since Sunday, also hits the 7.2 branch with no further fix planned. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Zimbra</strong> CVE-2026-73570: Microsoft saw attacks a good two weeks before disclosure. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>Spectre variant BTR</strong> hits JIT engines, including Oracle GraalVM and Linux cBPF. Patches are out. <span class="chip">EU</span></li>
+      <li><span class="chip">Infra</span> <strong>Azure</strong>: maintenance disrupted VPN and ExpressRoute gateways in 18 regions, including West Europe and Germany North. <span class="chip">Global</span></li>
+      <li><span class="chip">Release</span> <strong>Ubuntu 26.04.1</strong> is now offered as an upgrade to 24.04 users. <span class="chip">Global</span></li>
+      <li><span class="chip good">OSS</span> <strong>Netherlands</strong>: government desktop DAWO is built on NixOS, Nextcloud, and Element, coordinated with openDesk. <span class="chip">EU</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">Two CISA deadlines, otherwise no dated events. The deadlines only apply to US federal agencies, but they're a good signal for how urgent CISA rates a flaw.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Mon 10/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA deadline Zammad CVE-2026-102489 and CVE-2026-102490</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 10/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>No dated events</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Wed 10/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA deadline Citrix NetScaler CVE-2026-88779</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu 10/08 – Sun 10/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>No dated events. Open question: will Fortinet ship the missing FortiMail fixes?</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>NetScaler: a number, a patch, a deadline, and the September patch isn't enough</h2>
+        <p>On Saturday, admins reported mass spontaneous reboots of their NetScaler devices, even on fully patched systems. On Sunday at <strong>12:52 p.m.</strong>, heise updated the article: the flaw now has a name, <strong>CVE-2026-88779</strong>, with <span class="stat">CVSS 4.0: 8.7</span> ("high").<sup>[1]</sup> It's a buffer overflow in NetScaler instances configured as a SAML service provider or identity provider. According to heise, updates have been available since early Sunday morning.</p>
+        <p>CISA added the flaw to its KEV catalog on <strong>Oct 4</strong>, with a deadline of <strong>Wednesday, Oct 7</strong>.<sup>[2]</sup> The KEV entry describes only a denial of service. The researcher reports at heise go further: crashes and, in the worse case, code execution. I'm assuming the worse case until Citrix proves otherwise. The advisory is called <strong>CTX697174</strong>.</p>
+        <p>The point that's easy to miss: the fixed versions are <strong>14.1-73.41</strong> and <strong>13.1-64.28</strong> (FIPS: 14.1-73.41; 13.1-FIPS/NDcPP: 13.1-37.282).<sup>[1]</sup> The patch level from <strong>Sep 27</strong> was <strong>14.1-73.37</strong> and <strong>13.1-64.23</strong>.<sup>[3]</sup> So anyone who did everything right last week is still vulnerable. Anyone using SAML on the gateway, and that's many for corporate VPNs, should check the build number, not just the date of the last update.</p>
+        <p>My take: this was the third NetScaler zero-day in eight days. Citrix delivered fast this time, and that's good. But anyone running NetScaler at the network edge now needs a fixed weekly slot for it, not an emergency reflex.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Buffer overflow:</strong> A program reserves a fixed-size box for data. If someone sends more data than fits, it spills into the neighboring memory. In the harmless case, the program crashes. In the bad case, the attacker overwrites exactly the spot that determines which code runs next.
+        </div>
+        <div class="callout warn">
+          <span class="callout-label">Heads up</span> The version list comes from the heise update. The Citrix page itself wasn't accessible to me (HTTP 403). The CVE number, date, and deadline, however, are confirmed via CISA's KEV catalog.
+        </div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Netscaler-Admins-aufgepasst-Zero-Day-verursacht-Codeausfuehrung-11474971.html">heise.de (update Oct 4, 12:52 p.m.)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (version 2026.10.04)</a> · [3] <a href="https://www.wiz.io/vulnerability-database/cve/cve-2026-88778">wiz.io (CVE-2026-88778)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Deadline corner: Zammad today, FortiMail overdue</h2>
+        <h3>Zammad CVE-2026-102489 and -102490</h3>
+        <p>Today marks the end of the KEV deadline for the two Zammad flaws: CVE-2026-102489 is individually rated <span class="stat">CVSS 8.7</span>, CVE-2026-102490 at <span class="stat">CVSS 8.5</span> — only chaining both flaws reaches <span class="stat">CVSS 9.4</span>.<sup>[1]</sup> This is the chain an agentic AI tool used on <strong>Sep 21</strong> to take over the Dutch DIVD: first session hijacking with code execution as the <code>zammad</code> user, then privilege escalation to root, "in seconds" according to the report.<sup>[2]</sup> The full story ran here on Saturday. Vulnerable to the first flaw: <strong>Zammad 6.3.0 through 6.5.4</strong>. The second ranges from <strong>1.5.0</strong> to the pre-release <strong>7.1.0-alpha</strong>, so it affects practically every installation.</p>
+        <p>Zammad is a German product popular with mid-sized businesses. Anyone self-hosting it should check Zammad's release page today and the community thread on active exploitation.</p>
+        <h3>FortiMail CVE-2026-104286</h3>
+        <p>The deadline for FortiMail passed yesterday. The flaw (<span class="stat">CVSS 9.8</span>) lets an unauthenticated attacker write arbitrary files to the system via crafted HTTP requests.<sup>[1]</sup> Affected: FortiMail <strong>8.0.0–8.0.1</strong>, <strong>7.6.0–7.6.6</strong>, <strong>7.4.0–7.4.8</strong>, and <strong>7.2.0–7.2.9</strong> — Fortinet's own advisory says no 7.2.10 fix is planned, so 7.2.x admins must move to 7.4+. The Register reported on Oct 2 that some admins were still waiting for patches.<sup>[3]</sup> Whether Fortinet has since shipped fixes for all branches, I couldn't verify. Fortinet's advisory is called FG-IR-26-175.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (accessed Oct 5)</a> · [2] <a href="https://securityaffairs.com/?p=200126">securityaffairs.com</a> · <a href="https://www.helpnetsecurity.com/?p=386522">helpnetsecurity.com</a> · [3] <a href="https://www.theregister.com/security/2026/10/02/fortinet-sounds-the-alarm-over-actively-exploited-fortimail-zero-day/5300803">theregister.com (Oct 2)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Zimbra: attacks two weeks before the CVE</h2>
+        <p>Microsoft described attacks on a Zimbra flaw that ran before the flaw was public.<sup>[1]</sup> <strong>CVE-2026-73570</strong> is an unauthenticated command injection: a crafted email to a vulnerable server is enough. The fix came with <strong>Zimbra 10.1.20</strong> on <strong>Jul 20</strong>, disclosure only on <strong>Aug 13</strong>. Microsoft saw scans between <strong>Jul 28</strong> and <strong>Aug 7</strong>, followed by webshells, privilege escalation, and password theft.</p>
+        <p>The good news: only servers with the optional SNMP monitoring package and active notifications are affected. Still, the lesson is a general one. Attackers read release notes and diffs. A silent fix without an advisory only protects those who update immediately anyway.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/10/01/microsoft-catches-hackers-exploiting-zimbra-bug-before-disclosure/5300543">theregister.com (Oct 1)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Spectre is back, this time in the JIT compiler</h2>
+        <p>Researchers from Vrije Universiteit Amsterdam and Scuola Superiore Sant'Anna in Pisa demonstrate a new Spectre variant: <strong>Branch Target Reuse (BTR)</strong>.<sup>[1]</sup> When a program rewrites its own code, as every JIT compiler does, the CPU correctly updates the code. But it doesn't forget the old branch predictions. From that, the researchers build a "speculative execute-after-free."</p>
+        <p>Affected are the Intel cores <strong>Raptor Cove</strong> and <strong>Lion Cove</strong>, as well as the JIT engines <strong>Linux cBPF</strong>, <strong>Oracle GraalVM</strong>, and <strong>Mozilla SpiderMonkey</strong>. The leak rate is <span class="stat">5.7 KB/s</span> (Raptor Cove) and <span class="stat">5.4 KB/s</span> (Lion Cove). That's enough for an unprivileged user to read out, for example, password hashes. The CVEs: <strong>CVE-2026-64507</strong> and <strong>CVE-2026-64508</strong>. Linux and Oracle have patched it, Mozilla relies on site isolation. The paper is coming to CCS in November in The Hague.</p>
+        <p>For Java people, GraalVM is the interesting part. Anyone building Native Images or running Truffle languages on shared hosts should pick up the next GraalVM update. It's no reason to panic though: the attacker already needs to be running code on the same machine.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Speculative execution:</strong> The CPU guesses where a jump in the program goes and keeps computing ahead. If it guesses wrong, it throws away the result. But traces remain in the cache, and an attacker can measure those. With BTR, the CPU guesses based on code that technically no longer exists.
+        </div>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/09/30/spectre-bug-is-back-this-time-to-haunt-jit-engines/5299937">theregister.com (Sep 30)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Azure: maintenance knocks out gateways, and nobody knows why</h2>
+        <p>On <strong>Sep 30 starting at 20:30 UTC</strong> (17:30 in Ribeirão Claro), Azure ExpressRoute gateways, VPN gateways, and Azure VMware Service went down. Azure Firewall, Application Gateway, and WAF followed later.<sup>[1]</sup> <span class="stat">18</span> regions were affected, including <strong>West Europe</strong>, <strong>North Europe</strong>, <strong>Germany North</strong>, and <strong>Switzerland North</strong>. Microsoft sees a connection to infrastructure OS updates and has paused that maintenance. According to The Register, Microsoft hasn't named a root cause.</p>
+        <p>My take: this is the case you plan a second connection into the data center for, and then cut for cost reasons. Anyone running hybrid should know whether the failover path runs over an independent network or through the same gateway layer.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/off-prem/2026/10/01/azure-maintenance-mess-disrupted-hybrid-clouds-vpns-cloudy-vmware-services/5300333">theregister.com (Oct 1)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Ubuntu 26.04.1: the upgrade comes knocking</h2>
+        <p>Canonical is now offering <strong>Ubuntu 24.04 LTS</strong> users the upgrade to <strong>26.04.1 LTS</strong>, via Update Manager or <code>do-release-upgrade</code>.<sup>[1]</sup> The offer came later than usual. Canonical wanted to fix regressions in <strong>rust-coreutils</strong> first, the new Rust implementation of the basic Unix tools. On the desktop, GNOME 50 now runs under Wayland only.</p>
+        <p>For servers and Docker hosts, the old rule applies: don't click on day one. The rust-coreutils are the part that can surprise shell scripts, since small details in the behavior of <code>ls</code>, <code>cp</code>, and friends differ. Staging first, then production.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/os-platforms/2026/09/30/canonical-begins-pushing-resolute-raccoon/5300225">theregister.com (Sep 30)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Netherlands: a government desktop built on NixOS</h2>
+        <p>The Dutch Ministry of the Interior (BZK) is having three state IT providers build a sovereign workplace: <strong>DAWO</strong>, "Digitaal Autonome Werkomgeving Overheid."<sup>[1]</sup> <strong>NixOS</strong> won out as the operating system, after tests with openSUSE and Fedora. The reason: declarative configuration and reproducible deployments for large device fleets. For collaboration, <strong>MijnBureau</strong> is added, meaning Nextcloud, Collabora, Element, and OpenProject. The project coordinates with France's La Suite and Germany's <strong>openDesk</strong>. According to the municipal association, tests are running in <span class="stat">8</span> municipalities.</p>
+        <p>This is still a pilot, not a rollout. But the choice is notable. NixOS was long seen as a tool for enthusiasts. When a government chooses it for reproducibility, that's a signal for anyone who takes infrastructure as code seriously.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Declarative:</strong> Instead of running commands one after another ("install this, change that"), you describe in a file what the finished machine should look like. NixOS builds it from that, the same way on every device. Like a blueprint instead of a list of manual steps.
+        </div>
+        <span class="src">[1] <a href="https://www.theregister.com/os-platforms/2026/09/28/dutch-government-turns-to-nixos-for-a-sovereign-desktop/5299501">theregister.com (Sep 28)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Met Police halts phone forensics software</h2>
+        <p>Scotland Yard has paused the use of software for extracting data from phones. According to The Register, US prosecutors traced the supposedly American tool back to Moscow.<sup>[1]</sup> This is a supply-chain story in miniature: the origin of the software apparently wasn't verifiable for the buyer.</p>
+        <div class="callout info">
+          <span class="callout-label">Single source</span> I only read the headline and lead of the Register article. I didn't cross-check the software's name or the US indictment.
+        </div>
+        <span class="src">[1] <a href="https://www.theregister.com/software/2026/10/02/met-police-suspends-use-of-phone-hacking-software-over-russian-links/5300549">theregister.com (Oct 2)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Briefly noted</h2>
+        <ul>
+          <li><strong>Python 3.10</strong>: the final release, 3.10.22, is out (see yesterday). Support officially ends on <strong>Oct 31, 2026</strong>. After that, there are no more security fixes. <span class="src"><a href="https://discuss.python.org/t/python-3-10-eol-is-there-an-official-end-of-support-date-within-october-2026/108064">discuss.python.org</a></span></li>
+          <li><strong>Windows 11 26H2</strong> arrived as an enablement package for 24H2 and 25H2, with build <strong>26300.9550</strong>. The main additions are Administrator Protection, built-in Sysmon, and Smart App Control, all already known from 25H2. Support for Home/Pro runs until Oct 10, 2028, for Enterprise until Oct 9, 2029. <span class="src"><a href="https://www.heise.de/news/Windows-11-26H2-ist-da-11470483.html">heise.de (Sep 30)</a></span></li>
+          <li><strong>GDB 18.1</strong> saves command history to a file and extends the Python API. <strong>Crystal 1.21.1</strong> closes request-smuggling and zip-bomb flaws in <code>HTTP::Server</code>. <span class="src"><a href="https://www.heise.de/news/Developer-Haeppchen-Rust-wird-variadisch-Qt-kann-HarmonyOS-Python-3-10-geht-11473875.html">heise.de (Oct 3)</a></span></li>
+          <li><strong>Not here</strong>: OpenAI's warning to over 100 organizations and the Mythos reports are AI topics. Details in the ai-usecases brief.</li>
+          <li><strong>Deliberately empty</strong>: no new releases found for Spring, Angular, React, PostgreSQL, Docker, Caddy, or Tailscale. Brazil: no software story with substance this week.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>What's worth twenty minutes today</h2>
+        <p>Anyone running NetScaler with SAML: check the build number against 14.1-73.41 and 13.1-64.28. The date of the last patch tells you nothing. Anyone self-hosting Zammad: update today, the deadline is a good occasion. Anyone running hybrid on Azure: check once whether the failover path is really independent.</p>
+        <p>What doesn't belong on the list is panic over Spectre-BTR. The next regular GraalVM and kernel update is enough.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Monday, October fifth. Today's top story: the new Citrix NetScaler flaw now has a number, a patch, and a deadline.</p>
+  <p>Over the weekend, admins reported mass spontaneous reboots of their NetScaler devices, even on fully patched systems. Sunday brought the answer. The flaw is CVE twenty twenty-six, eight eight seven seven nine. It's a buffer overflow affecting devices that use SAML for login. The US agency CISA set Wednesday as the deadline. Important: anyone who patched in September is still vulnerable. The new versions are fourteen point one, seventy-three point forty-one, and thirteen point one, sixty-four point twenty-eight.</p>
+  <p>Today the deadline runs out for the two Zammad flaws. That's the chain an AI agent used in September to take over the Dutch organization DIVD, all the way to root access. The deadline for FortiMail already passed yesterday, and according to The Register, some admins were still waiting for patches.</p>
+  <p>At Zimbra, Microsoft spotted attacks that ran a good two weeks before the flaw was publicly disclosed. Only servers with the SNMP package are affected.</p>
+  <p>Spectre is back. A new variant called Branch Target Reuse hits JIT compilers, including Oracle GraalVM and Linux cBPF. Patches are already out, and an attacker needs to already be running code on the machine. No reason to panic.</p>
+  <p>At Azure, VPN and ExpressRoute gateways went down in eighteen regions in late September, including Western Europe and northern Germany. Microsoft sees a link to maintenance work but still doesn't know the root cause.</p>
+  <p>Canonical is now offering the upgrade from Ubuntu twenty-four oh four to twenty-six oh four point one. For servers, the rule holds: test first, since the new Rust coreutils can catch scripts off guard.</p>
+  <p>And some good news for open source: the Netherlands is building a sovereign government desktop on NixOS, with Nextcloud and Element, coordinated with Germany's openDesk.</p>
+</div>
+
+</body>
+</html>
