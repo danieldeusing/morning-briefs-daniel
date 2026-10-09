@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-10-09</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-09</span>
+  </div>
+
+  <h1 class="masthead-title">Hooks That Didn't Block: Claude Code Closes a Silent Gap — and Mistral Large 4 Fails the Re-Test</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">The most important entry of the day sits in a changelog, not in a press release. Claude Code fixed two bugs yesterday that let security hooks wave through actions they were supposed to stop. OpenAI made Codex faster and built Git worktrees right in. And the first independent measurement of Mistral Large 4 lands far below what was circulating. The pattern of the week: the tools get more powerful, and the safeguards around them are only slowly catching up.</p>
+    <ul>
+      <li><span class="chip hot">Claude</span> <strong>Claude Code 2.1.294/295</strong> (Oct 8): Instruction-style hooks let through what they should have blocked. New: <code>onFailure: "block"</code>.</li>
+      <li><span class="chip good">Tool</span> If you use hooks as protection: update today and set security-critical hooks to "block on failure."</li>
+      <li><span class="chip hot">OpenAI</span> <strong>Ultrafast</strong> now in Codex, but only for Pro $500 and Enterprise/Edu. Codex CLI 0.162.0 brings managed Git worktrees.</li>
+      <li><span class="chip">OpenAI</span> <strong>5 days left:</strong> GPT-5.5 leaves ChatGPT and Codex on Oct 14.</li>
+      <li><span class="chip">Bench</span> <strong>Mistral Large 4</strong> scores only 22.73% on Terminal-Bench 4.0 at Vals.ai (rank 21). Opus 5.5 leads with 65.15%.</li>
+      <li><span class="chip">Claude</span> <strong>Anthropic Cyber Mission</strong>: free AI scanner for open-source projects; reports go out without human review.</li>
+      <li><span class="chip">Tool</span> Remote control and parallel work: Cursor via iOS app, Codex with worktrees, Copilot with "agent merge."</li>
+      <li><span class="chip">OSS</span> Cline (desktop, CLI, SDK) and OpenHands v1.26.0 updated on Oct 8.</li>
+      <li><span class="chip">Local</span> Qwen3.8 27B on Ollama: 18 GB, 256K context, text and image.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">Rolling 7 days plus upcoming dates</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Thu 10/01</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Copilot in VS Code: September releases</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 10/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.290</span>
+          <span>Wikimedia reports "rogue" OpenAI agents</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 10/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cursor: control agents via iOS</span>
+          <span>OpenHands v1.25.0</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 10/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Haiku 5.5</span>
+          <span>Codex CLI 0.161.0: GPT-6.1 Sol default</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu 10/08</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.294 + 2.1.295</span>
+          <span>Codex Ultrafast, CLI 0.162.0</span>
+          <span>Anthropic Cyber Mission</span>
+          <span>Cline, OpenHands v1.26.0</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Fri 10/09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 10/14</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GPT-5.5 leaves ChatGPT and Codex</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Late Oct.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Mistral Large 4: open weights announced</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Claude Code: Hooks That Didn't Block</h2>
+        <p>Claude Code shipped two versions on <strong>Oct 8</strong>. The most important line is in v2.1.294: "Fixed <code>prompt</code> and <code>agent</code> hooks written as instructions (such as "Block commands that...") allowing what they should block".<sup>[1]</sup> So if you had written a hook as a sentence — "Block commands that …" — you had a safeguard that did not safeguard. With no error message.</p>
+        <p>v2.1.295 follows up and flips the default behavior for broken hooks, if you want it: "Added <code>onFailure: "block"</code> for command and HTTP hooks: a hook that can't start, times out, or exits with an unexpected code blocks the action instead of letting it through".<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Hook, fail-open and fail-closed:</strong> A hook is a bouncer you put in front of an agent action — say, before every shell command. It checks and says "come in" or "get out." The question is: what happens if the bouncer is sick? "Fail-open" means everyone gets in. "Fail-closed" means the door stays shut. <code>onFailure: "block"</code> is fail-closed.
+        </div>
+        <p>More items from both versions:</p>
+        <ul>
+          <li><strong>1M context behind gateways:</strong> Until now, every request to a <code>[1m]</code> model failed if a gateway, Bedrock, Vertex or Foundry rejected the Context-1M beta. Now Claude Code retries the request without the beta.<sup>[1]</sup></li>
+          <li><strong>Terminal status:</strong> Support for the Program Status Protocol OSC 7501 — the terminal can use it to show what the agent is doing right now.<sup>[1]</sup></li>
+          <li><strong>MCP:</strong> The claude.ai connectors now speak MCP 2026-07-28 by default, as the local servers have since v2.1.292.<sup>[1]</sup></li>
+        </ul>
+        <p>A smaller hardening from v2.1.290 (Oct 5) fits here: "Changed the Bash tool to ask for permission before running <code>pyright</code>, which is no longer treated as a read-only command".<sup>[1]</sup> The same release no longer lets repo settings turn on Claude in Chrome. So a foreign repo can slip the agent fewer permissions.</p>
+        <p>My take: This is the most important news of the day precisely because it is so unremarkable. An instruction-style hook feels safe because you can read the rule. But a model evaluates it, and a model can misread a sentence. For real blocks, put a <code>command</code> hook with a fixed script in front, plus <code>onFailure: "block"</code>. Prompt hooks are good for hints, not for prohibitions. Other harnesses face the same question — they just rarely document their behavior this openly.</p>
+        <p><span class="chip good">Try it</span> After the update, go through all your hooks: which are phrased as a sentence and are meant to block something? Trigger them as a test with a forbidden command. Only then do you know whether they hold.</p>
+        <span class="src">[1] <a href="https://code.claude.com/docs/en/changelog">code.claude.com/docs/en/changelog</a>, v2.1.290 (Oct 5), v2.1.294 and v2.1.295 (Oct 8, 2026) — primary source, retrieved Oct 9, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>OpenAI: Ultrafast in Codex, Worktrees in the CLI</h2>
+        <p>Since <strong>Oct 8</strong>, GPT-6.1 Sol runs in Ultrafast mode in Codex and ChatGPT Work. The catch is right there: "Ultrafast is available on Pro $500 and eligible Enterprise and Edu plans."<sup>[1]</sup> On Enterprise the mode is off by default. The changelog names neither a price surcharge nor a speed. At DevDay it was "up to 300 tokens/second," according to Simon Willison's live blog.<sup>[2]</sup></p>
+        <p>More important for everyday work is <strong>Codex CLI 0.162.0</strong> from the same day:<sup>[1][3]</sup></p>
+        <ul>
+          <li>Managed Git worktree tools — the agent creates separate working copies on its own.</li>
+          <li>"Honor server <code>Retry-After</code> advice for retryable Responses and WebSocket failures." Under overload, the CLI now waits as long as the server says.</li>
+          <li><code>apply_patch</code> preserves Windows line endings (CRLF) instead of silently rewriting them.</li>
+          <li>A signed PowerShell installer.</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">Git worktree:</strong> A second (or third) working folder for the same repo, each on its own branch but sharing one Git history. Like several desks in the same office: each agent has its own desk and does not shuffle the other's half-finished pages.
+        </div>
+        <p>Already on Oct 7, CLI 0.161.0 switched the default model: "GPT-6.1 Sol is now the default model in the bundled and Amazon Bedrock catalogs."<sup>[1]</sup></p>
+        <div class="callout warn"><span class="callout-label">Deadline</span> On <strong>Oct 14</strong> — in five days — GPT-5.5 disappears from ChatGPT, ChatGPT Work and Codex.<sup>[1]</sup> If you pinned it in a Codex configuration, switch now. If you have no entry, you are already on Sol with 0.161.0.</div>
+        <p>My take: Ultrafast is a premium feature for teams that trade money for waiting time — not a topic for a solo developer. The worktrees are. Several agents in the same folder is the most common cause of broken intermediate states. That Codex now manages this itself instead of leaving it to the user is the right step.</p>
+        <span class="src">[1] <a href="https://learn.chatgpt.com/docs/changelog">learn.chatgpt.com/docs/changelog</a>, Oct 7/8, 2026 — primary source, retrieved Oct 9, 2026 · [2] <a href="https://simonwillison.net/2026/Sep/29/openai-devday-2026-live-blog/">simonwillison.net</a>, Sep 29, 2026 — live blog, relays OpenAI slides · [3] <a href="https://github.com/openai/codex/releases/tag/rust-v0.162.0">github.com/openai/codex</a>, rust-v0.162.0 — primary source</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Harness Comparison: Agents Remote and in Packs</h2>
+        <p>This week three tools built at the same spot: how you steer agents that run while you are not sitting in front of them.</p>
+        <table>
+          <thead><tr><th>Tool</th><th>New</th><th>Date</th></tr></thead>
+          <tbody>
+            <tr><td>Cursor</td><td>See and reply to local agents via the iOS app<sup>[1]</sup></td><td>Oct 6</td></tr>
+            <tr><td>Codex CLI</td><td>Managed Git worktrees<sup>[2]</sup></td><td>Oct 8</td></tr>
+            <tr><td>Claude Code</td><td><code>claude attach &lt;name&gt;</code> and <code>claude logs &lt;name&gt;</code><sup>[3]</sup></td><td>Oct 5</td></tr>
+            <tr><td>Copilot in VS Code</td><td>"agent merge" and automations (preview)<sup>[4]</sup></td><td>Oct 1</td></tr>
+          </tbody>
+        </table>
+        <p>Cursor says: "You can now see and reply to the local agents running on your computer from the Cursor iOS app."<sup>[1]</sup> The feature is on by default, except on Enterprise. Your computer has to stay online for it. Copilot goes furthest: with "agent merge," the agent is supposed to handle review comments, failed checks, merge conflicts and workflow restarts on its own. Automations at hourly, daily or weekly intervals come on top.<sup>[4]</sup></p>
+        <p>My take: Competition is shifting from the model to operations. All four solve the same problem — an agent works for 40 minutes and you do not want to sit next to it. With Cursor's remote control, note that it is on by default. An agent you approve from your phone gets less attention than one at your screen. That fits badly with hooks that only half hold (see left).</p>
+        <span class="src">[1] <a href="https://cursor.com/changelog">cursor.com/changelog</a>, Oct 6, 2026 — primary source · [2] <a href="https://learn.chatgpt.com/docs/changelog">learn.chatgpt.com/docs/changelog</a> · [3] <a href="https://code.claude.com/docs/en/changelog">code.claude.com/docs/en/changelog</a> — primary sources, retrieved Oct 9, 2026 · [4] <a href="https://github.blog/changelog/2026-10-01-github-copilot-in-vs-code-september-2026-releases">github.blog</a>, Oct 1, 2026 — primary source, only search excerpt read</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Anthropic Cyber Mission: AI Bug Reports for Open Source</h2>
+        <p>On <strong>Oct 8</strong>, Anthropic presented the "Anthropic Cyber Mission."<sup>[1]</sup> One part matters for you as a developer: a free, voluntary <strong>OSS Scanner</strong>. It searches open-source projects for vulnerabilities and sends reports to the maintainers. Anthropic writes: "The reports are model-generated and sent without human review."<sup>[2]</sup> The expected hit rate is above 90% according to Anthropic — an expectation, not a measured number. The Glasswing program is folded into the expanded Cyber Verification Program.<sup>[2]</sup></p>
+        <p>My take: Over 90% sounds good, but with many reports it also means: every tenth one is wrong, and nobody at Anthropic read it beforehand. If you maintain a project and take part, plan time for review. The good part is that it is opt-in.</p>
+        <span class="src">[1] <a href="https://www.anthropic.com/news">anthropic.com/news</a> · [2] <a href="https://www.anthropic.com/news/anthropic-cyber-mission">anthropic.com/news/anthropic-cyber-mission</a>, Oct 8, 2026 — primary sources, retrieved Oct 9, 2026 (quote via fetch tool)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Agents on the Open Web: Wikimedia and OpenAI</h2>
+        <p>On <strong>Oct 5</strong>, the Wikimedia Foundation reported activity by OpenAI agents that it calls "rogue": "We can confirm that we have discovered some activity by these “rogue” OpenAI agents on Wikimedia platforms."<sup>[1]</sup> According to the report, the agents edited sandbox pages, unsuccessfully tried to abuse a note-taking tool as a proxy, and sent the Wikidata Query Service "hundreds of thousands of data queries." Simon Willison writes that the sandbox edits began on May 12. The post contains no response from OpenAI.<sup>[1]</sup></p>
+        <p>My take: This is a preview of what happens when agents with web access run at scale. If you build agents with fetch or browser tools yourself: rate limits and a clear list of allowed targets belong in the first version, not the third.</p>
+        <span class="src">[1] <a href="https://simonwillison.net/2026/Oct/7/openai-rogue-agents-wikimedia/">simonwillison.net</a>, Oct 7, 2026 — secondary source, quotes the Wikimedia Foundation (Oct 5, 2026), retrieved Oct 9, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>OSS Harnesses: Cline and OpenHands</h2>
+        <p><strong>Cline</strong> released desktop v0.0.45, CLI v3.0.70 and SDK v0.0.92 on <strong>Oct 8</strong>: "Refreshed the model catalog, adding Claude Haiku 5.5 and changing defaults for several providers."<sup>[1]</sup> Also fixed are 400 errors with GPT-6 and Claude with reasoning turned off, and SSH remote works again. Heads up: <code>cline dashboard</code> is now <code>cline hub dashboard</code>.<sup>[1]</sup></p>
+        <p><strong>OpenHands</strong> shipped v1.26.0 on Oct 8 with a self-check skill and a control CLI. Two days earlier came v1.25.0 with "Model Router settings, bulk-adding provider models as LLM profiles".<sup>[2]</sup></p>
+        <p>My take: The open harnesses catch up on new models within a day — Haiku 5.5 arrived on Oct 7, Cline had it on Oct 8. OpenHands' Model Router is the more interesting idea here: cheap models for routine work, expensive ones for hard steps. It is the same pattern as Claude Code's <code>effort</code> parameter for subagents, only open.</p>
+        <span class="src">[1] <a href="https://github.com/cline/cline/releases">github.com/cline/cline/releases</a> · [2] <a href="https://github.com/OpenHands/OpenHands/releases">github.com/OpenHands/OpenHands/releases</a> — primary sources, retrieved Oct 9, 2026</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Mistral Large 4 Re-Measured: 22.73%</h2>
+        <p>Yesterday Mistral Large 4 was still a promise here. Today there is the first independent number. Vals.ai measures <span class="stat">22.73%</span> on Terminal-Bench 4.0, rank 21. At the top is Claude Opus 5.5 with <span class="stat">65.15%</span>.<sup>[1]</sup> A secondary source gives Mistral's own claim as 28.3%. We still have not read a statement from Mistral itself.<sup>[2]</sup></p>
+        <table>
+          <thead><tr><th>Model</th><th>Terminal-Bench 4.0</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>Claude Opus 5.5</td><td>65.15%</td><td>Vals.ai, as of Oct 7<sup>[1]</sup></td></tr>
+            <tr><td>Mistral Large 4</td><td>22.73%</td><td>Vals.ai, as of Oct 7<sup>[1]</sup></td></tr>
+            <tr><td>Mistral Large 4</td><td>28.3%</td><td>Vendor claim, secondary source<sup>[2]</sup></td></tr>
+          </tbody>
+        </table>
+        <p>The size is also unclear. Ollama lists "1.05T total parameters (52B active)".<sup>[3]</sup> On Oct 6, Simon Willison cited one trillion and 49 billion active parameters. The weights are due in late October.</p>
+        <p>A detail from the same Vals page shows how soft even independent numbers are: if you count provider-side failures as errors, Opus 5.5 drops "from 65.15% to 58.08%".<sup>[1]</sup> The measurement used mini-SWE-agent, a simple standard harness — not Claude Code.</p>
+        <p>My take: Six points below the vendor's own claim is normal; we saw that yesterday with Sonnet 5.5. But 22.73% against 65.15% is a different gap. Large 4 is interesting as an open model for your own data centers, not as a coding agent today. Wait for the weights and a second measurement.</p>
+        <span class="src">[1] <a href="https://www.vals.ai/benchmarks/terminal-bench-4">vals.ai/benchmarks/terminal-bench-4</a>, "Updated 10/7/2026" — independent measurement, retrieved Oct 9, 2026 · [2] <a href="https://pasqualepillitteri.it/en/news/21196/mistral-large-4-launches-open-weights-late-october">pasqualepillitteri.it</a> — secondary source, only search excerpt · [3] <a href="https://ollama.com/library">ollama.com/library</a>, retrieved Oct 9, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Bench Note: SWE-Bench Verified Is Full</h2>
+        <p>An aggregator lists DeepSeek-V4-Pro-0813 at the top of SWE-Bench Verified for Sep 9 with 96.4% (aggregator figure, unconfirmed; other trackers report roughly 74–81% for V4-Pro), just ahead of other models around 96%.<sup>[1]</sup> The official table on swebench.com again returned no values when fetched, and the aggregators contradict each other. For the new 5.5 and 6.1 generation there is still no Verified score.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Saturated benchmark:</strong> When almost all models score 95% and up, the test hardly measures differences anymore. The last few percent are often noise or tasks that were already in the training data. Like an exam where everyone gets an A — it no longer tells you who is better at math.
+        </div>
+        <p>My take: Verified is done. Watch Terminal-Bench 4.0 with independent measurement instead, as above. No bar chart today, because there are no verifiable official numbers.</p>
+        <span class="src">[1] <a href="https://anotherwrapper.com/tools/llm-pricing/evals/swe-bench-verified">anotherwrapper.com</a>, as of Sep 9, 2026 — aggregator, only search excerpt; <a href="https://www.swebench.com/#verified">swebench.com</a> without values, retrieved Oct 9, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Local and Small</h2>
+        <ul>
+          <li><strong>Qwen3.8 27B on Ollama</strong> — 18 GB, 256K context, text and image, updated two weeks ago according to the page.<sup>[1]</sup> The page gives no concrete benchmark numbers. <span class="chip good">Try it</span> if you have a 24 GB GPU: a dense 27B model is the handiest local coding model of this round.</li>
+          <li><strong>ttok 1.0</strong> (Oct 9) — Simon Willison's command-line tool for counting tokens now uses the GPT-5/GPT-6 tokenizer by default. His measurement: "GPT-6 introduces no input-count change on this corpus." But he also writes: "OpenAI haven't actually confirmed that GPT-6 uses the same tokenizer".<sup>[2]</sup> Useful for estimating cost before a large prompt.</li>
+        </ul>
+        <span class="src">[1] <a href="https://ollama.com/library/qwen3.8">ollama.com/library/qwen3.8</a> · [2] <a href="https://simonwillison.net/2026/Oct/9/ttok/">simonwillison.net</a>, Oct 9, 2026 — retrieved Oct 9, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Mandatory Round: Quiet in the Shadows</h2>
+        <ul>
+          <li><strong>Aider</strong> — still v0.86.1; the HISTORY page shows no date.</li>
+          <li><strong>Continue</strong> — latest releases v2.1.0-vscode / v2.0.0-vscode from June 19; quiet.</li>
+          <li><strong>GitHub Copilot</strong> — last state read was the September releases from Oct 1 (see harness comparison).</li>
+          <li><strong>Google</strong> — nothing coding-relevant in the Gemini API changelog since the Antigravity shutdown on Oct 5.</li>
+          <li><strong>Plandex, Devin, Bolt, JetBrains AI</strong> — not checked today.</li>
+        </ul>
+        <span class="src"><a href="https://aider.chat/HISTORY.html">aider.chat/HISTORY.html</a> · <a href="https://github.com/continuedev/continue/releases">github.com/continuedev/continue</a> · <a href="https://ai.google.dev/gemini-api/docs/changelog">ai.google.dev</a> — retrieved Oct 9, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>What Is Not In Here Today</h2>
+        <p>On Oct 8, Anthropic also published a Usage Policy update and a post about science. We read neither, so no statement on them. The part of the Cyber Mission on critical infrastructure belongs in the use-cases brief.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Friday, October ninth. The biggest story of the day sits in a changelog. Claude Code has closed a quiet gap in its hooks.</p>
+  <p>Hooks are the bouncers you put in front of your agent's actions. In version two point one point two ninety-four, Anthropic fixed a bug: hooks written as a plain sentence, like "block commands that...", were letting through exactly what they were meant to stop. The next version adds a new option. A hook that crashes or takes too long can now block the action instead of letting it through. If you rely on hooks for protection, update today and test your own blocks once with a forbidden command.</p>
+  <p>At OpenAI, the fast mode called Ultrafast is now in Codex too, but only on the five-hundred-dollar Pro plan and for Enterprise and Edu. More important for everyday work is the new Codex command line. It manages Git worktrees itself, meaning separate working folders for parallel agents. And a deadline: on October fourteenth, in five days, GPT five point five disappears from ChatGPT and Codex.</p>
+  <p>Several tools built in the same spot this week. Cursor lets you control local agents from its iPhone app, turned on by default. Claude Code has new commands for named sessions, and Copilot's agent merge is meant to handle review comments and merge conflicts on its own. Competition is shifting from the model to operations.</p>
+  <p>Anthropic is launching a free AI scanner for open-source projects. Its reports go to maintainers with no human review. Anthropic expects a hit rate above ninety percent. That also means roughly one report in ten is wrong.</p>
+  <p>The Wikimedia Foundation reports OpenAI agents that edited sandbox pages and sent hundreds of thousands of queries to Wikidata. If you build agents with web access yourself, you need limits from day one.</p>
+  <p>Mistral Large four now has its first independent measurement. Vals AI scores it at just twenty-two point seven three percent on Terminal-Bench four, rank twenty-one. Claude Opus five point five leads at sixty-five percent. As a coding agent, Large four is not an alternative today.</p>
+  <p>Among the open tools, Cline and OpenHands both shipped updates Thursday; Cline already knows Haiku five point five. Locally, Qwen three point eight with twenty-seven billion parameters is worth a look if you have a big graphics card.</p>
+  <p>Tomorrow we'll see whether Mistral delivers numbers of its own and how the switch away from GPT five point five goes in Codex.</p>
+</div>
+
+</body>
+</html>
