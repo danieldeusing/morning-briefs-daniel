@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-11</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-11</span>
+    <span class="dot">·</span>
+    <span>Sunday, October 11, 2026 · Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">The DNS root swaps its key today, and Deno heads to Cloudflare</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">It's Sunday, and of all days, something happens in the foundation of the internet: according to IANA, the new root key KSK-2024 signs the DNS root zone starting October 11. If you run your own validating resolver, check it today. The week's second big story landed on Friday: the entire Deno team is joining Cloudflare. The Deno runtime gets one more year of updates, Deno Deploy six more months. Also a correction to yesterday's Windows certificate item and a weekly recap of the security loose ends.</p>
+    <ul>
+      <li><span class="chip hot">Infra</span> <strong>Root KSK rollover</strong> today: KSK-2024 (key tag 38696) replaces KSK-2017. Validating resolvers must trust the new key. <span class="chip">Global</span></li>
+      <li><span class="chip hot">M&amp;A</span> <strong>Deno team to Cloudflare</strong>: runtime gets one more year of monthly releases, then development ends; Deno Deploy shuts down after six months. <span class="chip">USA</span></li>
+      <li><span class="chip">OSS</span> <strong>JSR</strong> keeps running and moves to Cloudflare infrastructure. Deno stays open source. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>Windows Update</strong>: certificates expire on May 17, 2027 and June 19, 2027. Per BleepingComputer, devices without the right update lose Windows Update. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>CISA KEV</strong>: deadline today for ProFTPD, BIND, Struts, ONLYOFFICE, Strapi; Tuesday for an Apple flaw. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>Atlassian Data Center</strong> CVE-2026-21589 (CVSS 4.0: 9.3): attacks under way since midweek. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>SonicWall SMA1000</strong> and <strong>Citrix NetScaler</strong>: patches available, exploitation status differs. <span class="chip">Global</span></li>
+      <li><span class="chip">Release</span> <strong>7-Zip 26.04</strong> closes several flaws, details unclear. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>Tuesday, Oct 13</strong> is Microsoft Patch Tuesday. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Today the root key rollover and a CISA deadline; Tuesday Patch Tuesday and the next KEV deadline.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Sun 10/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Today</span><span>Root zone: KSK-2024 takes over (per IANA)</span><span>CISA deadline: ProFTPD, BIND, Struts, ONLYOFFICE, Strapi</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 10/12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>No known events</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue 10/13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Microsoft Patch Tuesday, October</span><span>CISA deadline: Apple CVE-2026-86950</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 10/14 – Sun 10/18</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>No confirmed events</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>DNS: the new root key signs today</h2>
+        <p>IANA's table gives <strong>October 11, 2026</strong> as the date for the switch to <strong>KSK-2024</strong>: "KSK-2024 is scheduled to sign the zone; KSK-2017 will no longer sign the zone."<sup>[1]</sup> Neither IANA nor Cloudflare names a time of day. The new key has key tag <strong>38696</strong>; the old KSK-2017 has key tag 20326.<sup>[1][2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">KSK and trust anchor:</strong> DNSSEC signs DNS answers so nobody can forge them. At the very top of that chain sits the root key (KSK). Your resolver has to know this key as its "trust anchor." Think of a notary whose seal certifies every other seal: if the notary changes the seal and your resolver doesn't know the new one, it believes no document anymore.
+        </div>
+        <p>Cloudflare describes the risk bluntly: "If a resolver does not trust the replacement key, its users may be unable to reach websites under any top-level domain."<sup>[2]</sup> Resolvers with RFC 5011 learn the new key automatically; according to Cloudflare, KSK-2024 has been in the root's DNSKEY set since January 11, 2025. The problem is resolvers that lost their learned state, for example through software upgrades or moves to new machines.<sup>[2]</sup></p>
+        <p><strong>Who is affected:</strong> Not customers of Cloudflare DNS, 1.1.1.1 and Gateway; Cloudflare says it already trusts KSK-2024.<sup>[2]</sup> Anyone who validates on their own can be affected: an Unbound on a Pi-hole, a BIND in a company network, an old router with its own resolver.</p>
+        <div class="callout info"><span class="callout-label">How to check</span> Open the test page <code>dnstest.dev/ksk-2024/</code>. Or query the sentinels: <code>is-ta-38696</code> should return a valid answer, <code>not-ta-38696</code> a SERVFAIL. According to Cloudflare, an unclear result does not mean the key is missing.<sup>[2]</sup> If it really is missing, update the trust anchor following your software vendor's instructions.</div>
+        <p>My take: for most developers this is a non-event. But if you run your own resolver and rebuilt it since 2025, spend two minutes on it today. When DNS fails, it looks like "the internet is broken," and nobody thinks of a root key first.</p>
+        <span class="src">[1] <a href="https://www.iana.org/dnssec/files">iana.org/dnssec (as of Oct 11)</a> · [2] <a href="https://blog.cloudflare.com/root-ksk-2024-rollover/">blog.cloudflare.com (Oct 6)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Deno joins Cloudflare: what happens to the runtime, Deploy and JSR</h2>
+        <p>On Friday, Oct 9, both sides announced the move. Deno writes: "the entire Deno team is joining Cloudflare."<sup>[1]</sup> Cloudflare writes: "The Deno team is joining Cloudflare, and we're merging workerd and celld!" and tags the post "Acquisitions."<sup>[2]</sup> Neither post names a purchase price or contract details.</p>
+        <p>These points matter for users, all per the Deno blog:<sup>[1]</sup></p>
+        <ul>
+          <li><strong>Deno runtime:</strong> "We will support the Deno runtime for another year with monthly releases containing bug fixes and security updates." After that, development by the team ends.</li>
+          <li><strong>Open source:</strong> "Deno will remain open source, and we welcome others who want to continue its development."</li>
+          <li><strong>Deno Deploy:</strong> runs "six months before shutting down." Paying customers get help migrating to Cloudflare Workers.</li>
+          <li><strong>JSR:</strong> keeps running, the infrastructure moves to Cloudflare.</li>
+        </ul>
+        <p>The post says nothing about Fresh and Deno Sandbox. Cloudflare's goal: "make workerd self-hosting a first-class supported way to build and run apps using the Workers programming model."<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">workerd:</strong> The open-source runtime behind Cloudflare Workers. Your code runs in it as a small JavaScript function. Until now that made sense almost only in Cloudflare's data centers. Self-hosting means the same runtime on your own server, like a Docker container without a Cloudflare account.
+        </div>
+        <p>My take: for Deno this is an honest ending, not a sale with empty promises. One year of support and a clear statement is more than many acquisitions deliver. For the JavaScript runtime market it means: Node stays the standard, Bun the challenger, and Deno becomes a community project with an open future. If you use Deno Deploy in production, you now have a six-month deadline on your desk. The second part is the interesting one: a self-hosted workerd would be the first serious answer to "what if I want to leave Cloudflare?"</p>
+        <div class="callout warn"><span class="callout-label">Deadline</span> Deno Deploy: six months from Oct 9, the post gives no exact shutdown date. Deno runtime: updates until about October 2027.</div>
+        <span class="src">[1] <a href="https://deno.com/blog/cloudflare">deno.com/blog (Oct 9)</a> · [2] <a href="https://blog.cloudflare.com/deno-joins-cloudflare/">blog.cloudflare.com (Oct 9)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Windows Update: correction to yesterday</h2>
+        <div class="update-since"><strong>Since yesterday:</strong> Yesterday we could not load the article and tentatively tied it to Secure Boot. Now we have it, and the picture is more concrete.</div>
+        <p>According to BleepingComputer, certificates that Windows Update needs are expiring: "A set of these certificates will expire on May 17, 2027 and June 19, 2027." Devices without matching updates lose Windows Update afterward.<sup>[1]</sup> The deadlines per the article:</p>
+        <ul>
+          <li><strong>Windows 11 24H2 and Server 2025:</strong> need at least the September 2025 update.</li>
+          <li><strong>Windows 11 25H2 and later:</strong> no action needed.</li>
+          <li><strong>Other Windows 11 versions, Server 2022, Windows 10:</strong> need the July 2026 update, by June 19, 2027 at the latest.</li>
+          <li><strong>Windows 10 Enterprise 2019 LTSC, Server 2019 and 2016:</strong> need the July 2026 update, by May 17, 2027 at the latest.</li>
+        </ul>
+        <p>For devices served through WSUS, the article names an exception.<sup>[1]</sup></p>
+        <p>My take: this is not an emergency, but it is a real inventory item. The dangerous one is the forgotten box: the Windows PC in the workshop, the old VM for a client tool. It quietly loses updates in 2027 and nobody notices.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-outdated-windows-devices-will-lose-security-protection-next-year/">bleepingcomputer.com (Oct 9)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Atlassian Data Center: weekly tally on a critical flaw</h2>
+        <p><strong>CVE-2026-21589</strong> allows file access without login. Affected are the Data Center versions of Jira, Jira Service Management, Confluence, Bitbucket, Bamboo, Crowd and Crucible/Fisheye. Rating: <span class="stat">CVSS 4.0: 9.3</span>.<sup>[1]</sup> heise reported the first attacks on Oct 8: Previdian counted "156 attack attempts from 25 IP addresses in eight countries."<sup>[1]</sup></p>
+        <p><strong>Patch status:</strong> Fixes exist for all products. Help Net Security lists Confluence DC 9.2.26 or 10.2.19, Jira Software DC 9.12.40, 10.3.26 or 11.3.12, Bitbucket DC 9.4.26, 10.2.8 or 10.5.1.<sup>[2]</sup> For Bamboo and Crowd, sources contradict each other on individual version numbers. The authoritative list is in the Atlassian advisory, which we have not read ourselves.</p>
+        <p><strong>If you can't patch right away:</strong> Reports name a WAF rule or a block via Tomcat RewriteValve as a stopgap.<sup>[3]</sup> The flaw is still not in CISA's KEV catalog as of today.<sup>[4]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Angriffe-auf-Atlassian-Data-Center-Luecke-haben-begonnen-11480200.html">heise.de (Oct 8)</a> · [2] <a href="https://www.helpnetsecurity.com/?p=386932">helpnetsecurity.com</a> · [3] <a href="https://thehackernews.com/2026/10/critical-atlassian-flaw-lets.html">thehackernews.com</a> · [4] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of Oct 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>SonicWall SMA1000: patch since Tuesday, attack status disputed</h2>
+        <p><strong>CVE-2026-102255</strong> sits in the Appliance WorkPlace interface of models 6210, 7210 and 8200v. BleepingComputer calls it a maximum-severity flaw; the SMA 100 series is not affected.<sup>[1]</sup> heise writes that the flaw "opens internal functions."<sup>[2]</sup> We did not check the exact CVSS score and the fix firmware against the SonicWall advisory today.</p>
+        <p><strong>Exploit status:</strong> A Previdian honeypot network saw exploitation attempts on Oct 9. SonicWall "has not yet flagged this vulnerability as actively exploited." Shadowserver counts more than 400 internet-exposed SMA1000 devices.<sup>[1]</sup></p>
+        <p>My take: whether it's "attempt" or "attack" makes no difference to operators. The patch came on Oct 6, and a maximum-severity VPN interface does not stay unpatched on the network over a weekend.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/max-severity-sonicwall-sma1000-flaw-now-exploited-in-attacks/">bleepingcomputer.com (Oct 9)</a> · [2] <a href="https://www.heise.de/news/SonicWall-SMA1000-Luecke-mit-Hoechstwertung-oeffnet-interne-Funktionen-11480426.html">heise.de (Oct 8)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Citrix NetScaler: the week's second SAML patch</h2>
+        <p><strong>CVE-2026-107406</strong> is a memory overflow in NetScaler ADC and Gateway. It allows code execution or a crash, but only on systems configured as a SAML identity provider or service provider. Fix builds: 14.1-73.46 and 13.1-64.29 or newer, FIPS 14.1-73.46, FIPS/NDcPP 13.1.37.283.<sup>[1]</sup></p>
+        <p><strong>Exploit status:</strong> Citrix says: "not aware of any unmitigated exploits of this vulnerability." Shadowserver sees over 21,000 NetScalers online, about 20,000 ADC and 1,500 Gateway.<sup>[1]</sup> The older flaw CVE-2026-88779, by contrast, has been in the KEV catalog since Oct 4.<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/citrix-warns-admins-to-patch-new-netscaler-rce-flaw-immediately/">bleepingcomputer.com (Oct 9)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of Oct 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CISA KEV: deadlines expire today and Tuesday</h2>
+        <p>Today, Oct 11, the deadline ends for the five old flaws CISA added on Oct 8: ProFTPD (CVE-2015-3306), ISC BIND (CVE-2015-5477), Apache Struts (CVE-2016-3081), ONLYOFFICE Docs (CVE-2021-3199) and Strapi (CVE-2023-22894).<sup>[1]</sup> On Tuesday, Oct 13, the deadline follows for <strong>CVE-2026-86950</strong> in several Apple products, added on Sep 29.<sup>[1]</sup></p>
+        <p>The remaining entries of the last two weeks, for an overview: Zammad (CVE-2026-102489 and -102490, Oct 2), Fortinet FortiMail (CVE-2026-104286, Oct 1) and Cisco Catalyst SD-WAN Manager (CVE-2026-76504, Sep 30).<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">KEV deadline:</strong> The deadline applies only to US federal agencies. For everyone else it is a signal: this flaw is demonstrably being attacked, so it belongs at the top of the list.
+        </div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of Oct 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cisco: CVSS 10 in the license server</h2>
+        <p>Cisco published several advisories on Oct 7 (heise reported on Oct 9). The most severe flaw is <strong>CVE-2026-76482</strong> in Cisco License On-Prem, per heise with a "maximum CVSS score of 10 out of 10." The fix is in version 10-202609; if you are still on up to 9-202601, you have to migrate.<sup>[1]</sup> Also <strong>CVE-2026-76485</strong> in Nexus 3000 and 9000: code execution as root without login via NGOAM, rated critical.<sup>[1]</sup> The report mentions no attacks. A fix for an SSRF flaw in Cisco Finesse only comes in January or February 2027.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Sicherheitspatches-Kritische-Root-Luecke-bedroht-Cisco-Switches-11481742.html">heise.de (Oct 9)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>7-Zip 26.04: flaws closed, details unclear</h2>
+        <p>heise reports that the 7-Zip version from Monday of this week fixes "several security vulnerabilities" and bugs. There are no CVE numbers: "There are currently no indications of the severity of the security holes, nor of how many there are."<sup>[1]</sup></p>
+        <p>My take: 7-Zip has already closed flaws several times this year, including 26.02 (end of June) involving crafted xz archives.<sup>[1]</sup> Archivers process foreign files, so they belong among the programs you keep current, even without details.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/7-Zip-Update-stopft-Sicherheitsluecken-11483182.html">heise.de (Oct 10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Python 3.15 and 3.14.8: the week in the release calendar</h2>
+        <p>Python 3.15.0 has been final since Oct 9; the details were here yesterday.<sup>[1]</sup> The release post came from Hugo van Kemenade.<sup>[2]</sup> For anyone not switching yet: the current 3.14 version is 3.14.8 from Sep 30.<sup>[1]</sup></p>
+        <p>My take: a Sunday is a good day for a trial run in a throwaway venv. In production I would wait until the big packages have wheels for 3.15.</p>
+        <span class="src">[1] <a href="https://www.python.org/downloads/">python.org/downloads (as of Oct 11)</a> · [2] <a href="https://blog.python.org/">blog.python.org (Oct 9)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cloudflare Workers: profiling at the push of a button</h2>
+        <p>Besides the Deno news, Cloudflare published a second post for developers on Oct 9: on-demand CPU and memory profiling with flame graphs for Workers and Durable Objects.<sup>[1]</sup> We have not read the details. For anyone running Workers, this is a tool that was missing until now: if you wanted to know why a Worker scrapes the CPU limit, you had to guess.</p>
+        <span class="src">[1] <a href="https://blog.cloudflare.com/workers-on-demand-profiling/">blog.cloudflare.com (Oct 9)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Browsers: Chrome on a two-week cadence</h2>
+        <p>Since Chrome 153 (stable on Sep 8), major Chrome versions ship every two weeks, heise reports.<sup>[1]</sup> Chrome 153 itself brought 230 security fixes according to one report and closed, per the same report, an actively attacked V8 flaw (CVE-2026-87491).<sup>[2]</sup> There are reports of a stable release of Chrome 155; we could not confirm the exact date.</p>
+        <p>My take: for web developers the new cadence means features land faster, but the compatibility table also goes stale faster. If you pin browser versions in E2E tests, you will adjust the matrix more often.</p>
+        <span class="src">[1] <a href="https://heise.de/-11446371">heise.de</a> · [2] <a href="https://www.thedroptimes.com/node/72157">thedroptimes.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief</h2>
+        <ul>
+          <li><strong>PostgreSQL 14</strong> gets updates only until Nov 12, 2026. Current minor releases are 18.6, 17.11, 16.15, 15.19 and 14.24 from Aug 13. PostgreSQL 19 is still in beta; on Sep 24 six features, including SQL/PGQ, were removed again. We could not confirm a GA date. <span class="src"><a href="https://wz-it.com/en/blog/postgresql-14-end-of-life-upgrade-guide/">wz-it.com</a></span></li>
+          <li><strong>Veeam Backup &amp; Replication</strong>: fix for a malicious-code flaw, details in the Oct 9 brief. <span class="src"><a href="https://www.heise.de/news/Veeam-stopft-Schadcode-Luecke-in-Backup-Replication-11480790.html">heise.de (Oct 8)</a></span></li>
+          <li><strong>AhsayCBS</strong>: attacks on unpatched flaws with webshells and crypto miners, status as of yesterday. <span class="src"><a href="https://www.bleepingcomputer.com/news/security/unpatched-ahsaycbs-flaws-exploited-to-deploy-webshells-mine-crypto/">bleepingcomputer.com (Oct 9)</a></span></li>
+          <li><strong>IBM Verify Identity Access</strong>: flaws allow system takeover, per heise. <span class="src"><a href="https://www.heise.de/news/Angreifer-koennen-Systeme-mit-IBM-Verify-Identity-Access-uebernehmen-11482296.html">heise.de (Oct 9)</a></span></li>
+          <li><strong>Energy facilities</strong>: thousands of European wind and solar installations are openly exposed on the internet. <span class="src"><a href="https://www.heise.de/news/Tausende-europaeische-Windanlagen-und-Solarparks-offen-im-Internet-11482262.html">heise.de</a></span></li>
+          <li><strong>AI as an attack tool</strong>: BleepingComputer reports on AI agents in attacks on South Korean banks and a ClickFix campaign with fake Claude installers. Details in the AI briefs. <span class="src"><a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (Oct 9–10)</a></span></li>
+          <li><strong>Not checked</strong>: NVD entries (only the home page loaded), the original Atlassian, SonicWall and Citrix advisories, Java/Spring, Angular/React, EU regulation and the Brazilian trade press.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>What this Sunday is worth in twenty minutes</h2>
+        <p>If you run your own DNS resolver: open <code>dnstest.dev/ksk-2024/</code>, done. If you use Deno Deploy: put a date for the migration in your calendar, six months go fast. If you have old Windows boxes: make a list of which ones need the July update by May 2027. The rest can wait for Tuesday's Patch Tuesday.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Sunday, October eleventh. A quiet day, but of all days, something is happening today in the foundation of the internet: the DNS root zone is switching its master key.</p>
+  <p>According to IANA, the new root key, KSK twenty twenty-four, starts signing the root zone today, and the old one from twenty seventeen steps down. If you run your own validating resolver, such as Unbound or BIND, it has to trust the new key. Otherwise, Cloudflare says, your users can't reach websites anymore. Most resolvers learned the key automatically long ago. A Cloudflare test page shows in seconds whether everything checks out.</p>
+  <p>The second big story came on Friday: the entire Deno team is joining Cloudflare. The Deno runtime gets one more year of monthly updates, after which the team's development ends. Deno stays open source. Deno Deploy shuts down after six months, and the JSR package registry keeps running. Cloudflare wants to make its own runtime, workerd, something you can host yourself.</p>
+  <p>A correction to yesterday: on the expiring Windows certificates, BleepingComputer says this is about Windows Update itself. The certificates expire in May and June of twenty twenty-seven. Devices without the right update will then lose their updates.</p>
+  <p>On this week's security flaws, the picture is steady. At Atlassian Data Center, attacks are under way on a flaw rated nine point three. SonicWall has patched its SMA one thousand devices, though whether they're already under attack is disputed. Citrix closed a second SAML flaw in NetScaler, with no known attacks there. And Cisco reports a flaw with the maximum score of ten in its License On-Prem server.</p>
+  <p>Today the deadline from the US agency CISA runs out for five old flaws in ProFTPD, BIND, Struts, ONLYOFFICE and Strapi. On Tuesday, a deadline follows for an Apple flaw. Also, 7-Zip has closed several flaws, but the maker doesn't give details.</p>
+  <p>Tuesday is Microsoft Patch Tuesday. Tomorrow's brief checks whether the root key switch caused problems anywhere, and what's leaking out about Patch Tuesday.</p>
+</div>
+
+</body>
+</html>
