@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-12</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-12</span>
+    <span class="dot">·</span>
+    <span>Monday, October 12, 2026 · Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">Let's Encrypt Moves to 64 Days, GitHub Rebuilds Its Git Storage</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Monday, and the week starts with infrastructure instead of alarms. From Wednesday, Let's Encrypt issues certificates with a 64-day lifetime in its staging environment, and in February 2027 that becomes the default. If you hard-coded "renew after 60 days" anywhere, you now have a problem. GitHub is replacing its storage system Spokes because traffic more than doubled in a year. Also: two CVEs in the PostgreSQL JDBC driver, an OpenSSH release with a quiet security fix, and the security picture ahead of Tuesday's Patch Tuesday.</p>
+    <ul>
+      <li><span class="chip hot">Infra</span> <strong>Let's Encrypt</strong>: 64-day certificates in staging from Oct 14, default from Feb 10, 2027, then 45 days in 2028. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Infra</span> <strong>GitHub</strong> replaces Spokes with Azure Blob Storage: 35x faster writes in internal tests. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>PostgreSQL JDBC 42.7.14</strong> fixes two CVEs, one of which can allow plaintext password login. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>OpenSSH 10.6</strong>: <code>restrict</code> in <code>authorized_keys</code> now also applies to tunnels. <span class="chip">Global</span></li>
+      <li><span class="chip">Release</span> <strong>Linux 7.3-rc7</strong> is out, ext4 <code>data=journal</code> is due to disappear in early 2028. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Start-of-week status</strong>: Atlassian, Citrix, SonicWall, AhsayCBS. Still no patch for Ahsay. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>VMware</strong>: In a survey, nine in ten customers are considering alternatives. <span class="chip">Global</span></li>
+      <li><span class="chip good">OSS</span> <strong>Margaret Hamilton</strong>, the Apollo software lead, has died at 90. <span class="chip">USA</span></li>
+      <li><span class="chip">Infra</span> Tomorrow, <strong>Tuesday Oct 13</strong>, is Microsoft Patch Tuesday. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Patch Tuesday, shorter certificates in staging on Wednesday, then a quiet week.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Mon Oct 12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Today</span><span>Linux 7.3-rc7 released</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue Oct 13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Microsoft Patch Tuesday (second Tuesday, date calculated)</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Wed Oct 14</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Let's Encrypt staging: 64-day certificates</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu Oct 15 – Sun Oct 18</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>No confirmed dates</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Let's Encrypt: 64 Days Is the New 90</h2>
+        <p>On Oct 7, Let's Encrypt set the roadmap for shorter certificates. From <strong>Wednesday, Oct 14</strong>, the staging environment issues certificates with a 64-day lifetime so you can test. Production follows on <strong>Feb 10, 2027</strong>: "all Let's Encrypt subscribers will move to certificates with 64 day lifetimes by default".<sup>[1]</sup> According to Let's Encrypt, the last 90-day certificate expires on May 11, 2027. In 2028 the default drops to 45 days.<sup>[1]</sup></p>
+        <p>The second change is quieter but matters more for some setups: A passed domain validation now counts for only 10 days instead of 30. In 2028 it will be just seven hours.<sup>[1]</sup> Anyone who gets certificates through DNS challenges with manual steps will notice first.</p>
+        <div class="eli5">
+          <strong class="eli5-term">ARI (ACME Renewal Info):</strong> Normally your ACME client decides on its own when to renew a certificate, often after a fixed number of days. With ARI, the client asks the certificate authority: "When should I renew?" Like a doctor who gives you your next appointment instead of you having to guess.
+        </div>
+        <p>Let's Encrypt is clear: If you renew automatically and have a client with ARI, you "should be all set". Everyone else should renew at about two thirds of the lifetime.<sup>[1]</sup></p>
+        <div class="callout warn"><span class="callout-label">To check</span> Let's Encrypt advises searching cron jobs, wrapper scripts and runbooks for hard-coded numbers like <code>83</code>, <code>80</code> or <code>60</code>.<sup>[1]</sup> A script that says "renew after 60 days" renews four days before expiry with 64-day certificates. If something fails, there is hardly any time left.</div>
+        <p>My take: For anyone using Caddy, Traefik or another server with built-in ACME, this is probably a non-event. Whether your client supports ARI is in its release notes. The risky ones are the home-grown solutions: the certbot script from 2019, the hook that copies certificates to a load balancer, the monitoring that alerts at "less than 30 days". With 64 days, such a warning fires for almost half the lifetime. Staging from Wednesday exists for exactly this: run once against staging and see what breaks.</p>
+        <span class="src">[1] <a href="https://letsencrypt.org/2026/10/07/64-day-certs">letsencrypt.org (Oct 7)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>GitHub: Farewell to Spokes</h2>
+        <p>GitHub is rebuilding the storage for Git repositories. According to The Register, the old system <strong>Spokes</strong> uses a three-phase commit protocol and stores full copies of every repo on several local disks. Every write needs confirmation from a majority of those copies.<sup>[1]</sup> The new design "writes a commit only once, to Azure Blob Storage". Early tests show "a promising 35x write improvement in internal tests".<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Quorum replication:</strong> Imagine you write a note and have to dictate it to three colleagues. Only when two say "got it" does it count as saved. That is safe, but slow when there are many notes. An object store like Azure Blob takes the copying off your hands: store it once, and the storage handles redundancy itself.
+        </div>
+        <p>The reason is load. According to the Register, traffic has doubled, "from 218.2 billion events per month to 473.3 billion". In September alone there were 7.38 billion commits, five times as many as in September 2025.<sup>[1]</sup> April had ten incidents with degraded performance, May nine. GitHub gave no timeline for the migration.<sup>[1]</sup> Where the growth comes from is covered in the ai-dev brief.</p>
+        <p>My take: This is an honest admission. Spokes was a showcase project for years, and now GitHub is essentially saying: this no longer scales. For us as users it means nothing at first, except maybe fewer red status pages. The strategic lesson is bigger: Even GitHub puts core data on an object store of its parent company. If you bet on "runs on our own disks" with GitHub Enterprise Server or a data-sovereignty question, keep an eye on this.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/devops/2026/10/09/so-long-spokes-github-rewrites-storage-to-restore-reliability-just-in-time-for-agentic-hordes/5302148">theregister.com (Oct 9)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>OpenSSH 10.6: A Quiet Fix for Tunnels</h2>
+        <p>OpenSSH 10.6 has been out since Oct 6. The most important change for admins: OpenSSH will now "fully honor the authorized_keys "restrict" keyword, which was not being properly applied to tunnel forwarding".<sup>[1]</sup> Anyone who set up a key with <code>restrict</code> for a backup or a deploy job assumed that key could not open tunnels. For tunnel forwarding, that was not fully true until now.</p>
+        <p>Other points per the release notes: stricter path checking in sftp, GSSAPI credentials are stored only after successful login, the LZ77 compression coder is disabled, usernames containing <code>$</code> or a backslash are rejected, and the phase-out of <code>scp -R</code> begins.<sup>[1]</sup> We did not see a CVE number in the notes.</p>
+        <p>My take: No reason to rush, but a reason to update at the next maintenance window. If you use <code>restrict</code> as a security boundary, check quickly whether your distribution already ships the fix.</p>
+        <span class="src">[1] <a href="https://www.openssh.org/releasenotes.html">openssh.org/releasenotes (as of Oct 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>VMware: Nine in Ten Customers Are Looking Around</h2>
+        <p>A survey by Unisphere Research of 269 VMware customers says: Nine in ten are considering alternatives because of higher license costs. 54 percent cite the end of support for perpetual licenses as the reason, 60 percent are considering a multi-hypervisor strategy.<sup>[1]</sup> The survey ran from December 2025 to February 2026. It was commissioned by Rimini Street, a third-party support provider.<sup>[1]</sup> Also per the Register, IBM is handing off "hundreds" of its VMware cloud customers.<sup>[2]</sup></p>
+        <p>My take: A survey commissioned by a company that lives off switching deserves caution. But the direction fits everything you hear since the Broadcom takeover. For developers it means: Proxmox, OpenShift and Hyper-V experience will be in demand more often in projects.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/virtualization/2026/10/07/nine-in-10-vmware-customers-eye-the-exit-as-licensing-bills-bite/5301591">theregister.com (Oct 7)</a> · [2] <a href="https://www.theregister.com/virtualization/2026/10/08/ibm-offloads-hundreds-of-its-cloudy-vmware-customers/5301849">theregister.com (Oct 8)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PostgreSQL JDBC 42.7.14: Two CVEs in the Java Driver</h2>
+        <p>The JDBC driver for PostgreSQL has shipped a security release; the postgresql.org home page lists it under Oct 9.<sup>[1]</sup> The release notes name two vulnerabilities:<sup>[2]</sup></p>
+        <ul>
+          <li><strong>CVE-2026-107314</strong> (<code>requireAuth</code>): A value that excluded all authentication methods or contained none was treated as if <code>requireAuth</code> were not set. The driver then accepted any method the server demanded, including plaintext passwords. Affected: 42.7.11 through 42.7.13.</li>
+          <li><strong>CVE-2026-107315</strong> (padding of short values): If a value was shorter than its declared length, the driver padded it with bytes from earlier messages on the same connection. SQL text and parameters of earlier statements could end up in the stored value. Affected: 42.7.4 through 42.7.13.</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">requireAuth:</strong> A driver setting that says: "Only log in with these methods, for example SCRAM." It protects against a fake server tricking your client into sending a plaintext password. The flaw defeated exactly this protection for certain values.
+        </div>
+        <p>The notes give no CVSS score. My take: The second flaw is the more unpleasant one. It is not a classic attack but a data leak into your own database: Other statements' parameters, perhaps personal data too, land in a column where nobody expects them. Spring Boot projects usually pull the driver through dependency management. It is worth checking the version that actually resolves.</p>
+        <p><strong>Related:</strong> PostgreSQL 14 gets fixes only until <strong>Nov 12, 2026</strong>, so a good month.<sup>[1]</sup> The current minor versions are 18.6, 17.11, 16.15, 15.19 and 14.24 from Aug 13.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.postgresql.org/">postgresql.org (as of Oct 12)</a> · [2] <a href="https://jdbc.postgresql.org/changelogs/2026-10-07-42.7.14-release/">jdbc.postgresql.org</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Linux: 7.3-rc7 and the Slow End of data=journal</h2>
+        <p>Linux 7.3-rc7 is out as of today. The current stable kernel is 7.2.10 from Oct 11, the long-term kernel 6.18 is at 6.18.56.<sup>[1]</sup> The older LTS lines 6.12.112, 6.6.158, 6.1.189, 5.15.222 and 5.10.271 got their last update on Oct 3.<sup>[1]</sup> After an rc7 the final release usually follows, but no date has been announced.</p>
+        <p>Phoronix also reports: The ext4 mode <code>data=journal</code> is being deprecated, with removal planned for early 2028.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">data=journal:</strong> ext4 normally writes only the metadata to the journal, i.e. "which file lives where". With <code>data=journal</code>, the contents themselves land in the journal first. That is safer in a power outage, but slower and rarely used.
+        </div>
+        <p>My take: If you use the mode, you usually know, because you entered it in <code>/etc/fstab</code> on purpose. A <code>grep data=journal /etc/fstab</code> on your own servers takes five seconds.</p>
+        <span class="src">[1] <a href="https://www.kernel.org/">kernel.org (as of Oct 12)</a> · [2] <a href="https://lwn.net/">lwn.net (as of Oct 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Security Status at the Start of the Week</h2>
+        <p>The big open issues of the past week, in brief. We found no new attack reports since Saturday.</p>
+
+        <h3>Atlassian Data Center: Attacks Under Way, KEV Entry Missing</h3>
+        <p><strong>CVE-2026-21589</strong> (CVSS 4.0: <span class="stat">9.3</span>) allows reading files without login if the attacker knows the exact path. According to Help Net Security, all versions of the Data Center products Jira, Jira Service Management, Confluence, Bitbucket, Bamboo and Crowd as well as Crucible and Fisheye are affected. The cloud is not affected.<sup>[1][2]</sup> heise reported on Oct 8, citing Previdian, "156 attack attempts from 25 IP addresses in eight countries".<sup>[1]</sup> The flaw does not yet appear among the newest entries of CISA's KEV catalog today.<sup>[3]</sup> The fix versions are in the Atlassian advisory; we did not check the numbers from the trade press against the original.</p>
+
+        <h3>Citrix NetScaler: Two SAML Flaws, Different Status</h3>
+        <p>The new <strong>CVE-2026-107406</strong> has a CVSS 4.0 score of <span class="stat">9.5</span> according to Citrix. It affects only systems configured as a SAML Service Provider or Identity Provider. Fix builds: 14.1-73.46 and 13.1-64.29 or newer, for FIPS/NDcPP 13.1-37.283.<sup>[4][5]</sup> Citrix knows of "no unmitigated exploits".<sup>[6]</sup> Different for the older SAML flaw <strong>CVE-2026-88779</strong>: It was attacked before the patch and has been in the KEV catalog since Oct 4.<sup>[3]</sup></p>
+
+        <h3>SonicWall SMA1000: Fix Versions Now Known</h3>
+        <div class="update-since"><strong>Since yesterday:</strong> Yesterday we lacked the CVSS score and fix firmware. heise gives both.</div>
+        <p><strong>CVE-2026-102255</strong> is an SSRF flaw without login, with CVSS <span class="stat">10.0</span> according to heise. Versions 12.4.3-03670 and 12.5.0-03082 or newer are safe, for models 6210, 7210 and 8200v.<sup>[7]</sup> The CVSS score comes from this one source only.</p>
+
+        <h3>AhsayCBS: Still No Patch</h3>
+        <p>According to BleepingComputer, Huntress observed attacks on at least five organizations on Oct 7 through two flaws (<strong>CVE-2026-105133</strong>, login bypass, and <strong>CVE-2026-105134</strong>, command injection). They install webshells and the XMRig crypto miner. Even the newest version 10.3.4 is affected, and there was no fix at publication.<sup>[8]</sup> If you run AhsayCBS, take the admin interface off the internet until a patch is available.</p>
+
+        <h3>Veeam and Cisco: Patched, No Attacks Known</h3>
+        <p>Veeam Backup &amp; Replication: <strong>CVE-2025-64393</strong> with CVSS 4.0 9.4 needs only the "Backup Viewer" role. Fix version 12.3.2.4934; per heise the 13.x branches are not affected by this flaw.<sup>[9]</sup> Cisco License On-Prem: <strong>CVE-2026-76482</strong> with CVSS 10, fix in 10-202609.<sup>[10]</sup> Both scores come from heise and were not checked against NVD.</p>
+
+        <span class="src">[1] <a href="https://www.heise.de/news/Angriffe-auf-Atlassian-Data-Center-Luecke-haben-begonnen-11480200.html">heise.de (Oct 8)</a> · [2] <a href="https://www.helpnetsecurity.com/?p=386932">helpnetsecurity.com</a> · [3] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of Oct 12)</a> · [4] <a href="https://support.citrix.com/external/article/CTX697191/">support.citrix.com (Oct 8)</a> · [5] <a href="https://www.heise.de/news/Citrix-legt-weiteres-Sicherheitsupdate-gegen-kritische-Netscaler-Luecke-nach-11481808.html">heise.de (Oct 9)</a> · [6] <a href="https://www.bleepingcomputer.com/news/security/citrix-warns-admins-to-patch-new-netscaler-rce-flaw-immediately/">bleepingcomputer.com (Oct 9)</a> · [7] <a href="https://www.heise.de/news/SonicWall-SMA1000-Luecke-mit-Hoechstwertung-oeffnet-interne-Funktionen-11480426.html">heise.de (Oct 8)</a> · [8] <a href="https://www.bleepingcomputer.com/news/security/unpatched-ahsaycbs-flaws-exploited-to-deploy-webshells-mine-crypto/">bleepingcomputer.com (Oct 9)</a> · [9] <a href="https://www.heise.de/news/Veeam-stopft-Schadcode-Luecke-in-Backup-Replication-11480790.html">heise.de (Oct 8)</a> · [10] <a href="https://www.heise.de/news/Sicherheitspatches-Kritische-Root-Luecke-bedroht-Cisco-Switches-11481742.html">heise.de (Oct 9)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CISA KEV: Quiet Weekend</h2>
+        <p>The latest entries in the KEV catalog date from Oct 8: five old flaws in ProFTPD (CVE-2015-3306), ISC BIND (CVE-2015-5477), Apache Struts (CVE-2016-3081), ONLYOFFICE Docs (CVE-2021-3199) and Strapi (CVE-2023-22894).<sup>[1]</sup> Before that came Citrix (Oct 4), Zammad (Oct 2), Fortinet FortiMail (Oct 1) and Cisco Catalyst SD-WAN Manager (Sep 30).<sup>[1]</sup> Nothing has been added since, as of this morning.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of Oct 12)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Patch Tuesday on Tuesday</h2>
+        <p>Microsoft publishes its updates on the second Tuesday of each month, which in October 2026 is <strong>Oct 13</strong>. We calculated the date from the fixed rhythm; we have not read an announcement. From experience, other vendors follow suit with their own updates on the same day. Wednesday's brief summarizes what matters from it for developer machines and servers.</p>
+      </section>
+
+      <section class="news-item">
+        <h2>Obituary: Margaret Hamilton</h2>
+        <p>Margaret Hamilton died on Sep 30 at the age of 90, The Register reports.<sup>[1]</sup> She joined the MIT Instrumentation Laboratory in 1965 and led development of the on-board software for the Apollo command and lunar modules.<sup>[1]</sup> During the Apollo 11 landing, the on-board computer reported "executive overflows", meaning it could no longer handle all tasks. The restart logic of her software kept the important landing tasks running.<sup>[1]</sup></p>
+        <p>According to the report, she called herself a "software engineer" even then, because programming was not taken as seriously as other engineering work. In 2016 she received the Presidential Medal of Freedom from Barack Obama.<sup>[1]</sup></p>
+        <p>My take: Every one of us with "Software Engineer" on a business card today carries a piece of her fight. And the Apollo 11 story remains the best argument for error handling you hope never to need.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/software/2026/10/08/margaret-hamilton-software-pioneer-who-helped-put-humans-on-the-moon-dies-at-90/5301988">theregister.com (Oct 8)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>From the Stack</h2>
+        <ul>
+          <li><strong>Python 3.15.0</strong> has been final since Oct 9, with <code>frozendict</code>, lazy imports, UTF-8 as default and the Tachyon profiler. The details were here on Saturday. Current 3.14 version: 3.14.8 from Sep 30. <span class="src"><a href="https://www.python.org/downloads/release/python-3150/">python.org</a></span></li>
+          <li><strong>Java</strong>: JDK 27 has been GA since Sep 15, JDK 28 is in development. <span class="src"><a href="https://openjdk.org/projects/jdk/">openjdk.org (as of Oct 12)</a></span></li>
+          <li><strong>Spring</strong>: No new GA release and no security post. The last milestones came on Sep 24 and 25: Boot 4.2.0-M2, Security 7.2.0-M2, Cloud 2026.0.0-M1. <span class="src"><a href="https://spring.io/blog">spring.io/blog (as of Oct 12)</a></span></li>
+          <li><strong>Angular</strong>: v22 has been active since Jun 3, v21 is in LTS. v22.3 is planned for around November. <span class="src"><a href="https://angular.dev/reference/releases">angular.dev</a></span></li>
+          <li><strong>Caddy</strong>: v2.11.7 from Oct 3 is the current version, two days after v2.11.6. <span class="src"><a href="https://github.com/caddyserver/caddy/releases">github.com/caddyserver</a></span></li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>Briefly Noted</h2>
+        <ul>
+          <li><strong>EU Cyber Resilience Act</strong>: The reporting obligation for exploited vulnerabilities has applied since Sep 11. Early warning within 24 hours, report within 72 hours, to ENISA's reporting platform. Most other obligations apply from Dec 11, 2027. <span class="src"><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">digital-strategy.ec.europa.eu</a></span></li>
+          <li><strong>7-Zip 26.04</strong> closes several flaws, with no details on severity. 7-Zip has no automatic update. <span class="src"><a href="https://www.heise.de/news/7-Zip-Update-stopft-Sicherheitsluecken-11483182.html">heise.de (Oct 10)</a></span></li>
+          <li><strong>Cisco Nexus 3000/9000</strong>: The critical root flaws CVE-2026-76485 and CVE-2026-76465 from last week. The second sits in MPLS OAM, which is off by default. <span class="src"><a href="https://www.heise.de/news/Sicherheitspatches-Kritische-Root-Luecke-bedroht-Cisco-Switches-11481742.html">heise.de (Oct 9)</a></span></li>
+          <li><strong>Stack Overflow survey</strong> with 30,903 responses: The topic is AI in developers' daily work, details in the ai-dev brief. <span class="src"><a href="https://www.theregister.com/software/2026/10/10/stack-overflow-survey-finds-devs-hooked-on-ai-but-not-totally-sold-on-its-judgment/5301662">theregister.com (Oct 10)</a></span></li>
+          <li><strong>Not checked</strong>: NVD entries (the pages deliver only a JS shell), the Atlassian advisory in the original, browser versions, Docker, Tailscale, FastAPI, SQLite, golem.de and the Brazilian trade press. We have no verified BR story for today.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>What This Monday Is Worth Twenty Minutes For</h2>
+        <p>First: search your own certificate scripts for fixed renewal days, and from Wednesday test once against Let's Encrypt staging. Second: in Java projects, check the resolved version of the PostgreSQL JDBC driver and raise it to 42.7.14. Third: if you still run PostgreSQL 14, plan the upgrade now, support ends in a month. The rest waits for Patch Tuesday.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Monday, October twelfth. The week starts with infrastructure instead of alarms, and the top story affects nearly anyone who runs a website.</p>
+  <p>Let's Encrypt is shortening the lifetime of its certificates. Starting Wednesday, the test environment issues certificates valid for sixty-four days, and from February tenth, twenty twenty-seven, that becomes the default. In twenty twenty-eight the lifetime drops to forty-five days. If you renew automatically with a modern client, you don't need to do anything. But if a script has "renew after sixty days" hard-coded, change it now. Let's Encrypt recommends renewing after about two thirds of the lifetime.</p>
+  <p>GitHub is rebuilding the storage behind its Git repositories. The old system, Spokes, kept multiple copies of every repo on its own disks. The new one writes once to Azure Blob Storage, and in internal tests it was thirty-five times faster at writing. The reason, according to The Register: traffic more than doubled in a year, to four hundred seventy-three billion events a month.</p>
+  <p>For Java developers, there's an update to the PostgreSQL driver. Version forty-two point seven point fourteen fixes two vulnerabilities. In one, the driver could send a plaintext password despite a protective setting. In the other, leftovers from earlier queries ended up in stored values. And PostgreSQL fourteen gets updates only until November twelfth.</p>
+  <p>OpenSSH ten point six fixes a quiet weakness: the restrict option in the keys file didn't fully apply to tunnels until now. On the Linux kernel side, the seventh release candidate for version seven point three is out, and the ext-four mode data journal is set to disappear in early twenty twenty-eight.</p>
+  <p>On last week's vulnerabilities, the picture is steady. Attacks are under way against Atlassian Data Center, but the flaw isn't yet in the catalog of the U.S. agency CISA. Citrix has patched a second SAML flaw. For SonicWall, the safe firmware versions are now known. Only AhsayCBS still has no patch, even though attackers there are installing webshells and crypto miners.</p>
+  <p>A survey finds nine in ten VMware customers are weighing alternatives, though it was commissioned by a support provider that profits from switching. And some sad news: Margaret Hamilton has died at ninety. She led the on-board software for the Apollo moon landing and called herself a software engineer even then.</p>
+  <p>Tomorrow is Microsoft Patch Tuesday. Wednesday's brief looks at what matters for developers, and whether the start of shorter certificates in the test environment goes smoothly.</p>
+</div>
+
+</body>
+</html>
