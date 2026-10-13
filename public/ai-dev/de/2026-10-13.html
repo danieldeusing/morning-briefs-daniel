@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-10-13</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<!-- Heute kein Chart (kein unabhängiger Benchmark-Sprung) und kein Mermaid. -->
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-10-13</span>
+  </div>
+
+  <h1 class="masthead-title">Hooks, die wirklich blockieren — und ein Preiskrieg bei den kleinen Modellen</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Wieder ein ruhiger Tag. Seit Freitag gibt es keinen neuen Release von Claude Code und kein neues Coding-Modell. Heute lohnt deshalb der Blick ins Kleingedruckte der letzten Woche. Claude Code hat eine Sicherheitslücke im Hook-System geschlossen, die viele nie bemerkt haben. Anthropic und OpenAI verlangen für ihre kleinen Modelle jetzt auf den Cent denselben Preis. Und morgen läuft eine Frist bei Codex ab.</p>
+    <ul>
+      <li><span class="chip good">Claude</span> <strong>Hooks mit <code>onFailure: "block"</code></strong> (2.1.295, 08.10.): Ein abgestürzter Hook stoppt jetzt die Aktion, statt sie durchzuwinken.</li>
+      <li><span class="chip">Claude</span> <strong>Sonnet 5.5 Cache-Lesen</strong> kostet laut Changelog 0,10 $ statt 0,20 $ pro Million Tokens.</li>
+      <li><span class="chip">MCP</span> <strong>Tool-Beschreibungen</strong> dürfen in Claude Code 2.1.296 jetzt 4.096 statt 2.048 Zeichen lang sein.</li>
+      <li><span class="chip hot">OpenAI</span> <strong>Frist Mi 14.10.</strong>: GPT-5.5 verlässt ChatGPT und Codex. Die API ist nicht betroffen.</li>
+      <li><span class="chip">OpenAI</span> <strong>Decisions API</strong> (Beta, 06.10.) mit <code>gpt-6-luna</code>: Text und Bilder rein, typisierte Antwort raus.</li>
+      <li><span class="chip">Claude</span> <strong>Haiku 5.5 = GPT-6 Luna</strong>: beide 0,10 $ / 0,50 $ pro Million Tokens (bis 100K).</li>
+      <li><span class="chip">Bench</span> <strong>SWE-Bench Verified</strong> ist fast voll: Spitze 96 % (Opus 5) laut Aggregator BenchLM. Die neuen Modelle stehen dort noch nicht.</li>
+      <li><span class="chip good">Local</span> <strong>Qwen3.8-27B</strong>: In einem Test von Simon Willison macht Reasoning den Unterschied zwischen 24 % und fast 100 %.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event-Horizont</div>
+      <div class="timeline-sub">Die letzten sieben Tage plus die nächsten Fristen</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Di 06.10.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>OpenAI Decisions API (Beta)</span>
+          <span>Mistral Large 4 Preview</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mi 07.10.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Haiku 5.5</span>
+          <span>Claude Code 2.1.293</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Do 08.10.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.295: blockierende Hooks</span>
+          <span>GPT-6.1 Sol Ultrafast</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fr 09.10.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.296</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mo 12.10.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Willison: web-edit mit Codex gebaut</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Di 13.10.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heute · Copilot CLI 1.0.97-2 (Pre-Release)</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mi 14.10.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GPT-5.5 verlässt ChatGPT und Codex</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Ende Okt.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Mistral Large 4: offene Gewichte versprochen</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid cols-2">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Claude Code: Hooks, die bei einem Fehler wirklich stoppen</h2>
+        <p>Die wichtigste Zeile der letzten Woche steht tief im Changelog von <strong>2.1.295</strong> (08.10.): „Added <code>onFailure: "block"</code> for command and HTTP hooks, so a hook that fails to start, times out, or exits unexpectedly blocks the action."<sup>[1]</sup></p>
+        <p>Warum das zählt: Viele nutzen Hooks als Schutzzaun. Ein Hook prüft zum Beispiel, ob ein Befehl Secrets anfasst oder in den falschen Ordner schreibt. Wenn dieser Hook aber selbst abstürzt oder hängt, lief die Aktion bisher je nach Fall trotzdem weiter. Der Zaun hatte also ein Loch genau dann, wenn er kaputt war.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Fail-open und fail-closed:</strong> Stell dir eine elektrische Tür vor. Bei Stromausfall bleibt sie entweder offen (fail-open) oder zu (fail-closed). Für einen Notausgang willst du offen. Für einen Tresor willst du zu. Ein Sicherheits-Hook ist ein Tresor. Mit <code>onFailure: "block"</code> kannst du ihn jetzt so einstellen.
+        </div>
+        <p>Dazu kam in derselben Version <code>CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS</code>, eine Obergrenze für Wartezeiten bei Wiederholungen.<sup>[1]</sup> Simon Willison schrieb passend dazu am 03.10.: „We're going to need default hard budget caps on pretty much everything".<sup>[2]</sup> Den Text dahinter haben wir nicht gelesen, nur die Überschrift. Die Richtung ist aber klar: Agenten laufen länger und unbeaufsichtigt, also brauchen sie harte Grenzen.</p>
+        <p>Meine Sicht: Das ist das nützlichste Feature der Woche, auch wenn es niemand bewirbt. Gestern ging es hier um Agenten, die vom Handy aus weiterlaufen. Genau dafür braucht man Hooks, die im Zweifel Nein sagen.</p>
+        <p><span class="chip good">Ausprobieren</span> Geh deine Sicherheits-Hooks durch und setz bei jedem <code>onFailure: "block"</code>. Dann bau einen Hook mit Absicht kaputt (falscher Pfad) und prüf, ob die Aktion wirklich stoppt.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code/releases</a> — Primärquelle, abgerufen 13.10.2026 · [2] <a href="https://simonwillison.net/">simonwillison.net</a>, 03.10.2026 — nur Überschrift, Beitrag nicht gelesen</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Claude Code 2.1.296: Subagenten, MCP und ein halbierter Cache-Preis</h2>
+        <p>Die aktuelle Version ist <strong>2.1.296</strong> vom 09.10.<sup>[1]</sup> Danach haben wir bis heute nichts Neues gefunden. Anfang Oktober kamen zehn Releases in neun Tagen, von 2.1.287 am 01.10. bis 2.1.296.<sup>[2]</sup> Die Punkte, die für den Alltag zählen:</p>
+        <ul>
+          <li><strong><code>autoCompactWindow</code> im Frontmatter von Subagenten</strong>: Jeder Subagent kann eine eigene Grenze bekommen, ab der er seinen Verlauf zusammenfasst.<sup>[1]</sup></li>
+          <li><strong>MCP-Tool-Beschreibungen</strong>: „Changed the default limit on MCP tool descriptions and server instructions from 2,048 to 4,096 characters."<sup>[1]</sup></li>
+          <li><strong>Sonnet 5.5 Cache-Lesen</strong>: „Updated Sonnet 5.5 cache-read pricing to $0.10 per million tokens (was $0.20)."<sup>[1]</sup></li>
+          <li>Neu ist auch <code>CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL</code>, um das Modell für Workflow-Subagenten festzulegen.<sup>[1]</sup></li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">Auto-Compaction:</strong> Ein Agent hat ein begrenztes Gedächtnis pro Sitzung, das Kontextfenster. Wird es voll, fasst er den bisherigen Verlauf zusammen und macht mit der Zusammenfassung weiter. Wie ein Protokoll statt einer Tonaufnahme der ganzen Besprechung. Das spart Platz, aber Details gehen verloren. Mit <code>autoCompactWindow</code> legst du pro Subagent fest, wann das passiert.
+        </div>
+        <div class="eli5">
+          <strong class="eli5-term">Cache-Lesen:</strong> Agenten schicken bei jedem Schritt fast denselben langen Text mit, etwa Systemprompt und Dateien. Der Anbieter merkt sich diesen Anfang. Beim nächsten Mal liest er ihn aus dem Speicher, und das kostet nur einen Bruchteil. Bei langen Agent-Läufen ist das oft der größte Posten der Rechnung.
+        </div>
+        <p>Meine Sicht: Der Cache-Preis ist für Vielnutzer mehr wert, als er klingt. In einer langen Sitzung wird derselbe Kontext hunderte Male gelesen. Eine Halbierung dort trifft direkt die Kosten pro Aufgabe. Die längeren MCP-Beschreibungen sind zweischneidig: Sie helfen dem Modell, ein Tool richtig zu nutzen, kosten aber bei jedem Aufruf Kontext. Wer zehn MCP-Server aktiv hat, zahlt das zehnmal.</p>
+        <p><span class="chip good">Ausprobieren</span> Gib einem Recherche-Subagenten, der viel liest, ein kleineres <code>autoCompactWindow</code>. So verbraucht er den Kontext nicht, bevor er fertig ist.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code/releases</a> — Primärquelle, abgerufen 13.10.2026 · [2] <a href="https://www.havoptic.com/releases/claude-code/2026/10">havoptic.com</a> — Sekundärquelle (Release-Tracker), abgerufen 13.10.2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Preiskrieg unten: Haiku 5.5 kostet genau so viel wie GPT-6 Luna</h2>
+        <p>Claude Haiku 5.5 erschien am <strong>07.10.</strong>. Anthropic nennt es „Our fastest, cheapest, and most capable small model yet".<sup>[1]</sup> Der Preis liegt bei 0,10 $ Input und 0,50 $ Output pro Million Tokens, bis 100.000 Tokens. Darüber steigt er auf 0,50 $ / 2,50 $. Simon Willison: „The new Haiku exactly matches the price of GPT-6 Luna—$0.10/$0.50—up to 100,000 tokens."<sup>[2]</sup> Zum Vergleich: Haiku 4.5 kostete laut Willison 1 $ / 5 $.</p>
+        <p>Zwei Einschränkungen. Erstens zählt der neue Tokenizer laut Willison etwa 1,25-mal so viele Tokens für denselben Text.<sup>[2]</sup> Zweitens war die offizielle Haiku-5.5-Seite von Anthropic beim Abruf nicht erreichbar. Offizielle Benchmarks und das offizielle Kontextfenster haben wir deshalb nicht. Die 1M Kontext in Claude Code kennen wir nur von einem Release-Tracker.<sup>[3]</sup></p>
+        <p>Meine Sicht: Zehnfach billiger bei gleichem Namen ist kein normales Update, das ist eine Preisansage. Beide Labs zielen auf dieselbe Arbeit: Subagenten, die Dateien durchsuchen, Logs lesen und Tests auswerten. Dort zählt der Preis pro Durchlauf mehr als die letzte Qualitätsstufe. Solange es keine unabhängige Coding-Messung für Haiku 5.5 gibt, würde ich es nur für solche Fleißarbeit einsetzen.</p>
+        <span class="src">[1] <a href="https://www.anthropic.com/news">anthropic.com/news</a> — Primärquelle, abgerufen 13.10.2026 · [2] <a href="https://simonwillison.net/2026/Oct/7/claude-haiku-5-5/">simonwillison.net</a>, 07.10.2026 — Sekundärquelle · [3] <a href="https://www.havoptic.com/releases/claude-code/2026/10">havoptic.com</a> — Sekundärquelle (Tracker)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>OpenAI: Decisions API, weniger Tarifstufen und die Frist am Mittwoch</h2>
+        <p>Im API-Changelog von OpenAI stehen drei Punkte, die für Entwickler zählen:<sup>[1]</sup></p>
+        <ul>
+          <li><strong>Decisions API</strong> (Beta, 06.10.): „launched in beta with <code>gpt-6-luna</code> for turning text and images into typed answers."</li>
+          <li><strong>Usage Tiers</strong> (06.10.): „Usage tiers were reduced from five to three: Build, Launch, and Grow."</li>
+          <li><strong>GPT-6.1 Sol</strong> (29.09.): 2 $ Input und 10 $ Output pro Million Tokens, für Prompts bis 272K Tokens, Multi-Agent-Support als Beta. Gestern hatten wir den Preis nur aus der Fachpresse, jetzt ist er an der Primärquelle bestätigt.</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">Typisierte Antworten:</strong> Normal antwortet ein Modell mit freiem Text, und dein Code muss den Text zerlegen. Eine typisierte Antwort hat ein festes Format, zum Beispiel „ja/nein plus Begründung" oder eine Zahl aus einer Liste. Wie ein Formular mit Ankreuzfeldern statt eines Briefs. Für Code, der mit der Antwort weiterarbeitet, ist das viel robuster.
+        </div>
+        <p>Für GPT-6 Astra stehen Migrationshinweise im Changelog: Astra unterstützt den Reasoning-Aufwand <code>none</code> nicht, und Tool-Calling braucht die Responses API.<sup>[1]</sup> Wer alten Code auf Astra umstellt, muss also mehr anpassen als den Modellnamen.</p>
+        <p>Und die Frist: „On October 14, 2026, GPT-5.5 will retire from ChatGPT, ChatGPT Work, and Codex on all plans". Die API ist ausgenommen.<sup>[2]</sup> Das ist morgen.</p>
+        <p>Meine Sicht: Die Decisions API ist kein Coding-Tool im engeren Sinn. Für jeden, der Klassifizierung in Skripten oder CI baut, etwa „ist dieser Commit ein Breaking Change?", ist sie aber genau das richtige Werkzeug. Zusammen mit dem Luna-Preis wird so eine Prüfung pro Aufruf fast kostenlos.</p>
+        <p><span class="chip good">Ausprobieren</span> Heute noch: Such in Codex-Konfigurationen und Skripten nach <code>gpt-5.5</code>. Morgen ist das Modell dort weg.</p>
+        <span class="src">[1] <a href="https://developers.openai.com/api/docs/changelog">developers.openai.com/api/docs/changelog</a> — Primärquelle, abgerufen 13.10.2026 · [2] <a href="https://learn.chatgpt.com/docs/changelog">learn.chatgpt.com/docs/changelog</a>, Eintrag 14.09.2026 — Primärquelle, abgerufen 13.10.2026</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Benchmarks: SWE-Bench Verified ist fast voll</h2>
+        <p>Gestern fehlte SWE-Bench Verified hier ganz. Heute haben wir Zahlen, aber nicht von swebench.com selbst. Die Seite lädt ihre Tabelle per JavaScript, und der Abruf lieferte nur die Navigation. Die Werte stammen deshalb vom Aggregator <strong>BenchLM</strong>, Stand 12.10.:<sup>[1]</sup></p>
+        <table>
+          <thead><tr><th>#</th><th>Modell</th><th>SWE-Bench Verified</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Claude Opus 5</td><td>96 %</td></tr>
+            <tr><td>2</td><td>Claude Mythos 5</td><td>95,5 %</td></tr>
+            <tr><td>3</td><td>Claude Fable 5</td><td>95 %</td></tr>
+            <tr><td>4</td><td>Ember-1 (Fireworks)</td><td>92,2 %</td></tr>
+            <tr><td>5</td><td>Claude Opus 4.8</td><td>88,6 %</td></tr>
+          </tbody>
+        </table>
+        <p>Zwei Dinge fallen auf. Opus 5.5, Haiku 5.5 und die ganze GPT-6-Familie stehen nicht in den Top 10. Das heißt nicht, dass sie schlechter sind, sondern dass dort noch keine Werte eingetragen sind. Und BenchLM selbst zeigt SWE-Bench Verified nur „for reference" und rechnet es nicht in die eigene Gesamtwertung ein.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Gesättigter Benchmark:</strong> Ein Test ist gesättigt, wenn fast alle guten Modelle fast alles lösen. Wie eine Mathe-Klausur, in der die halbe Klasse 1,0 schreibt: Sie zeigt nicht mehr, wer der Beste ist. Dazu kommt Kontamination. Die Aufgaben von SWE-Bench sind öffentliche GitHub-Issues, die gut im Trainingsmaterial gelandet sein können.
+        </div>
+        <p>Die einzige neue Zahl für Opus 5.5 bleibt die von Anthropic selbst: 66,4 % auf Terminal-Bench 4.0, gegenüber 57,9 % für GPT-6 Astra.<sup>[2]</sup> Die GPT-Werte gibt Anthropic dabei „as reported by OpenAI" an. Vellum wiederholt dieselbe Tabelle, das ist keine unabhängige Messung.<sup>[3]</sup></p>
+        <p>Meine Sicht: Bei 96 % ist SWE-Bench Verified als Rangliste am Ende. Zwischen Platz 1 und 3 liegt ein Punkt, das ist Rauschen. Spannender sind Tests wie Terminal-Bench, wo die Spitze noch bei zwei Dritteln liegt. Dort fehlt aber die unabhängige Nachmessung. Deshalb heute kein Chart: Eine Grafik mit einer Hersteller-Zahl sähe genauer aus, als sie ist.</p>
+        <span class="src">[1] <a href="https://benchlm.ai/benchmarks/swe-bench-verified">benchlm.ai — SWE-Bench Verified</a>, „Last updated" 12.10.2026 — Sekundärquelle (Aggregator), nicht das offizielle Board · [2] <a href="https://www.anthropic.com/news/claude-opus-5-5">anthropic.com — Claude Opus 5.5</a>, 22.09.2026 — Herstellerangabe · [3] <a href="https://www.vellum.ai/blog/claude-opus-5-5-benchmarks-explained">vellum.ai</a> — wiederholt Anthropics Daten</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Codex in der Praxis: Willison baut eine Web-App per Fernsteuerung</h2>
+        <p>Am 12.10. zeigte Simon Willison, wie er das Tool <strong>web-edit 0.1a0</strong> gebaut hat. Er ließ „Codex and GPT-6 Astra Extra High build this Python web app", gesteuert über Codex Remote.<sup>[1]</sup> Das ist kein Benchmark, sondern ein echter Arbeitsablauf eines erfahrenen Entwicklers, der seine Prompts offenlegt.</p>
+        <p>Meine Sicht: Solche Berichte sind mir lieber als jede Tabelle. Sie zeigen, wie viel Lenkung ein Agent wirklich braucht. Wer Codex noch nicht ausprobiert hat, findet bei Willison eine ehrliche Vorlage. Der Vergleich zu Claude Code lohnt sich vor allem bei kleinen, klar abgegrenzten Projekten wie diesem.</p>
+        <span class="src">[1] <a href="https://simonwillison.net/2026/Oct/12/web-edit/">simonwillison.net</a>, 12.10.2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Lokal: Bei Qwen3.8-27B entscheidet der Reasoning-Schalter</h2>
+        <p>Simon Willison testete am 04.10. <strong>Qwen3.8-27B</strong> lokal mit Additionsaufgaben, die als Wörter geschrieben waren. Ohne Reasoning lag die Trefferquote bei etwa 24 %. Mit Reasoning waren es 167 von 169 richtigen Antworten, in einem einzigen Pilotlauf.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Reasoning-Modus:</strong> Das Modell schreibt erst eine Art Notizzettel mit Zwischenschritten und gibt dann die Antwort. Wie Kopfrechnen gegen schriftliches Rechnen. Das dauert länger und kostet mehr Tokens, ist aber bei mehrstufigen Aufgaben viel genauer.
+        </div>
+        <p>Meine Sicht: Ein Lauf ist keine Studie. Die Lehre für Ollama-Nutzer ist trotzdem klar: Wer ein lokales Modell schwach findet, sollte zuerst prüfen, ob Reasoning an ist. Auf dem eigenen Rechner kostet es nur Zeit, kein Geld.</p>
+        <span class="src">[1] <a href="https://simonwillison.net/">simonwillison.net</a>, 04.10.2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Offene Gewichte: warten auf Mistral</h2>
+        <p><strong>Mistral Large 4</strong> läuft seit 06.10. als Preview, mit 1 Billion Parametern, davon 49 Mrd. aktiv. Offene Gewichte sind für „later this month" versprochen.<sup>[1]</sup> Im Index von Artificial Analysis liegt es laut Willison bei 38, knapp hinter DeepSeek V4.1-Flash.<sup>[1]</sup> Bei DeepSeek selbst bleibt die Größe umstritten: Willison nennt 552 Mrd. Parameter, smol.ai 763 Mrd.<sup>[2]</sup> Neue offene Coding-Modelle mit Oktober-Datum haben wir nicht gefunden.</p>
+        <p>Meine Sicht: Beide Modelle sind für den Laptop zu groß. Interessant werden sie für Teams, die Code nicht an US-Anbieter schicken dürfen und eigene GPUs mieten.</p>
+        <span class="src">[1] <a href="https://simonwillison.net/2026/Oct/6/le-chonk/">simonwillison.net</a>, 06.10.2026 — Sekundärquelle, AA-Wert nicht selbst geprüft · [2] <a href="https://news.smol.ai">news.smol.ai</a> — Sekundärquelle</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Harness-Runde: Copilot, Cursor, Cowork</h2>
+        <p><strong>GitHub Copilot CLI</strong> hat heute die Vorabversion 1.0.97-2 veröffentlicht. Eine Änderung: „Custom agent discovery now finds all agents, even in repositories with more than 100 agents". Stabil ist weiter 1.0.96.<sup>[1]</sup> <strong>Cursor</strong> erlaubt seit 06.10. Antworten an lokale Agenten über die iOS-App. Laut Changelog ist das standardmäßig an, außer bei Enterprise.<sup>[2]</sup> Seit 10.09. gibt es dort „Projects" als Beta: Ein Koordinator-Agent plant und verteilt die Arbeit an ausführende Agenten in der Cloud.<sup>[2]</sup> Anthropics <strong>Cowork</strong> lässt laut Willison Modell und VM jetzt in der Cloud laufen.<sup>[3]</sup></p>
+        <p>Meine Sicht: Cursor „Projects", Claude-Code-Subagenten und Copilots Custom Agents bauen alle dasselbe Muster: ein Chef-Agent, viele Helfer. Dass Copilot über 100 Agenten pro Repo unterstützen muss, zeigt, wie schnell das wuchert. Ein Repo mit 100 Agenten-Definitionen ist ein Wartungsproblem, kein Feature.</p>
+        <span class="src">[1] <a href="https://github.com/github/copilot-cli/releases">github.com/github/copilot-cli/releases</a> — Primärquelle, abgerufen 13.10.2026 · [2] <a href="https://www.cursor.com/changelog">cursor.com/changelog</a> — Primärquelle, abgerufen 13.10.2026 · [3] <a href="https://simonwillison.net/2026/Oct/5/felix-rieseberg/">simonwillison.net</a>, 05.10.2026 — Sekundärquelle</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Pflicht-Runde: still im Schatten</h2>
+        <ul>
+          <li><strong>Claude Code</strong> — 2.1.296 vom 09.10., seitdem nichts gefunden.</li>
+          <li><strong>Cursor</strong> — zuletzt 06.10. (iOS-Fernsteuerung).</li>
+          <li><strong>GitHub Copilot CLI</strong> — 1.0.96 stabil, 1.0.97-2 Pre-Release heute.</li>
+          <li><strong>Ollama</strong> — letzter Blogbeitrag 29.09., keiner im Oktober.</li>
+          <li><strong>Google / Gemini</strong> — kein Coding-Release im Oktober gefunden.</li>
+          <li><strong>Codex CLI</strong> — heute nicht neu geprüft (gestern: 0.162.1 stabil).</li>
+          <li><strong>Aider, Cline, Continue, OpenHands, Plandex, Devin, Bolt, JetBrains AI</strong> — heute nicht geprüft.</li>
+        </ul>
+        <p>Ehrlich gesagt: Die zweite Hälfte der Liste bleibt den zweiten Tag in Folge ungeprüft. Das ist eine Lücke, kein Zeichen von Stillstand.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Dienstag, der dreizehnte Oktober, und es ist wieder ruhig. Seit Freitag gibt es keine neue Version von Claude Code und kein neues Coding-Modell. Deshalb schauen wir heute ins Kleingedruckte der letzten Woche.</p>
+  <p>Die nützlichste Neuerung ist leise. Claude Code kann Hooks seit Version zwei Komma eins Komma zwei neun fünf so einstellen, dass ein abgestürzter oder hängender Hook die Aktion blockiert. Bisher konnte ein kaputter Sicherheits-Hook die Aktion durchwinken. Mein Tipp: Setz bei deinen Sicherheits-Hooks die Option zum Blockieren, und teste sie mit einem absichtlich kaputten Hook.</p>
+  <p>In Version zwei Komma eins Komma zwei neun sechs kamen weitere Details. Subagenten können eine eigene Grenze für das Zusammenfassen ihres Verlaufs bekommen. MCP-Tool-Beschreibungen dürfen doppelt so lang sein wie bisher. Und laut Changelog kostet das Lesen aus dem Cache bei Sonnet fünf Komma fünf nur noch zehn Cent statt zwanzig Cent pro Million Tokens. Bei langen Agent-Läufen spart das spürbar.</p>
+  <p>Bei den kleinen Modellen herrscht Preiskrieg. Claude Haiku fünf Komma fünf kostet zehn Cent Input und fünfzig Cent Output pro Million Tokens, genau so viel wie GPT sechs Luna von OpenAI. Laut Simon Willison zählt der neue Tokenizer aber etwa ein Viertel mehr Tokens. Offizielle Benchmarks für Haiku haben wir nicht gefunden.</p>
+  <p>OpenAI hat eine neue Decisions API als Beta gestartet. Sie macht aus Text und Bildern Antworten mit festem Format. Die Tarifstufen der API sind von fünf auf drei geschrumpft. Und morgen, am vierzehnten Oktober, verschwindet GPT fünf Komma fünf aus ChatGPT und Codex. Such heute noch in deinen Konfigurationen nach dem Modellnamen.</p>
+  <p>Bei den Benchmarks ist SWE-Bench Verified fast voll. Laut dem Aggregator BenchLM führt Claude Opus fünf mit sechsundneunzig Prozent. Die ersten drei liegen einen Punkt auseinander, das ist Rauschen. Die neuen Modelle stehen dort noch gar nicht. Für Opus fünf Komma fünf gibt es weiter nur die Zahlen von Anthropic selbst.</p>
+  <p>Für lokale Modelle eine kleine Lehre: Simon Willison testete Qwen drei Komma acht mit siebenundzwanzig Milliarden Parametern. Ohne Reasoning traf es etwa ein Viertel der Aufgaben, mit Reasoning fast alle. Wer ein lokales Modell schwach findet, sollte zuerst den Reasoning-Schalter prüfen.</p>
+  <p>Bei den Werkzeugen bauen Cursor, Copilot und Claude Code alle dasselbe Muster: ein Chef-Agent mit vielen Helfern. Morgen schauen wir, ob die GPT-fünf-Komma-fünf-Abschaltung reibungslos läuft und ob Anthropic nach vier Tagen Pause eine neue Version von Claude Code bringt.</p>
+</div>
+
+</body>
+</html>
