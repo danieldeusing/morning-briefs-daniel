@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-17</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-10-17</span>
+    <span class="dot">·</span>
+    <span>Samstag, 17.10.2026 · Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">BeyondTrust: Fernwartung seit August angegriffen, CISA-Frist am Montag</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Samstag, und die Woche endet mit einem Thema, das Admins nicht gern hören: Das Werkzeug, mit dem man fremde Rechner wartet, war selbst die offene Tür. BeyondTrust hat eine Lücke in Remote Support gepatcht, die seit Ende August ausgenutzt wird. Die CISA hat sie am Freitag in den KEV-Katalog aufgenommen, Frist Montag. Daneben: Nextcloud-Server mit Webshells über Collabora, gefälschte Arch-Pakete mit Root-Skript, und ein Windows-Update, das NTLMv1-Netzwerke abklemmt. Bei Deno und PostgreSQL 19 gibt es Nachträge zu dieser Woche.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>BeyondTrust Remote Support</strong> CVE-2026-102764: Auth-Bypass, seit Ende August ausgenutzt, KEV seit 16.10., US-Frist Mo 19.10. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Collabora/Nextcloud</strong> CVE-2026-110447: Angriffe mit Webshells; Fix seit 11.09., CVE erst seit 14.10. <span class="chip">EU</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Fake-AUR-Pakete</strong> geben sich als yay/paru aus und führen ein Skript als root aus. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Magento „BlockStrap“</strong> CVE-2026-103849: höchste Stufe, noch keine Angriffe gesehen. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>KEV-Wochenende</strong>: heute PAN-OS, Cisco Secure Email Gateway, AhsayCBS; So Atlassian; Mo BeyondTrust und Fortinet. <span class="chip">USA</span></li>
+      <li><span class="chip">Infra</span> <strong>Windows-Oktober-Update</strong>: NTLMv1-SSO jetzt standardmäßig blockiert, dazu Probleme mit Smart App Control und Exchange. <span class="chip">Global</span></li>
+      <li><span class="chip">M&amp;A</span> <strong>Deno</strong>: Ryan Dahl und 12 Kollegen gehen zu Cloudflare; die Runtime bekommt noch ein Jahr Pflege. <span class="chip">USA</span></li>
+      <li><span class="chip">Release</span> <strong>PostgreSQL 19</strong>: GA um den 19.11., 8 bis 10 Features auf PG 20 verschoben. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulierung</span> <strong>CRA-Meldepflichten</strong> laufen seit September; Berlin will bis 2032 zu 70 % Open Source am Arbeitsplatz. <span class="chip">EU</span> <span class="chip">DE</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Sieben CISA-Fristen an drei Tagen, danach eine ruhige Woche, soweit bekannt.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Sa 17.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA-Frist PAN-OS CVE-2026-0322, Cisco SEG CVE-2026-76519, AhsayCBS CVE-2026-105133/-105134</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">So 18.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA-Frist Atlassian CVE-2026-21589</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mo 19.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA-Frist BeyondTrust CVE-2026-102764</span><span>CISA-Frist Fortinet CVE-2025-61624</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 20.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Oracle Critical Patch Update: Datum heute nicht geprüft (oracle.com blockt)</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 21.10 – Fr 23.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Keine bestätigten Termine</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>BeyondTrust Remote Support: die Fernwartung als Einfallstor <span class="h2-refs">[1][2]</span></h2>
+        <p>BeyondTrust hat eine Lücke in <strong>Remote Support (RS)</strong> geschlossen, die laut BleepingComputer seit Ende August als Zero-Day ausgenutzt wird. <strong>CVE-2026-102764</strong> ist ein Authentifizierungs-Bypass: Angreifer ohne Rechte können auf ungepatchten Appliances Dateioperationen ausführen. Betroffen ist RS <span class="stat">26.2.3</span> und älter (Advisory BT26-05).<sup>[1]</sup> Die CISA hat die Lücke am 16.10. in den KEV-Katalog aufgenommen; US-Bundesbehörden haben bis <strong>Mo 19.10.</strong> Zeit.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Remote-Support-Appliance:</strong> Ein Server, über den der IT-Support sich auf fremde Rechner schaltet und dort arbeitet. Wie der Generalschlüssel des Hausmeisters: praktisch, aber wer ihn klaut, kommt in jede Wohnung.
+        </div>
+        <p>Hinter den Angriffen steckt laut Mandiant/GTIG ein mutmaßlich chinesischer Spionage-Akteur, dort „Armory Castle“ genannt (früher UNC5221), bei CrowdStrike „Warp Panda“. Mandiant beschreibt eine Webshell (Sawfly), einen Tunnel (Bareclaw), gelöschte Logs und Seitwärtsbewegung mit gestohlenen Admin-Zugangsdaten. SaaS-Kunden hat BeyondTrust am 08.10. gepatcht; selbst betriebene Installationen brauchen das Update von Hand, außer die automatischen Updates sind wirklich an. Shadowserver zählt über <span class="stat">1.400</span> erreichbare RS-Instanzen, sagt aber nicht, wie viele davon gepatcht oder Honeypots sind. Einen CVSS-Wert nennt der Bericht nicht.<sup>[1]</sup></p>
+        <p><strong>Privileged Remote Access (PRA)</strong> teilt den betroffenen Code. BeyondTrust fand intern keinen Weg zur Ausnutzung, liefert aber trotzdem einen Patch und rät, ihn sofort einzuspielen.<sup>[1]</sup></p>
+        <div class="callout warn"><span class="callout-label">Einordnung</span> Sechs Wochen Zero-Day auf einem Gerät, das Zugangsdaten für halbe Netzwerke hält: Hier reicht das Update nicht. BleepingComputer rät, jede erreichbare Appliance mit verwundbarer Version als „potenziell kompromittiert“ zu behandeln, bis sie geprüft ist. Unsere Sicht: Alle Zugangsdaten rotieren, die die Box gespeichert oder vermittelt hat. Das ist die eigentliche Arbeit fürs Wochenende, nicht der Patch.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/beyondtrust-patches-zero-day-exploited-in-attacks-since-august/">bleepingcomputer.com (16.10.)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (Katalog 2026.10.16)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Collabora in Nextcloud: der Fix kam vor der Warnung <span class="h2-refs">[1]</span></h2>
+        <p>Angreifer nutzen eine Lücke im eingebauten Collabora-Server von Nextcloud (<code>richdocumentscode</code>), um Webshells abzulegen. <strong>CVE-2026-110447</strong> ist eine Befehls-Injektion über <code>proxy.php</code>, ohne Login. Betroffen sind alle Versionen vor <strong>26.4.303</strong>.<sup>[1]</sup> <span class="chip">EU</span></p>
+        <div class="eli5">
+          <strong class="eli5-term">Webshell:</strong> Ein kleines Skript, das ein Angreifer auf dem Webserver ablegt, um ihn später über den Browser fernzusteuern. Wie ein Ersatzschlüssel, den der Einbrecher unter die Fußmatte legt, bevor er geht.
+        </div>
+        <p>Die Zeitachse ist der eigentliche Punkt. Der Fix ging am 09.09. als Commit raus, Version 26.4.303 am 11.09. Die ersten Angriffe gab es laut BleepingComputer schon am 10.09. CVE und Advisory kamen erst am 14.10.<sup>[1]</sup> Unsere Meinung: Ein öffentlicher Commit ist für Angreifer bereits das Advisory. Wer Nextcloud nur bei CVE-Meldungen aktualisiert, war hier einen Monat zu spät.</p>
+        <div class="callout info"><span class="callout-label">Zum Prüfen</span> Laut BleepingComputer reicht es nicht, die App zu deaktivieren. Version auf 26.4.303 oder neuer bringen, dann das Webroot nach fremden PHP-Dateien durchsuchen.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-collabora-rce-flaw-to-backdoor-nextcloud-servers/">bleepingcomputer.com (15.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Arch Linux: gefälschte yay- und paru-Pakete im AUR <span class="h2-refs">[1]</span></h2>
+        <p>Im Arch User Repository tauchten Pakete auf, die sich als die AUR-Helfer <code>yay</code> und <code>paru</code> ausgaben, etwa als „yyay“. Ihr Install-Skript lädt über eine Wayback-Machine-URL ein Shell-Skript von GitFlic und führt es als root aus. Entdeckt wurde das am 13.10.; das Konto „marchos1as“ ist gesperrt.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">AUR:</strong> Eine Sammlung von Bau-Rezepten, die Arch-Nutzer selbst hochladen und niemand vorher prüft. Wie ein schwarzes Brett im Supermarkt: oft nützlich, aber jeder kann einen Zettel aufhängen.
+        </div>
+        <p>BleepingComputer ist deutlich: Wer die Pakete installiert hat, soll das System als kompromittiert betrachten. Eine Verbindung zur npm-Kampagne „DirtyBlanket“ (OSV MAL-2026-17242) ist möglich, aber nicht bestätigt. Schon im Juni gab es rund 400 AUR-Pakete mit Rootkit-Stealer.<sup>[1]</sup> Unsere Sicht: Typosquatting auf genau das Werkzeug, mit dem man AUR-Pakete installiert, ist böse elegant. <code>PKGBUILD</code> lesen bleibt Pflicht, auch beim dritten Mal.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/fake-arch-linux-packages-push-malware-with-root-privileges/">bleepingcomputer.com (15.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Magento „BlockStrap“: kritisch, aber noch still <span class="h2-refs">[1]</span></h2>
+        <p><strong>CVE-2026-103849</strong> in Magento und Adobe Commerce hat laut BleepingComputer die höchste Schwerestufe. Über eine Injektion in Template-Direktiven lässt sich PHP-Code auf dem Server ausführen. Betroffen sind laut Bericht Versionen bis 2.4.9 und B2B bis 1.5.3. Adobe hat das Bulletin <strong>APSB26-153</strong> am 13.10. veröffentlicht, aber nur mit Priorität 2; Sansec widerspricht dieser Einstufung. Angriffe sind noch nicht beobachtet.<sup>[1]</sup> Unsere Meinung: Shops sind ein dankbares Ziel für Kartenskimmer. „Noch keine Angriffe“ hält erfahrungsgemäß nicht lange.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/critical-blockstrap-flaw-lets-hackers-run-code-on-magento-servers/">bleepingcomputer.com (16.10.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>KEV-Wochenende: sieben Fristen bis Montag <span class="h2-refs">[1][2][3]</span></h2>
+        <p>Der KEV-Katalog (Version 2026.10.16) hat sieben Fristen an drei Tagen. Heute, Sa 17.10., enden PAN-OS CVE-2026-0322, Cisco Secure Email Gateway CVE-2026-76519 und die zwei AhsayCBS-Lücken. Am So 18.10. folgt Atlassian CVE-2026-21589, am Mo 19.10. BeyondTrust und Fortinet.<sup>[1]</sup></p>
+        <h3>Fortinet CVE-2025-61624: neu seit Freitag</h3>
+        <p>Die CISA führt die Lücke als „Path Traversal“ in mehreren Fortinet-Produkten, aufgenommen am 16.10.<sup>[1]</sup> Ein Vendor-Advisory haben wir heute nicht geprüft. Welche Produkte und Versionen genau betroffen sind, wissen wir daher nicht. Das Alter der Kennung (2025) zeigt: Die Lücke ist schon länger bekannt, die Angriffe sind neu bestätigt.</p>
+        <h3>Cisco Secure Email Gateway: Root per E-Mail</h3>
+        <p>Laut The Register bekommt ein Angreifer ohne Login Root-Rechte, nur mit einer präparierten Mail. Die Lücke steckt in der Behandlung von Anhängen durch AMP und hat CVSS <span class="stat">9,8</span>. Betroffen sind die CSE Content Scanner Tools vor 25.3.0.5525 bei aktivierter File Reputation; einen Workaround gibt es nicht.<sup>[2]</sup> Den Score haben wir nur aus dieser Quelle, nicht aus dem Cisco-Advisory.</p>
+        <h3>Ivanti: Frist vorbei, Patch-Kette unvollständig</h3>
+        <p><span class="update-since">Update seit 16.10.</span> Die US-Frist für Ivanti Connect Secure lief gestern ab. Den Fix für die Rechteausweitung in der Kette verspricht Ivanti laut The Register weiter nur „in the coming weeks“.<sup>[3]</sup></p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (Katalog 2026.10.16)</a> · [2] <a href="https://www.theregister.com/security/2026/10/14/cisco-make-me-root-email-bug-exploited-as-a-0-day-by-unknown-crims/5303168">theregister.com (14.10.)</a> · [3] <a href="https://www.theregister.com/security/2026/10/14/ivanti-patches-connect-secure-zero-day-after-researchers-confirm-in-the-wild-attacks/5303095">theregister.com (14.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Windows-Oktober-Update: NTLMv1 fliegt raus, und manches Netz mit <span class="h2-refs">[1][2][3]</span></h2>
+        <p>Das Oktober-Update ändert den Standard für den Registry-Wert <code>BlockNtlmv1SSO</code>. Ist er nicht gesetzt, nutzt Windows jetzt den Enforce-Modus (1) statt Audit (0). SSO-Anfragen mit NTLMv1-Zugangsdaten werden also blockiert statt nur protokolliert. Laut The Register kann das WLAN-, Ethernet- und VPN-Anmeldungen brechen.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">NTLMv1:</strong> Ein uraltes Windows-Anmeldeverfahren aus den 90ern, das heute leicht zu knacken ist. Wie ein Fahrradschloss mit drei Ziffern: Es sieht nach Schutz aus, hält aber niemanden auf.
+        </div>
+        <p>Microsofts Workaround: <code>BlockNtlmv1SSO</code> auf 0 setzen. Microsoft selbst nennt das eine „scoped, temporary security exception“. Mit aktiviertem Credential Guard greift die Blockade ebenfalls nicht.<sup>[1]</sup> Unsere Sicht: Das ist kein Bug, sondern eine Frist, die viele ignoriert haben. Audit-Modus kauft Zeit, löst aber nichts.</p>
+        <p>Dazu kommen zwei weitere Baustellen: Das Update <strong>KB5127648</strong> kann Smart App Control brechen,<sup>[2]</sup> und heise meldet Exchange-Server, die nach den Oktober-Updates ausfallen.<sup>[3]</sup> Zu Exchange haben wir nur die Schlagzeile geprüft. Zur Erinnerung: Der Patchday vom 13.10. war mit 1.411 Lücken ein Rekord.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/10/16/networking-problems-after-the-october-2026-windows-update-ntlm-might-be-to-blame/5303503">theregister.com (16.10.)</a> · [2] <a href="https://www.bleepingcomputer.com/news/microsoft/kb5127648-windows-security-update-may-break-smart-app-control/">bleepingcomputer.com (16.10.)</a> · [3] <a href="https://www.heise.de/news/Oktober-Updates-legen-Exchange-Server-lahm-11490529.html">heise.de (16.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL 19: später und schlanker <span class="h2-refs">[1]</span></h2>
+        <p><span class="update-since">Nachtrag zu gestern</span> Gestern stand hier der RC1 mit GA am 19.11. The Register liefert die Vorgeschichte: Geplant war das Release für Ende September oder Anfang Oktober. Jetzt kommt es um den 19.11., und 8 bis 10 größere Features wurden auf PostgreSQL 20 verschoben, darunter SQL/PGQ. <code>REPACK CONCURRENTLY</code> bleibt drin.<sup>[1]</sup></p>
+        <p>Peter Eisentraut (EDB) nennt als einen Grund KI-gestützte Code-Reviews, die viele kleine Fehler finden: „The effective quality bar has been raised.“<sup>[1]</sup> Unsere Meinung: Das ist die richtige Reaktion. Lieber ein Feature später als ein Planer-Bug, den man erst in Produktion findet. Die Zahl der verschobenen Features stammt nur aus dieser einen Quelle.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/databases/2026/10/16/postgres-19-delayed-after-ai-reviewers-find-more-bugs-than-humans-can-fix/5303471">theregister.com (16.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Deno: Ryan Dahl geht zu Cloudflare <span class="h2-refs">[1][2]</span></h2>
+        <p><span class="update-since">Update seit 15.10.</span> Laut The Register ist der Kauf ein Acquihire: Dahl und 12 Deno-Kollegen arbeiten künftig an Cloudflare Workers. Ziel ist eine eigenständige JavaScript/WebAssembly-Runtime aus celld und workerd, die mit Workers und Durable Objects zusammenspielt.<sup>[1]</sup></p>
+        <p>Die klassische Deno-Runtime bekommt noch ein Jahr Bugfixes und Sicherheits-Patches, dann endet die Entwicklung. Dahl sucht ein neues Zuhause für das MIT-Projekt, eventuell die OpenJS Foundation.<sup>[1]</sup> Deno Deploy wird laut heise in sechs Monaten eingestellt, mit Migration zu Workers; JSR bleibt.<sup>[2]</sup> Unsere Sicht: Wer Deno in Produktion hat, plant jetzt den Weg zu Node oder Bun. Ein Jahr Patches ist eine Galgenfrist, keine Roadmap.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/devops/2026/10/16/nodejs-creator-ditches-deno-to-work-on-open-source-cloudflare-workers/5303662">theregister.com (16.10.)</a> · [2] <a href="https://www.heise.de/news/Cloudflare-stoppt-Deno-Runtime-Open-Source-Community-soll-uebernehmen-11487276.html">heise.de (14.10., Update 15.10.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Europa: Meldepflicht läuft, Berlin setzt auf Open Source <span class="h2-refs">[1][2]</span></h2>
+        <p>Laut The Register gelten die Meldepflichten des <strong>Cyber Resilience Act</strong> für aktiv ausgenutzte Lücken und schwere Vorfälle seit September 2026; die Hauptpflichten folgen ab Dezember 2027.<sup>[1]</sup> Das ist eine Sekundärquelle; EUR-Lex und ENISA haben wir heute nicht geprüft. <span class="chip">EU</span></p>
+        <div class="eli5">
+          <strong class="eli5-term">Cyber Resilience Act (CRA):</strong> Ein EU-Gesetz, das Hersteller von Software und vernetzten Geräten für deren Sicherheit verantwortlich macht. Wie die TÜV-Pflicht fürs Auto, nur für Software.
+        </div>
+        <p>Im selben Bericht: Berlin will bis 2032 zu 70 % Open Source auf den Arbeitsplätzen der Verwaltung kommen. Außerdem gibt es das EU Cloud Sovereignty Framework mit den Stufen SOV-1 bis -8 und SEAL-0 bis -4.<sup>[1]</sup> <span class="chip">DE</span> Passend dazu fordern Bitkom und Bürgerrechtler ein strenges staatliches Schwachstellenmanagement; hier haben wir nur die Schlagzeile.<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.theregister.com/software/2026/10/16/open-source-sovereignty-gets-down-to-the-boring-business-of-making-it-work/5303206">theregister.com (16.10.)</a> · [2] <a href="https://www.heise.de/news/Buergerrechtler-und-Bitkom-fordern-strenges-Schwachstellenmanagement-11491210.html">heise.de (16.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Chrome: Full-Chain-Exploit in sechs Tagen <span class="h2-refs">[1]</span></h2>
+        <p>Forscher von Xbow haben laut The Register drei Zero-Days zu einer kompletten Angriffskette verbunden: V8 Maglev, animiertes WebP und Crashpad. Behoben ist das ab <strong>Chrome 152.0.7977.82</strong>; die Prämie lag bei 250.000 $. CVE-Kennungen nennt der Bericht nicht.<sup>[1]</sup> <span class="chip">Browser</span> Für uns zählt nur: Chrome und Electron-Apps auf diesen Stand bringen. Wie das Team dabei KI eingesetzt hat, ist ein Thema für den ai-dev-Brief.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/10/14/security-researchers-spent-6-days-doing-their-chromework-built-1b-user-exploit/5303134">theregister.com (14.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Releases und Fristen</h2>
+        <ul>
+          <li><strong>Python 3.15.0</strong> (09.10.): UTF-8 als Standard auf allen Plattformen (PEP 686), eingebauter Profiler, experimenteller JIT, Lazy Imports zum Einschalten. Kam laut The Register eine Woche später als geplant. <span class="src"><a href="https://www.python.org/downloads/">python.org</a> · <a href="https://www.theregister.com/devops/2026/10/14/python-315-goes-global-with-utf-8-support/5302966">theregister.com</a></span></li>
+          <li><strong>.NET 11 RC2</strong> (13.10.): Runtime 11.0.0-rc.2.26504.105 mit Go-Live-Lizenz; GA etwa vier Wochen später. Neue WinForms-Designer-Analyzer sind ein Breaking Change. <span class="src"><a href="https://www.heise.de/news/NET-11-0-Release-Candidate-2-Breaking-Changes-kurz-vor-Fertigstellung-11489365.html">heise.de (15.10.)</a></span></li>
+          <li><strong>Ubuntu 26.10</strong>: Kernel 7.3-rc7, GNOME 51, systemd 261.3, OpenSSL 4, Rust-NTP-Daemon. Nutzer von TPM-Vollverschlüsselung auf 26.04 können noch nicht upgraden. <span class="src"><a href="https://www.theregister.com/os-platforms/2026/10/16/ubuntu-stonking-stingray-swims-into-spotlight-with-pre-release-kernel/5303580">theregister.com (16.10.)</a></span></li>
+          <li><strong>KDE Plasma 6.8</strong> (14.10.): keine X11-Sitzungen mehr. <span class="src"><a href="https://lwn.net/">lwn.net</a></span></li>
+          <li><strong>Windows Server 2022</strong>: Mainstream-Support ist vorbei, Extended Support bis Oktober 2031. <span class="src"><a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-windows-server-2022-reached-end-of-mainstream-support/">bleepingcomputer.com (15.10.)</a></span></li>
+          <li><strong>Spring</strong>: zuletzt Spring Boot 4.2.0-M2 und Security 7.2.0-M2 (25.09.); bis 15.10. keine Security-Advisories im Blog. <span class="src"><a href="https://spring.io/blog">spring.io</a></span></li>
+          <li><strong>PQC-Leitlinie des Bundes</strong> (12.10.): hohe Risiken bis Ende 2030, mittlere bis Ende 2035 umstellen. <span class="chip">DE</span> <span class="src"><a href="https://www.heise.de/news/Bund-veroeffentlicht-Leitlinie-zur-Umstellung-auf-Post-Quanten-Kryptografie-11489209.html">heise.de</a></span></li>
+          <li><strong>Schaltsekunde</strong>: ab 20.05.2027 abgeschafft (CGPM). <span class="src"><a href="https://www.heise.de/news/Nie-mehr-Schaltsekunden-11490060.html">heise.de</a></span></li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert</h2>
+        <ul>
+          <li><strong>BAE Systems</strong>: Ein Cyberangriff auf den Dienstleister legt Systeme von US-Bundes- und Insolvenzgerichten lahm. <span class="chip">USA</span> <span class="src"><a href="https://www.bleepingcomputer.com/news/security/bae-systems-cyberattack-disrupts-us-federal-court-operations/">bleepingcomputer.com (16.10.)</a></span></li>
+          <li><strong>Burger King Japan</strong>: Angreifer griffen auf einen Server mit 11,18 Mio. Kundendatensätzen zu. <span class="src"><a href="https://www.bleepingcomputer.com/news/security/burger-king-japan-data-breach-exposes-11-million-customer-records/">bleepingcomputer.com (16.10.)</a></span></li>
+          <li><strong>Proxyjacking</strong>: Gekaperte D-Link- und Ubiquiti-Geräte in 34 Ländern verkaufen fremde Bandbreite weiter. <span class="src"><a href="https://www.bleepingcomputer.com/news/security/hackers-hijack-d-link-ubiquiti-devices-to-resell-your-stolen-bandwidth/">bleepingcomputer.com (15.10.)</a></span></li>
+          <li><strong>Candiru</strong>: Die Spyware kam über gezielte Werbung als Zero-Click auf Geräte bei Al Jazeera; Nachtrag zum Werbe-Spyware-Thema von gestern. <span class="src"><a href="https://www.bleepingcomputer.com/news/security/zero-click-attacks-used-targeted-ads-to-deliver-candiru-spyware/">bleepingcomputer.com (16.10.)</a></span></li>
+          <li><strong>Microsoft Defender</strong> gibt es jetzt auch für Linux-Desktops (nur Schlagzeile geprüft). <span class="src"><a href="https://www.heise.de/news/Jetzt-auch-auf-dem-Desktop-Microsoft-Defender-schuetzt-Linux-11490688.html">heise.de (16.10.)</a></span></li>
+          <li><strong>Ledger</strong>: Der Hersteller sieht hinter manipulierten Wallets einen Angriff auf die ganze Branche (nur Schlagzeile). <span class="src"><a href="https://www.heise.de/news/Verwanzte-Wallets-Hersteller-Ledger-sieht-Angriff-auf-die-ganze-Branche-11490092.html">heise.de (16.10.)</a></span></li>
+          <li><strong>Hacker News heute</strong>: „JPEG XL vs. AVIF for web use-cases“ (224 Punkte) und „C++26: The New Debugging Header“ (85 Punkte). <span class="chip">Web</span> <span class="src"><a href="https://news.ycombinator.com/">news.ycombinator.com</a></span></li>
+          <li><strong>KI-Werkzeuge</strong>: Anthropics Git-Alternative Scion, der KI-Port des TypeScript-Compilers nach Rust und Torvalds’ Patch mit Claude Code stehen im ai-dev-Brief.</li>
+          <li><strong>Brasilien</strong>: Heute keine geprüfte BR-Story; tecnoblog blockte den Abruf. <span class="chip">BR</span></li>
+          <li><strong>Nicht geprüft</strong>: NVD, die Vendor-Advisories von Cisco, Ivanti und Fortinet, Oracles Oktober-CPU, postgresql.org/news, Angular, React, Caddy, Docker, Tailscale und The Hacker News.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>Was dieser Samstag zwanzig Minuten wert ist</h2>
+        <ul>
+          <li><strong>BeyondTrust RS/PRA selbst betrieben?</strong> Version prüfen, patchen, gespeicherte Zugangsdaten rotieren.</li>
+          <li><strong>Nextcloud mit eingebautem Collabora?</strong> Auf 26.4.303+ bringen und das Webroot nach fremden PHP-Dateien durchsuchen.</li>
+          <li><strong>Arch-Rechner:</strong> <code>pacman -Qm</code> auf Pakete mit Namen wie „yyay“ prüfen.</li>
+          <li><strong>Windows-Netz mit Anmeldeproblemen seit Patchday?</strong> Zuerst NTLMv1 als Ursache prüfen, bevor man das Update zurückrollt.</li>
+        </ul>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Samstag, der siebzehnte Oktober. Die Woche endet mit einer unbequemen Geschichte: Das Werkzeug, mit dem Admins fremde Rechner warten, war selbst die offene Tür.</p>
+  <p>BeyondTrust hat eine Lücke in seiner Fernwartung Remote Support geschlossen. Laut BleepingComputer wird sie seit Ende August angegriffen, mutmaßlich von einer chinesischen Spionage-Gruppe. Betroffen ist Version sechsundzwanzig Punkt zwei Punkt drei und älter. Die US-Behörde CISA hat die Lücke am Freitag in ihren Katalog aktiv ausgenutzter Schwachstellen aufgenommen, die Frist endet am Montag. Wer so ein Gerät selbst betreibt, sollte nicht nur patchen, sondern alle Zugangsdaten tauschen, die darauf lagen.</p>
+  <p>Auch bei Nextcloud laufen Angriffe. Über den eingebauten Collabora-Server legen Angreifer Webshells ab. Bemerkenswert ist die Zeitachse: Der Fix war seit dem elften September da, die offizielle Warnung kam erst am vierzehnten Oktober. Die ersten Angriffe gab es schon einen Tag nach dem öffentlichen Commit.</p>
+  <p>Im Arch User Repository tauchten gefälschte Pakete auf, die sich als die beliebten Helfer yay und paru ausgaben. Ihr Installationsskript lädt ein fremdes Skript und führt es mit Root-Rechten aus. Wer sie installiert hat, sollte das System als kompromittiert betrachten. Und für Magento-Shops gibt es eine Lücke der höchsten Stufe namens BlockStrap, bisher ohne bekannte Angriffe.</p>
+  <p>Windows-Admins kämpfen mit dem Oktober-Update. Es blockiert jetzt standardmäßig Anmeldungen mit dem uralten NTLM Version eins. Das kann laut The Register WLAN, Ethernet und VPN brechen. Microsoft bietet einen vorübergehenden Workaround an, nennt ihn aber selbst eine befristete Sicherheitsausnahme.</p>
+  <p>Zwei Nachträge zu dieser Woche. Bei Deno ist klar: Ryan Dahl und zwölf Kollegen gehen zu Cloudflare. Die alte Runtime bekommt noch ein Jahr Patches, Deno Deploy endet in sechs Monaten. Und PostgreSQL neunzehn kommt um den neunzehnten November, aber ohne acht bis zehn größere Features, die auf Version zwanzig warten müssen.</p>
+  <p>In Europa laufen laut The Register die Meldepflichten des Cyber Resilience Act seit September. Berlin will bis zweitausendzweiunddreißig zu siebzig Prozent Open Source auf den Verwaltungsrechnern.</p>
+  <p>Am Montag enden die US-Fristen für BeyondTrust und Fortinet. Der nächste Brief schaut, ob Oracles Java-Patches kommen und ob die Windows-Probleme weitere Kreise ziehen.</p>
+</div>
+
+</body>
+</html>

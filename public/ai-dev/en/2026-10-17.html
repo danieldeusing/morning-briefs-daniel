@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-10-17</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<!-- No chart today: the independent DeepSWE board is still from Sept. 22, and the new models are missing from it. -->
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-17</span>
+  </div>
+
+  <h1 class="masthead-title">Claude Code forks everywhere now, Anthropic lets auditors inside</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">A quiet day for models, a good day for harnesses. Claude Code 2.1.302 turns fork sub-agents on by default in headless mode, in the SDK and in VS Code. Anthropic gives METR and other evaluators access like employees and gives up any veto over publication. Cursor lets cloud agents build interactive canvases, and Codex CLI 0.163.0 can be steered mid-response. And a correction to yesterday: local was not quiet. Ollama 0.40.5 brings NVIDIA's Nemotron 3.5.</p>
+    <ul>
+      <li><span class="chip hot">Claude</span> <strong>Claude Code 2.1.302</strong> (Oct 16): fork sub-agents on by default in <code>claude -p</code>, the Agent SDK, Desktop and VS Code.</li>
+      <li><span class="chip good">Claude</span> <strong>Idle compaction</strong> (2.1.299, Oct 14): above 200K tokens, the conversation is compacted after about 54 minutes of inactivity, before the cache expires.</li>
+      <li><span class="chip">Claude</span> <strong>Independent evaluators</strong> (Oct 15): METR with six people in-house, no veto, only predefined redactions.</li>
+      <li><span class="chip good">Tool</span> <strong>Cursor</strong> (Oct 16): canvases for cloud agents, Environments API in beta, up to 300 repos.</li>
+      <li><span class="chip good">OpenAI</span> <strong>Codex CLI 0.163.0</strong> (Oct 15): steering during a response, parallel read tools, searchable <code>/config</code>.</li>
+      <li><span class="chip">OSS</span> <strong>Cline</strong> (Oct 17): GPT-6 models work again on OpenAI-compatible endpoints.</li>
+      <li><span class="chip good">Local</span> <strong>Ollama 0.40.5</strong> (Oct 14): Nemotron 3.5 Super and Bolt, Bolt for 24 GB GPUs.</li>
+      <li><span class="chip">Bench</span> <strong>DeepSWE board</strong> still from Sept. 22. For Opus 5.5, Sonnet 5.5 and Argon there are only vendor numbers.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">The last seven days</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Mon 10/12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>OpenHands 1.27.0 / 1.27.1</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 10/13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Argon in Antigravity</span>
+          <span>Cursor Origin Marketplace</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 10/14</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.299 + 2.1.300</span>
+          <span>Ollama 0.40.5: Nemotron 3.5</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu 10/15</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Anthropic: independent evaluators</span>
+          <span>Codex CLI 0.163.0</span>
+          <span>Claude Code 2.1.301</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Fri 10/16</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.302</span>
+          <span>Cursor Canvases + Environments API</span>
+          <span>Codex 0.164.0-alpha.1/2</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Sat 10/17</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today · Cline SDK, Desktop, CLI</span>
+          <span>Codex 0.164.0-alpha.3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Claude Code 2.1.302: Forks become the default</h2>
+        <p>Four releases in three days, from <strong>2.1.299</strong> (Oct 14) to <strong>2.1.302</strong> (Oct 16).<sup>[1]</sup> The most important entry is in the newest version. Fork sub-agents (<code>subagent_type: "fork"</code>) are now on by default in <code>claude -p</code>, in the Agent SDK, in the desktop app and in VS Code, "as they already are in the terminal".<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Fork sub-agent:</strong> A normal sub-agent starts with an empty head. You have to explain everything it should know. A fork is a copy of the running conversation. It already knows everything that has happened so far, and then works on a subtask on its own. It is like a colleague who sat through the whole meeting, instead of a new temp who only gets a note.
+        </div>
+        <p>What else came:</p>
+        <ul>
+          <li><strong>Idle compaction in the terminal (2.1.299):</strong> A conversation with more than 200K tokens that rests for about 54 minutes is compacted before the one-hour prompt cache expires. That way your next message does not have to reprocess everything.<sup>[1]</sup></li>
+          <li><strong><code>/advisor</code> on Claude Platform on AWS (2.1.300):</strong> No advisor runs until you pick one with <code>/advisor</code>, <code>advisorModel</code> or <code>--advisor</code>. <code>CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1</code> turns it off.<sup>[1]</sup></li>
+          <li><strong><code>fable</code> alias (2.1.301):</strong> If the newest Fable model is not enabled for your organization, Claude Code tries the previous Fable model once instead of failing with an error.<sup>[1]</sup></li>
+          <li><strong>Hooks (2.1.302):</strong> At most 12 hooks run at the same time for a prompt or agent hook event. <code>CLAUDE_CODE_AUTO_MODE_MODEL</code> is also new.<sup>[1]</sup></li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">Prompt cache and compaction:</strong> The provider remembers the start of a long conversation for a while. As long as it does, the next request is cheap and fast. After an hour that memory is gone, and all 200K tokens cost full price again. Compaction summarizes the conversation into a short version beforehand. It is like a memo before the file goes into the archive.
+        </div>
+        <p>My take: Forks in headless mode matter for everyone who runs Claude Code from scripts or cron. Until now the same prompt behaved differently in the terminal than in <code>claude -p</code>. Now it is the same, and that is good. But it also means a fork inherits the full context, and that costs tokens. Anyone running pipelines with many sub-agents should watch their costs over the next few days. I find idle compaction clever, but it is a trade-off. You save money and lose details from the conversation. If you pick up at a delicate spot after lunch, check whether the summary kept what matters.</p>
+        <p><span class="chip good">Try it</span> Run an existing <code>claude -p</code> job with 2.1.302 and compare runtime and token usage with the last run.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code/releases</a> — primary source, retrieved Oct 17, 2026 (page gives day and month, no year)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Anthropic lets auditors inside</h2>
+        <p>On <strong>Oct 15</strong> Anthropic described how external evaluators test its models.<sup>[1]</sup> The core: six METR staff get access like Anthropic employees. Anthropic "can't veto publication", but may demand redactions in predefined categories. SecureBio reviews the chemistry and biology chapter of the August 2026 Risk Report. Accenture and Faculty are added, and there are first talks with Hugging Face. Access is organized in three tiers.<sup>[1]</sup></p>
+        <p>The same day Simon Willison quoted a Financial Times report: Anthropic's third-quarter revenue is <strong>$16.8B</strong>, up from $11.5B in the second.<sup>[2]</sup> We did not read the FT article itself, which is behind a paywall. So the figure is secondhand.</p>
+        <p>My take: Nothing changes for your daily work. For the question of which provider you trust with code and access, it does. An evaluator who cannot be censored is worth more than one who only has a test account. The catch is the "predefined categories" for redactions. How broad they are decides how much the promise is worth. Read that closely in the first real report.</p>
+        <span class="src">[1] <a href="https://www.anthropic.com/news/an-update-on-independent-evaluators">anthropic.com/news</a>, Oct 15, 2026 — primary source, retrieved Oct 17, 2026 · [2] <a href="https://simonwillison.net/">simonwillison.net</a>, Oct 15, 2026 — secondary source (quotes the FT), retrieved Oct 17, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cursor: Agents build interfaces</h2>
+        <p>On <strong>Oct 16</strong> Cursor released three things together. "Cloud agents can build interactive canvases, the Environments API is in beta, and environments support up to 300 repositories."<sup>[1]</sup> Three days earlier, on Oct 13, the Origin App Marketplace opened to public submissions. It works with over 20 partner apps.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Environment for cloud agents:</strong> A cloud agent does not run on your laptop but on a server. There it needs a ready-made workbench: repos, dependencies, access. An environment is that workbench as a template. With an API you can create it by script instead of clicking it together in the UI.
+        </div>
+        <p>My take: 300 repos in one environment show where Cursor is headed: large companies with distributed codebases. For a solo developer the Environments API is more interesting than the canvases. If you can describe your agent environment as code, you can also version and reproduce it. It is the same principle as dev containers, just for agents. The canvases are a nice demo until we know what they do in daily use. We did not take exact details from the entries, only the summary on the changelog page.</p>
+        <span class="src">[1] <a href="https://cursor.com/changelog">cursor.com/changelog</a> — primary source, retrieved Oct 17, 2026 (no version numbers)</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Codex CLI 0.163.0: Redirect without waiting</h2>
+        <p>Version <strong>0.163.0</strong> arrived on <strong>Oct 15</strong>.<sup>[1]</sup> Three changes stand out:</p>
+        <ul>
+          <li><strong>Steering during a response:</strong> "A follow-up sent during a response steers Codex immediately." You no longer have to wait or cancel to correct course.</li>
+          <li><strong>Parallel read tools:</strong> "Independent read-only tools can run in parallel." So reading or searching several files happens at the same time.</li>
+          <li><strong><code>/config</code>:</strong> Settings are searchable, and supported values take effect immediately.</li>
+        </ul>
+        <p>On Oct 16 and 17, three alpha versions of 0.164.0 followed, without release notes.<sup>[1]</sup></p>
+        <p>My take: Redirecting mid-response is the best change of the week among the big-lab harnesses. The biggest annoyance with agents is the moment you see it turning the wrong way and still have to wait. Parallel read tools are purely a speed matter, but one you feel on every run. Both exist in similar form in other harnesses already. Codex is catching up here, not leading.</p>
+        <p><span class="chip good">Try it</span> In a longer Codex run, send a correction mid-response and see whether it really picks it up immediately.</p>
+        <span class="src">[1] <a href="https://github.com/openai/codex/releases">github.com/openai/codex/releases</a> — primary source, retrieved Oct 17, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cline: GPT-6 works again, Sonnet 5.5 is the default</h2>
+        <p>Today, <strong>Oct 17</strong>, three releases landed at once: SDK v0.0.95, Desktop v0.0.48 and CLI v3.0.73.<sup>[1]</sup> The most important fix: "GPT-6 models such as <code>gpt-6-sol</code> now work on OpenAI and Azure OpenAI-compatible endpoints, which previously rejected every request." The fix concerns the <code>max_completion_tokens</code> parameter. Also: "With no model chosen, the Cline provider defaults to Claude Sonnet 5.5 again."<sup>[1]</sup></p>
+        <p>My take: A bug where "every request" was rejected is not an edge case. Anyone running Cline through Azure with GPT-6 simply had no working setup until now. It shows the basic problem of multi-provider harnesses: every new model family changes a parameter somewhere, and the tool has to follow. The "again" on the default model suggests it was something else in between. If you use Cline without a fixed model, check briefly what is running.</p>
+        <span class="src">[1] <a href="https://github.com/cline/cline/releases">github.com/cline/cline/releases</a> — primary source, retrieved Oct 17, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Local: Nemotron 3.5 on Ollama</h2>
+        <p>Correction to yesterday: we wrote "Local: quiet". That was wrong. Ollama <strong>v0.40.5</strong> from <strong>Oct 14</strong> brings NVIDIA Nemotron 3.5 Super, a vision-language model with tool calling and up to 1M context, and Nemotron 3.5 Bolt, a smaller variant for 24 GB GPUs.<sup>[1]</sup> Version 0.40.6 has been out as a pre-release since Oct 16.<sup>[1]</sup></p>
+        <p>My take: Bolt is the more interesting model. 24 GB is exactly the class of an RTX 3090 or 4090, so what a developer has at home. We found no coding benchmarks for it. Whether Bolt holds up next to Qwen in agent mode, you have to test yourself.</p>
+        <p><span class="chip good">Try it</span> Pull Nemotron 3.5 Bolt in Ollama and run a small refactoring task with tool calling against your current local model.</p>
+        <span class="src">[1] <a href="https://github.com/ollama/ollama/releases">github.com/ollama/ollama/releases</a> — primary source, retrieved Oct 17, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Google: Argon in Antigravity</h2>
+        <p>Since <strong>Oct 13</strong>, Gemini 4 Argon is said to run in the Antigravity desktop app and the Antigravity CLI, for Google AI Pro and Ultra and eligible Gemini Enterprise subscriptions.<sup>[1]</sup> The source is Google's post, checked on Oct 17.</p>
+        <p>My take: Since June, the Antigravity CLI has replaced the Gemini CLI for personal and free users.<sup>[2]</sup> So anyone who wants Google's agents in the terminal ends up here. And since Argon already runs with AI Pro, the entry barrier for solo developers is low.</p>
+        <span class="src">[1] <a href="https://antigravity.google/blog/gemini-4-argon-in-google-antigravity">antigravity.google/blog</a> — primary source, checked Oct 17, 2026 · [2] developertoolkit.ai — secondary source, not checked</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Benchmarks: still only vendor numbers</h2>
+        <p>The independent DeepSWE board from Datacurve is still from <strong>Sept. 22, 2026</strong>. Opus 5.5, Sonnet 5.5, Haiku 5.5, Argon and GPT-6.1 Sol are not on it.<sup>[1]</sup> The top looks unchanged: gpt-6-astra, gemini-3.8-flash and claude-opus-5 are each at 74%, with ± 1 to ± 4. Costs per task range from $2.36 (Flash) to $11.84 (Opus 5).<sup>[1]</sup></p>
+        <p>For the new Claude models there is only Anthropic's own table. For Sonnet 5.5 on Terminal-Bench 4.0, Anthropic reports <strong>70.6%</strong>, for Opus 5.5 at Xhigh 66.4%.<sup>[2]</sup> On FrontierCode 1.1, Anthropic reports 46.2% (Max) and 52.1% (Xhigh) for Sonnet 5.5. The page gives no SWE-Bench value. The price: $2 input and $10 output per million tokens.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Effort levels:</strong> Max, Xhigh or High say how long the model may think before it answers. More thinking costs more tokens and usually brings better results. Comparing two numbers from different levels is like comparing two runners when one got to train ten minutes longer.
+        </div>
+        <p>My take: Sonnet ahead of Opus on Terminal-Bench sounds like a sensation. I read it cautiously. The numbers come from the vendor, the effort levels are not cleanly equal, and an independent measurement is missing. What is certain: Sonnet 5.5 costs less than Opus, and for many agent tasks it apparently suffices. I am leaving out a chart until the board lists the new models.</p>
+        <span class="src">[1] <a href="https://deepswe.datacurve.ai/">deepswe.datacurve.ai</a> — independent, "updated September 22, 2026" · [2] <a href="https://www.anthropic.com/news/claude-sonnet-5-5">anthropic.com/news</a>, Sept. 28, 2026 — vendor figures; both retrieved Oct 17, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>MCP: quiet</h2>
+        <p>The newest MCP specification is still the one from <strong>July 28, 2026</strong>. It was the biggest revision so far: it removes protocol-level sessions, including the <code>Mcp-Session-Id</code> header, from the Streamable HTTP transport.<sup>[1]</sup> We found no October update.</p>
+        <span class="src">[1] <a href="https://modelcontextprotocol.io/specification/latest/changelog">modelcontextprotocol.io</a> — primary source, per search result, page not opened, retrieved Oct 17, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief</h2>
+        <ul>
+          <li><strong>Code review at Anthropic:</strong> According to Simon Willison (Oct 16), the Claude Code team says code review there now happens continuously.<sup>[1]</sup></li>
+          <li><strong>OpenAI API:</strong> No new coding model since GPT-6.1 Sol on Sept. 29. New are Prompt-to-Voice for all API customers and nine GPT-Live voices (Oct 16). On Oct 7, OpenAI recommended the GPT-6 family for production use.<sup>[2]</sup></li>
+          <li><strong>GitHub Copilot:</strong> The model deprecation for mid-November and the GA of Agentic Autofix (Oct 15) were here yesterday. No new entry since.<sup>[3]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://simonwillison.net/">simonwillison.net</a> · [2] <a href="https://developers.openai.com/api/docs/changelog">developers.openai.com/api/docs/changelog</a> · [3] <a href="https://github.blog/changelog/">github.blog/changelog</a> — all retrieved Oct 17, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Mandatory round: quiet in the shadows</h2>
+        <ul>
+          <li><strong>Claude Code</strong> — 2.1.302 (Oct 16), see above.</li>
+          <li><strong>Codex CLI</strong> — 0.163.0 (Oct 15), 0.164.0-alpha.3 (Oct 17).</li>
+          <li><strong>Cursor</strong> — Canvases and Environments API (Oct 16).</li>
+          <li><strong>Cline</strong> — CLI v3.0.73 (Oct 17), see above.</li>
+          <li><strong>GitHub Copilot</strong> — latest entries Oct 15.</li>
+          <li><strong>OpenHands</strong> — still v1.27.1 (Oct 12).</li>
+          <li><strong>Continue</strong> — still v2.0.0-vscode (stable) and v2.1.0-vscode (pre-release), both from Jun 19. Quiet for about four months.</li>
+          <li><strong>Aider</strong> — the history page lists no new version and no date. Effectively dormant.</li>
+          <li><strong>Plandex, Devin, Bolt, JetBrains AI</strong> — not checked today.</li>
+        </ul>
+        <p>My take: This week the harnesses of the big vendors are moving faster than the open ones. Claude Code, Codex and Cursor ship features, Cline repairs compatibility, and OpenHands, Continue and Aider stand still. That is no verdict on quality, but a hint about pace. For the four unchecked tools, it is a gap in our research, not proof of standstill.</p>
+        <span class="src"><a href="https://github.com/All-Hands-AI/OpenHands/releases">github.com/All-Hands-AI/OpenHands/releases</a> · <a href="https://github.com/continuedev/continue/releases">github.com/continuedev/continue/releases</a> · <a href="https://aider.chat/HISTORY.html">aider.chat/HISTORY.html</a> — retrieved Oct 17, 2026</span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Saturday, October seventeenth. It was quiet on the model front, but not for tooling. Almost every major harness shipped something useful this week.</p>
+  <p>Claude Code is at version two point one point three-oh-two. Fork sub-agents are now on by default in headless mode, in the Agent SDK, in the desktop app and in VS Code. A fork is a copy of the running conversation that carries on alone with a subtask. Also new is idle compaction. A conversation with more than two hundred thousand tokens gets summarized after about fifty-four minutes of inactivity, before the prompt cache expires after an hour. That saves money, but it can cost you details.</p>
+  <p>Anthropic explained how outside evaluators work. Six people from METR get access like employees, and Anthropic can't block publication of their findings. Anthropic may only redact in predefined categories. The same day, Simon Willison quoted the Financial Times: Anthropic's third-quarter revenue is sixteen point eight billion dollars. We only have that figure secondhand.</p>
+  <p>Cursor now lets cloud agents build interactive canvases. The Environments API is out in beta, and an environment can span up to three hundred repositories. That means an agent's workbench can be described in a script.</p>
+  <p>OpenAI's Codex CLI is at version zero point one-sixty-three. You can now redirect Codex in the middle of a response, and independent read-only tools run in parallel. Today Cline fixed a bug that made GPT-six models get every request rejected on OpenAI and Azure-compatible endpoints.</p>
+  <p>A correction to yesterday: local was not quiet. Ollama zero point forty point five brings NVIDIA's Nemotron three point five in two variants. The smaller one is called Bolt and is built for graphics cards with twenty-four gigabytes. There are no coding benchmarks for it yet.</p>
+  <p>Benchmarks stay thin. The independent DeepSWE board is still from September twenty-second. For Sonnet five point five, Anthropic reports seventy point six percent on Terminal-Bench, more than for Opus five point five. That's a vendor number with different effort levels, so read it with caution.</p>
+  <p>Continue, Aider and OpenHands had no new releases. Tomorrow we'll see whether the DeepSWE board finally lists the new models, and whether Codex zero point one-sixty-four ships as stable.</p>
+</div>
+
+</body>
+</html>
