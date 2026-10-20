@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-20</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-20</span>
+    <span class="dot">·</span>
+    <span>Tuesday, October 20, 2026 · Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">PwnEscape: Kernel Flaw Lets Guests Break Out of a KVM VM</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Tuesday, and the weekend delivered two kinds of trouble. First, a kernel flaw that attacks exactly the boundary every cloud customer relies on: a VM should not be able to touch its host. Debian has the fix; Ubuntu and RHEL did not have it on Sunday. Second, the supply chain, three times: a backup service that gave attackers a way into Microsoft 365 tenants, a WordPress plugin with a backdoor shipped straight from the vendor, and hijacked update servers at AOMEI. Add critical patches for NGINX and Drupal, a practical workaround for Exchange, and Oracle's patch day today.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>PwnEscape</strong> CVE-2026-99999 (CVSS 9.3): escape from KVM guests via crafted IPv4 packets; Debian patched, Ubuntu/RHEL still open (as of Oct 19). <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>ConnectWise Cloud Backup</strong>: attackers abused the app identity, at least 162 M365 tenants affected, services offline (as of Oct 18). <span class="chip">USA</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Rank Math PRO 3.0.123</strong> shipped with a backdoor from the vendor's server; 3.0.124 is clean. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>AOMEI Backupper</strong>: update server briefly hijacked three times, backdoor via Radmin. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>NGINX</strong>: F5 patches three critical flaws out of band; <strong>Drupal</strong> warns of fast exploits for an RCE. <span class="chip">Global</span></li>
+      <li><span class="chip good">OSS</span> <strong>GitHub malware alerts</strong> cover eight ecosystems per a heise look-back (Oct 19), fed by more than 238,000 OpenSSF reports. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>Exchange after the October update</strong>: cause found, registry workaround available. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>Linux 7.3</strong> is out; today Oracle CPU, Wed Node.js security updates, PostgreSQL 19 RC1. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulation</span> <strong>CRA reporting duties</strong>: 24 h / 72 h / 14 days; plus a cyberattack on Loxone. <span class="chip">EU</span> <span class="chip">DE</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Two patch dates at the start of the week, then nothing confirmed.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Tue 10/20</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Oracle Critical Patch Update (October)</span><span>JDK version numbers not yet published</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Wed 10/21</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Node.js security updates (announced)</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu 10/22 – Mon 10/26</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>No confirmed dates</span><span>Open: Ubuntu/RHEL kernels for PwnEscape, Microsoft's Exchange fix</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PwnEscape: from the VM into the host <span class="h2-refs">[1][2][3][4]</span></h2>
+        <p>A flaw in the Linux kernel's networking code lets a guest break out of its KVM VM. The flaw is called <strong>PwnEscape</strong>, identifier <strong>CVE-2026-99999</strong>; heise and The Register both report CVSS <span class="stat">9.3</span>.<sup>[1][2]</sup> We have not confirmed the score in the NVD. The Debian Security Tracker confirms the identifier and the fix versions.<sup>[3]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">VM escape:</strong> A virtual machine is a sealed-off computer on a real server that many customers share. An escape means the guest gets out of its box and controls the whole server. Like a hotel guest whose room key suddenly opens every door in the building.
+        </div>
+        <p>The bug sits in <code>skb_checksum_help</code>. A guest sends malformed IPv4 packets, and according to The Register, "untrusted checksum metadata" can overwrite security-relevant fields in the packet.<sup>[2]</sup> Debian's title for the fix: "ipv4: validate checksum_start before completing checksum".<sup>[3]</sup> Paulos Yibelo discovered it.<sup>[2]</sup></p>
+        <p>Where the fixes stand: the fix (commit 6785011f8b16) landed upstream in October, and seven stable kernels with the fix followed on Oct 15.<sup>[4]</sup> Debian has it in bookworm (<code>6.1.190-1</code>) and trixie (<code>6.12.113-1</code>). Ubuntu and RHEL still had no packages on Oct 19.<sup>[1]</sup> According to heise, Hetzner is using an eBPF mitigation and Netcup is rebooting hosts. AWS says EC2 is not affected.<sup>[2]</sup> Attacks in the wild are not confirmed; the researchers expect exploits "within a few weeks".<sup>[1]</sup></p>
+        <div class="callout warn"><span class="callout-label">Context</span> For ordinary Docker boxes this is not a weekend emergency: the flaw hits KVM <em>hosts</em> that run foreign guests. If you run your own Proxmox or KVM hosts, do not wait for Ubuntu; plan a stable kernel with the fix. If you only rent VPS, ask your provider. A CVSS vector and the affected kernel range are still missing from both reports.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/PwnEscape-Kritische-Luecke-in-Linux-Kernel-erlaubt-VM-Ausbruch-11492131.html">heise.de (Oct 19)</a> · [2] <a href="https://www.theregister.com/virtualization/2026/10/19/linux-kvm-guest-host-escape-rated-critical-may-represent-a-new-way-to-attack-penguin-powered-networking/5303744">theregister.com (Oct 19)</a> · [3] <a href="https://security-tracker.debian.org/tracker/CVE-2026-99999">security-tracker.debian.org (Oct 20)</a> · [4] <a href="https://lwn.net/">lwn.net (Oct 20)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>ConnectWise Cloud Backup: MFA doesn't help when the app logs in itself <span class="h2-refs">[1][2]</span></h2>
+        <p>Attackers got into customers' Microsoft 365 tenants through <strong>ConnectWise Cloud Backup</strong> (formerly SkyKick). ConnectWise confirms "unauthorized access to application identities".<sup>[2]</sup> Huntress counts at least <span class="stat">162</span> compromised tenants; Microsoft calls it an "active supply-chain attack".<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">App identity:</strong> An account a program uses, instead of a human, to sign in to Microsoft 365, with a secret key instead of a password plus phone code. Like a spare key you give the cleaning service: whoever hijacks the service no longer needs a fingerprint.
+        </div>
+        <p>Discovered on Oct 15, advisory on Oct 16. ConnectWise shut down seven app identities; per the Oct 18 update, the shared credentials are invalid. According to the vendor, there are no signs that backup data was exfiltrated. Cloud Backup, SaaS Security and Cloud Management were still offline on Oct 18. There is no CVE, and ConnectWise is silent on the attackers' origin.<sup>[1][2]</sup></p>
+        <p>Our view: this is the pattern of the season. Every SaaS service with broad Graph API permissions is a master key to hundreds of tenants. Anyone who manages M365 should look at the list of enterprise apps with write permissions more often than once a year.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-breach-microsoft-365-tenants-via-connectwise-supply-chain-attack/">bleepingcomputer.com (Oct 17/18)</a> · [2] <a href="https://www.theregister.com/security/2026/10/19/connectwise-turns-off-its-saas-y-backup-security-and-management-services-to-probe-security-snafu/5303758">theregister.com (Oct 19)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Supply chain, twice from the vendor itself</h2>
+        <h3>Rank Math PRO: backdoor in the official download</h3>
+        <p>Version <strong>3.0.123</strong> of the WordPress SEO plugin Rank Math PRO shipped with a backdoor from the vendor's server. The window ran from Oct 15, 20:02 UTC to Oct 16, 07:12 UTC, about eleven hours. The command-and-control domain is <code>rank1cdn[.]com</code>. <strong>3.0.124</strong> is clean; the free plugin (over 4 million sites) is not affected. The vendor does not say how the attackers got in or how many sites pulled the update.<sup>[1]</sup></p>
+        <h3>AOMEI Backupper: hijacked update servers</h3>
+        <p>According to BleepingComputer, the group UNC7017 modified the update server's configuration files and swapped the checksum at the same time. That way the server delivered a downloader (CROSSROAD) and a backdoor via Radmin (SHINYROAD). The windows were tiny: 10 minutes on May 28, 6 on Jul 16, 5 on Jul 20. Victims were in the USA, Australia, India, Singapore, Spain and Switzerland. ManageEngine disputes AOMEI's version of tampering in transit: "The evidence did not support AOMEI's explanation".<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Checksum:</strong> A digital fingerprint of a file. The installer compares it to detect tampering. If the forger swaps the fingerprint in the same folder, the check never fires.
+        </div>
+        <p>Our opinion: both cases show that a checksum served from the same server as the file only protects against transmission errors, not against attackers. Only a signature made with a key that does not sit on the download server protects here.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/wordpress-seo-plugin-rank-math-compromised-to-backdoor-websites/">bleepingcomputer.com (Oct 19)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/hackers-hijack-aomei-update-servers-to-secretly-spread-malware/">bleepingcomputer.com (Oct 19)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>GitHub also warns about malware in Maven, PyPI and more <span class="h2-refs">[1]</span></h2>
+        <p>GitHub's malware alerts used to apply only to npm. They now cover eight ecosystems (heise look-back of Oct 19; per Help Net Security the alerts have run since summer): crates.io, Go, Maven, NuGet, npm, Composer, PyPI and RubyGems. The data comes from the OpenSSF malware database, which now holds <span class="stat">238,000</span> reports; at launch in 2023 it had just over 15,000. More than 28,000 reports come from GitHub itself. You have to enable the alerts per repository.<sup>[1]</sup> <span class="chip good">OSS</span></p>
+        <p>For a Java and Python stack this is a useful look-back: free, one click, and Maven and PyPI are included.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Rueckblick-OpenSSF-Datenbank-erweitert-GitHubs-Malware-Warnungen-11492599.html">heise.de (Oct 19)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>NGINX: three critical flaws, out-of-band patch <span class="h2-refs">[1]</span></h2>
+        <p>On Oct 19, F5 released out-of-band patches for NGINX Plus, NGINX OSS, Ingress Controller, Gateway Fabric and Instance Manager:</p>
+        <ul>
+          <li><strong>CVE-2026-15176</strong> in <code>ngx_http_v3_module</code>. Mitigation: avoid <code>alias</code> or <code>$request_filename</code>.</li>
+          <li><strong>CVE-2026-97205</strong>, also HTTP/3. Mitigation: disable AIO or SSI.</li>
+          <li><strong>CVE-2026-93479</strong> in the <code>map</code> directive. Mitigation: use named captures.</li>
+        </ul>
+        <p>According to the report, code execution is possible if ASLR is off or bypassed. F5 reports no attacks.<sup>[1]</sup> We could not verify CVSS scores and fix versions; the F5 advisories (K000162416, K000162608, K000162607) did not load. Caddy users are not affected, but many Kubernetes clusters have an NGINX ingress somewhere.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/f5-releases-out-of-band-patches-for-critical-nginx-vulnerabilities/">bleepingcomputer.com (Oct 19)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Drupal: RCE in core, exploit "in hours or days" <span class="h2-refs">[1]</span></h2>
+        <p><strong>CVE-2026-108097</strong> sits in the core module Field UI, <strong>CVE-2026-108099</strong> in the contrib module Entity List. Fixed in core 10.6.19, 11.3.19 and 11.4.10 as well as Entity List 3.0.10 (SA-CORE-2026-014, SA-CONTRIB-2026-218). Core alone is not exploitable. With contrib modules, however, there is at least one path without a login. If you cannot patch immediately, uninstall <code>field_ui</code>. There are no attacks yet; the Drupal team warns that exploits could come "within hours or days". The report gives no CVSS score.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/drupal-patches-critical-rce-flaws-warns-exploits-may-emerge-soon/">bleepingcomputer.com (Oct 17)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>The WAF as an entry point: SiteGuard under attack <span class="h2-refs">[1]</span></h2>
+        <p>The WAF SiteGuard Server Edition contains a command injection, <strong>CVE-2026-106931</strong>. It sits in the statistics feature, which is on by default, and runs commands as root or SYSTEM. Fixed in 8.00 Update 5 (FreeBSD: 7.00 Update 6). The vendor informed customers on Sep 29; according to the report, exploitation is "already confirmed". It is not yet in the KEV catalog.<sup>[1]</sup> After BeyondTrust last week, another security product that is itself the door.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-siteguard-waf-flaw-to-run-commands-as-system-root/">bleepingcomputer.com (Oct 18)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: Fortinet details filled in, no new entries <span class="h2-refs">[1][2]</span></h2>
+        <p><span class="update-since">Update since Oct 17</span> The KEV catalog stands at version 2026.10.16 with <span class="stat">1,748</span> entries; nothing has been added since Friday.<sup>[1]</sup> The deadlines for BeyondTrust and Fortinet expired yesterday.</p>
+        <p>We lacked the details on <strong>Fortinet CVE-2025-61624</strong> on Saturday; heise supplies them. It is a path traversal with CVSS 6.5 (NVD) or 6.0 (Fortinet), and it requires an admin profile with write permissions. Fixed in FortiOS 7.6.5 and 7.4.10, FortiPAM 1.7.1, FortiProxy 7.6.5 and 7.4.12, FortiSwitchManager 7.2.8 and 7.0.7. Unit 42 describes an attack on a telecom provider using the memory-resident malware "Peerstitch". Initial access came as early as 2024 via FortiJump (CVE-2024-47575).<sup>[2]</sup> So the low score is deceptive: the flaw is one building block in a long chain.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (catalog 2026.10.16)</a> · [2] <a href="https://www.heise.de/news/Cyberangriffe-auf-Sicherheitsluecken-in-Fortinet-Produkten-und-BeyondTrust-11492254.html">heise.de (Oct 19)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Patches that need patches <span class="h2-refs">[1]</span></h2>
+        <p>A study by the startup Terra Security shows that the share of GitHub security fixes that need a follow-up fix within 90 days rose from about <span class="stat">0.2%</span> (2019–2025) to <span class="stat">2.3%</span> in 2026. CVEs with a bypassed fix land in the KEV catalog about four times as often. In the Linux kernel, 3.2% of CVEs arose from the fix for another CVE; in <code>fs/smb</code> and <code>net/sched</code> about 10%.<sup>[1]</sup></p>
+        <p>A caution on interpretation: it is a single study by a vendor, not independently checked. The direction does fit PwnEscape, though: networking code in the kernel is tough to repair.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/patches/2026/10/19/security-patches-need-patches-now-that-attackers-have-ai/5303927">theregister.com (Oct 19)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Exchange after the October update: cause and workaround <span class="h2-refs">[1][2]</span></h2>
+        <p><span class="update-since">Update since Oct 17</span> The Exchange problems have a cause. The October updates for Windows Server 2019 and newer limit the Endpoint Mapper's memory, by default to 512 concurrent calls. The results are failed OWA logins, stuck outboxes and "MapiExceptionMdbOffline".<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Endpoint Mapper:</strong> A Windows service that tells programs which port another service is listening on. Like a company's switchboard: when it is overloaded, no call gets through, even if every employee is at their desk.
+        </div>
+        <p>Microsoft's workaround (then restart; do not uninstall the update):</p>
+        <p><code>reg add HKLM\SOFTWARE\Microsoft\Rpc /v EpmapSavedContextCap /t REG_DWORD /d 65536 /f</code></p>
+        <p>A fix is in progress.<sup>[1]</sup> For planning: Server 2016 loses support on <strong>January 12, 2027</strong>; ESU via Azure Arc is available from January 13, 2027 until 2030.<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-october-windows-server-updates-cause-exchange-issues/">bleepingcomputer.com (Oct 19)</a> · [2] <a href="https://www.heise.de/news/Support-Ende-fuer-Windows-10-LTSB-und-Server-2016-Was-Admins-jetzt-planen-muessen-11492075.html">heise.de (Oct 19)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Releases: Linux 7.3, Oracle today, Node on Wednesday <span class="h2-refs">[1][2][3]</span></h2>
+        <h3>Linux 7.3 is here</h3>
+        <p>Torvalds released Linux 7.3 on Oct 18: <span class="stat">18,765</span> non-merge commits from 3,021 developers, 807 of them first-timers. It is considered the next LTS candidate.<sup>[1]</sup></p>
+        <h3>Oracle Critical Patch Update: today</h3>
+        <p>Oracle has announced the October CPU for today, Oct 20. The release notes for JDK 25.0.4.1 advise against using that version after this date.<sup>[2]</sup> Which JDK versions arrive today was not published at press time. If you run Java in production, schedule the update for this week.</p>
+        <h3>Node.js: security updates on Wednesday</h3>
+        <p>The Node.js project has announced security updates for Oct 21; the current lines are 24.22 and 26.12.<sup>[3]</sup> Which flaws are involved is still open.</p>
+        <h3>PostgreSQL 19 RC1, Python 3.16 Alpha 1, Symfony 8.2</h3>
+        <p>PostgreSQL 19 is at release candidate 1; final is planned for Nov 19, and only fixes will land until then. Python 3.16 starts with Alpha 1; beta from May 4, 2027, final on Oct 5, 2027. Symfony 8.2 is due in November.<sup>[3]</sup> We have the PG date only via heise; the project page did not load.</p>
+        <span class="src">[1] <a href="https://lwn.net/">lwn.net (Oct 20)</a> · [2] <a href="https://www.oracle.com/java/technologies/javase/25-0-4-1-relnotes.html">oracle.com (Aug 18)</a> · [3] <a href="https://www.heise.de/news/Developer-Haeppchen-was-Postgres-19-Python-3-16-und-Symfony-8-2-Neues-bringen-11490397.html">heise.de (Oct 17)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>From the stack: Tailscale, Angular, Spring <span class="h2-refs">[1][2][3]</span></h2>
+        <p><strong>Tailscale v1.104.1</strong> (Oct 7) builds with Go 1.27, caches the netmap and now requires macOS 13+ or iOS 16+. The Kubernetes operator followed on Oct 13. Since Oct 14 you can switch the identity provider yourself.<sup>[1]</sup> For <strong>Angular</strong>, v22 is current; v22.3 arrives around November.<sup>[2]</sup> <strong>Spring</strong> is quiet in October; the latest are Spring Boot 4.2.0-M2 and Spring AI 2.1.0-M1 from September.<sup>[3]</sup></p>
+        <span class="src">[1] <a href="https://tailscale.com/changelog">tailscale.com/changelog</a> · [2] <a href="https://angular.dev/reference/releases">angular.dev</a> · [3] <a href="https://spring.io/blog">spring.io/blog</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: the reporting clock has been running since September <span class="h2-refs">[1][2]</span></h2>
+        <p>The Cyber Resilience Act's reporting duties have applied since Sep 11, 2026. For actively exploited vulnerabilities this means: early warning within 24 hours, notification within 72 hours, final report 14 days after the fix. For severe incidents a month applies. The rest of the CRA follows from Dec 11, 2027.<sup>[1]</sup> <span class="chip">EU</span></p>
+        <div class="eli5">
+          <strong class="eli5-term">Cyber Resilience Act (CRA):</strong> An EU law that makes manufacturers of software and connected devices responsible for their security. Like the recall duty for cars: whoever knows about a defect must report and fix it.
+        </div>
+        <p>Whether ENISA's reporting platform worked from day one is <strong>unconfirmed</strong>; the sources contradict each other.<sup>[2]</sup> For the cases above this means: a vendor like Rank Math or AOMEI that sells in the EU now has a legal clock around its neck.</p>
+        <span class="src">[1] <a href="https://www.mccannfitzgerald.com/knowledge/data-privacy-and-cyber-risk/cyber-resilience-act-reporting-obligations-apply-from-11-september-2026">mccannfitzgerald.com</a> · [2] <a href="https://www.enisa.europa.eu/cra-srp/">enisa.europa.eu</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Germany: Loxone, CDU mailbox, SAP <span class="h2-refs">[1][2][3]</span></h2>
+        <p>The building automation vendor <strong>Loxone</strong> reports a cyberattack; customer systems are said to be unaffected.<sup>[1]</sup> In Heilbronn, a CDU mail account was hijacked and used for phishing against Merz and many others.<sup>[2]</sup> And <strong>SAP Signavio</strong> received a preliminary injunction in Germany in its patent dispute with Celonis.<sup>[3]</sup> <span class="chip">DE</span></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Loxone-Cyberangriff-auf-Gebaeudeautomatisierungsanbieter-11492872.html">heise.de (Oct 19)</a> · [2] <a href="https://www.heise.de/news/Phishing-Angriff-auf-Merz-und-viele-andere-CDU-Mailkonto-in-Heilbronn-gehackt-11491677.html">heise.de (Oct 17)</a> · [3] <a href="https://www.theregister.com/legal/2026/10/19/saps-signavio-hit-with-function-injunction-in-germany/5303835">theregister.com (Oct 19)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief <span class="h2-refs">[1][2]</span></h2>
+        <ul>
+          <li><strong>Broadcom Wi-Fi:</strong> According to The Register, a 2018 bug still lets attackers hijack routers.<sup>[1]</sup></li>
+          <li><strong>OpenCode Console:</strong> A breach exposed stored API keys; 1.4% of users are affected. Details in the ai-dev brief.<sup>[2]</sup></li>
+          <li><strong>Brazil:</strong> No reliable tech story found today.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.theregister.com/networks/2026/10/19/broadcom-wi-fi-bug-turns-sweet-16-still-lets-strangers-hijack-your-router/5303771">theregister.com (Oct 19)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/opencode-hack-exposes-api-keys-amid-ai-distillation-attacks/">bleepingcomputer.com (Oct 19)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>What this Tuesday is worth twenty minutes on</h2>
+        <ul>
+          <li><strong>Your own KVM/Proxmox hosts?</strong> Check the kernel version and plan a stable kernel with the PwnEscape fix.</li>
+          <li><strong>M365 tenant?</strong> Review enterprise apps with write permissions; cloud backup vendors first.</li>
+          <li><strong>WordPress with Rank Math PRO?</strong> Check the version; 3.0.123 means: update to 3.0.124 and investigate the site.</li>
+          <li><strong>GitHub repos:</strong> Enable malware alerts.</li>
+          <li><strong>Java:</strong> Read the Oracle CPU this evening and schedule the JDK updates.</li>
+        </ul>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Tuesday, October twentieth. The weekend brought two kinds of trouble: a kernel flaw at the boundary between virtual machines and their host, and three separate supply-chain attacks.</p>
+  <p>The kernel flaw is called PwnEscape. According to heise and The Register, it scores nine point three out of ten. A guest in a KVM machine sends crafted IPv4 packets and can break out of its box. Debian has already shipped fixes; Ubuntu and Red Hat still had none on Sunday. Attacks aren't confirmed, but the researchers expect exploits within a few weeks. If you run your own virtualization hosts, don't wait long.</p>
+  <p>At ConnectWise Cloud Backup, attackers took over the service's app identity. According to Huntress, that got them into at least one hundred sixty-two Microsoft three sixty-five tenants. Multifactor authentication didn't help, because here a program signs in, not a person. As of Sunday, the services were still offline.</p>
+  <p>Twice, the malware came straight from the vendor. The WordPress plugin Rank Math PRO was distributed with a backdoor for eleven hours; version three point zero point one two four is clean. And at AOMEI Backupper, hijacked update servers delivered a backdoor in short windows. The good news: GitHub warns about malware in eight package ecosystems, including Maven and PyPI.</p>
+  <p>F5 patched three critical NGINX flaws out of band, with no known attacks so far. Drupal closed a hole in its core and warns that exploits could arrive in hours or days. And the SiteGuard web firewall is already under attack.</p>
+  <p>Exchange admins have a workaround. The October updates limit Windows' Endpoint Mapper. Microsoft advises a registry entry and a restart, not uninstalling the update.</p>
+  <p>On the release front, Linux seven point three is out, likely the next long-term kernel. Oracle's patch day for Java is today, and Node.js security updates follow on Wednesday. PostgreSQL nineteen is at its first release candidate.</p>
+  <p>In Europe, the Cyber Resilience Act's reporting duties are in force: twenty-four hours for an early warning, seventy-two for the notification. In Germany, the building automation vendor Loxone reports a cyberattack.</p>
+  <p>Our next brief looks at which Java versions Oracle ships today, and whether Ubuntu and Red Hat deliver their kernels for PwnEscape.</p>
+</div>
+
+</body>
+</html>
