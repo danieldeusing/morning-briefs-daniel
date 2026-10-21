@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-10-21</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-21</span>
+  </div>
+
+  <h1 class="masthead-title">Quiet day, but two switches in Claude Code deserve a look</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Today is a quiet day. No major lab has shipped a new coding model, and the independent benchmark board is still from Sep 22. The most important news is small and technical. Claude Code 2.1.305 adds a new sandbox switch that, according to Anthropic itself, lets commands get around the file protections. Also, a changed MCP allowlist loads servers after the update that were filtered before. If you run Claude Code in a team with managed settings, check this today. Also on the list: 12-hour prompt caching at OpenAI, a stable Ollama 0.40.7 and OpenHands 1.29.0.</p>
+    <ul>
+      <li><span class="chip hot">Claude</span> <strong>Claude Code 2.1.305</strong> (Oct 20): <code>allowedMcpServers</code> no longer filters certain <code>managed-mcp.json</code> servers. A previously blocked server loads after the update.</li>
+      <li><span class="chip hot">Claude</span> <strong><code>sandbox.allowNestedUserNamespaces</code></strong>: new switch for Chromium and rootless podman, but it bypasses the sandbox's file protections.</li>
+      <li><span class="chip good">Claude</span> <strong>2.1.305</strong> fixes the 2.1.304 bug that made every request fail on Vertex and Bedrock. <strong>2.1.306</strong> (Oct 21) follows with an MCP fix.</li>
+      <li><span class="chip good">OpenAI</span> <strong>12-hour prompt caching</strong> in the Responses API (Oct 20).</li>
+      <li><span class="chip">OpenAI</span> <strong>Codex CLI</strong>: 0.164.0-alpha.7 and alpha.8 (Oct 20), no notes. Stable remains 0.163.0.</li>
+      <li><span class="chip">Local</span> <strong>Ollama 0.40.7</strong> is now stable: new 27B model <code>pplx-decider</code>, fix for <code>ollama launch claude</code>.</li>
+      <li><span class="chip">OSS</span> <strong>OpenHands 1.29.0</strong> (Oct 20): settings per agent profile.</li>
+      <li><span class="chip">Google</span> <strong>Gemini 4 Argon</strong> has been available since Oct 13. Still no independent coding numbers.</li>
+      <li><span class="chip">Bench</span> No new independent measurement. DeepSWE board still from Sep 22.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">The last seven days</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col hot">
+        <div class="tl-date">Thu 10/15</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Meta Muse Spark Open</span>
+          <span>Anthropic: “An update on independent evaluators”</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 10/16</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cursor: Cloud Agent Canvases</span>
+          <span>OpenAI: Artifact SDK in Agents sandboxes</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 10/17</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cline CLI, SDK, Desktop</span>
+          <span>DeepSeek “1017” (date only from the name)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun 10/18</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Ollama 0.40.7</span>
+          <span>Anthropic: “Investing in the public benefit”</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 10/19</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.304</span>
+          <span>Copilot: deprecations + policy API</span>
+          <span>OpenHands 1.28.0</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue 10/20</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.305</span>
+          <span>OpenAI: 12 h prompt caching</span>
+          <span>OpenHands 1.29.0</span>
+          <span>Codex 0.164.0-alpha.7 / .8</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Wed 10/21</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today · Claude Code 2.1.306</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Claude Code 2.1.305: two guardrails get looser</h2>
+        <p>Claude Code 2.1.305 arrived on <strong>Oct 20</strong>, and 2.1.306 followed on <strong>Oct 21</strong>.<sup>[1]</sup> Most entries are fixes. But two entries in 2.1.305 change what your setup allows. Both are stated openly in the notes, with a warning. You just have to read them.</p>
+        <p><strong>1. The sandbox switch.</strong> New is <code>sandbox.allowNestedUserNamespaces</code>. It lets commands in the sandbox create their own user namespaces on Linux. Chromium and rootless podman, for example, need this. Anthropic itself says it “lets them get around the sandbox's file protections”.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">User namespace:</strong> A Linux trick that lets a program build its own small world. Inside it, the program can feel like an administrator without being one on the real system. Browsers and containers use this to wall themselves off. The problem: from inside that world, a program can get around the rules the sandbox sets from outside. It is like a child in a playpen who is allowed to build their own box. The box can get tall enough to climb over the bars.
+        </div>
+        <p><strong>2. The MCP allowlist.</strong> <code>allowedMcpServers</code> now no longer filters stdio servers from <code>managed-mcp.json</code> if they use <code>${VAR}</code> only in the <code>env</code> block. The note says it plainly: a server your allowlist left out “now loads on upgrade”. If you still want it off, you must add it to <code>deniedMcpServers</code>.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">MCP server and allowlist:</strong> An MCP server is an add-on program that gives the agent tools, such as access to a database or a ticket system. The allowlist is the guest list: only those on it get in. Until now, certain guests were turned away at the door even though they were not on the list. Now they get in. If you do not want them, you now need a list of banned guests.
+        </div>
+        <p>My take: The sandbox switch is built honestly. It is off until you turn it on, and the warning is in the text. Turn it on only in an environment that is disposable anyway, such as a container or a VM. The MCP change is trickier. It takes effect silently on update, without you doing anything. Fail-open behavior in an allowlist is exactly the kind of change a security team must not miss. For you as a solo developer, the risk is small if you do not use <code>managed-mcp.json</code>. In a team with managed settings, check today which servers run after the update.</p>
+        <p><span class="chip good">Try it</span> After the update, look at the loaded servers with <code>/mcp</code> and compare them with your intended list.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code/releases</a> — primary source, retrieved Oct 21, 2026 (page gives day and month, no year)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Claude Code: the rest of the week in fixes</h2>
+        <p>2.1.304 from <strong>Oct 19</strong> introduced a bug. On Vertex, Bedrock and other providers, every request failed if the endpoint or a gateway rejected tool search. 2.1.305 then retries without tool search.<sup>[1]</sup> The background: 2.1.304 had turned tool search on by default behind a custom <code>ANTHROPIC_BASE_URL</code>.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Tool search:</strong> With many connected tools, the agent does not load all the descriptions into context at once. It picks out only the ones it needs right now. This saves space in context. But it requires that the server on the other end knows this feature.
+        </div>
+        <p>More fixes in 2.1.305: Bash commands on a full disk now clearly report that the disk is full and nothing ran, instead of showing a raw <code>ENOSPC</code> path.<sup>[1]</sup> 2.1.306 fixes a bug where, in sessions with many MCP tools, an API error appeared as “prompt is too long” and triggered an unnecessary compaction.<sup>[1]</sup></p>
+        <p>My take: Three versions in three days, and one of them repairs the previous one. That is the pace you know from Claude Code. If you work through Bedrock, Vertex or your own gateway and have 2.1.304, move on to 2.1.306 right away. If you work directly with the Anthropic API, you were not affected.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code/releases</a> — primary source, retrieved Oct 21, 2026</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>OpenAI: prompt cache now lasts 12 hours</h2>
+        <p>The API changelog says on <strong>Oct 20</strong> for <code>v1/responses</code>: “You can now choose 12-hour prompt caching in the API.”<sup>[1]</sup> On Oct 16 it added that the OpenAI-hosted sandboxes in the Agents API include the Artifact SDK and skills for spreadsheets.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Prompt caching:</strong> A coding agent sends the same long beginning with every request: system prompt, tool descriptions, often large parts of the repo. The provider can cache this beginning. Then it does not have to process it again each time, and you pay less. It is like a waiter who remembers your regular order. The longer he remembers, the more often you save yourself the recital.
+        </div>
+        <p>My take: For agents this is more useful than it sounds. An agent that works in the morning, pauses at noon and continues in the afternoon still hits the cache at 12 hours. What the option costs and how long the cache lasted before is not in the changelog entry; it only says cached-input pricing is lower, with no figure. We did not check that. Read the pricing page before you turn it on. A longer cache only pays off if you really reuse the beginning.</p>
+        <p><span class="chip good">Try it</span> If you build your own agents on the Responses API: compare the cache hits in the usage data for a day with and without the 12-hour option.</p>
+        <span class="src">[1] <a href="https://developers.openai.com/api/docs/changelog">developers.openai.com/api/docs/changelog</a> — primary source, retrieved Oct 21, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Codex CLI: eight alphas, zero notes</h2>
+        <p>The Codex CLI published two more alphas on <strong>Oct 20</strong>, 0.164.0-alpha.7 and alpha.8. All are simply titled “Release 0.164.0-alpha.N”, with no notes. 0.163.0 remains marked as stable.<sup>[1]</sup></p>
+        <p>My take: Eight alphas for one version point to a bigger change. Without notes, though, there is no telling which one. Stay on 0.163.0 until the release with text arrives. That is the contrast to Claude Code: there, every change is in plain text, even the uncomfortable ones.</p>
+        <span class="src">[1] <a href="https://github.com/openai/codex/releases">github.com/openai/codex/releases</a> — primary source, retrieved Oct 21, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Gemini 4 Argon: a week out, still no measurement</h2>
+        <p>Google released Gemini 4 Argon to developers on <strong>Oct 13, 2026</strong>. According to the Google blog, the model is available on the paid tier of the Gemini API in AI Studio and Android Studio. Google AI Ultra subscribers also get access to Antigravity, an “agent-first development platform”.<sup>[1]</sup> The blog post gives no benchmark numbers or prices.<sup>[1]</sup></p>
+        <p>Secondary sources cite an introductory price through the end of November. On the price after that, they contradict each other, and we did not check Google's pricing page. So we give no number here. We have not verified a headline claiming Argon beats GPT-6 and Claude at coding.</p>
+        <p>My take: A major model with no coding number on its own page is unusual. Either Google is being reserved, or the model targets science and agents more than repo work. Argon is not yet on the DeepSWE board. Until then, it is an option to test yourself, not a proven leader.</p>
+        <span class="src">[1] <a href="https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-4-argon/">blog.google</a> — primary source, “October 13, 2026”, retrieved Oct 21, 2026</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Local: Ollama 0.40.7 is stable</h2>
+        <p>Ollama <strong>v0.40.7</strong> from <strong>Oct 18</strong> is now the current version.<sup>[1]</sup> New is the model <code>pplx-decider</code>. According to the note it is “a 27B decision model from Perplexity”. Of interest to Claude Code users: the version limits <code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code> for <code>ollama launch claude</code>. Also, the order of tool-call events is now correct when streaming over the Responses API.<sup>[1]</sup></p>
+        <p>My take: The compact fix is the practical part. A local model usually has a much smaller context window than Claude. If Claude Code compacts too late, the local model overflows. If you test Claude Code with a local model through Ollama, update. How good <code>pplx-decider</code> is at coding is open. A “decision model” sounds more like routing than writing code. 27B fits quantized on a 24 GB card.</p>
+        <span class="src">[1] <a href="https://github.com/ollama/ollama/releases">github.com/ollama/ollama/releases</a> — primary source, retrieved Oct 21, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>OpenHands 1.29.0: profiles with their own toolbox</h2>
+        <p>OpenHands released version 1.29.0 on <strong>Oct 20</strong>, one day after 1.28.0.<sup>[1]</sup> According to the release summary, skills, condensers, verification and model router can now be set per agent profile. 1.28.0 had brought a verification tool “verify-openhands”.<sup>[1]</sup> Note from OpenHands: the macOS app is not signed. Gatekeeper may report it as “damaged”.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Condenser:</strong> A component that summarizes long agent histories so they fit into the context window. It is what Claude Code calls “compaction”.
+        </div>
+        <p>My take: Profiles with their own model and their own rules are the right way. A review agent needs different settings than a refactoring agent. Claude Code solves this with subagents, OpenHands now with profiles. I would take the note about the unsigned app seriously: download it only from the official GitHub release.</p>
+        <span class="src">[1] <a href="https://github.com/All-Hands-AI/OpenHands/releases">github.com/All-Hands-AI/OpenHands/releases</a> — primary source, retrieved Oct 21, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Benchmarks: still no referee</h2>
+        <p>There is no new independent measurement today. The DeepSWE board is still from <strong>Sep 22, 2026</strong>. At the top are gpt-6-astra, gemini-3.8-flash and claude-opus-5 at 74% each, with uncertainties of ± 1 to ± 4.<sup>[1]</sup> Gemini 4 Argon, DeepSeek-V4.1-Flash-1017 and Muse Spark Open are missing there. Their numbers come only from the vendor. That is why there is no chart today.</p>
+        <p>My take: The board is now a month old. Three relevant models are waiting for a measurement. Until then: vendor tables show what the vendor wants to show.</p>
+        <span class="src">[1] <a href="https://deepswe.datacurve.ai/">deepswe.datacurve.ai</a> — independent, “updated September 22, 2026”, last retrieved Oct 20, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief</h2>
+        <ul>
+          <li><strong>Anthropic:</strong> Latest post is still “Investing in the public benefit” from Oct 18. No new coding model since Haiku 5.5 (Oct 7).<sup>[1]</sup></li>
+          <li><strong>GitHub</strong> announced a “package firewall” as a public preview on Oct 20. We did not read the text, only the title.<sup>[2]</sup></li>
+          <li><strong>Simon Willison</strong> showed “Battle Drones” on Oct 20, a real-time strategy game he “vibe-coded” with Claude.<sup>[3]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://www.anthropic.com/news">anthropic.com/news</a> · [2] <a href="https://github.blog/changelog/">github.blog/changelog</a> · [3] <a href="https://simonwillison.net/">simonwillison.net</a> — all retrieved Oct 21, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Mandatory round: quiet in the shadows</h2>
+        <ul>
+          <li><strong>Claude Code</strong> — 2.1.306 (Oct 21), see above.</li>
+          <li><strong>Codex CLI</strong> — stable 0.163.0, 0.164.0-alpha.8 (Oct 20).</li>
+          <li><strong>Cursor</strong> — last entry Oct 16 (Cloud Agent Canvases).</li>
+          <li><strong>Cline</strong> — still CLI v3.0.73, SDK v0.0.95, Desktop v0.0.48 from Oct 17.</li>
+          <li><strong>GitHub Copilot</strong> — deprecations and policy API from Oct 19, nothing new on Copilot itself.</li>
+          <li><strong>OpenHands</strong> — 1.29.0 (Oct 20), see above.</li>
+          <li><strong>Aider</strong> — still v0.86.0 from Aug 9. No new version in over two months.</li>
+          <li><strong>Continue</strong> — still v2.0.0 (stable) and v2.1.0 (pre-release), both from Jun 19. Quiet for four months.</li>
+          <li><strong>Plandex, Devin, Bolt, JetBrains AI</strong> — not checked today.</li>
+        </ul>
+        <p>My take: Aider and Continue are no longer weekly topics but monthly ones. If you use either one day to day, you should know a plan B. Cline and OpenHands are the open harnesses that keep moving. The unchecked tools are a gap in our research, not proof of standstill.</p>
+        <span class="src"><a href="https://cursor.com/changelog">cursor.com/changelog</a> · <a href="https://github.com/cline/cline/releases">github.com/cline/cline/releases</a> · <a href="https://github.com/Aider-AI/aider/releases">github.com/Aider-AI/aider/releases</a> · <a href="https://github.com/continuedev/continue/releases">github.com/continuedev/continue/releases</a> — retrieved Oct 21, 2026 (release pages give no year)</span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Wednesday, October twenty-first. Today is a quiet day. No major lab has shipped a new coding model. The most important news is in the Claude Code release notes.</p>
+  <p>Claude Code two point one point three-oh-five came out on October twentieth. It adds a new sandbox switch for Linux. It lets programs like Chromium or Podman run inside the sandbox. Anthropic itself says this lets them get around the sandbox's file protections. The switch is off until you turn it on.</p>
+  <p>Trickier is a change to the allowlist for MCP servers. Certain servers from the managed configuration are no longer filtered out. A server the allowlist used to block will load after the update. If you don't want it, you have to put it on the deny list. Teams with managed settings should check this today.</p>
+  <p>The same version fixes a bug from the previous one. On Vertex, Bedrock and other providers, every request failed if the gateway rejected tool search. Today, version three-oh-six already followed, with another fix for sessions with many MCP tools.</p>
+  <p>OpenAI now offers a twelve-hour prompt cache in the Responses API. For agents that work throughout the day, that can save money. What the option costs isn't in the changelog. The Codex CLI published two more alpha versions with no notes. Stable remains version zero point one six three.</p>
+  <p>Google's Gemini 4 Argon has been available since October thirteenth. Google gives neither benchmark numbers nor prices on its own page. The model hasn't been independently measured yet.</p>
+  <p>Ollama zero point forty point seven is now stable. It brings a decision model from Perplexity with twenty-seven billion parameters, and a fix for Claude Code with local models. OpenHands one point twenty-nine allows separate settings per agent profile.</p>
+  <p>Aider and Continue stay quiet. Aider has had no new version since August ninth, Continue since June nineteenth. The independent DeepSWE board is still from September twenty-second. That's why there's no chart today.</p>
+  <p>Tomorrow we'll see whether Codex version zero point one six four arrives with notes, and whether anyone measures Gemini 4 Argon independently.</p>
+</div>
+
+</body>
+</html>
