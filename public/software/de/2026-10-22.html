@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-22</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-10-22</span>
+    <span class="dot">·</span>
+    <span>Donnerstag, 22.10.2026 · Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">PHP ist gepatcht, das Embargo ist zerbrochen, und ein Backup-Dienst wird zur Hintertür in Microsoft 365</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Die angekündigten Patches sind da. PHP schließt zwei Lücken, die ohne Anmeldung Code ausführen lassen, und das einen Tag früher als geplant, weil das Embargo gerissen ist. Node.js hat zehn eigene Lücken gefixt, darunter eine im Brotli-Decoder. Die unangenehmere Geschichte kommt aus der Lieferkette: Über ein gestohlenes App-Secret von ConnectWise Cloud Backup kamen Angreifer ohne MFA in mindestens 162 Microsoft-365-Tenants. Dazu eine vergiftete LiteLLM-Version auf PyPI, Oracles Patch-Lawine und Python-Bugfix-Releases.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>PHP</strong>: 8.5.12, 8.4.27, 8.3.36, 8.2.35 fixen zwei RCE-Lücken ohne Anmeldung; „no complete mitigations“. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>ConnectWise Cloud Backup</strong>: gestohlenes App-Secret, ≥ 162 M365-Tenants (Huntress), App-Identitäten seit 17.10. gesperrt, Backups seit 18.10. aus. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Node.js</strong> 22.23.4 / 24.22.1 / 26.12.1: 10 Lücken, 4 High, darunter Brotli-RCE. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>LiteLLM 1.107.0</strong> auf PyPI und Docker mit Infostealer (The Register); sicher ist 1.106.2. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>CISA KEV</strong>: Plex2Shell-Frist morgen, 23.10.; Siemens und SiteGuard brauchen Updates. <span class="chip">USA</span></li>
+      <li><span class="chip">Release</span> <strong>Oracle CPU</strong>: 1295 Patches laut heise; Java-Details offen. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>Python</strong> 3.15.1, 3.14.9, 3.13.17 seit 21.10. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Ledger</strong>: manipulierte Wallets, ≥ 86–102 Mio. US-Dollar weg, laut Cointelegraph bei einem südostasiatischen Händler gekauft; MediaMarkt Saturn stoppte vorsorglich den Verkauf. <span class="chip">DE</span></li>
+      <li><span class="chip">Regulierung</span> <strong>CRA</strong>: Meldepflichten laufen seit 11.09.; PHP2Shell ist ein Testfall. <span class="chip">EU</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Morgen zwei KEV-Fristen, Montag der curl-Wechsel, sonst eine ruhige Woche nach dem Patch-Mittwoch.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Do 22.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Ursprünglich geplanter PHP2Shell-Disclosure-Tag (vorgezogen auf 21.10.)</span><span>Offen: PHP-Backports für 7.4 / 8.0 / 8.1 (ohne Versionsnummern angekündigt)</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Fr 23.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA-KEV-Frist: Plex CVE-2026-96654 / -96656, SiteGuard CVE-2026-106931</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sa 24.10 – So 25.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Keine bestätigten Termine</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mo 26.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>curl: Low-/Medium-Meldungen ab heute öffentlich auf GitHub</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 27.10 – Mi 28.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Keine bestätigten Termine</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PHP2Shell: die Fixes sind da, eine Ausweichlösung nicht <span class="h2-refs">[1][2][3]</span></h2>
+        <p><span class="update-since">Seit gestern</span> PHP hat am 21.10. die Versionen <strong>8.5.12, 8.4.27, 8.3.36 und 8.2.35</strong> veröffentlicht. Sie schließen zwei Lücken, die laut php.net „unauthenticated remote code execution“ erlauben.<sup>[1]</sup> Die Kennungen sind <strong>CVE-2026-109618</strong> (Speicherverwaltung) und <strong>CVE-2026-109619</strong> (Fehlerbehandlung). php.net und heise führen beide mit CVSS 4.0 <span class="stat">9,2</span>.<sup>[1][2]</sup> Der Satz, auf den es ankommt, steht bei php.net: „There are no complete mitigations, updating is the only safe choice.“<sup>[1]</sup></p>
+        <p>Am höchsten schätzt PHP das Risiko für <strong>mod_php</strong> ein. Dort gibt es einen gezeigten Exploit, bei dem eine Anfrage ohne Anmeldung den Angriff auslöst, bevor überhaupt Anwendungscode läuft.<sup>[1]</sup> Laut heise sind alle Versionen seit PHP 5 betroffen; Backports für 7.4, 8.0 und 8.1 sind angekündigt, aber ohne Versionsnummern. Die Entdecker von Calif zeigen in einem Video Befehle auf einem Laravel-Server nach 38 Sekunden. Cloudflare hat WAF-Regeln nachgeschoben.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">mod_php:</strong> PHP läuft dabei als Modul direkt im Apache-Prozess, nicht als eigener Dienst wie bei PHP-FPM. Jede Anfrage landet sofort im PHP-Interpreter. Wie ein Pförtner, der jeden Besucher schon im Treppenhaus in die Werkstatt lässt, bevor der Chef ihn sieht.
+        </div>
+        <p>Wer läuft: Laut heise waren am Nachmittag des 21.10. keine Angriffe in freier Wildbahn bekannt.<sup>[2]</sup> The Register berichtet am 22.10., Chainguard habe auf eigenen Honeypots am Mittwoch Versuche von IP-Adressen aus China und Russland gesehen.<sup>[3]</sup> Versuche sind noch keine erfolgreichen Einbrüche, aber das Fenster schließt sich.</p>
+        <span class="src">[1] <a href="https://www.php.net/">php.net (21.10.)</a> · [2] <a href="https://www.heise.de/news/php2shell-Kritische-Sicherheitsluecken-erlauben-Codeeinschleusung-in-PHP-11492938.html">heise.de (21.10.)</a> · [3] <a href="https://www.theregister.com/security/2026/10/22/php-blames-supply-chain-security-biz-chainguard-for-putting-huge-chunks-of-the-web-at-risk/5304611">theregister.com (22.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Der Streit ums Embargo: PHP Foundation gegen Chainguard <span class="h2-refs">[1]</span></h2>
+        <p>Geplant war die Veröffentlichung für heute, den 22.10. Sie kam einen Tag früher, nachdem Details durchgesickert waren. Die PHP Foundation wirft Chainguard vor, das Embargo am 21.10. um 07:41 UTC „unilaterally“ gebrochen zu haben. Chainguards Dan Lorenc sagt laut The Register, man habe nichts geleakt.<sup>[1]</sup> Wiz, einer der Mitentdecker, sieht die Lücken laut Register bis PHP 5.4 zurück und schätzt, dass rund 70 Prozent der Websites PHP nutzen.<sup>[1]</sup> Gefunden haben Calif, OpenAI und Wiz die Fehler im August und September, alle mit KI-Unterstützung; die Werkzeug-Seite gehört in den ai-dev-Brief.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Embargo:</strong> Eine Absprache, dass alle Beteiligten über eine Lücke schweigen, bis der Fix bereitsteht. Distributionen und Hoster bekommen so Zeit, Pakete vorzubereiten. Wie eine Überraschungsparty: Plaudert einer vorher, steht der Gast vor der Tür, bevor der Kuchen fertig ist.
+        </div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Wer genau geleakt hat, klären wir hier nicht, beide Seiten widersprechen sich. Aber der Schaden ist real: Ein Tag weniger Vorlauf trifft vor allem kleine Hoster und Distributionen, die keine eigene Security-Abteilung haben. Coordinated Disclosure funktioniert nur, solange niemand aus dem Kreis Kapital daraus schlägt, als Erster zu warnen.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/10/22/php-blames-supply-chain-security-biz-chainguard-for-putting-huge-chunks-of-the-web-at-risk/5304611">theregister.com (22.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Node.js: zehn Lücken, eine davon im Brotli-Decoder <span class="h2-refs">[1][2]</span></h2>
+        <p><span class="update-since">Seit gestern</span> Die angekündigten Releases sind raus: <strong>22.23.4, 24.22.1 und 26.12.1</strong>. Sie beheben zehn projekteigene Lücken, vier High, drei Medium, drei Low.<sup>[1][2]</sup> Die vier High-Lücken:</p>
+        <ul>
+          <li><strong>CVE-2026-111497</strong>: Out-of-bounds-Write im Brotli-Decoder, laut Node.js mit möglicher Remote Code Execution.<sup>[1]</sup></li>
+          <li><strong>CVE-2026-105483</strong>: Die TLS-Hostname-Prüfung lässt sich umgehen, wenn die IP in Vollbreiten-Ziffern geschrieben ist (26.x und 24.x).<sup>[1]</sup></li>
+          <li><strong>CVE-2026-106069</strong>: ein zweiter Hostname-Bypass über locker formatierte IP-Adressen.<sup>[1]</sup></li>
+          <li><strong>CVE-2026-105482</strong>: NUL-Zeichen in <code>dns.resolve</code>.<sup>[1]</sup></li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">Brotli:</strong> Ein Kompressionsformat, das Webserver und Browser für HTTP-Antworten nutzen, ähnlich wie gzip. Der Decoder packt die Daten wieder aus. Wie ein Umzugskarton, der beim Auspacken mehr Zeug ausspuckt, als ins Regal passt, und dabei das Nachbarregal überschreibt.
+        </div>
+        <p>Unsere Sicht: Brotli ist der Treffer, der zählt. Jeder Dienst, der komprimierte Antworten von fremden Servern entpackt, etwa ein Proxy oder ein Scraper, nimmt Daten von außen an. Die beiden Hostname-Bugs treffen Clients, die mit IP-Adressen statt Namen verbinden. Ob das Release auch den eMudhra-Rauswurf aus dem CA-Speicher enthält, steht nicht in unseren Quellen.</p>
+        <span class="src">[1] <a href="https://nodejs.org/en/blog/vulnerability/october-2026-security-releases">nodejs.org (21.10.)</a> · [2] <a href="https://www.heise.de/news/Node-js-fixt-eigene-und-geerbte-Sicherheitsluecken-11495996.html">heise.de (21.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>eMudhra: was sich seit gestern tut <span class="h2-refs">[1][2]</span></h2>
+        <p><span class="update-since">Seit gestern</span> Neu für die Chronik: Gemeldet wurde der Vorfall laut heise am 17.10. gegen 18 Uhr deutscher Zeit, Mozillas OneCRL-Sperre kam rund drei Stunden später. Mozilla hat die Wurzeln am 20.10. entfernt.<sup>[2]</sup> Für Go bleibt <strong>CVE-2026-111943</strong> mit 1.27.3 und 1.26.10 der Fix, Firefox ist auf 158.0.1.<sup>[1]</sup> Neue Stände für Debian <code>ca-certificates</code> und Bun haben wir heute nicht geprüft. Das Risiko für Endnutzer bleibt laut heise gering, weil ein Angreifer zusätzlich DNS oder Routing kontrollieren muss.<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/mozilla-google-apple-block-compromised-emudhra-ca-certificates/">bleepingcomputer.com (20.10.)</a> · [2] <a href="https://www.heise.de/news/Vorfall-bei-Zertifizierungsstelle-eMudhra-Acht-CA-Zertifikate-kompromittiert-11494412.html">heise.de (20.10.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>ConnectWise Cloud Backup: ein Secret, 162 Tenants, keine MFA <span class="h2-refs">[1][2]</span></h2>
+        <p>Angreifer haben ein App-Secret von <strong>ConnectWise Cloud Backup</strong> gestohlen und sich damit in Microsoft-365-Tenants der Kunden angemeldet. MFA hat das nicht gebremst, denn eine App meldet sich mit ihrem Secret an, nicht mit einem Nutzerkonto. Huntress zählt laut BleepingComputer „at least 162 compromised tenants“ in der eigenen Umgebung; die Aktivität kam von einer einzigen IP.<sup>[1]</sup> heise spricht von „Hunderten“ Tenants.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">App-Secret (Service Principal):</strong> Ein Passwort, mit dem sich nicht ein Mensch, sondern ein Programm bei Microsoft 365 anmeldet, etwa ein Backup-Dienst. Es bekommt dauerhaft Rechte, die ein Admin einmal erteilt hat. Wie ein Generalschlüssel für den Hausmeisterdienst: Wer ihn klaut, braucht keinen Fingerabdruck an der Tür.
+        </div>
+        <p>ConnectWise hat am 17.10. sieben App-Identitäten deaktiviert. Seit dem 18.10. laufen keine Backups, SaaS Security und Cloud Management sind offline, ein Termin für die Wiederherstellung fehlt. ConnectWise schreibt: „We have no indicators to date that Cloud Backup partner backup data has been compromised.“<sup>[1]</sup> Laut Microsoft nutzten die Angreifer bestehende Rechte, darunter <code>Directory.ReadWrite.All</code>.<sup>[1]</sup></p>
+        <div class="callout warn"><span class="callout-label">Achtung</span> Der Haken für Admins steht im Kleingedruckten: Laut BleepingComputer beendet das Deaktivieren der App bereits ausgestellte Tokens nicht, und das Widerrufen von Nutzer-Sessions beendet keinen App-Zugriff (Hinweis von Todyl).<sup>[1]</sup> Wer ConnectWise Cloud Backup nutzt, prüft deshalb die Anmelde-Logs der Service Principals und die Rechte aller Drittanbieter-Apps, nicht nur die Nutzerkonten.</div>
+        <p>Unsere Sicht: Das ist das Muster, vor dem man seit Jahren warnt. Backup-Dienste brauchen weite Leserechte, oft auch Schreibrechte, und genau deshalb sind sie das wertvollste Ziel im Tenant. Eine App mit <code>Directory.ReadWrite.All</code> ist kein Backup-Tool mehr, sondern ein zweiter Global Admin.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-breach-microsoft-365-tenants-via-connectwise-supply-chain-attack/">bleepingcomputer.com (17./18.10.)</a> · [2] <a href="https://www.heise.de/security/">heise.de (21.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>LiteLLM 1.107.0: vergiftetes Release auf PyPI und Docker <span class="h2-refs">[1]</span></h2>
+        <p>Laut The Register enthielt <strong>LiteLLM 1.107.0</strong> auf PyPI und im Docker-Image <code>litellm/litellm:1.107.0</code> Schadcode, ebenso die Tags <code>latest</code>, <code>main-latest</code> und <code>main-stable</code>. Hochgeladen wurde die Version am 21.10. um 11:39 UTC; die letzte saubere Version ist <strong>1.106.2</strong>.<sup>[1]</sup> Das Paket brachte einen Infostealer (<code>cook.py</code>) und über <code>sitecustomize.py</code> einen Fernzugriff, der stündlich beim Angreifer nachfragt. Die Register-Warnung: „anyone who ran the compromised package on any platform should assume their secrets have been stolen.“<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">.pth / sitecustomize.py:</strong> Python liest diese Dateien bei jedem Start automatisch ein, noch bevor das eigentliche Programm läuft. Wer dort Code ablegt, läuft bei jedem <code>python</code>-Aufruf mit. Wie ein Zettel im Briefkasten, den der Postbote jeden Morgen zuerst vorliest.
+        </div>
+        <p>Wichtig zur Einordnung: Für diesen Vorfall haben wir nur eine Quelle, The Register; ein Advisory des Projekts haben wir nicht gesehen. Laut Register lief ein Teil über eine Typosquat-Organisation <code>Berri-AI</code> statt <code>BerriAI</code>. Als Spuren nennt der Bericht <code>/tmp/.pc_once_*</code> und <code>/tmp/remote_code_loader.lock</code>.<sup>[1]</sup> LiteLLM ist ein Gateway für KI-Modelle; die Modellseite gehört in den ai-dev-Brief, hier zählt die Lieferkette.</p>
+        <p>Unsere Sicht: Wer Container mit dem Tag <code>latest</code> zieht, hat die Wahl der Version an einen Fremden abgegeben. Images per Digest pinnen und PyPI-Abhängigkeiten mit Hashes sperren kostet wenig und hätte hier den Unterschied gemacht.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/10/21/litellm-supply-chain-attack-hoovers-up-passwords-and-secrets/5304548">theregister.com (21.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: Plex2Shell-Frist läuft morgen ab <span class="h2-refs">[1][2]</span></h2>
+        <p><span class="update-since">Seit gestern</span> Die Plex-Kette hat jetzt einen Namen: <strong>Plex2Shell</strong>, vier Lücken (CVE-2026-96652, -96654, -96655, -96656). Der Forscher bewertet die Kette mit 9,8. Der Fix steckt in Plex Media Server <strong>1.43.3.10861</strong>, laut BleepingComputer schon am 04.08. erschienen.<sup>[2]</sup> Die CISA-Frist für -96654 und -96656 ist <strong>morgen, 23.10.</strong>, für die anderen beiden der 03.11.<sup>[1]</sup></p>
+        <ul>
+          <li><strong>Siemens Software Center</strong> (CVE-2026-110936, Frist 03.11.): Update auf 4.0.9.8 oder neuer; laut BleepingComputer im Umfeld der „Romulus“-ClickFix-Kampagnen.<sup>[2]</sup></li>
+          <li><strong>SiteGuard Server Edition</strong> (CVE-2026-106931, Frist 23.10.): Fix in 8.00 Update 5 und 7.00 Update 6.<sup>[2]</sup></li>
+        </ul>
+        <p>Plex war seit August gepatcht und wird trotzdem ausgenutzt. Das sagt viel über Homeserver: Sie laufen, bis jemand sie vergisst. Automatische Updates für Plex einschalten ist hier die eigentliche Lösung.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov (22.10.)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/cisa-hackers-chain-plex-flaws-in-plex2shell-attacks-to-breach-servers/">bleepingcomputer.com (21.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Signal: Auflegen beendet den Anruf nicht immer <span class="h2-refs">[1]</span></h2>
+        <p>Laut The Register steckte in Signals Anruf-Bibliothek <strong>RingRTC</strong> eine Lücke, <strong>CVE-2026-113380</strong>, CVSS 9,3. Betroffen ist „every single version before 2.72.0“. Nach dem Auflegen konnte der Anruf weiterlaufen, Mikrofon und Kamera blieben aktiv. Der Fix kam schon im September; in der KEV-Liste steht die Lücke nicht.<sup>[1]</sup> Wer Signal aktuell hält, ist sicher. Für alle, die RingRTC in eigenen Apps einbetten, lohnt der Blick auf die Version.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/10/21/signal-bug-could-keep-your-mic-and-camera-on-after-hangup/5304528">theregister.com (21.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Ledger: verwanzte Wallets über einen Händler <span class="h2-refs">[1]</span></h2>
+        <p>Laut heise wurden zwischen dem 9. und 13.10. rund <span class="stat">86 bis 102 Mio. US-Dollar</span> aus manipulierten Hardware-Wallets abgezogen (Angaben je nach Quelle). Bitquery zählt 324 betroffene Wallets. Laut Cointelegraph betrifft das Geräte des südostasiatischen Händlers CryptoBilis; MediaMarkt Saturn setzte den Verkauf vorsorglich aus, Verluste mit dessen Geräten sind nicht gemeldet. Ein eingebautes eSIM-Modem schickte die Seed-Phrase nach außen.<sup>[1]</sup> Ledger sagt: „Das war kein systemischer Angriff auf die Lieferkette, sondern ein lokaler Angriff auf die Distribution.“<sup>[1]</sup> <span class="chip">DE</span></p>
+        <p>Unsere Sicht: Für den Kunden ist das ein Wortspiel. Die Lehre für Hardware-Hersteller ist dieselbe wie bei Software: Ohne prüfbare Echtheit beim Auspacken ist jede Station zwischen Fabrik und Kunde Teil der Lieferkette.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Verwanzte-Wallets-Hersteller-Ledger-sieht-Angriff-auf-die-ganze-Branche-11490092.html">heise.de (16.10.)</a></span>
+        <span class="src">[2] <a href="https://cointelegraph.com/news/mediamarkt-pulls-ledger-wallet-security-incident">Cointelegraph</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Oracle: 1295 Patches, Java bleibt eine Lücke im Bericht <span class="h2-refs">[1][2]</span></h2>
+        <p>Oracles Critical Patch Update vom 20.10. bringt laut heise <span class="stat">1295</span> Sicherheitspatches.<sup>[1]</sup> Die Vorab-Ankündigung von Oracle nannte 1283; wir halten das für die Differenz zwischen Vorschau und finaler Liste, prüfen konnten wir es nicht, denn oracle.com blockte den Abruf.<sup>[2]</sup> Als kritisch nennt heise Lücken in der Datenbank (über OpenSSL), in WebLogic, Solaris und im MySQL Server. VirtualBox steht laut Download-Seite auf 7.2.22; der Updater in der App zeigt laut heise noch 7.2.20.<sup>[1]</sup></p>
+        <p>Für Daniels Stack fehlt das Wichtigste: Welche JDK-Builds der Oktober-CPU gebracht hat, haben wir weiter nicht aus einer Primärquelle. Wir nennen deshalb keine Java-Versionen. Wer Oracle JDK oder WebLogic betreibt, liest das Advisory selbst.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Patchday-bei-Oracle-1295-Sicherheitspatches-quer-durch-die-Bank-11495244.html">heise.de (21.10.)</a> · [2] <a href="https://www.oracle.com/security-alerts/cpuoct2026.html">oracle.com (Vorab-Ankündigung)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Python: drei Bugfix-Releases an einem Tag <span class="h2-refs">[1]</span></h2>
+        <p>Am 21.10. erschienen <strong>Python 3.15.1, 3.14.9 und 3.13.17</strong>.<sup>[1]</sup> 3.15.1 ist das erste Bugfix-Release nach dem 3.15.0-Final. Python 3.10 hat mit 3.10.22 am 01.10. sein Lebensende erreicht.<sup>[1]</sup> Unsere Sicht: Wer mit 3.15 noch gewartet hat, hat jetzt den üblichen Grund, einzusteigen. Und wer noch 3.10-Images baut, baut ab jetzt ohne Sicherheitsnetz.</p>
+        <span class="src">[1] <a href="https://www.python.org/downloads/">python.org (22.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: PHP2Shell als erster echter Testfall <span class="h2-refs">[1]</span></h2>
+        <p>Seit dem <strong>11.09.2026</strong> gelten die Meldepflichten aus Artikel 14 des Cyber Resilience Act: eine Frühwarnung binnen 24 Stunden, eine Meldung binnen 72 Stunden, wenn eine Lücke in einem eigenen Produkt aktiv ausgenutzt wird. Der Rest des CRA gilt ab dem 11.12.2027. Die Kommission hat dazu am 27.07. einen Leitfaden mit mehr als 80 Seiten veröffentlicht.<sup>[1]</sup> Wohin die Meldung genau geht, beschreiben die Quellen unterschiedlich. <span class="chip">EU</span></p>
+        <div class="eli5">
+          <strong class="eli5-term">Cyber Resilience Act (CRA):</strong> Ein EU-Gesetz, das Hersteller von Produkten mit Software für deren Sicherheit verantwortlich macht, über die ganze Lebenszeit. Ein Teil davon sind Meldefristen bei Angriffen. Wie beim Autohersteller, der einen Rückruf melden muss, sobald er von einem gefährlichen Defekt weiß.
+        </div>
+        <p>Unsere Sicht: Wer ein Produkt mit eingebautem PHP oder LiteLLM in der EU verkauft, sollte jetzt prüfen, ob die Uhr schon läuft. Bei PHP2Shell gibt es Versuche auf Honeypots, aber noch keine bestätigten Einbrüche. Bei LiteLLM ist das Release selbst der Angriff. Eine Rechtsauskunft ist das nicht; die Frage gehört heute auf den Tisch, nicht erst nach dem ersten Kundenvorfall.</p>
+        <span class="src">[1] <a href="https://www.jonesday.com/en/insights/2026/07/eu-cyber-resilience-act-24hour-reporting-duties-start-september-11-2026">jonesday.com (07/2026)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>OSS: ein Viertel der Pull Requests ist Ballast <span class="h2-refs">[1]</span></h2>
+        <p>Eine Umfrage der Linux Foundation, über die The Register berichtet: Rund 25 Prozent der eingehenden Pull Requests sind von geringer Qualität, bei großen Projekten 31 Prozent. Nur 35 Prozent der Projekte haben eine Richtlinie für generative KI.<sup>[1]</sup> <span class="chip good">OSS</span> Das passt zu curl, das ab Montag kleine Meldungen öffentlich behandelt. Unsere Sicht: Eine Projekt-Richtlinie zu KI-Beiträgen ist kein Bürokratie-Luxus mehr, sondern Selbstschutz der Maintainer. Die Zahlen zur Zeitersparnis beim Coding stehen im ai-dev-Brief.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/ai-and-ml/2026/10/21/ai-cuts-coding-time-but-its-also-filling-open-sources-inbox-with-crap/5304389">theregister.com (21.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Infra: ein VPS-Anbieter macht komplett dicht <span class="h2-refs">[1][2]</span></h2>
+        <p>Beim japanischen Anbieter <strong>Onamae Desktop Cloud</strong> sind laut BleepingComputer bis zu 26.739 Kundenserver mit Malware befallen. Seit dem 21.10. um 04:00 JST sind alle Desktop-Cloud-Tarife abgeschaltet; wie die Angreifer reinkamen, ist unbekannt.<sup>[1]</sup> Und CISA und FBI melden, die Ransomware-Gruppe <strong>SafePay</strong> habe seit 2024 mehr als 600 Organisationen der kritischen Infrastruktur getroffen.<sup>[2]</sup> Ein ganzer Anbieter, der den Stecker zieht, ist der Grund, warum Backups woanders liegen sollten als die Server.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/japans-onamae-desktop-cloud-hacked-up-to-27-000-servers-affected/">bleepingcomputer.com (21.10.)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/cisa-and-fbi-safepay-ransomware-has-hit-over-600-critical-infrastructure-organizations/">bleepingcomputer.com (21.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Stack-Check: Angular, Caddy, Spring <span class="h2-refs">[1][2][3]</span></h2>
+        <ul>
+          <li><strong>Angular 22.2.3</strong> ist seit 14.10. das aktuelle Release, 22.3.0-next.2 läuft als Vorschau, 20.3.34 pflegt die alte Linie.<sup>[1]</sup></li>
+          <li><strong>Caddy</strong> (nachgereicht): 2.11.6 vom 01.10. braucht mindestens Go 1.26 und begrenzt Request-Header standardmäßig auf 16 KiB. Dazu kommen Idle-Timeouts gegen Slowloris und ein Sicherheitsfix, bei dem <code>forward_auth</code>/<code>reverse_proxy</code> den falschen Upstream treffen konnten. Aktuell ist 2.11.7 vom 03.10.<sup>[2]</sup> Wer große Cookies oder JWTs im Header schickt, testet das Limit vor dem Update.</li>
+          <li><strong>Spring</strong>: Im Wochenrückblick vom 20.10. geht es um den SSRF-Schutz in Spring Boot 4.1; neue Versionen oder CVEs haben wir nicht gefunden.<sup>[3]</sup></li>
+          <li>Docker, containerd, Tailscale, Postgres und Quarkus haben wir heute nicht geprüft.</li>
+        </ul>
+        <span class="src">[1] <a href="https://github.com/angular/angular/releases">github.com/angular (22.10.)</a> · [2] <a href="https://github.com/caddyserver/caddy/releases">github.com/caddyserver (22.10.)</a> · [3] <a href="https://spring.io/blog">spring.io (20.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert <span class="h2-refs">[1][2]</span></h2>
+        <ul>
+          <li><strong>Lazarus</strong> nutzt laut BleepingComputer Post-Quanten-Kryptografie, um Schadcode auszuliefern (21.10.).<sup>[1]</sup></li>
+          <li><strong>Pi-hole</strong>: Ein Update schließt unter anderem eine Command-Injection (20.10.).<sup>[1][2]</sup></li>
+          <li><strong>PowerToys 0.102</strong> ist erschienen (21.10.).<sup>[2]</sup></li>
+          <li><strong>Brasilien:</strong> Auch heute keine belastbare, datierte Tech-Meldung; tecnoblog war nicht abrufbar. <span class="chip">BR</span></li>
+        </ul>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (21.10.)</a> · [2] <a href="https://www.heise.de/security/">heise.de (21.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Was dieser Donnerstag zwanzig Minuten wert ist</h2>
+        <ul>
+          <li><strong>PHP:</strong> Auf 8.5.12, 8.4.27, 8.3.36 oder 8.2.35 heben; Images neu bauen. mod_php zuerst.</li>
+          <li><strong>Node.js:</strong> Auf 22.23.4, 24.22.1 oder 26.12.1 bauen.</li>
+          <li><strong>LiteLLM im Einsatz?</strong> Auf 1.106.2 pinnen; nach den <code>/tmp</code>-Spuren suchen; bei Treffer alle Secrets rotieren.</li>
+          <li><strong>M365 mit Drittanbieter-Backup?</strong> Rechte und Anmelde-Logs der Service Principals prüfen.</li>
+          <li><strong>Plex am Homeserver?</strong> Version 1.43.3.10861 oder neuer, automatische Updates an.</li>
+          <li><strong>Caddy-Update geplant?</strong> Das 16-KiB-Header-Limit vorher testen.</li>
+        </ul>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Donnerstag, der zweiundzwanzigste Oktober. Die angekündigten Patches sind da, und die interessanteren Geschichten spielen sich daneben ab.</p>
+  <p>Zuerst PHP. Die Versionen acht Komma fünf Komma zwölf, acht Komma vier Komma siebenundzwanzig, acht Komma drei Komma sechsunddreißig und acht Komma zwei Komma fünfunddreißig schließen zwei Lücken, über die ein Angreifer ohne Anmeldung Code ausführen kann. heise bewertet beide mit neun Komma zwei von zehn. Eine vollständige Ausweichlösung gibt es laut PHP nicht, nur das Update. Am stärksten betroffen ist mod_php unter Apache.</p>
+  <p>Die Veröffentlichung kam einen Tag früher als geplant. Die PHP Foundation wirft der Firma Chainguard vor, das Embargo gebrochen zu haben, Chainguard bestreitet das. Laut The Register sah Chainguard am Mittwoch schon Angriffsversuche auf Honeypots.</p>
+  <p>Node.js hat zehn eigene Lücken gefixt, vier davon hoch, darunter ein Fehler im Brotli-Decoder, der Code von außen ausführen könnte.</p>
+  <p>Die unangenehmste Geschichte: Angreifer haben ein App-Geheimnis von ConnectWise Cloud Backup gestohlen und kamen damit ohne Mehr-Faktor-Anmeldung in mindestens hundertzweiundsechzig Microsoft-365-Umgebungen. Wichtig für Admins: Die App abzuschalten beendet bereits ausgegebene Zugänge nicht.</p>
+  <p>Dazu meldet The Register eine vergiftete Version der Python-Bibliothek LiteLLM auf PyPI und Docker. Wer Version eins Komma hundertsieben Komma null ausgeführt hat, soll seine Geheimnisse als gestohlen betrachten. Für diesen Fall haben wir nur diese eine Quelle.</p>
+  <p>Außerdem: Die CISA-Frist für die Plex-Lücken läuft morgen ab. Oracle bringt laut heise zwölfhundertfünfundneunzig Patches, die Java-Details fehlen uns noch. Python hat drei Bugfix-Releases veröffentlicht. Und manipulierte Ledger-Wallets eines Händlers in Südostasien haben je nach Quelle sechsundachtzig bis hundertzwei Millionen Dollar Schaden verursacht.</p>
+  <p>Morgen schauen wir, ob PHP die Backports für die alten Versionen liefert und ob ConnectWise wieder Backups fährt.</p>
+</div>
+
+</body>
+</html>

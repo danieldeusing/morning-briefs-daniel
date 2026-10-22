@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-10-22</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-22</span>
+  </div>
+
+  <h1 class="masthead-title">Claude Code stops sending MCP calls twice, and Ollama brings a fast coding model</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Once again, no major lab ships a new coding model today. The biggest news is a fix in Claude Code 2.1.307: when a connection dropped, HTTP MCP calls could run twice. For tools that write something, that is a real bug, not a cosmetic one. There is also a new OpenTelemetry event that reports every blocked tool call. On the local side, Flint in Ollama 0.40.8 is a coding model with only about 2.5 billion active parameters. So far, though, there is only one source and no benchmark number. For OpenAI, we now know what the 12-hour cache costs.</p>
+    <ul>
+      <li><span class="chip hot">Claude</span> <strong>Claude Code 2.1.307</strong> (Oct 21): HTTP MCP calls ran twice when the connection dropped. Now Claude Code retries only read-only or idempotent tools.</li>
+      <li><span class="chip good">Claude</span> New OTel event <code>claude_code.safety_event</code> for every tool call that was stopped, prompted or sent back.</li>
+      <li><span class="chip">Claude</span> <code>/claude-api api-version</code> moves API code to version <code>2026-10-21</code>. <strong>2.1.308</strong> (Oct 22) brings only fixes.</li>
+      <li><span class="chip good">Local</span> <strong>Ollama 0.40.8</strong>: <code>ollama run flint</code>, a 40B MoE coding model from Recursive, Apache 2.0, macOS only for now.</li>
+      <li><span class="chip">OpenAI</span> <strong>12-hour cache</strong>: writing to the cache costs 2.5 times the input price.</li>
+      <li><span class="chip">OpenAI</span> <strong>Codex CLI</strong> has reached 0.164.0-alpha.11, still without notes.</li>
+      <li><span class="chip">Bench</span> Two SWE-bench Verified aggregators disagree on the top spot. Their shared values match, though.</li>
+      <li><span class="chip">OSS</span> <strong>OpenHands 1.30.0</strong> (Oct 22), two days after 1.29.0.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">The last seven days</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Fri 10/16</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cursor: Cloud Agent Canvases</span>
+          <span>OpenAI: Ultrafast mode in the Agents API</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 10/17</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Quiet</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun 10/18</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Ollama 0.40.7</span>
+          <span>Anthropic: “Investing in the public benefit”</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 10/19</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.304</span>
+          <span>Copilot: model policy API</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 10/20</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.305</span>
+          <span>OpenAI: 12 h prompt caching</span>
+          <span>OpenHands 1.29.0</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Wed 10/21</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.306 + 2.1.307</span>
+          <span>Ollama 0.40.8 with Flint</span>
+          <span>OpenAI: service tiers per project</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Thu 10/22</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today · Claude Code 2.1.308</span>
+          <span>OpenHands 1.30.0</span>
+          <span>Codex 0.164.0-alpha.11</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Claude Code 2.1.307: MCP calls no longer run twice</h2>
+        <p>Claude Code 2.1.307 arrived on <strong>Oct 21</strong>, 2.1.308 on <strong>Oct 22</strong>.<sup>[1]</sup> The only note for 2.1.308 is “Bug fixes and reliability improvements”. The substance is in 2.1.307, and there one fix matters more than it sounds.</p>
+        <p>The note reads: “Fixed HTTP MCP tool calls being sent twice when the connection closed mid-call; only read-only or idempotent tools are now retried”.<sup>[1]</sup> So until now, a tool call could reach the server twice if the connection dropped in the middle of the call. For a read-only tool, that does not matter. For a tool that creates a ticket, sends a message or writes to a database, it means the action may have run twice.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Idempotent:</strong> An operation is idempotent if running it twice gives the same result as running it once. “Set the status to done” is idempotent. “Create a new ticket” is not: running it twice gives two tickets. It is like the elevator button. Pressing it twice still calls the elevator only once. With a bank transfer, on the other hand, you do not want to press “Send” twice.
+        </div>
+        <p>A second MCP fix concerns machines that go to sleep. MCP servers were treated as “timed out” and stayed down in headless runs if macOS or Linux went to sleep while the connection was being set up.<sup>[1]</sup> That hits exactly the people who let agents run overnight.</p>
+        <p>My take: the double call is the fix of the week. It points to a problem every agent harness has: an agent retries calls automatically, but only the server knows whether a retry is safe. The note does not say how Claude Code tells whether a tool is read-only or idempotent. It probably uses hints the MCP server provides itself. We did not check that. If you run your own HTTP MCP server with write tools, check your logs from the last few weeks for duplicate actions. Also build write tools so that a retry breaks nothing, for example with a request ID.</p>
+        <p><span class="chip good">Try it</span> Protect write tools in your own MCP server with an idempotency key. That protects you no matter which client retries.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code/releases</a> — primary source, retrieved Oct 22, 2026 (page gives day and month, no year and no time zone)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>An event for every stopped tool call</h2>
+        <p>Also new in 2.1.307 is the OpenTelemetry event <code>claude_code.safety_event</code>. According to the note, it fires “for each tool call a permission rule, auto mode, a safety check, a hook or the sandbox stopped, prompted or sent back”.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">OpenTelemetry (OTel):</strong> An open standard that programs use to report what they are doing. The reports land in a tool like Grafana, Honeycomb or Datadog. There you can count them, filter them and build alerts. It is like a tachograph in a truck: it records, and someone else analyzes the data later.
+        </div>
+        <p>My take: this is more useful for teams than for you alone. Until now you mostly saw what the agent did. Now you also see what it tried and what was stopped. Many stopped calls in one repo usually mean the rules do not fit the work. Then the agent asks too often, and people just click “Yes”. The new event makes that pattern measurable. Together with <code>/auto-mode-setup</code> from 2.1.304, you get a loop: set up rules, measure stops, tighten the rules.<sup>[1]</sup></p>
+        <p><span class="chip good">Try it</span> If you already have OTel on for Claude Code: watch the <code>safety_event</code> counts per repo for a week before you change the rules.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code/releases</a> — primary source, retrieved Oct 22, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Claude Code: what else mattered this week</h2>
+        <ul>
+          <li><strong>API version 2026-10-21:</strong> <code>/claude-api api-version</code> (2.1.307) moves code that uses the Claude API to version <code>2026-10-21</code>.<sup>[1]</sup> We did not check what changes in this version. Run the command in a separate branch and read the diff.</li>
+          <li><strong>Worktree fix (2.1.304, Oct 19):</strong> on exit, <code>claude --worktree</code> deleted the worktree and branch without asking if HEAD was detached or on a different branch. According to the note, it “could lose commits”.<sup>[1]</sup> If you work with worktrees and are still on an older version, update.</li>
+          <li><strong>2.1.306 (Oct 21):</strong> in sessions with many MCP tools, an API error showed up as “prompt is too long” and triggered an unnecessary compaction. This is fixed.<sup>[1]</sup></li>
+          <li><strong>Reminder on 2.1.305 (Oct 20):</strong> according to Anthropic, the sandbox switch <code>sandbox.allowNestedUserNamespaces</code> bypasses the file protections. And <code>allowedMcpServers</code> no longer filters certain <code>managed-mcp.json</code> servers; a server that was previously left out loads after the update. <code>deniedMcpServers</code> helps against that.<sup>[1]</sup> Details are in yesterday's issue.</li>
+        </ul>
+        <p>My take: five versions in four days. Two of them fix bugs that could cost work: lost commits and duplicate actions. Both fixes are stated openly in the notes. That is good. But it also means that anyone using Claude Code in production should actually read the notes and not just update.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code/releases</a> — primary source, retrieved Oct 22, 2026</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Local: Flint, a coding model with 2.5 billion active parameters</h2>
+        <p>Ollama <strong>v0.40.8</strong> from <strong>Oct 21</strong> is the current version. The note begins with “Flint brings Recursive's coding model to Ollama”.<sup>[1]</sup> According to the release page, Flint is a mixture-of-experts model with 40 billion parameters, of which about 2.5 billion are active per token. The license is Apache 2.0, and the context window is 262K tokens. Start it with <code>ollama run flint</code>. For now it runs only on macOS; other GPUs are to follow later.<sup>[1]</sup> On Oct 22, 0.40.9-rc1 already arrived with a llama.cpp update.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Mixture of Experts (MoE):</strong> The model consists of many small specialist parts, the “experts”. For each word, a router picks only a few of them. So the model computes with 2.5 billion parameters per word, not 40 billion. That makes it fast. But all 40 billion still have to sit in memory. It is like a big clinic: you talk to only two doctors, but the building must have room for all of them.
+        </div>
+        <p>My take: the combination is interesting. Few active parameters mean fast answers on a Mac. An open Apache model with 262K context fits agents that read a lot of repo. But there are two caveats. First, we have only one source: the Ollama release page. We found nothing independent on Recursive as the maker. Second, the note gives no benchmark number. So how well Flint writes code is open. As a rough estimate, 40 billion parameters at 4-bit quantization need about 20 GB of memory, plus room for the context. That is our estimate, not a figure from Ollama.</p>
+        <p><span class="chip good">Try it</span> If you have a Mac with 32 GB or more: test Flint against your current local model on a real task from your repo. Watch the speed and whether tool calls come out cleanly.</p>
+        <span class="src">[1] <a href="https://github.com/ollama/ollama/releases/tag/v0.40.8">github.com/ollama/ollama/releases</a> — primary source for the Ollama version; model details not independently confirmed; retrieved Oct 22, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>OpenAI: the long cache now has a price</h2>
+        <div class="update-since"><strong>Update since yesterday:</strong> Yesterday we wrote that the price for the 12-hour cache was missing from the changelog. Now it is available.</div>
+        <p>Since <strong>Oct 20</strong>, the API offers 12-hour prompt caching: “You can now choose 12-hour prompt caching in the API.” According to the changelog, writing to this cache costs <strong>2.5 times</strong> the normal input price.<sup>[1]</sup> On <strong>Oct 21</strong> came another item: “You can now choose which service tiers projects can use in Platform settings.”<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Cache write vs. cache read:</strong> The first time, the provider stores the long beginning of your request. That storing is the “write”, and here it costs more than normal. Every later request with the same beginning “reads” from the cache, and that is cheaper. It pays off only if you read often enough to make up for the expensive first step.
+        </div>
+        <p>My take: the factor of 2.5 makes the math honest. For an agent that works on the same repo all day, it probably pays off. For a short job with few requests, probably not. We did not check the price for cached reads, so we cannot name a break-even point. The per-project service tiers are the practical half: you can simply forbid expensive tiers for a test project.</p>
+        <p><span class="chip good">Try it</span> In the Platform settings, allow only the cheap service tiers for experiment projects.</p>
+        <span class="src">[1] <a href="https://developers.openai.com/api/docs/changelog">developers.openai.com/api/docs/changelog</a> — primary source, retrieved Oct 22, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Codex CLI: alpha.11, still without notes</h2>
+        <p>The Codex CLI published 0.164.0-alpha.10 and alpha.11 on <strong>Oct 22</strong>. On <strong>Oct 21</strong>, a 0.163.0-alpha.11.1 came as well. All are marked as pre-release and are titled only “Release …”, with no text.<sup>[1]</sup> Among the five newest entries, none is marked “Latest”.</p>
+        <p>My take: eleven alphas for one version, plus an alpha on the 0.163 line. That looks like a big change plus a touch-up on the old line. But that is interpretation, not information. Without notes, yesterday's advice stands: do not switch to an alpha until a release with text arrives.</p>
+        <span class="src">[1] <a href="https://github.com/openai/codex/releases">github.com/openai/codex/releases</a> — primary source, retrieved Oct 22, 2026</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Benchmarks: two leaderboards, two winners</h2>
+        <p>For SWE-bench Verified, we read two aggregators. <strong>llm-stats.com</strong> (as of Oct 22, 2026) puts Claude Fable 5 in the lead at 95.0%. Behind it come Mythos Preview at 93.9% and Fireworks' Ember-1 at 92.2%.<sup>[1]</sup> <strong>benchlm.ai</strong> (as of Oct 20, 2026) puts Claude Opus 5 first at 96%, then Mythos 5 at 95.5% and Fable 5 at 95%.<sup>[2]</sup></p>
+        <p>Where both list the same model, the values match: Fable 5 95%, Ember-1 92.2%, Opus 4.8 88.6%, Opus 4.7 87.6%.<sup>[1][2]</sup> The difference lies in which models are listed at all. Opus 5 and Mythos 5 appear only on benchlm.ai. We did not read the official site swebench.com; it loads its table via JavaScript.</p>
+        <div class="eli5">
+          <strong class="eli5-term">SWE-bench Verified:</strong> A collection of real GitHub bugs from Python projects, checked by humans. The agent gets the bug and the repo and must write a fix that passes the tests. The percentage says how many bugs it solves. What is measured is always model plus harness, not the model alone.
+        </div>
+        <p>My take: at 95%, this test is nearly full. Half a percentage point between Opus 5 and Mythos 5 then says little about your daily work. The tasks have been public for years, and the risk that models saw them in training keeps growing. According to its own page, BenchLM does not include Verified in its weighted overall score. I think that is right. That is why there is no chart today: two aggregators that disagree, on a nearly full test, are not evidence of a leap.</p>
+        <span class="src">[1] <a href="https://llm-stats.com/benchmarks/swe-bench-verified">llm-stats.com</a> — aggregator, “Last updated October 22, 2026” · [2] <a href="https://benchlm.ai/benchmarks/sweVerified">benchlm.ai</a> — aggregator, as of Oct 20, 2026 — both retrieved Oct 22, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief</h2>
+        <ul>
+          <li><strong>OpenHands 1.30.0</strong> arrived on Oct 22, two days after 1.29.0. 1.29.0 said: “agent-profiles: launch `default` by id; profiles own their settings”. We did not review the notes for 1.30.0.<sup>[1]</sup></li>
+          <li><strong>Anthropic:</strong> the newest post (Oct 21) concerns the Long-Term Benefit Trust, not a coding topic. There is no new coding model.<sup>[2]</sup></li>
+          <li><strong>Simon Willison</strong> points on Oct 19, under “My obituary for programming”, to a text by Jeremy Scheff about coding agents. On Oct 20 he showed “Battle Drones”, a game he built with Claude: “I got there by telling Claude to 'Make it a LOT more fun'.”<sup>[3]</sup></li>
+          <li><strong>GitHub</strong> shipped a “Copilot model policy API for enterprise, orgs, and teams” on Oct 19. The package firewall from Oct 20 is a topic for the software briefing.<sup>[4]</sup></li>
+          <li><strong>Hugging Face:</strong> the trends for “coder” show community fine-tunes based on Qwen3.8, not an official lab release.<sup>[5]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://github.com/All-Hands-AI/OpenHands/releases">github.com/All-Hands-AI/OpenHands/releases</a> · [2] <a href="https://www.anthropic.com/news">anthropic.com/news</a> · [3] <a href="https://simonwillison.net/">simonwillison.net</a> · [4] <a href="https://github.blog/changelog/">github.blog/changelog</a> · [5] <a href="https://huggingface.co/models?sort=trending&amp;search=coder">huggingface.co</a> — all retrieved Oct 22, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Mandatory round: quiet in the shadows</h2>
+        <ul>
+          <li><strong>Claude Code</strong> — 2.1.308 (Oct 22), see above.</li>
+          <li><strong>Codex CLI</strong> — 0.164.0-alpha.11 (Oct 22), pre-releases only.</li>
+          <li><strong>Cursor</strong> — last entry Oct 16 (Cloud Agent Canvases).</li>
+          <li><strong>GitHub Copilot</strong> — model policy API from Oct 19, nothing on Copilot itself since.</li>
+          <li><strong>OpenHands</strong> — 1.30.0 (Oct 22).</li>
+          <li><strong>Aider</strong> — still v0.86.0 from Aug 9, as of yesterday.</li>
+          <li><strong>Gemini 4 Argon</strong> — available since Oct 13, still without an independent coding number.</li>
+          <li><strong>Cline, Continue, Plandex, Devin, Bolt, JetBrains AI</strong> — not checked today.</li>
+        </ul>
+        <p>My take: this week it is mainly the harnesses that move, not the models. Claude Code, OpenHands and Codex ship almost daily. On the model side there is only Flint, and that without a measurement. The unchecked tools are a gap in our research, not evidence of standstill.</p>
+        <span class="src"><a href="https://cursor.com/changelog">cursor.com/changelog</a> · <a href="https://github.blog/changelog/">github.blog/changelog</a> · <a href="https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-4-argon/">blog.google</a> — retrieved Oct 22, 2026; Aider status from the Oct 21, 2026 research</span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Thursday, October twenty-second. Once again, no major lab is shipping a new coding model today. The biggest news is a fix in Claude Code that matters more than it sounds.</p>
+  <p>Claude Code two point one point three-oh-seven came out on October twenty-first. Until now, a call to an MCP server over HTTP could arrive twice if the connection dropped in the middle of the call. With a tool that creates a ticket or sends a message, the action may have run twice. Now Claude Code retries only tools that read, or where a retry changes nothing. If you run your own MCP server with write tools, check your logs for duplicate actions.</p>
+  <p>The same version now reports, through OpenTelemetry, every tool call that a rule, auto mode, a hook or the sandbox stopped. That's useful for teams. You can see where the rules don't fit the work. There's also a command that moves code to the new API version from October twenty-first. Version three-oh-eight, out today, brings only fixes.</p>
+  <p>One more important fix from the week. Version three-oh-four fixed a bug where Claude Code deleted a worktree and its branch on exit. Commits could be lost.</p>
+  <p>On the local side, there's news from Ollama. Version zero point forty point eight brings Flint, a coding model from a company called Recursive. It has forty billion parameters, but computes with only about two and a half billion per word. That makes it fast. The license is Apache, and for now it runs only on the Mac. We have just one source for it, though, and no benchmark number.</p>
+  <p>At OpenAI, we now know what the twelve-hour prompt cache costs. Writing to the cache costs two and a half times the normal input price. For agents that work on the same repo all day, that can pay off. The Codex CLI has reached alpha eleven, still without notes.</p>
+  <p>On SWE-bench Verified, two leaderboards disagree. One has Claude Fable five in front at ninety-five percent, the other has Claude Opus five at ninety-six percent. At scores this high, the test is nearly full, and small differences say little.</p>
+  <p>Tomorrow we'll see whether anyone measures Flint independently, and whether the Codex CLI finally ships with notes.</p>
+</div>
+
+</body>
+</html>
