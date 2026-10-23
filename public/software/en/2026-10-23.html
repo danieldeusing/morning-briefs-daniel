@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-23</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-23</span>
+    <span class="dot">·</span>
+    <span>Friday, October 23, 2026 · Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">Day two after PHP2Shell, and now GitLab is on fire too</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">The PHP patches are two days old, and the picture has shifted: according to Amazon, attackers tried four days before the release, and according to heise many websites are offline. On Wednesday GitLab added another maximum-severity flaw (CVSS 10.0), exploitable without a login. Per The Hacker News, eMudhra is quitting the TLS business entirely after the key debacle, and Chrome plans to switch off the root next week. Today the CISA deadline for Plex2Shell expires. The rest is a solid patch week with Linux 7.3, Python bugfixes and a new supply-chain safeguard in Cargo.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>PHP2Shell</strong>: first exploitation attempt on Oct 17, four days before the fix (Amazon MadPot); the only real remedy remains 8.5.12 / 8.4.27 / 8.3.36 / 8.2.35. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>GitLab CVE-2026-110264</strong>: rated Critical by GitLab, CVSS 10.0, code execution without a login; fix in 19.5.1 and six backports. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>eMudhra</strong> leaves the global TLS business, per The Hacker News; Chrome distrust for emSign ECC Root CA - G3 expected around Oct 27. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>CISA KEV</strong>: deadline for Plex CVE-2026-96656 / -96654 and SiteGuard expires today. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>Arista VeloCloud Orchestrator</strong>: actively exploited zero-day, the fourth Arista zero-day of 2026. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>LiteLLM 1.107.0</strong>: pipeline hijacked via a stolen GitHub token (per THN); 1.106.2 is safe. Details in the ai-dev brief. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>Linux 7.3</strong> out since Oct 18, expected to be the next LTS kernel. <span class="chip">Global</span></li>
+      <li><span class="chip good">OSS</span> <strong>Cargo</strong> can reject too-fresh packages; <strong>curl</strong> makes low/medium reports public from Monday. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulation</span> <strong>CRA</strong>: the 24-hour early warning has applied since Sep 11. This week is the real test. <span class="chip">EU</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">One KEV deadline today, the curl switch on Monday, and Chrome is expected to end the emSign root on Tuesday.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Fri Oct 23</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA KEV deadline: Plex CVE-2026-96656 / -96654, SiteGuard CVE-2026-106931</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat Oct 24 – Sun Oct 25</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>No confirmed events</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon Oct 26</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>curl: low/medium reports become public on GitHub from today</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue Oct 27</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Chrome distrust for emSign ECC Root CA - G3 (expected, per The Hacker News)</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed Oct 28 – Fri Oct 30</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>No confirmed events</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PHP2Shell, day two: the attackers were there before the patch</h2>
+        <p><span class="update-since">Since yesterday</span> The fixes have been out since Oct 21: <strong>PHP 8.5.12, 8.4.27, 8.3.36 and 8.2.35</strong> close <strong>CVE-2026-109618</strong> and <strong>CVE-2026-109619</strong>, both with CVSS 4.0 <span class="stat">9.2</span> and exploitable without a login.<sup>[1]</sup> What is new is how early the other side was. According to The Hacker News, Amazon's honeypot network MadPot logged an exploitation attempt on <strong>Oct 17</strong>, four days before the release.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Honeypot:</strong> A deliberately exposed decoy server whose only job is to record attacks. Like a fake ATM with a camera: anyone who tinkers with it gives away their method.
+        </div>
+        <p>heise reports on Oct 22: updates are trickling in, many websites are offline, attacks are under way. heise had not confirmed any successful break-ins by then.<sup>[3]</sup> The Register reports millions of attempts at Cloudflare and 32 downed UK government services.<sup>[4]</sup> Both come from that one source only; we have not cross-checked them.</p>
+        <p>What php.net calls interim hardening does not replace the patch: <code>memory_limit=-1</code> via <code>php_admin_value</code>, <code>post_max_size</code> at 8M, <code>session.upload_progress.enabled=0</code>, and under 8.5 also <code>fatal_error_backtraces=0</code>.<sup>[1]</sup> According to php.net, <strong>mod_php</strong> is the most exposed. Watch out with old branches: 8.2 only gets security fixes until Dec 31, 2026, and 8.1 and older get none at all from upstream.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> An attempt four days before the fix means someone knew details before the hosts had their packages ready. According to LWN, the delay was "a structural failure, caused by both the security team's decision process and its lack of resources."<sup>[5]</sup> That is honest, but it is exactly the problem: a project that a large part of the web runs on has a volunteer-sized security team.</div>
+        <span class="src">[1] <a href="https://www.php.net/">php.net (Oct 21)</a> · [2] <a href="https://thehackernews.com/2026/10/someone-tried-to-exploit-php2shell-4.html">thehackernews.com (Oct 22)</a> · [3] <a href="https://www.heise.de/developer">heise.de (Oct 22)</a> · [4] <a href="https://www.theregister.com/">theregister.com (Oct 22)</a> · [5] <a href="https://lwn.net/">lwn.net (Oct 21)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>GitLab: the next maximum-severity flaw <span class="h2-refs">[1][2][3][4]</span></h2>
+        <p>On Wednesday, Oct 21, GitLab fixed <strong>CVE-2026-110264</strong>, an integer overflow in the regex compiler. BleepingComputer quotes GitLab: the flaw "could have allowed an unauthenticated user to execute arbitrary code on the GitLab server".<sup>[1]</sup> GitLab itself rates it Critical, with a CVSS score of <span class="stat">10.0</span>.<sup>[4]</sup> According to The Hacker News, self-managed instances going back to version 7.0 are affected.<sup>[2]</sup></p>
+        <p>Fixed in <strong>19.5.1, 19.4.3, 19.3.6, 19.2.9, 19.1.9, 19.0.10 and 18.11.13</strong>. GitLab.com is already patched, and Dedicated customers on these builds need to do nothing. No exploitation has been reported.<sup>[1]</sup> According to heise, the update closes twelve flaws in total.<sup>[3]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Integer overflow:</strong> A number grows larger than its storage space can hold and then wraps around to a small value. Like an old odometer that starts again at 0 after 99,999. If a program then computes memory from the wrong value, that can become an entry point.
+        </div>
+        <p>It is already the second regex-compiler flaw in eleven days. <strong>CVE-2026-97229</strong> (CVSS 10.0, Oct 12) still needed a manipulated CI/CD configuration; according to BleepingComputer, both come from the same researcher.<sup>[1]</sup> No source says how the two are technically related.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/gitlab-warns-of-new-max-severity-code-execution-vulnerability/">bleepingcomputer.com (Oct 22)</a> · [2] <a href="https://thehackernews.com/2026/10/critical-gitlab-flaw-cvss-100-could.html">thehackernews.com (Oct 22)</a> · [3] <a href="https://www.heise.de/developer">heise.de (Oct 22)</a> · [4] <a href="https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-5-1-released/">docs.gitlab.com (Oct 21)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>eMudhra: retreat from the TLS business <span class="h2-refs">[1][2][3][4][5][6]</span></h2>
+        <p><span class="update-since">Since yesterday</span> The interim tally: the private keys of eight eMudhra intermediate certificates are compromised. Mozilla blocks them via OneCRL and NSS 3.131.1.<sup>[1]</sup> Chrome blocks the six TLS intermediates.<sup>[5]</sup> Since Oct 19, Go rejects the chains from 1.27.3 and 1.26.10.<sup>[6]</sup> Node.js cleaned up its CA store in the Oct 21 release.<sup>[2]</sup></p>
+        <p>New, per The Hacker News: eMudhra is exiting the global SSL/TLS business. Chrome plans to stop trusting the root <strong>emSign ECC Root CA - G3</strong> around <strong>Oct 27</strong>; about <span class="stat">30,800</span> still-valid certificates are affected.<sup>[3]</sup> The date and the number come from this one source only.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Intermediate CA:</strong> A subordinate certificate authority that the root CA allows to issue certificates. Like a branch manager with the company stamp: if his stamp is stolen, you do not just void his letters, eventually you stop trusting the whole company.
+        </div>
+        <p>The Register writes that one of the keys was the number "4". On oss-security, by contrast, the original post is said not to prove the key was easy to guess.<sup>[4]</sup> That remains a claim. In practice: if you have customers with emSign certificates, switch the CA before Tuesday.</p>
+        <span class="src">[1] <a href="https://lwn.net/">lwn.net (Oct 20)</a> · [2] <a href="https://nodejs.org/en/blog/vulnerability/october-2026-security-releases">nodejs.org (Oct 21)</a> · [3] <a href="https://thehackernews.com/2026/10/emudhra-to-exit-global-ssltls-business.html">thehackernews.com (Oct 22)</a> · [4] <a href="https://www.openwall.com/lists/oss-security/2026/10/20/33">openwall.com/oss-security (Oct 20)</a> · [5] <a href="https://www.implicator.ai/emudhra-key-compromise-30000-certificates/">implicator.ai</a> · [6] <a href="https://pasqualepillitteri.it/en/news/26020/go-1-27-3-blocks-8-emudhra-certificates">pasqualepillitteri.it (Oct 19)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Node.js: a reminder about the October patch <span class="h2-refs">[1]</span></h2>
+        <p>Since Oct 21 there have been <strong>22.23.4 (LTS), 24.22.1 (LTS) and 26.12.1 (Current)</strong> with ten CVEs. The most serious is <strong>CVE-2026-111497</strong>, an out-of-bounds write in the Brotli decoder (High). In addition there are two TLS hostname checks that could be bypassed with unusually written IP addresses. Node 20 and older are end of life and get no fix.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://nodejs.org/en/blog/vulnerability/october-2026-security-releases">nodejs.org (Oct 21)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>KEV: Plex2Shell deadline expires today <span class="h2-refs">[1][2]</span></h2>
+        <p>US federal agencies must fix <strong>CVE-2026-96656</strong> and <strong>-96654</strong> in Plex Media Server and <strong>CVE-2026-106931</strong> in EG SiteGuard Server Edition by today. For <strong>-96655</strong>, <strong>-96652</strong> and Siemens Software Center (<strong>CVE-2026-110936</strong>) the deadline is Nov 3.<sup>[1]</sup> According to BleepingComputer, the Plex chain has a score of 9.8. The fix has been in <strong>1.43.3.10861</strong> since August 4, and exploitation has been under way since Oct 17.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">KEV catalog:</strong> The list from the US agency CISA of flaws that are demonstrably being attacked. Like the police list of car models that are actually being broken into right now, not just in theory.
+        </div>
+        <p>October in the catalog is full: numerous entries, including BeyondTrust Remote Support, Fortinet, Atlassian, PAN-OS, Cisco Secure Email Gateway, Ivanti Connect Secure, Windows and Citrix NetScaler.<sup>[1]</sup> Our state is the catalog version from Oct 21, 14:04 UTC; later entries are missing here.</p>
+        <p>If you run Plex in a homelab: check the version and do not expose the server directly to the internet. According to BleepingComputer, the chain starts without a login and obtains the admin token on its own.<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">cisa.gov KEV feed (Oct 21)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/cisa-hackers-chain-plex-flaws-in-plex2shell-attacks-to-breach-servers/">bleepingcomputer.com (Oct 21)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Arista VeloCloud: the fourth zero-day of the year <span class="h2-refs">[1][2]</span></h2>
+        <p>Arista fixed <strong>CVE-2026-114625</strong> in the VeloCloud Orchestrator, an SQL injection that gives attackers operator rights. It is already being actively exploited. According to BleepingComputer, Arista has already patched its hosted VCO deployments to <strong>5.2.3.18, 6.1.3.10 and 6.4.2.12</strong>. BleepingComputer gives no fixed On-Prem builds; On-Prem admins should check Arista's advisory.<sup>[1]</sup> On the score the sources contradict each other: The Hacker News says 9.9, BleepingComputer writes only "critical".<sup>[1][2]</sup></p>
+        <p>According to BleepingComputer, this is the fourth exploited Arista zero-day of 2026. For network management systems that is a pattern, not a coincidence: whoever has the orchestrator has all the branch offices.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/arista-patches-new-veloCloud-orchestrator-zero-day-exploited-in-attacks/">bleepingcomputer.com (Oct 22)</a> · [2] <a href="https://thehackernews.com/2026/10/arista-warns-of-critical-velocloud-sql.html">thehackernews.com (Oct 22)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>ConnectWise Cloud Backup: more tenants, unclear culprits <span class="h2-refs">[1]</span></h2>
+        <p><span class="update-since">Since yesterday</span> Huntress has widened the picture: 162 confirmed tenants on Oct 16, then on Oct 17 around 1,000 tenants with login attempts, over 300 of them successful. ConnectWise blocked seven application identities on Oct 17.<sup>[1]</sup></p>
+        <div class="callout warn"><span class="callout-label">Unconfirmed</span> An attribution to the group "Storm-0940" and a figure of 2,250 tenants are circulating in the trade press. We have not seen the Microsoft report on this, and our search did not confirm either. We keep going with the Huntress numbers.</div>
+        <p>If you had ConnectWise Cloud Backup (formerly SkyKick) in your M365 tenant: check enterprise apps and sign-in logs from Oct 13. Huntress saw scripted sign-ins from that day.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-breach-microsoft-365-tenants-via-connectwise-supply-chain-attack/">bleepingcomputer.com (Oct 17–22)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>LiteLLM: how the pipeline was hijacked <span class="h2-refs">[1][2]</span></h2>
+        <p>Short, because the product is an AI gateway (details in the ai-dev brief). The software lesson is general: <strong>litellm 1.107.0</strong> sat on PyPI for just under two hours on Oct 21, and longer on Docker Hub and GHCR. The malicious version dropped <code>.pth</code> files and a <code>sitecustomize.py</code> that run on every Python start.<sup>[1]</sup> According to The Hacker News, the attackers used stolen GitHub CLI OAuth tokens from three developers.<sup>[2]</sup> <strong>1.106.2</strong> is safe; if you had 1.107.0, rotate all secrets and rebuild.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">.pth file:</strong> A small file in the Python package folder that the interpreter reads on every start, even if the package is never imported. Like a note on the fridge that everyone reads in the morning, no matter what they have for breakfast.
+        </div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/litellm-release-pipeline-hacked-to-distribute-info-stealer-malware/">bleepingcomputer.com (Oct 21)</a> · [2] <a href="https://thehackernews.com/2026/10/litellm-compromised-in-supply-chain.html">thehackernews.com (Oct 22)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Linux KSMBD: two flaws without a mainline fix <span class="h2-refs">[1]</span></h2>
+        <p>The Hacker News reports two flaws with CVSS 9.0 in the kernel SMB server KSMBD. One is reachable without a login via port 445, the other needs SMB Direct. Both were described on public lists before there was a kernel fix.<sup>[1]</sup> Only one source. If you do not deliberately use KSMBD, you do not load the module; if you do, do not expose port 445 to the internet.</p>
+        <span class="src">[1] <a href="https://thehackernews.com/2026/10/two-cvss-90-linux-ksmbd-rce-flaws.html">thehackernews.com (Oct 22)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>HTTP/3: QPACK as a memory hog <span class="h2-refs">[1]</span></h2>
+        <p>A denial-of-service weakness in the HTTP/3 header format QPACK allows up to 4,000x memory amplification, according to The Hacker News. Fixes exist in quic-go, quiche, lsquic and Wireshark; Bun, h3 (Rust) and aioquic were still open at publication. There is no CVE.<sup>[1]</sup> Relevant for Caddy users because Caddy speaks HTTP/3 via quic-go: keep an eye on the next Caddy release.</p>
+        <div class="eli5">
+          <strong class="eli5-term">QPACK:</strong> The compression scheme for HTTP/3 headers. Instead of sending every header again, the client points to a shared table. Like speed dial on a phone: handy, until someone stuffs the table with nonsense.
+        </div>
+        <span class="src">[1] <a href="https://thehackernews.com/2026/10/new-qpack-flaws-can-crash-http3-servers.html">thehackernews.com (Oct 22)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Railway: rotate secrets <span class="h2-refs">[1]</span></h2>
+        <p>The PaaS Railway reports possible access to encrypted environment variables on Oct 22 and advises rotating secrets.<sup>[1]</sup> If you keep database passwords or API keys there, do it today.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (Oct 22)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Linux 7.3 is here <span class="h2-refs">[1]</span></h2>
+        <p>Linus Torvalds released <strong>Linux 7.3</strong> on Oct 18; according to LWN it is expected to be the next LTS kernel. The merge window for 7.4 is open. On Oct 21 the stable kernels <strong>7.2.12, 6.18.58, 6.12.114 and 6.6.160</strong> arrived.<sup>[1]</sup> For servers that means 6.12 or 6.18 remain the calm choice, and 7.3 gets a few point releases of time first.</p>
+        <span class="src">[1] <a href="https://lwn.net/">lwn.net (Oct 21)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cargo learns to reject too-fresh packages <span class="h2-refs">[1]</span></h2>
+        <p>According to heise, Cargo is getting an optional block against packages that were published only recently.<sup>[1]</sup> That is the right answer to cases like LiteLLM: most poisoned versions are caught within hours. If you wait a few days, you are never part of those cases.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Minimum package age:</strong> The package manager installs a version only after it has been public for a while. Like yogurt from the back of the shelf: if it is bad, others have already noticed.
+        </div>
+        <span class="src">[1] <a href="https://www.heise.de/developer">heise.de (Oct 22)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>curl: small flaws public from Monday <span class="h2-refs">[1]</span></h2>
+        <p>From Oct 26, low and medium reports for curl land publicly on GitHub. High and critical stay private on HackerOne. According to Daniel Stenberg, over 90 percent of the recent reports were below High.<sup>[1]</sup> Our view: the right call. An embargo for small stuff costs maintainer time and protects nobody.</p>
+        <span class="src">[1] <a href="https://daniel.haxx.se/blog/">daniel.haxx.se (Oct 20)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: this week is the real test <span class="h2-refs">[1]</span></h2>
+        <p>Since Sep 11, 2026, the reporting duties of the Cyber Resilience Act have applied. If you sell products with digital elements in the EU, you report an actively exploited flaw within 24 hours as an early warning, followed after 72 hours by the notification, via ENISA's Single Reporting Platform. Fines reach up to €15 million or 2.5 percent of turnover. The main obligations arrive on Dec 11, 2027.<sup>[1]</sup></p>
+        <p>PHP2Shell and GitLab are the practical test now: if you ship a product with PHP or GitLab and learn of exploitation, a clock is running.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Cyber Resilience Act (CRA):</strong> An EU law that makes manufacturers of software and devices responsible for their security. Like a recall duty for cars: whoever knows about a defect must report and fix it.
+        </div>
+        <span class="src">[1] <a href="https://www.jonesday.com/en/insights/2026/07/eu-cyber-resilience-act-24hour-reporting-duties-start-september-11-2026">jonesday.com (07/2026)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Stack check: Python, Angular, Postgres, Spring, Java <span class="h2-refs">[1][2]</span></h2>
+        <p><strong>Python</strong> 3.15.1, 3.14.9 and 3.13.17 have been out since Oct 21; 3.10 has been end of life since Oct 1.<sup>[1]</sup> <strong>Angular</strong>: LTS support for v20 ends on Nov 28, 2026, and the current version is v22.<sup>[2]</sup> If you are still on v20, plan the upgrade now.</p>
+        <p>We have <strong>PostgreSQL</strong> 19 RC1 and the end of life of PG 14 on Nov 12 only from search results, as the news page was unreachable. For <strong>Spring</strong> we found no October announcement. For <strong>Oracle/Java</strong> the version numbers for the October CPU remain unconfirmed; the facts follow once oracle.com loads again.</p>
+        <span class="src">[1] <a href="https://www.python.org/downloads/">python.org (Oct 23)</a> · [2] <a href="https://angular.dev/reference/releases">angular.dev (Oct 23)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>OSS & releases, in brief <span class="h2-refs">[1]</span></h2>
+        <ul>
+          <li><strong>OpenBSD 8.0</strong> (Oct 21): RTR cache server, guests with up to 64 vCPUs.<sup>[1]</sup></li>
+          <li><strong>KeePassXC 2.8.0</strong>: move to Qt6, auto-type on Wayland.<sup>[1]</sup></li>
+          <li><strong>musl libc</strong>: out-of-bounds write published; keep an eye on Alpine images.<sup>[1]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://lwn.net/">lwn.net (Oct 21/22)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Quick notes <span class="h2-refs">[1][2][3]</span></h2>
+        <ul>
+          <li><strong>OSS ballast</strong>: About a quarter of incoming pull requests are AI junk, according to The Register, 31 percent for large projects. The article does not clearly name the study behind it.<sup>[1]</sup></li>
+          <li><strong>EU/DSA</strong>: The Commission is examining Booking.com over fake listings and phishing.<sup>[1]</sup></li>
+          <li><strong>Onamae Desktop Cloud</strong> (Japan): up to 26,739 servers affected.<sup>[2]</sup></li>
+          <li><strong>Capcom</strong>: 11.7 million accounts affected.<sup>[2]</sup></li>
+          <li><strong>INTERPOL Serengeti III</strong>: 1,462 arrests, 10,909 networks dismantled.<sup>[3]</sup></li>
+          <li><strong>BR</strong>: no verified report today; tecnoblog was unreachable.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.theregister.com/">theregister.com (Oct 21)</a> · [2] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (Oct 21)</a> · [3] <a href="https://thehackernews.com/">thehackernews.com (Oct 22)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>What this Friday is worth twenty minutes for</h2>
+        <ol>
+          <li><strong>PHP</strong>: Every host serving PHP to 8.5.12 / 8.4.27 / 8.3.36 / 8.2.35. Put everything below 8.2 on a migration list.</li>
+          <li><strong>GitLab self-managed</strong>: Check your version against the fix list.</li>
+          <li><strong>Certificates</strong>: Move customers with emSign certificates before Tuesday.</li>
+          <li><strong>Node</strong>: Raise container base images to 22.23.4 / 24.22.1.</li>
+          <li><strong>Plex in the homelab</strong>: at least 1.43.3.10861.</li>
+        </ol>
+        <p>The rest can wait until Monday.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Friday, October twenty-third. Two days after the PHP patches, one thing is clear: the attackers got there before the fixes did. On top of that, there's a severe GitLab flaw, and an Indian certificate authority is pulling out of the business.</p>
+  <p>First, PHP. Versions eight point five point twelve, eight point four point twenty-seven, eight point three point thirty-six and eight point two point thirty-five close two flaws that let attackers run code without logging in. According to The Hacker News, Amazon's honeypot network saw an attempt as early as October seventeenth, four days before the fix. heise reports many websites offline, but no confirmed break-ins yet. The hardening tips from php.net are no substitute for the update.</p>
+  <p>Then GitLab. The flaw, tracked as CVE-2026-110264, sits in the regex compiler and allows code execution without a login. GitLab rates it critical, with the top score of ten out of ten. Since Wednesday, it's been fixed in version nineteen point five point one and six older branches. No exploitation is known so far, and GitLab.com is already safe.</p>
+  <p>At eMudhra, the keys for eight intermediate certificates are compromised. According to The Hacker News, the company is leaving the TLS business altogether, and Chrome plans to stop trusting its root around October twenty-seventh. About thirty thousand eight hundred certificates would be affected. If you use any of them, switch before Tuesday.</p>
+  <p>Today is the deadline set by the U.S. agency CISA for two Plex flaws from the Plex2Shell chain. The fix has been available since August. Separately, Arista closed an actively exploited flaw in its VeloCloud Orchestrator, the fourth one this year.</p>
+  <p>On LiteLLM, we now know more about how the pipeline was hijacked: according to The Hacker News, with stolen GitHub tokens from three developers. The lesson for everyone: Python startup hooks are a way to persist. Fittingly, Cargo can now reject packages that are too fresh.</p>
+  <p>There's good news too. Linux seven point three has been out since October eighteenth and is likely to be the next long-term kernel. Python has three bugfix releases, and curl will make small flaws public starting Monday. And for Angular, version twenty loses long-term support at the end of November.</p>
+  <p>Between now and Monday, we'll be watching whether the PHP attempts turn into real break-ins, and whether Chrome holds to the emSign date.</p>
+</div>
+
+</body>
+</html>
