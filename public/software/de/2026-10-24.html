@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-24</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-10-24</span>
+    <span class="dot">·</span>
+    <span>Samstag, 24.10.2026 · Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">PHP legt nach, HPE räumt bei Aruba auf, und Montag laufen zwei KEV-Fristen ab</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Der Samstag nach der PHP2Shell-Woche ist kein ruhiger. PHP hat am Freitag eine dritte Lücke gemeldet, diesmal ohne Patch und nur für eine seltene Konfiguration. HPE schließt 72 Lücken in ArubaOS, acht davon in der höchsten Stufe. Die US-Behörde CISA hat Collabora Online und Arista VeloCloud in den KEV-Katalog genommen, Frist ist Montag. Dazu ein Lehrstück über verwaiste Update-Domains, ein neuer npm-Filter bei GitHub und der Oracle-Quartalspatch, dessen Java-Details weiter wackeln. Die Lieferkette ist das Thema der Woche, und das ist kein Zufall.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>PHP CVE-2026-115560</strong>: noch kein Patch, betrifft nur Apps, die den Session-Serializer zur Laufzeit umschalten; Abhilfe <code>session.upload_progress.enabled=0</code>. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>CISA KEV 23.10.</strong>: Collabora Online (CVE-2026-110447) und Arista VeloCloud Orchestrator (CVE-2026-114625), Frist Mo 26.10. <span class="chip">USA</span></li>
+      <li><span class="chip hot">Sec</span> <strong>HPE ArubaOS</strong>: 72 Lücken, acht der Maximal-Stufe; keine bekannte Ausnutzung. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>BIND 9.20.30</strong> schließt vier CVEs vom 21.10. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Oracle CPU Oktober</strong>: 1295 Patches, 55 für Java SE; welche JDK-Builds genau, bleibt unklar. <span class="chip">Global</span></li>
+      <li><span class="chip good">OSS</span> <strong>GitHub Package Firewall</strong> für npm in der öffentlichen Vorschau; <strong>gh</strong> kann jetzt ablaufende OAuth-Tokens. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Time4Popcorn</strong>: Updater auf verwaister Domain, bis zu 3 Mio. Windows-Verbindungen; Forscher haben ihn abgeschaltet. <span class="chip">Global</span></li>
+      <li><span class="chip">Web</span> <strong>GoDaddy</strong> widerruft 404 607 Zertifikate; <strong>Chrome</strong> warnt jetzt standardmäßig vor HTTP-Seiten. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulierung</span> <strong>Quad9</strong> verlässt Frankreich nach Sperr-Urteil. <span class="chip">EU</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Ein ruhiges Wochenende, dann am Montag zwei KEV-Fristen. Die nächste Plex-Frist (03.11.) liegt schon außerhalb des Fensters.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Sa 24.10 – So 25.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Keine bestätigten Termine</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mo 26.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA-KEV-Frist: Collabora Online CVE-2026-110447, Arista VeloCloud Orchestrator CVE-2026-114625</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 27.10 – Sa 31.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Keine bestätigten Termine</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PHP, Teil drei: eine Lücke ohne Patch, aber mit schmaler Angriffsfläche <span class="h2-refs">[1][2]</span></h2>
+        <p><span class="update-since">Seit gestern</span> Am Freitag, 23.10., hat das PHP-Team <strong>CVE-2026-115560</strong> gemeldet, eine Lücke rund um den Upload-Fortschritt von Sessions. Laut BleepingComputer gibt es noch keinen Patch; PHP will die Lücke im normalen Release-Zyklus schließen und mit dem nächsten Release ein volles Advisory veröffentlichen.<sup>[1]</sup> Eine Ausnutzung meldet der Artikel nicht, einen CVSS-Wert auch nicht.</p>
+        <p>Betroffen ist nur eine seltene Kombination. Eine App setzt <code>session.serialize_handler</code> in der Konfiguration auf <code>php_binary</code> oder <code>php_serialize</code> und schaltet ihn zur Laufzeit per <code>ini_set()</code> auf <code>php</code> um, bevor sie <code>session_start()</code> aufruft. Zusätzlich muss der Upload-Fortschritt aktiv sein.<sup>[1]</sup> Wer den Handler nie zur Laufzeit ändert, ist nicht betroffen.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Session-Serializer:</strong> Das Format, in dem PHP die Daten einer Sitzung auf die Platte schreibt und wieder einliest. Schreibt man in einem Format und liest im anderen, ist das wie ein Brief auf Deutsch, den jemand als Code für einen Tresor liest. Dabei kann Unsinn entstehen, den ein Angreifer steuert.
+        </div>
+        <p>Die Abhilfe ist dieselbe Einstellung, die php.net schon für PHP2Shell empfohlen hat: <code>session.upload_progress.enabled=0</code>. Wer sie diese Woche schon gesetzt hat, lässt sie stehen.<sup>[1][2]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Nach einer Woche mit Notfall-Patches ist das ein gutes Zeichen, kein schlechtes. Die Leute schauen sich den Session-Code jetzt genau an, und PHP kommuniziert offen statt still. Für die meisten Frameworks ist das ein Grep auf <code>serialize_handler</code>, mehr nicht.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/php-shares-mitigation-for-new-and-unpatched-rce-vulnerability/">bleepingcomputer.com (23.10.)</a> · [2] <a href="https://www.php.net/">php.net (23.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PHP2Shell: der Stand am Samstag <span class="h2-refs">[1][2][3]</span></h2>
+        <p>Die beiden Haupt-Lücken <strong>CVE-2026-109618</strong> und <strong>CVE-2026-109619</strong> betreffen laut BleepingComputer „all PHP installations that serve web requests, including PHP-FPM, Apache with mod_php, php-cgi, FrankenPHP, and LiteSpeed“.<sup>[1]</sup> Fixes gibt es seit dem 21.10. in <strong>8.5.12, 8.4.27, 8.3.36 und 8.2.35</strong>; laut php.net ist das Update die einzige vollständige Abhilfe.<sup>[2]</sup> Nach einer VirusTotal-Schätzung, die BleepingComputer zitiert, sind über 5,1 Millionen PHP-Hosts erreichbar.<sup>[1]</sup></p>
+        <p>heise hat am 22.10. eine Übersicht „Wer nun was machen muss“ veröffentlicht: Alle PHP-Versionen der letzten 20 Jahre sind gefährdet, und Updates sind der einzige wirksame Schutz.<sup>[3]</sup> Nicht vergessen: PHP 8.2 bekommt nur noch bis 31.12.2026 Sicherheits-Fixes.<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/php-ships-emergency-patches-for-critical-php2shell-flaws/">bleepingcomputer.com (21.10.)</a> · [2] <a href="https://www.php.net/">php.net (24.10.)</a> · [3] <a href="https://www.heise.de/security/">heise.de (22.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: Collabora Online und Arista VeloCloud, Frist Montag <span class="h2-refs">[1][2]</span></h2>
+        <p>CISA hat am 23.10. zwei aktiv ausgenutzte Lücken in den KEV-Katalog aufgenommen. Beide haben die Frist <strong>26.10.</strong>, also nur drei Tage:<sup>[1]</sup></p>
+        <ul>
+          <li><strong>CVE-2026-110447</strong>, Collabora Online, im Katalog als „Built-in CODE Server“ geführt. Technische Details haben wir nicht gefunden.</li>
+          <li><strong>CVE-2026-114625</strong>, Arista VeloCloud Orchestrator. BleepingComputer meldete am 22.10., dass Arista eine aktiv ausgenutzte Zero-Day in On-Prem-Installationen gepatcht hat.<sup>[2]</sup> Den Artikel selbst konnten wir nicht lesen; Fix-Versionen nennen wir deshalb nicht.</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">KEV-Katalog:</strong> Die Liste der US-Cyberbehörde CISA mit Lücken, die nachweislich angegriffen werden. US-Bundesbehörden müssen bis zur Frist patchen. Für alle anderen ist die Liste ein guter Filter: Was dort steht, ist kein Theorie-Risiko.
+        </div>
+        <div class="callout"><span class="callout-label">Achtung</span> Die Kurzfrist bei Collabora ist der Punkt. Viele selbst gehostete Nextcloud-Instanzen nutzen Collabora für Office-Dokumente. Ob die eingebaute Variante dort genau das betroffene Produkt ist, haben wir nicht bestätigt. Wer so ein Setup betreibt, prüft am Montag das Update seines Pakets.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (24.10.)</a> · [2] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (22.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Plex2Shell: die zweite Frist kommt <span class="h2-refs">[1][2]</span></h2>
+        <p>Von den vier Plex-Lücken der Plex2Shell-Kette ist die Frist für CVE-2026-96654 und -96656 am Freitag abgelaufen. Für <strong>CVE-2026-96652</strong> (SSRF in <code>/player/timeline</code>) und <strong>CVE-2026-96655</strong> (SSRF im Transcoder) läuft sie bis <strong>03.11.</strong><sup>[1]</sup> Der Forscher Zach Main bewertet die ganze Kette mit 9,8; in freier Wildbahn landen laut BleepingComputer Krypto-Miner und Proxy-Hintertüren auf den Servern.<sup>[2]</sup> Sicher ist <strong>1.43.3.10861</strong> und neuer, seit August verfügbar.<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (24.10.)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/cisa-hackers-chain-plex-flaws-in-plex2shell-attacks-to-breach-servers/">bleepingcomputer.com (21.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>HPE ArubaOS: 72 Lücken, acht der Maximal-Stufe <span class="h2-refs">[1]</span></h2>
+        <p>HPE hat am 23.10. Fixes für 72 Lücken in ArubaOS veröffentlicht, dem Betriebssystem für Aruba-Controller, Access Points und Gateways. Acht davon sind in der höchsten Stufe: Umgehung der Anmeldung, Command Injection, SQL-Injection und Pufferüberläufe, jeweils mit Code-Ausführung, verteilt auf AOS-8 und AOS-10 (CVE-2026-79844 bis -79851).<sup>[1]</sup></p>
+        <p>Ausnutzung ist nicht bekannt. HPE schreibt: „HPE Networking is not aware of any public discussion or exploit code that targets the listed vulnerabilities“. Als Übergang rät HPE, CLI und Web-Oberfläche auf ein eigenes VLAN zu beschränken oder per Firewall abzuschirmen.<sup>[1]</sup> Konkrete Fix-Versionen nennt der Artikel nicht; die stehen im HPE-Advisory.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Acht unauthentifizierte Wege zur Code-Ausführung in einem WLAN-Controller sind eine Einladung. Noch gibt es keinen Exploit. Erfahrungsgemäß ändert sich das bei Netzwerk-Hardware schnell, sobald jemand die Patches vergleicht.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hpe-patches-eight-max-severity-rce-and-auth-bypass-aos-flaws/">bleepingcomputer.com (23.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>BIND 9.20.30: vier CVEs auf einmal <span class="h2-refs">[1][2]</span></h2>
+        <p>ISC hat am 21.10. vier Lücken im Nameserver BIND veröffentlicht (CVE-2026-19630, -94300, -96888, -97313), alle in <strong>9.20.30</strong> behoben.<sup>[1]</sup> heise beschreibt eine davon als „Codeschmuggel-Lücke“.<sup>[2]</sup> Scores und betroffene Versionen stehen in den einzelnen Advisories, die wir nicht gelesen haben. Wer eigenen DNS betreibt, zieht die Distributions-Pakete nach.</p>
+        <span class="src">[1] <a href="https://kb.isc.org/docs/aa-00913">kb.isc.org (24.10.)</a> · [2] <a href="https://www.heise.de/security/">heise.de (22.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cisco und Fortinet: Updates mit wenig Details <span class="h2-refs">[1]</span></h2>
+        <p>heise meldet am 23.10.: „In mehreren Produkten von Cisco klaffen teils kritische Lücken.“ Welche Produkte, stand im Teaser nicht.<sup>[1]</sup> Fortinet hatte laut heise vom 22.10. Updates außer der Reihe für „Donnerstag“ angekündigt, Details sollen erst im November folgen.<sup>[1]</sup> Eine CVE-Nummer dazu haben wir nicht gefunden. Wer FortiGate betreibt, schaut in den PSIRT-Feed, statt auf den November zu warten.</p>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de (22./23.10.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Lieferkette I: die verwaiste Update-Domain <span class="h2-refs">[1]</span></h2>
+        <p>Time4Popcorn, ein Fork des BitTorrent-Clients Popcorn Time, holte Updates über unverschlüsseltes HTTP von einer verlassenen Domain. Laut BleepingComputer „accepted executables without verifying digital signatures“. Wer die Domain besaß, konnte Code mit SYSTEM-Rechten unter Windows und root unter macOS ausführen (CVE-2026-30612).<sup>[1]</sup></p>
+        <p>Eye Security hat die Domain registriert und sah „up to 3 million Windows and 350,000 macOS client connections“. Zwischen November 2025 und März 2026 schob das Team über den Updater Code, der den Updater stoppt und abschaltet. Die Domain liegt jetzt bei der Shadowserver Foundation. Android-Nutzer bleiben laut Artikel exponiert.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Verwaiste Domain:</strong> Eine Web-Adresse, die der frühere Besitzer nicht verlängert hat. Jeder kann sie neu kaufen. Fragt eine alte Software dort noch nach Updates, ist das wie ein Briefkasten, den der Nachmieter leert, und die Post sind Programme.
+        </div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Das ist der billigste Lieferketten-Angriff, den es gibt: ein paar Euro für eine Domain. Für eigene Projekte heißt das: Update-Kanäle signieren und Domains nicht auslaufen lassen, auch nicht die vom alten Marketing-Microsite.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/abandoned-popcorn-time-app-exposed-millions-of-device-to-rce-attacks/">bleepingcomputer.com (23.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Lieferkette II: GitHub Package Firewall für npm <span class="h2-refs">[1][2]</span></h2>
+        <p>GitHub hat die <strong>Package Firewall</strong> als öffentliche Vorschau freigegeben; im Changelog steht der Eintrag am 20.10.<sup>[1]</sup> Laut iX ist sie für Enterprise-Cloud-Kunden gedacht und prüft Paket-Abfragen und Downloads, um schädliche npm-Pakete zu blockieren.<sup>[2]</sup> Wie genau sie entscheidet, was schädlich ist, haben wir nicht nachgelesen.</p>
+        <p>Das passt zu Cargos neuer Option, zu frische Pakete abzulehnen (gestern hier). Der Trend ist klar: Registries und Plattformen bauen Schranken vor <code>npm install</code>, weil Lockfiles allein nicht reichen.</p>
+        <span class="src">[1] <a href="https://github.blog/changelog/">github.blog/changelog (20.10.)</a> · [2] <a href="https://www.heise.de/security/">heise.de / iX (23.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Lieferkette III: LiteLLM und die Lehre mit den Tokens <span class="h2-refs">[1][2]</span></h2>
+        <p>Kurz zum Stand: Die vergiftete Version <strong>LiteLLM 1.107.0</strong> lag am 21.10. laut Datadog etwa zwei Stunden auf PyPI und in den offiziellen Docker-Images. Der Credential-Stealer startete über einen <code>.pth</code>-Hook. Es ist der zweite LiteLLM-Vorfall 2026.<sup>[1]</sup> Wie die Angreifer reinkamen, ist umstritten: gestohlene OAuth-Tokens der GitHub CLI oder Trivy in der CI.<sup>[1]</sup> Details zur KI-Seite im ai-dev-Brief.</p>
+        <p>Passend dazu kann die <strong>GitHub CLI</strong> seit 21.10. auf Wunsch ablaufende, sich selbst erneuernde OAuth-Tokens nutzen.<sup>[2]</sup> Ein Token, das nach Stunden verfällt, ist für einen Dieb viel weniger wert als eines, das jahrelang gilt. Das ist eine Einstellung, die man diese Woche aktiviert.</p>
+        <div class="eli5">
+          <strong class="eli5-term"><code>.pth</code>-Hook:</strong> Python liest beim Start jede <code>.pth</code>-Datei im Paket-Ordner und führt Zeilen darin aus. Ein Paket kann so Code starten, ohne dass ihn je jemand importiert. Wie ein Zettel im Briefkasten, den der Hausmeister jeden Morgen automatisch vorliest.
+        </div>
+        <span class="src">[1] <a href="https://socket.dev/blog/litellm-compromise">socket.dev / securitylabs.datadoghq.com (21./22.10.)</a> · [2] <a href="https://github.blog/changelog/">github.blog/changelog (21.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Oracle-CPU: viele Patches, wackelige Java-Details <span class="h2-refs">[1][2]</span></h2>
+        <p>Oracle hat am 20.10. das Critical Patch Update für Oktober veröffentlicht: laut endoflife.ai <strong>1295</strong> neue Patches, davon <strong>55</strong> für Java SE.<sup>[1]</sup> Die Oracle-Seite selbst lieferte uns einen 403, die Zahlen stammen deshalb aus zweiter Hand.</p>
+        <p>Die japanische IPA führt 8u503, 11.0.32.1, 17.0.20.1, 21.0.12.1, 25.0.4.1 und auch 26.0.2 als betroffene Versionen auf, nicht als gefixte.<sup>[2]</sup> Das passt zu endoflife.ai: „JDK 26 got no fix.“<sup>[1]</sup> Oracles Vorab-Hinweis nannte 1.283 Patches; die 1.295 stammen von endoflife.ai. JDK 17 ist laut endoflife.ai seit September in Oracles Extended Support; das nächste CPU kommt am 19.01.2027.<sup>[1]</sup></p>
+        <div class="callout"><span class="callout-label">Achtung</span> Wer Temurin, Corretto oder ein anderes OpenJDK-Build nutzt, wartet auf die Builds seines Anbieters. Die Oracle-Nummern gelten nur für Oracle-JDK. Für Spring-Projekte ist der Weg einfach: Basis-Image heben, sobald es da ist.</div>
+        <span class="src">[1] <a href="https://endoflife.ai/article-oracle-cpu-october-2026-unsupported">endoflife.ai (24.10.)</a> · [2] <a href="https://www.ipa.go.jp/security/security-alert/2026/1021-jre.html">ipa.go.jp (21.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Zertifikate: GoDaddy widerruft 404 607 Stück <span class="h2-refs">[1]</span></h2>
+        <p>GoDaddy muss laut heise vom 22.10. <strong>404 607</strong> Zertifikate widerrufen, weil sie nicht der eigenen Dokumentation entsprechen.<sup>[1]</sup> Das ist ein Formfehler, kein Schlüssel-Leck wie bei eMudhra. Trotzdem: Ein widerrufenes Zertifikat bricht HTTPS genauso. Wer GoDaddy-Zertifikate händisch einspielt, prüft die Mails von GoDaddy. Mit ACME und automatischer Erneuerung ist das ein Nicht-Thema.</p>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de (22.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Chrome warnt jetzt standardmäßig vor HTTP <span class="h2-refs">[1]</span></h2>
+        <p>Chrome warnt laut heise vom 22.10. vor dem ersten Aufruf unverschlüsselter Websites, und Google hat das für alle Nutzer standardmäßig eingeschaltet.<sup>[1]</sup> Für öffentliche Seiten ist das kein Thema mehr. Interessant wird es bei internen Tools: Admin-Oberflächen im LAN, Router, Test-Server auf <code>http://</code>. Caddy mit automatischem HTTPS oder Tailscale-Zertifikate lösen das schnell.</p>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de (22.10.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Quad9 verlässt Frankreich <span class="h2-refs">[1]</span></h2>
+        <p>Der DNS-Dienst Quad9 zieht sich laut heise aus Frankreich zurück. Grund ist ein Sperr-Urteil, das der katarische Sender beIN erstritten hat.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Sport-Rechteinhaber zwingen die Infrastruktur-Schicht zum Sperren, und der Resolver geht lieber, als zum Zensor zu werden. Für Europa ist das ein schlechtes Signal. Wer Quad9 in Router oder Pi-hole eingetragen hat, sollte in Frankreich auf Ausweich-Resolver achten.</div>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de (22.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: die erste echte Melde-Woche <span class="h2-refs">[1]</span></h2>
+        <p>Seit 11.09.2026 gilt die Meldepflicht des Cyber Resilience Act: Hersteller melden aktiv ausgenutzte Lücken über die Plattform der ENISA, mit Frühwarnung binnen 24 Stunden und Meldung binnen 72 Stunden. Der Rest des CRA gilt ab 11.12.2027.<sup>[1]</sup></p>
+        <p>Diese Woche war voll mit ausgenutzten Lücken: PHP, Plex, Arista, Collabora. Jeder Hersteller, der so ein Produkt in der EU verkauft, musste die Uhr laufen lassen.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Die Pflicht trifft Hersteller, nicht ehrenamtliche OSS-Projekte wie PHP selbst. Aber jeder, der PHP in ein kommerzielles Produkt packt, ist jetzt Hersteller mit Meldepflicht. Spannend wird, ob ENISA nach dieser Woche Zahlen veröffentlicht.</div>
+        <span class="src">[1] <a href="https://www.crowell.com/en/insights/client-alerts/its-live-the-cyber-resilience-act-reporting-is-mandatory-as-of-today-11-september-2026">crowell.com (11.09.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Microsoft: Server 2016 läuft aus, EWS-Reparatur <span class="h2-refs">[1]</span></h2>
+        <p><strong>Windows Server 2016</strong> bekommt laut BleepingComputer nach dem Support-Ende im Januar 2027 keine Sicherheits-Updates mehr.<sup>[1]</sup> Das sind gut zwei Monate für die Migration. Außerdem hat Microsoft am 22.10. erklärt, wie man kaputte Apps mit der Exchange-Online-Schnittstelle EWS repariert.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">EWS (Exchange Web Services):</strong> Eine ältere Schnittstelle, über die Programme Mails, Kalender und Kontakte aus Exchange lesen. Microsoft will sie seit Jahren durch die modernere Graph-API ersetzen.
+        </div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-windows-server-2016-reaches-end-of-support-in-january/">bleepingcomputer.com (22./23.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KeePassXC 2.8.0 <span class="h2-refs">[1]</span></h2>
+        <p>Der lokale Passwortmanager KeePassXC schließt in Version 2.8.0 Sicherheitslücken, kann Auto-Type unter Wayland und Datenbanken über externe Programme synchronisieren.<sup>[1]</sup> Welche Lücken genau, nennt der Teaser nicht. Wer KeePassXC nutzt, aktualisiert einfach.</p>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de / iX (22.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Stack-Check: Python, Postgres <span class="h2-refs">[1][2]</span></h2>
+        <p><strong>Python</strong>: 3.15.1, 3.14.9 und 3.13.17 sind seit 21.10. verfügbar; 3.15.0 kam am 09.10.<sup>[1]</sup> Wer im Sommer auf 3.15 gewartet hat, kann mit dem ersten Bugfix-Release jetzt umsteigen.</p>
+        <p><strong>PostgreSQL</strong>: Am 12.11. kommt das geplante Update-Release, das letzte für PG 14. Die GA von PG 19 hat das Release-Team laut einem Mailinglisten-Beitrag vom 10.10. vom 29.10. auf den 19.11. verschoben.<sup>[2]</sup> Die offizielle News-Seite war nicht erreichbar, deshalb ist das Datum nicht offiziell bestätigt. Für <strong>Spring</strong>, <strong>Angular</strong>, <strong>Caddy</strong>, <strong>Docker</strong> und <strong>Tailscale</strong> haben wir diese Woche keine geprüfte Release-Meldung.</p>
+        <span class="src">[1] <a href="https://www.python.org/downloads/">python.org (24.10.)</a> · [2] <a href="https://www.postgresql.org/list/">postgresql.org Mailingliste (10.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert <span class="h2-refs">[1][2]</span></h2>
+        <ul>
+          <li><strong>Quest Diagnostics</strong> bestätigt ein Datenleck mit Patientendaten aus dem System Quanum LSM.<sup>[1]</sup></li>
+          <li><strong>Microsoft Teams</strong> soll ab Anfang November eine KI-gestützte Phishing-Erkennung in Nachrichten bekommen.<sup>[1]</sup></li>
+          <li><strong>Entra ID</strong>: iX warnt vor versteckten Berechtigungen und empfiehlt Selbst-Audits.<sup>[2]</sup></li>
+          <li><strong>AfD-Leak</strong>: Zwei anonyme mutmaßliche Täter bekennen sich laut heise in einem Zeit-Interview zum Cyberangriff.<sup>[2]</sup></li>
+          <li><strong>KI-Security-Tools</strong> von AWS und JFrog: Details im ai-dev-Brief.</li>
+          <li><strong>BR</strong>: heute keine verifizierte Meldung.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (23.10.)</a> · [2] <a href="https://www.heise.de/security/">heise.de (23.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Was dieses Wochenende eine halbe Stunde wert ist</h2>
+        <ol>
+          <li><strong>PHP</strong>: Prüfen, ob alles auf 8.5.12 / 8.4.27 / 8.3.36 / 8.2.35 läuft. Danach den Code nach <code>serialize_handler</code> durchsuchen.</li>
+          <li><strong>Collabora / Nextcloud</strong>: Vor Montag nach einem Update sehen.</li>
+          <li><strong>GitHub CLI</strong>: Ablaufende OAuth-Tokens einschalten.</li>
+          <li><strong>Plex im Homelab</strong>: mindestens 1.43.3.10861.</li>
+          <li><strong>Interne HTTP-Tools</strong>: Auf HTTPS umstellen, bevor Chrome alle nervt.</li>
+        </ol>
+        <p>Der Rest kann bis Montag warten.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Samstag, der vierundzwanzigste Oktober. Nach der PHP2Shell-Woche kommt kein ruhiges Wochenende. PHP hat eine weitere Lücke gemeldet, HPE schließt zweiundsiebzig Lücken in ArubaOS, und am Montag laufen zwei Fristen der US-Behörde CISA ab.</p>
+  <p>Zuerst PHP. Die neue Lücke hat noch keinen Patch. Sie trifft aber nur Anwendungen, die den Session-Serializer zur Laufzeit umschalten. Die Abhilfe ist bekannt: den Upload-Fortschritt für Sessions abschalten. Für die großen PHP2Shell-Lücken gilt weiter: Nur das Update auf die Versionen vom einundzwanzigsten Oktober hilft wirklich.</p>
+  <p>CISA hat Collabora Online und den Arista VeloCloud Orchestrator in den Katalog der aktiv ausgenutzten Lücken aufgenommen. Die Frist ist schon Montag. Wer Collabora selbst betreibt, etwa mit Nextcloud, sollte vorher nach einem Update sehen.</p>
+  <p>Bei HPE sind acht der zweiundsiebzig ArubaOS-Lücken in der höchsten Stufe. Angriffe sind noch nicht bekannt. Bis zum Update sollen die Verwaltungs-Oberflächen in ein eigenes Netz.</p>
+  <p>Das Thema der Woche bleibt die Lieferkette. Eine alte Popcorn-Time-Variante holte Updates von einer verlassenen Domain, ohne Signatur. Forscher haben sie gekauft und den Updater auf Millionen Rechnern abgeschaltet. GitHub testet eine Firewall gegen schädliche npm-Pakete. Und die GitHub CLI kann jetzt Tokens, die von selbst ablaufen. Nach dem LiteLLM-Vorfall ist das eine gute Idee.</p>
+  <p>Oracle hat sein Quartals-Update mit eintausendzweihundertfünfundneunzig Patches veröffentlicht. Welche Java-Versionen genau gefixt sind, ist noch nicht sauber geklärt.</p>
+  <p>Außerdem: GoDaddy widerruft rund vierhunderttausend Zertifikate wegen Formfehlern, Chrome warnt jetzt standardmäßig vor unverschlüsselten Seiten, und der DNS-Dienst Quad9 verlässt Frankreich nach einem Sperr-Urteil.</p>
+  <p>Schönes Wochenende. Am Montag schauen wir, ob die KEV-Fristen halten und ob PHP einen Termin für den nächsten Patch nennt.</p>
+</div>
+
+</body>
+</html>
