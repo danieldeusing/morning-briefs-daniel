@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-25</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-25</span>
+    <span class="dot">·</span>
+    <span>Sunday, October 25, 2026 · Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">A bootkit despite the patch, PHP2Shell in review, and two KEV deadlines expire on Monday</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Sunday is quiet, and that is fine. Hardly any new reports have come in since Friday, so we use the day for the weekly overview. The only fresh story is an unpleasant one: the UEFI bootkit BlackX bypasses Secure Boot on fully patched Windows machines, because a 2022 patch alone is not enough. Alongside it sits a week that put PHP, GitLab, Node.js and BIND under pressure all at once. The lesson is always the same: installing an update does not mean it works. With BlackX the revocation step is missing, with PHP2Shell the attack came before the patch, and with GitLab thousands of instances sit open on the internet.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>BlackX bootkit</strong>: uses Baton Drop (CVE-2022-21894), hits patched Windows without revocations enabled. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>CISA KEV</strong>: deadline Mon Oct 26 for Collabora Online (CVE-2026-110447) and Arista VeloCloud (CVE-2026-114625). <span class="chip">USA</span></li>
+      <li><span class="chip hot">Sec</span> <strong>PHP2Shell</strong>: according to AWS, attacks began four days before the patch; heise reports millions of vulnerable services in Germany. <span class="chip">DE</span></li>
+      <li><span class="chip hot">Sec</span> <strong>GitLab CVE-2026-110264</strong>: code execution without login, over 2,700 exposed CE instances. <span class="chip">Global</span></li>
+      <li><span class="chip">Release</span> <strong>Node.js</strong> 22.23.4 / 24.22.1 / 26.12.1: ten CVEs, including a Brotli bug. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>BIND 9.20.30</strong>: four CVEs, one of them with a path to code execution. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>Windows Server 2016</strong>: extended support ends Jan 12, 2027. <span class="chip">Global</span></li>
+      <li><span class="chip">OSS</span> <strong>curl</strong> now accepts only high and critical reports via HackerOne. <span class="chip">Global</span></li>
+      <li><span class="chip">Browser</span> <strong>Chrome</strong> warns about HTTP by default; <strong>Arc</strong> is being discontinued. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Two KEV deadlines on Monday, then nothing confirmed. The Plex deadline (Nov 3) falls just outside the window.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Sun 10/25</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>No confirmed events</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mon 10/26</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA KEV deadline: Collabora Online CVE-2026-110447, Arista VeloCloud Orchestrator CVE-2026-114625</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 10/27 – Sun 11/01</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>No confirmed events</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>BlackX: a bootkit that simply skips the 2022 patch <span class="h2-refs">[1]</span></h2>
+        <p><span class="update-since">New since Saturday</span> On Oct 24, BleepingComputer reports on <strong>BlackX</strong>, a UEFI bootkit that bypasses Secure Boot. It exploits <strong>Baton Drop</strong> (CVE-2022-21894), a flaw Microsoft already patched in 2022. The catch: the patch does not automatically revoke the old, vulnerable boot managers. According to the article, all BlackX victims Kaspersky has seen were running fully patched Windows, just without revocations enabled.<sup>[1]</sup></p>
+        <p>According to the article, BlackX has been known since early 2026. Its predecessor BlackLotus has used the same technique since October 2022. There is also a dated detail: the "Windows Production PCA 2011" certificate expired on Oct 19, 2026.<sup>[1]</sup> The article gives no CVSS score.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Bootkit and revocation:</strong> Secure Boot checks at startup whether the boot code has a valid signature. But an old, flawed boot manager also has a valid signature. The update fixes the new code but does not automatically put the old one on the blocklist. It is like a new lock on the door while the old key still fits until you explicitly block it.
+        </div>
+        <div class="callout"><span class="callout-label">Heads up</span> If you manage Windows servers or dev machines, check that the Secure Boot revocations from Microsoft's guidance are actually applied. This is a deliberate step with a risk: old boot media will no longer start afterward. That is why it never happened on many machines.</div>
+        <div class="callout info"><span class="callout-label">Our take</span> This is the story of the week in miniature. "Patched" is a status on a dashboard, not a security state. With firmware that is doubly true, because the last step is manual and can hurt.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/blackx-uefi-bootkit-exploits-baton-drop-flaw-to-bypass-secure-boot/">bleepingcomputer.com (Oct 24)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PHP2Shell: the week in review <span class="h2-refs">[1][2][3][4][5]</span></h2>
+        <p>The two flaws <strong>CVE-2026-109618</strong> and <strong>CVE-2026-109619</strong> allow code execution without login. Since Oct 21 they are fixed in <strong>8.5.12, 8.4.27, 8.3.36 and 8.2.35</strong>; the release candidate 8.6.0 RC4 also contains the fixes.<sup>[1]</sup> The PHP security team rates both at 9.2 under CVSS v4.0 (php.net, Oct 20); the NVD has no entry for them yet.<sup>[2]</sup></p>
+        <p>What made the week so unpleasant: according to Amazon, the first exploitation attempts began on Saturday, Oct 17, four days before the patch.<sup>[3]</sup> In the UK, tech minister Baroness Lloyd told the House of Lords on Oct 22 that <strong>32</strong> government services were unavailable and <strong>4</strong> partly unavailable. This was largely due to precautionary measures; she is not aware of any confirmed compromise of central government systems.<sup>[4]</sup></p>
+        <p>For Germany, heise reports on Oct 23, citing Censys scans, millions of vulnerable PHP services.<sup>[5]</sup> According to heise, the remedy stays the same: install updates, nothing else really helps.<sup>[5]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> A four-day head start for attackers means: even if you patched right away on Oct 21, you should still look at the logs. A patch closes the door, but it does not throw out anyone who is already inside. This applies especially to shared hosting and old client projects nobody has on their radar anymore.</div>
+        <span class="src">[1] <a href="https://www.php.net/archive/2026.php#2026-10-21-5">php.net (Oct 21)</a> · [2] <a href="https://www.php.net/archive/2026.php#2026-10-20-1">php.net (Oct 20)</a> · [3] <a href="https://www.bleepingcomputer.com/news/security/amazon-says-php2shell-exploitation-began-4-days-before-patches/">bleepingcomputer.com (Oct 22)</a> · [4] <a href="https://www.theregister.com/security/2026/10/22/php2shell-puts-dozens-of-uk-government-services-out-of-service/5304840">theregister.com (Oct 22)</a> · [5] <a href="https://www.heise.de/security/">heise.de (Oct 22/23)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PHP CVE-2026-115560: not an emergency, but a setting <span class="h2-refs">[1][2]</span></h2>
+        <p>On Oct 23, php.net reported a follow-up flaw involving session upload progress. PHP writes: "We suggest you set <code>session.upload_progress.enabled=0</code> until the next regular bugfix release, to fully protect from an unlikely RCE vector." A full advisory is due with the next regular release.<sup>[1]</sup></p>
+        <p>The Register confirmed on Oct 23: PHP has reserved the identifier CVE-2026-115560 for this third RCE flaw, and there will be no emergency patch.<sup>[2]</sup> Only setups with session upload progress enabled are affected.</p>
+        <span class="src">[1] <a href="https://www.php.net/archive/2026.php#2026-10-23-1">php.net (Oct 23)</a> · [2] <a href="https://www.theregister.com/security/2026/10/23/theres-a-third-php2shell-bug-but-it-wont-get-an-emergency-fix/5305208">theregister.com (Oct 23)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>GitLab: code execution without login, twelve years of releases <span class="h2-refs">[1][2][3]</span></h2>
+        <p>On Oct 21, GitLab closed <strong>CVE-2026-110264</strong>; GitLab itself rates the flaw <strong>CVSS 10.0</strong>, the highest level.<sup>[3]</sup> According to BleepingComputer, an integer overflow in the regex compiler allowed "an unauthenticated user" to execute arbitrary code on the server. Fixes are available for CE and EE in <strong>19.5.1, 19.4.3, 19.3.6, 19.2.9, 19.1.9, 19.0.10 and 18.11.13</strong>; GitLab.com is already patched.<sup>[1]</sup></p>
+        <p>Shadowserver counts more than <strong>2,700</strong> openly reachable CE instances.<sup>[1]</sup> The Register writes of "12 years of releases", while heise reports twelve flaws fixed in total in the same update.<sup>[2]</sup> No exploitation has been reported.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Integer overflow:</strong> A number grows larger than its storage space can hold and then wraps around to a small value, like an odometer after 999,999. If code then calculates with the wrong size, it writes past the edge of a buffer.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> Self-hosted GitLab is where source code, CI secrets and deploy keys all sit together. An unauthenticated RCE there is worse than on almost any other internal service. If your instance is not behind a VPN or Tailscale, do that after the update.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/gitlab-warns-of-new-max-severity-code-execution-vulnerability/">bleepingcomputer.com (Oct 22)</a> · [2] <a href="https://www.theregister.com/">theregister.com</a> / <a href="https://www.heise.de/security/">heise.de (Oct 22)</a> · [3] <a href="https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-5-1-released/">docs.gitlab.com (Oct 21)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Node.js: ten CVEs, one of them in the Brotli decoder <span class="h2-refs">[1]</span></h2>
+        <p>The security release of Oct 21 closes ten flaws: four high, three medium, three low. Fixed in <strong>22.23.4</strong>, <strong>24.22.1</strong> (current LTS) and <strong>26.12.1</strong> (current release). According to Node.js, EOL versions are always affected and get nothing.<sup>[1]</sup></p>
+        <p>The four high ones: truncation at a NUL byte in <code>dns.resolve</code> (CVE-2026-105482), two bypasses of the TLS certificate check <code>tls.checkServerIdentity()</code> via oddly written IP addresses (CVE-2026-105483 with full-width digits, 26.x and 24.x only; CVE-2026-106069 with leading zeros read as octal, such as <code>0127.0.0.1</code>), and an out-of-bounds write in the Brotli decoder (CVE-2026-111497). According to Node.js, the latter can lead to a crash, disclosure of process memory or code execution.<sup>[1]</sup></p>
+        <div class="callout"><span class="callout-label">Heads up</span> The two TLS flaws hit clients that connect to a server by IP address instead of hostname: a certificate issued for a different address can then still be accepted. If your Node code talks to internal services over IP and TLS, upgrade and check that the target addresses are written cleanly.</div>
+        <span class="src">[1] <a href="https://nodejs.org/en/blog/vulnerability/october-2026-security-releases">nodejs.org (Oct 21)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: Collabora and Arista, deadline Monday <span class="h2-refs">[1][2]</span></h2>
+        <p>On Oct 23, CISA listed <strong>CVE-2026-110447</strong> (Collabora Online, "Built-in CODE Server") and <strong>CVE-2026-114625</strong> (Arista VeloCloud Orchestrator) as actively exploited. The deadline for US federal agencies is <strong>Oct 26</strong>. Nothing new has entered the catalog since Friday.<sup>[1]</sup></p>
+        <p>BleepingComputer confirmed on Oct 22 that Arista patched an actively exploited zero-day in VeloCloud Orchestrator, tracked as CVE-2026-114625.<sup>[2]</sup> On Collabora we found no further technical details.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (Oct 25)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/arista-patches-new-velocloud-orchestrator-zero-day-exploited-in-attacks/">bleepingcomputer.com (Oct 22)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>BIND 9.20.30: four CVEs, one path to code execution <span class="h2-refs">[1][2]</span></h2>
+        <p>On Oct 21, ISC closed four flaws in BIND (CVE-2026-19630, -94300, -96888, -97313), fixed in <strong>9.20.30</strong> and 9.21.27.<sup>[1]</sup> heise calls it a "code smuggling flaw in the name server"; it means CVE-2026-94300 around GSS-TSIG.<sup>[2]</sup> ISC itself lists no CVSS scores on the overview, and we did not cross-check the second-hand scores. So we give none.</p>
+        <span class="src">[1] <a href="https://kb.isc.org/docs/aa-00913">kb.isc.org (Oct 21)</a> · [2] <a href="https://www.heise.de/security/">heise.de (Oct 22)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Network hardware: HPE, Fortinet, Plex <span class="h2-refs">[1][2][3][4]</span></h2>
+        <h3>HPE ArubaOS</h3>
+        <p>On Oct 23, BleepingComputer ran: "HPE patches eight max severity RCE and auth bypass AOS flaws", as part of a package with 72 flaws in total.<sup>[1]</sup> No exploitation is known.</p>
+        <h3>Fortinet</h3>
+        <p>On Oct 22, heise reported that Fortinet is planning urgent out-of-band updates, with technical details due only in November.<sup>[2]</sup> We found no CVE number for it. We treat this as a hint, not a confirmed flaw.</p>
+        <h3>Plex2Shell</h3>
+        <p>CISA added CVE-2026-96652 and -96655 to the KEV catalog on Oct 20; the deadline runs until <strong>Nov 3</strong>.<sup>[4]</sup> Plex Media Server <strong>1.43.3.10861</strong> and newer is safe.<sup>[3]</sup> If you run Plex in a homelab, check the version today, not next week.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hpe-patches-eight-max-severity-rce-and-auth-bypass-aos-flaws/">bleepingcomputer.com (Oct 23)</a> · [2] <a href="https://www.heise.de/security/">heise.de (Oct 22)</a> · [3] <a href="https://www.bleepingcomputer.com/news/security/cisa-hackers-chain-plex-flaws-in-plex2shell-attacks-to-breach-servers/">bleepingcomputer.com (Oct 21)</a> · [4] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (Oct 25)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>ConnectWise breach: attacks on 2,250 cloud tenants <span class="h2-refs">[1]</span></h2>
+        <p>According to Microsoft, the China-linked espionage group Storm-0940 targeted more than <strong>2,250</strong> Microsoft 365 tenants. The route: stolen ConnectWise application credentials and the permissions customers had granted to ConnectWise cloud services. Most attempts failed, but some attackers gained persistent privileged access. Microsoft has not said how many customers were compromised.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> Managed-service tools are master keys. If you give a service provider admin access to your own tenant, you should know which app registrations and partner relationships are in place there. A look at the Entra ID partner list takes five minutes.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/10/22/microsoft-says-connectwise-breach-let-chinese-spies-loose-on-2250-cloud-tenants/5304687">theregister.com (Oct 22)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Supply chain: LiteLLM, Railway, GitHub firewall <span class="h2-refs">[1][2][3]</span></h2>
+        <p>The poisoned <strong>LiteLLM 1.107.0</strong> sat on PyPI and in the Docker images for about two hours on Oct 21, with a credential stealer on board.<sup>[1]</sup> On Oct 22, BleepingComputer additionally reported that the release pipeline had been hacked. The AI side of the story is in the ai-dev brief.</p>
+        <p>The same day, the hosting platform <strong>Railway</strong> asked its users to rotate secrets.<sup>[2]</sup> And GitHub has released the <strong>Package Firewall</strong> against malicious npm packages as a public preview for Enterprise Cloud.<sup>[3]</sup></p>
+        <span class="src">[1] <a href="https://thehackernews.com/2026/10/litellm-compromised-in-supply-chain.html">thehackernews.com (Oct 21/22)</a> · [2] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (Oct 22)</a> · [3] <a href="https://www.heise.de/security/">heise.de (Oct 23)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>curl filters HackerOne <span class="h2-refs">[1]</span></h2>
+        <p>According to heise on Oct 22, the curl project now accepts only reports on high and critical flaws via HackerOne.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> This is OSS policy worth understanding: a small core team cannot review every weak report. If you find serious but medium-severity bugs, just use the normal bug tracker.</div>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de (Oct 22)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Certificates: eMudhra exits <span class="h2-refs">[1]</span></h2>
+        <p>The Indian CA eMudhra is leaving the global SSL/TLS business after its weak private keys came to light. According to The Register, revocation and status services keep running until every issued certificate has expired or been replaced, and eMudhra says it will move customers to other issuers free of charge.<sup>[1]</sup> If you use certificates from this CA, you need a new issuer.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/10/22/disgraced-indian-cert-issuer-leaves-the-cert-issuing-business/5304848">theregister.com (Oct 22)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Signal: microphone stays on after hangup <span class="h2-refs">[1]</span></h2>
+        <p>The flaw <strong>CVE-2026-113380</strong> (CVSS 9.3) sits in Signal's RingRTC calling library before version <strong>2.72.0</strong> and can keep the mic and camera on after hangup. The fix has been available since September 2026; no exploitation is known.<sup>[1]</sup> The update via the app store is usually enough.</p>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/10/21/signal-bug-could-keep-your-mic-and-camera-on-after-hangup/5304528">theregister.com (Oct 21)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Browser: Chrome warns about HTTP, Arc goes <span class="h2-refs">[1][2][3]</span></h2>
+        <p>According to heise on Oct 22, Chrome warns before the first visit to unencrypted sites, by default for everyone.<sup>[1]</sup> A year ago Google announced: "with the release of Chrome 154 in October 2026, we will change the default settings of Chrome to enable 'Always Use Secure Connections'."<sup>[2]</sup> We did not check which exact version the change landed in.</p>
+        <p>The Register also reports on Oct 23: "Arc browser on its way out".<sup>[3]</sup> If you use Arc as your main browser, plan the move of your profiles and passwords.</p>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de (Oct 22)</a> · [2] <a href="https://bleepingcomputer.com/news/google/google-chrome-to-warn-users-before-opening-insecure-http-sites">bleepingcomputer.com</a> · [3] <a href="https://www.theregister.com/">theregister.com (Oct 23)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Windows Server 2016: a good two months left <span class="h2-refs">[1]</span></h2>
+        <p>BleepingComputer reminds us on Oct 23: extended support for Windows Server 2016 ends on <strong>Jan 12, 2027</strong>.<sup>[1]</sup> After that there are no more security updates. Together with BlackX, this is a good reason to count the old Hyper-V hosts and build servers.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-windows-server-2016-reaches-end-of-support-in-january/">bleepingcomputer.com (Oct 23)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Oracle CPU: the Java question stays open <span class="h2-refs">[1]</span></h2>
+        <p>According to endoflife.ai, the Critical Patch Update of Oct 20 brings <strong>1,295</strong> patches, <strong>55</strong> of them for Java SE.<sup>[1]</sup> Which JDK builds exactly are fixed remains contradictory; endoflife.ai writes that JDK 26 received no fix. The Oracle page was not reachable for us. If you use OpenJDK builds like Temurin, wait for your vendor.</p>
+        <span class="src">[1] <a href="https://endoflife.ai/article-oracle-cpu-october-2026-unsupported">endoflife.ai (Oct 24)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: reporting obligation under stress test <span class="h2-refs">[1]</span></h2>
+        <p>Since Sep 11, 2026, manufacturers must report actively exploited flaws under the Cyber Resilience Act; the rest applies from Dec 11, 2027.<sup>[1]</sup> This week was the first real test: PHP, GitLab, Arista, Collabora, Plex.</p>
+        <div class="callout info"><span class="callout-label">Our take</span> If you build PHP or GitLab into a commercial product for the EU market, you are a manufacturer. It will be interesting to see whether ENISA names first figures after this week. We expect silence until the annual report.</div>
+        <span class="src">[1] <a href="https://www.crowell.com/en/insights/client-alerts/its-live-the-cyber-resilience-act-reporting-is-mandatory-as-of-today-11-september-2026">crowell.com (Sep 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Stack check: Python, Postgres, Spring <span class="h2-refs">[1][2][3]</span></h2>
+        <p><strong>Python</strong>: 3.15.1, 3.14.9 and 3.13.17 since Oct 21; 3.15.0 came on Oct 9.<sup>[1]</sup> <strong>PostgreSQL</strong>: the update release on Nov 12 is the last for PG 14; according to the RC1 announcement, GA of PG 19 is planned for Nov 19, 2026, not guaranteed.<sup>[2]</sup> <strong>Spring</strong>: the latest report we found is Spring Boot 3.5.16 from Jun 25, the last open-source version of the 3.5 line.<sup>[3]</sup> For Angular, React, Caddy, Docker and Tailscale we have no verified release report this week.</p>
+        <span class="src">[1] <a href="https://www.python.org/downloads/">python.org (Oct 24)</a> · [2] <a href="https://www.postgresql.org/about/news/postgresql-19-rc-1-released-3409/">postgresql.org (Oct 15)</a> · [3] <a href="https://spring.io/blog/2026/06/25/spring-boot-3-5-16-available-now/">spring.io (Jun 25)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief <span class="h2-refs">[1][2][3]</span></h2>
+        <ul>
+          <li><strong>Capcom</strong>: 11.7 million affected accounts, per BleepingComputer (Oct 22).<sup>[1]</sup></li>
+          <li><strong>Quest Diagnostics</strong> confirms a data breach (Oct 23).<sup>[1]</sup></li>
+          <li><strong>KeePassXC 2.8.0</strong> with security fixes and Auto-Type under Wayland.<sup>[2]</sup></li>
+          <li><strong>Quad9</strong> leaves France after the beIN blocking ruling.<sup>[2]</sup></li>
+          <li><strong>PubKeep</strong> wants to succeed Microsoft Publisher (Oct 23).<sup>[3]</sup></li>
+          <li><strong>Torvalds</strong> on AI patches in the kernel: details in the ai-dev brief.</li>
+          <li><strong>BR</strong>: no verified report today.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (Oct 22/23)</a> · [2] <a href="https://www.heise.de/security/">heise.de (Oct 22)</a> · [3] <a href="https://www.theregister.com/">theregister.com (Oct 23)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>What an hour of your Sunday is worth</h2>
+        <ol>
+          <li><strong>Secure Boot</strong>: On Windows machines, check whether the Baton Drop revocations are active. Have current boot media ready first.</li>
+          <li><strong>GitLab</strong>: Check the version, put the instance behind a VPN or Tailscale.</li>
+          <li><strong>Node.js</strong>: Raise base images to 22.23.4 / 24.22.1 / 26.12.1.</li>
+          <li><strong>PHP</strong>: Check versions, look at logs from Oct 17, leave <code>session.upload_progress.enabled=0</code> in place.</li>
+          <li><strong>Collabora / Plex</strong>: Updates before the KEV deadlines.</li>
+        </ol>
+        <p>The rest waits until Monday.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Sunday, October twenty-fifth. Things have been quiet since Friday, so today is mostly a look back at a rough week. There's one new story, and it's an unpleasant one.</p>
+  <p>The bootkit BlackX gets around Secure Boot on fully patched Windows machines. It exploits a twenty twenty-two flaw called Baton Drop. The patch for it doesn't automatically block the old boot managers. According to BleepingComputer, every victim Kaspersky has seen had the patch, but not the revocation. If you manage Windows machines, you should check that step.</p>
+  <p>On PHP2Shell: the updates from October twenty-first remain the only real fix. According to Amazon, attacks began four days before the patch. So even if you updated early, take a look at your logs. heise reports millions of vulnerable PHP services in Germany. For another, smaller flaw, PHP recommends turning off session upload progress until the next regular release.</p>
+  <p>GitLab has closed a top-severity flaw. Attackers could run code on the server without logging in. Shadowserver counts more than twenty-seven hundred openly reachable instances. Node.js fixed ten flaws, including a bug in the Brotli decoder and two ways to bypass the TLS certificate check.</p>
+  <p>On Monday, two deadlines from the U.S. agency CISA run out, for Collabora Online and the Arista VeloCloud Orchestrator. For Plex, there's time until November third.</p>
+  <p>Also: according to Microsoft, Chinese spies used stolen ConnectWise credentials to target more than twenty-two hundred fifty Microsoft 365 tenants. Most attempts failed, but not all. The curl project now accepts only serious reports through HackerOne. Chrome now warns about unencrypted sites by default. And Windows Server twenty sixteen stops getting updates after January twelfth.</p>
+  <p>Have a good Sunday. Tomorrow we'll see whether new attacks on GitLab or PHP were reported over the weekend, and whether Fortinet finally shares details.</p>
+</div>
+
+</body>
+</html>
