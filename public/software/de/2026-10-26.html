@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-26</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-10-26</span>
+    <span class="dot">·</span>
+    <span>Montag, 26.10.2026 · Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">Heute laufen die KEV-Fristen für Collabora und Arista ab, Unit 42 rudert bei PHP2Shell zurück, und Ruby repariert seinen Regex-Motor</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Ein Wochenende ohne neue Großbrände, und das ist die gute Nachricht. Die schlechte: Die Baustellen der letzten Woche sind noch offen. Heute endet die CISA-Frist für die Collabora-Lücke, die Nextcloud-Server seit Mitte September mit Webshells bestückt. Bei PHP2Shell zieht Palo Altos Unit 42 eine Behauptung über einen Angriff auf eine europäische Behörde zurück, was die Lage nicht entschärft, nur sauberer macht. Und Ruby hat drei Releases nachgeschoben, die genau den Regex-Fehler beheben, der hinter GitLabs Lücke der Höchststufe steckt. Meine Sicht für den Montag: weniger Neues lesen, mehr Altes abhaken.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>CISA KEV</strong>: Frist heute für Collabora CODE (CVE-2026-110447) und Arista VeloCloud (CVE-2026-114625). <span class="chip">USA</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Collabora/Nextcloud</strong>: ausgenutzt seit 10.09., Fix in richdocumentscode 26.4.303; Abschalten der App reicht nicht. <span class="chip">EU</span></li>
+      <li><span class="chip">Sec</span> <strong>PHP2Shell</strong>: Unit 42 zieht die Behauptung über einen Angriff auf eine EU-Behörde zurück. <span class="chip">Global</span></li>
+      <li><span class="chip">Release</span> <strong>Ruby 4.0.9 / 3.4.12 / 3.3.13</strong>: Onigmo-Fixes zu vier GitLab-CVEs. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Plex2Shell</strong>: Kryptominer seit 17.10., KEV-Frist 03.11.; sicher ab 1.43.3.10861. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Tailscale SSH</strong>: Bericht über ungepatchte Fehler, bisher nur eine Quelle. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>Python 3.15.2</strong> seit 25.10.; <strong>Linux 7.3</strong> seit 18.10. <span class="chip">Global</span></li>
+      <li><span class="chip">Web</span> <strong>eMudhra</strong>: acht Zwischen-Zertifikate gesperrt, Node.js entfernt die CA. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulierung</span> <strong>CRA</strong>: 24-Stunden-Meldepflicht seit 11.09., die PHP-Woche war der erste Härtetest. <span class="chip">EU</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Heute zwei KEV-Fristen, danach nichts Bestätigtes. Plex-Frist (03.11.) und Patch Tuesday (10.11.) liegen knapp außerhalb.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Mo 26.10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA-KEV-Frist: Collabora Online CVE-2026-110447, Arista VeloCloud Orchestrator CVE-2026-114625</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 27.10 – So 01.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Keine bestätigten Termine</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Collabora: die Nextcloud-Lücke, die keiner kommen sah <span class="h2-refs">[1][2]</span></h2>
+        <p>CISA hat <strong>CVE-2026-110447</strong> am 23.10. in den KEV-Katalog aufgenommen, die Frist für US-Behörden ist <strong>heute</strong>.<sup>[1]</sup> Betroffen ist nicht Collabora allgemein, sondern der eingebaute CODE-Server, den Nextcloud über die App <code>richdocumentscode</code> mitliefert. Laut BleepingComputer wurde der Fix am 09.09. eingecheckt, Version <strong>26.4.303</strong> kam am 11.09., die ersten Angriffe gab es schon am 10.09. Advisory und CVE folgten erst am 14.10.<sup>[2]</sup></p>
+        <p>Der Angriff läuft ohne Login über <code>proxy.php</code> und setzt Webshells ab. Unbequemes Detail: Voraussetzung laut BleepingComputer: Der eingebaute CODE-Server muss gestoppt sein, etwa nach Neustart, Update oder Absturz. Und laut Artikel ist „disabling the app is insufficient“. Nicht betroffen sind eigenständige Collabora-Installationen, Docker-, RPM- und DEB-Pakete sowie Nextcloud AIO.<sup>[2]</sup> Den CVSS-Wert 9,2 nennt nur The Hacker News; gegen NVD geprüft haben wir ihn nicht.</p>
+        <div class="callout"><span class="callout-label">Achtung</span> Wer eine Nextcloud mit der Office-App „Nextcloud Office (built-in CODE server)“ betreibt, prüft die App-Version auf 26.4.303 oder neuer. Weil die Angriffe einen Monat vor dem Advisory begannen, lohnt sich ein Blick nach unbekannten PHP-Dateien im Webroot, auch wenn das Update längst drauf ist.</div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Das ist der Albtraum der Self-Hoster: Ein Monat zwischen Fix und Advisory, in dem niemand wusste, dass er handeln muss. Auto-Updates für Nextcloud-Apps sind hier das einzige, was wirklich geholfen hätte.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (26.10.)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-collabora-rce-flaw-to-backdoor-nextcloud-servers/">bleepingcomputer.com (15.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Arista VeloCloud: SQL-Injection im Orchestrator <span class="h2-refs">[1][2][3]</span></h2>
+        <p>Der zweite KEV-Eintrag vom 23.10. mit Frist heute ist <strong>CVE-2026-114625</strong> im Arista VeloCloud Orchestrator.<sup>[1]</sup> BleepingComputer meldete am 22.10., Arista habe eine aktiv ausgenutzte Zero-Day-Lücke im Orchestrator gepatcht.<sup>[2]</sup> The Hacker News beschreibt sie als SQL-Injection mit CVSS 9,9, Fix im Oktober.<sup>[3]</sup> Den Score haben wir nicht beim Hersteller gegengeprüft. Wer SD-WAN von VeloCloud betreibt, hat den Orchestrator meist nicht selbst in der Hand; hier ist der Dienstleister gefragt.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (26.10.)</a> · [2] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (22.10.)</a> · [3] <a href="https://thehackernews.com/">thehackernews.com (24.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PHP2Shell: eine Behauptung weniger, ein Problem gleich groß <span class="h2-refs">[1][2]</span></h2>
+        <p><span class="update-since">Neu seit Samstag</span> Laut The Hacker News vom 25.10. hat Palo Altos <strong>Unit 42</strong> die frühere Aussage zurückgezogen, die Lücken seien bei einem Angriff auf eine europäische Regierungsbehörde genutzt worden. Im selben Zug meldet das Portal einen Verdacht auf weltweites Scannen durch nordkoreanische Akteure.<sup>[2]</sup></p>
+        <p>Zur Erinnerung: <strong>CVE-2026-109618</strong> und <strong>CVE-2026-109619</strong> erlauben Codeausführung ohne Login. Behoben sind sie seit 21.10. in <strong>8.5.12, 8.4.27, 8.3.36 und 8.2.35</strong>, für 7.4, 8.0 und 8.1 gibt es minimale Backports. Gefunden haben sie Calif, OpenAI und Wiz. Am höchsten ist das Risiko laut PHP-Sicherheitsteam bei <code>mod_php</code>. Cloudflare sah früh Angriffe und schaltete temporäre WAF-Regeln, das britische NCSC riet: aktualisieren oder vom Netz nehmen.<sup>[1]</sup> Den oft zitierten CVSS-Wert 9,2 haben wir in dieser Runde nur aus Suchtreffern, BleepingComputer nennt keinen.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Ein Rückzieher bei der Zuschreibung ändert nichts an der Technik. Wer am Wochenende auf „ist doch nicht so schlimm“ gehofft hat, liest die Meldung falsch. Die Frage für heute bleibt: Läuft irgendwo noch ein PHP unterhalb des Fix-Releases seines Zweigs (8.2.35, 8.3.36, 8.4.27, 8.5.12), auch in einem alten Kundenprojekt? Dazu kommt eine zweite, noch ungepatchte PHP-Lücke (CVE-2026-115560, seit 23.10. bekannt, braucht eine unübliche Session-Serializer-Konfiguration). Gegenmittel laut BleepingComputer: <code>session.upload_progress.enabled=0</code>.</div>
+        <span class="src">[1] <a href="https://bleepingcomputer.com/news/security/php-ships-emergency-patches-for-critical-php2shell-flaws">bleepingcomputer.com (21.10.)</a> · [2] <a href="https://thehackernews.com/">thehackernews.com (25.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Ruby: drei Releases gegen den GitLab-Regex-Fehler <span class="h2-refs">[1][2][3]</span></h2>
+        <p>Am 23.10. erschienen <strong>Ruby 4.0.9, 3.4.12 und 3.3.13</strong>. Dazu gibt es eine Meldung mit dem Titel „Regexp compilation fixes related to GitLab's CVE-2026-89078, CVE-2026-93577, CVE-2026-97229 and CVE-2026-110264“. Die Releases beheben mehrere Fehler in Rubys Regex-Engine Onigmo, die GitLab gemeldet hat.<sup>[1]</sup> CVE-2026-110264 ist die GitLab-Lücke der Höchststufe vom 21.10., über die wir am Sonntag berichtet haben: Codeausführung ohne Login.<sup>[3]</sup></p>
+        <p>The Hacker News fasst die Folge so zusammen: Betroffen ist jede Anwendung, die einen regulären Ausdruck aus Text baut, den ein Angreifer kontrolliert.<sup>[2]</sup> Ruby 4.0.8 kam übrigens erst am 22.10., also einen Tag vorher.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Regex-Compiler:</strong> Ein regulärer Ausdruck wie <code>^a+b$</code> ist ein kleines Programm. Bevor Ruby damit sucht, übersetzt Onigmo ihn in eine interne Form. Steckt im Übersetzer ein Rechenfehler, kann ein böswillig gebauter Ausdruck Speicher überschreiben. Gefährlich wird das nur, wenn Fremde den Ausdruck selbst bestimmen dürfen, etwa über eine Suchmaske mit Regex-Option.
+        </div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Das ist die eigentliche Lehre aus dem GitLab-Fall: Der Fehler lag nicht in GitLab, sondern eine Ebene tiefer in der Sprache. Wer Ruby-Dienste mit Nutzer-Regex hat, hebt die Runtime, nicht nur das Gem.</div>
+        <span class="src">[1] <a href="https://www.ruby-lang.org/en/news/">ruby-lang.org (23.10.)</a> · [2] <a href="https://thehackernews.com/">thehackernews.com (23.10.)</a> · [3] <a href="https://www.bleepingcomputer.com/news/security/gitlab-warns-of-new-max-severity-code-execution-vulnerability/">bleepingcomputer.com (22.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Plex2Shell: das Homelab als Kryptominer <span class="h2-refs">[1][2]</span></h2>
+        <p>Vier Plex-Lücken werden zu einer Kette verbunden: SSRF über <code>/player/timeline</code> (CVE-2026-96652), URL-Injection (-96654), authentifizierte SSRF (-96655) und ein Dateischreib-Fehler (-96656). Der Forscher Zach Main meldete sie am 27.07., veröffentlichte Details und einen PoC am 16.10. Seit 17.10. gibt es Berichte über echte Angriffe mit Kryptominern. Main bewertet die Kette mit 9,8.<sup>[1]</sup></p>
+        <p>CISA führt alle vier seit 20.10. im KEV-Katalog; die Frist für -96654 und -96656 lief am 23.10. ab, für -96652 läuft sie bis <strong>03.11.</strong><sup>[2]</sup> Sicher ist <strong>1.43.3.10861</strong> und neuer, erschienen schon Anfang August<sup>[1]</sup> Der Fix lag also gut zehn Wochen vor den ersten Angriffen bereit. Wer Plex nicht automatisch aktualisiert, hat diese Zeit verschenkt.</p>
+        <span class="src">[1] <a href="https://bleepingcomputer.com/news/security/cisa-hackers-chain-plex-flaws-in-plex2shell-attacks-to-breach-servers">bleepingcomputer.com (21.10.)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (26.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Node.js: Brotli: PoC öffentlich, keine bekannten Angriffe <span class="h2-refs">[1][2]</span></h2>
+        <p>Das Security-Release vom 21.10. schließt zehn CVEs, vier davon hoch, in <strong>22.23.4, 24.22.1 und 26.12.1</strong>. Die schwerste ist <strong>CVE-2026-111497</strong>, ein Schreibzugriff über das Pufferende im Brotli-Decoder, der laut Node.js Codeausführung erlaubt. Dazu kommen zwei Umgehungen der TLS-Hostnamen-Prüfung über ungewöhnlich geschriebene IP-Adressen und ein NUL-Byte-Fehler in <code>dns.resolve</code>.<sup>[1]</sup></p>
+        <p>The Hacker News schreibt am 24.10., auch Bun, Python und andere Software seien vom Brotli-Fehler betroffen; Angriffe seien nicht gemeldet. Ein öffentlicher RCE-Proof-of-Concept (Node2Shell) existiert laut The Hacker News vom 23.10. aber.<sup>[2]</sup> Diese Ausweitung auf andere Runtimes haben wir nicht unabhängig bestätigt. Node.js selbst nennt weder einen CVSS-Wert noch einen Exploit-Status.</p>
+        <span class="src">[1] <a href="https://nodejs.org/en/blog/vulnerability/october-2026-security-releases">nodejs.org (21.10.)</a> · [2] <a href="https://thehackernews.com/">thehackernews.com (24.10.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Tailscale SSH: ein Bericht, noch keine Bestätigung <span class="h2-refs">[1][2]</span></h2>
+        <p><span class="update-since">Neu seit Samstag</span> The Hacker News titelte am 25.10.: „Unpatched Tailscale SSH Flaws Could Let a Hacked Device Reach Root on Other Servers“. Laut dem Portal hat Tailscale weder ein Bulletin noch eine CVE oder eine gefixte Version veröffentlicht, und der Bericht beschreibt Labortests, keine Angriffe auf echte Netze.<sup>[1]</sup> Den zugrunde liegenden Bericht haben wir nicht gefunden. Wir behandeln das deshalb als Hinweis, nicht als bestätigte Lücke.</p>
+        <p>Zum Vergleich: Das letzte bestätigte Problem in Tailscale SSH, TS-2026-009 vom 13.07., erlaubte mit dem Benutzernamen <code>-i</code> eine Root-Sitzung und ist seit <strong>1.98.9</strong> behoben.<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Tailscale SSH ist bequem, aber es macht jeden Knoten im Tailnet zur möglichen Brücke. Ob der neue Bericht trägt, wissen wir in ein paar Tagen. Bis dahin ist eine enge ACL für <code>ssh</code>-Regeln ohnehin gute Hygiene, egal was rauskommt.</div>
+        <span class="src">[1] <a href="https://thehackernews.com/">thehackernews.com (25.10.)</a> · [2] <a href="https://cve.circl.lu/vuln/ts-2026-009">cve.circl.lu</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>eMudhra: Schlüssel aus einem fehlerhaften Skript <span class="h2-refs">[1][2]</span></h2>
+        <p>Acht Zwischen-Zertifikate der indischen CA eMudhra sind gesperrt, sechs für TLS und zwei für Code-Signing. Ursache laut BleepingComputer: Ein Skriptfehler bei der Schlüsselerzeugung im April 2025 erzeugte einen zweiten Satz schwächerer P-384-Schlüssel, die versehentlich zum Signieren ausgewählt wurden. Ein Forscher fand das am 17.10.; Mozilla (OneCRL) und Chrome sperrten noch am selben Tag. Hinweise auf ausgestellte Endnutzer-Zertifikate mit diesen Schlüsseln gibt es laut Artikel nicht.<sup>[1]</sup></p>
+        <p>Apple und Microsoft folgten innerhalb weniger Tage; die genauen Daten sind zwischen den Quellen widersprüchlich. Node.js entfernt die eMudhra-CA mit dem Security-Release vom 21.10. aus seinem eingebauten CA-Speicher.<sup>[2]</sup> Laut The Register steigt eMudhra danach ganz aus dem globalen TLS-Geschäft aus (siehe Sonntag).</p>
+        <div class="eli5">
+          <strong class="eli5-term">Zwischen-Zertifikat:</strong> Browser vertrauen einer kleinen Liste von Wurzel-Zertifikaten. Die Wurzel unterschreibt Zwischen-Zertifikate, und die unterschreiben die Zertifikate von Websites. Ist der Schlüssel eines Zwischen-Zertifikats schwach, kann jemand, der ihn errät, für jede beliebige Domain ein gültig aussehendes Zertifikat ausstellen. Deshalb wird gesperrt, bevor es Missbrauch gibt.
+        </div>
+        <span class="src">[1] <a href="https://bleepingcomputer.com/news/security/mozilla-google-apple-block-compromised-emudhra-ca-certificates">bleepingcomputer.com (20.10.)</a> · [2] <a href="https://nodejs.org/en/blog/vulnerability/october-2026-security-releases">nodejs.org (21.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Lieferkette: LiteLLM, kurz und mit Verweis <span class="h2-refs">[1][2]</span></h2>
+        <p>Die vergiftete <strong>LiteLLM 1.107.0</strong> lag am 21.10. auf PyPI (11:39 bis 13:23 UTC), Docker Hub und GHCR. Laut LiteLLMs eigenem Post kamen die Angreifer über gestohlene OAuth-Tokens der GitHub-CLI, schalteten den Branch-Schutz ab und starteten den Release-Workflow selbst. Die Malware nistet sich über <code>.pth</code>-Dateien und <code>sitecustomize.py</code> ein; empfohlen ist <code>litellm==1.106.2</code>.<sup>[1]</sup> The Hacker News schreibt dagegen von einem geleakten Master-Key aus einem Repo-Leck im Mai 2026.<sup>[2]</sup> Wir folgen der Primärquelle. Die KI-Seite der Geschichte steht im ai-dev-Brief.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Für Nicht-KI-Teams ist die Lehre trotzdem universell: Ein CLI-Token auf einem Entwickler-Laptop reicht, um Branch-Schutz abzuschalten. Fein granulierte Tokens und geschützte Release-Umgebungen in GitHub Actions sind keine Kür mehr.</div>
+        <span class="src">[1] <a href="https://docs.litellm.ai/blog/security-incident-oct-21-2026">docs.litellm.ai (21./23.10.)</a> · [2] <a href="https://thehackernews.com/">thehackernews.com (24.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>BlackX: Kaspersky sieht APT41 dahinter <span class="h2-refs">[1]</span></h2>
+        <p>Zum Bootkit vom Sonntag gibt es eine Ergänzung: The Hacker News meldet am 23.10., BlackX umgehe Secure Boot auf Windows-Systemen, denen die Widerrufe fehlen. Kaspersky ordnet es APT41 zu und hält es für eine weiterentwickelte Version von BlackLotus.<sup>[1]</sup> Die Abhilfe bleibt dieselbe: die Secure-Boot-Widerrufe bewusst aktivieren, vorher ein aktuelles Boot-Medium bereitlegen.</p>
+        <span class="src">[1] <a href="https://thehackernews.com/">thehackernews.com (23.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>VPN-Gateways: 70.000 Zugangsdaten offen <span class="h2-refs">[1]</span></h2>
+        <p>Laut The Hacker News vom 23.10. ist ein Akteur namens <strong>k0t</strong> in Fortinet-FortiGate- und Palo-Alto-GlobalProtect-Geräte eingedrungen und hat mehr als 70.000 Zugangsdaten offengelegt.<sup>[1]</sup> Details zur Lücke nennt die Schlagzeile nicht. Passend dazu: CISA hat am 16.10. eine Fortinet-Lücke (CVE-2025-61624) und am 14.10. eine in PAN-OS (CVE-2026-0322) in den KEV-Katalog aufgenommen.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> VPN-Appliances sind 2026 das bevorzugte Einfallstor, Woche für Woche. Wer noch Remote-Zugang über so ein Gerät anbietet, sollte ernsthaft über ein Mesh-VPN mit SSO nachdenken. Das ist kein Allheilmittel, siehe oben, aber die Angriffsfläche ist kleiner.</div>
+        <span class="src">[1] <a href="https://thehackernews.com/">thehackernews.com (23.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV-Katalog: die letzten zwei Wochen im Überblick <span class="h2-refs">[1][2]</span></h2>
+        <ul>
+          <li><strong>23.10.</strong>: Collabora CODE, Arista VeloCloud (Frist heute).</li>
+          <li><strong>20.10.</strong>: Siemens Software Center CVE-2026-110936 (unsicherer Suchpfad, gefixt ab 4.0.9.8), vier Plex-CVEs, SiteGuard Server Edition CVE-2026-106931 (OS-Command-Injection, gefixt in 8.00 Update 5 / 7.00 Update 6).<sup>[2]</sup></li>
+          <li><strong>16.10.</strong>: Fortinet (CVE-2025-61624), BeyondTrust Remote Support (CVE-2026-102764).</li>
+          <li><strong>15.10.</strong>: Atlassian (CVE-2026-21589).</li>
+          <li><strong>14.10.</strong>: Palo Alto PAN-OS (CVE-2026-0322), Ahsay AhsayCBS (CVE-2026-105133/-105134), Cisco Secure Email Gateway (CVE-2026-76519).</li>
+        </ul>
+        <p>Seit 23.10. kam laut Katalog nichts Neues dazu.<sup>[1]</sup> Am relevantesten für typische Dev-Teams: Atlassian, falls Jira oder Confluence noch selbst gehostet laufen.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (26.10.)</a> · [2] <a href="https://bleepingcomputer.com/news/security/cisa-hackers-chain-plex-flaws-in-plex2shell-attacks-to-breach-servers">bleepingcomputer.com (21.10.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Python 3.15.2 ist da <span class="h2-refs">[1][2]</span></h2>
+        <p><span class="update-since">Neu seit Samstag</span> python.org listet <strong>3.15.2</strong> mit Datum 25.10. Die Linie ist noch jung: 3.15.0 kam am 09.10., eine Woche später als geplant, weil am 02.10. ein ungeplanter dritter Release Candidate nötig war.<sup>[1][2]</sup> Zwei Bugfix-Releases in gut zwei Wochen sind für ein frisches Major normal. Wer FastAPI-Dienste auf 3.15 hebt, nimmt gleich 3.15.2.</p>
+        <span class="src">[1] <a href="https://www.python.org/downloads/">python.org (26.10.)</a> · [2] <a href="https://discuss.python.org/t/python-3-15-0-candidate-3-is-here/109327">discuss.python.org (02.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Linux 7.3 und die Stable-Kernel <span class="h2-refs">[1][2]</span></h2>
+        <p>Linux <strong>7.3</strong> erschien am 18.10.; LWN veröffentlichte am 19.10. die Entwicklungsstatistik dazu.<sup>[1]</sup> Laut OMG! Ubuntu stecken 18.765 Commits ohne Merges von 3.021 Entwicklern drin, darunter verschachteltes sched_ext und <code>fchroot(2)</code>; ein Bericht sieht 7.3 als Basis des nächsten LTS. Diese Details haben wir nur aus einem Suchtreffer.<sup>[2]</sup> Am 21.10. kamen die Stable-Kernel 7.2.12, 6.18.58, 6.12.114 und 6.6.160.<sup>[1]</sup></p>
+        <p>Ebenfalls auf LWN: SUSE arbeitet daran, setuid systemweit abzuschalten (20.10.).<sup>[1]</sup> Das ist eine stille, aber große Härtung, die langfristig manches Admin-Skript bricht.</p>
+        <span class="src">[1] <a href="https://lwn.net/">lwn.net (19.–22.10.)</a> · [2] <a href="https://www.omgubuntu.co.uk/2026/10/linux-7-3-features">omgubuntu.co.uk</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Oracle-CPU: Diese Java-Versionen sind betroffen <span class="h2-refs">[1]</span></h2>
+        <p>Das Critical Patch Update vom Oktober erschien am 20.10. (21.10. japanischer Zeit). Die japanische IPA listet als betroffene, unterstützte Versionen <strong>Java SE 27, 26.0.2, 25.0.4.1, 21.0.12.1, 17.0.20.1, 11.0.32.1 und 8u503</strong>.<sup>[1]</sup> Anzahl und Schwere der Java-Fixes widersprechen sich zwischen den Sekundärquellen, und oracle.com war für uns nicht erreichbar. Deshalb nennen wir keine Zahlen. Wer Temurin oder andere OpenJDK-Builds nutzt, wartet auf die Updates seines Anbieters.</p>
+        <span class="src">[1] <a href="https://www.ipa.go.jp/security/security-alert/2026/1021-jre.html">ipa.go.jp (21.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL: RC1 für 19, Countdown für 14 <span class="h2-refs">[1]</span></h2>
+        <p>PostgreSQL 19 RC1 erschien am 15.10. Für <strong>PG 14</strong> ist am 12.11. Schluss; das Update-Release an diesem Tag ist das letzte. Die letzten Minor-Releases (18.6, 17.11, 16.15, 15.19, 14.24) stammen vom 13.08.<sup>[1]</sup> Bis heute gibt es kein Release außer der Reihe. Wer noch auf 14 läuft, hat gut zwei Wochen, um den Upgrade-Pfad zu planen.</p>
+        <span class="src">[1] <a href="https://www.postgresql.org/about/newsarchive/">postgresql.org (26.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Microsoft: der Rekord-Patch-Tuesday als Kontext <span class="h2-refs">[1]</span></h2>
+        <p>Der Patch Tuesday vom 13.10. schloss laut BleepingComputer <strong>1.411</strong> Lücken, ein Rekord; andere Medien zählen leicht anders. 70 davon sind kritisch, 57 davon Codeausführung. Ausgenutzt wurde <strong>CVE-2026-96951</strong>, eine Umgehung in der Windows Shell. Windows 11 24H2 Home und Pro bekommen keine Updates mehr; für 23H2 Enterprise, Education und IoT endet es im November.<sup>[1]</sup> Der nächste Patch Tuesday ist am 10.11.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-october-2026-patch-tuesday-fixes-1-411-flaws-3-zero-days/">bleepingcomputer.com (13.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: die erste echte Meldewoche <span class="h2-refs">[1][2]</span></h2>
+        <p>Seit 11.09. müssen Hersteller unter dem Cyber Resilience Act aktiv ausgenutzte Lücken und schwere Vorfälle über ENISAs Single Reporting Platform melden: Frühwarnung in 24 Stunden, Meldung in 72 Stunden, Abschlussbericht 14 Tage nach dem Fix. Bußgelder gehen bis 15 Mio. Euro oder 2,5 % des weltweiten Umsatzes; voll gilt der CRA ab 11.12.2027.<sup>[1][2]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Collabora, Plex und PHP2Shell sind genau die Fälle, für die die Frist gedacht ist. Wer eine Nextcloud oder ein PHP-Backend als kommerzielles Produkt in die EU liefert, ist Hersteller. Neue Zahlen von ENISA gibt es bisher nicht.</div>
+        <span class="src">[1] <a href="https://www.jonesday.com/en/insights/2026/07/eu-cyber-resilience-act-24hour-reporting-duties-start-september-11-2026">jonesday.com (07/2026)</a> · [2] <a href="https://www.mccannfitzgerald.com/knowledge/data-privacy-and-cyber-risk/cyber-resilience-act-reporting-obligations-apply-from-11-september-2026">mccannfitzgerald.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert <span class="h2-refs">[1][2]</span></h2>
+        <ul>
+          <li><strong>KeePassXC 2.8.0</strong> ist seit 22.10. draußen.<sup>[1]</sup></li>
+          <li><strong>Popcorn Time</strong>: Eye Security schob von November 2025 bis März 2026 über zwei Millionen Updates aus, um den Updater von Time4Popcorn stillzulegen.<sup>[2]</sup></li>
+          <li><strong>Google</strong> ändert seit 16.10. seine Datenschutzregeln zu Gmail- und Fotos-Daten für Werbung.<sup>[2]</sup></li>
+          <li><strong>KI-Agenten</strong> bei Ransomware und VM-Ausbrüche durch OpenAI-Agenten: Details im ai-usecases- bzw. ai-dev-Brief.</li>
+          <li><strong>Spring, Angular, React, Caddy, Docker</strong>: diese Woche keine geprüfte Release-Meldung.</li>
+          <li><strong>BR</strong>: heute keine verifizierte Meldung.</li>
+        </ul>
+        <span class="src">[1] <a href="https://lwn.net/">lwn.net (22.10.)</a> · [2] <a href="https://thehackernews.com/">thehackernews.com (24.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Was der Montag wert ist</h2>
+        <ol>
+          <li><strong>Nextcloud</strong>: richdocumentscode auf 26.4.303 oder neuer prüfen, Webroot nach fremden PHP-Dateien durchsehen.</li>
+          <li><strong>PHP</strong>: jeden Zweig auf sein Fix-Release oder neuer (8.2.35 / 8.3.36 / 8.4.27 / 8.5.12), vor allem mit <code>mod_php</code>; <code>session.upload_progress.enabled=0</code> gegen die ungepatchte CVE-2026-115560.</li>
+          <li><strong>Ruby</strong>: Runtimes auf 4.0.9 / 3.4.12 / 3.3.13 heben, wo Nutzer Regex eingeben.</li>
+          <li><strong>Plex</strong>: Version 1.43.3.10861 oder neuer bestätigen.</li>
+          <li><strong>Tailscale</strong>: SSH-ACLs eng halten und das Changelog im Blick behalten.</li>
+        </ol>
+        <p>Alles andere kann bis Dienstag warten.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Guten Morgen, es ist Montag, der sechsundzwanzigste Oktober. Das Wochenende war ruhig, aber die Baustellen der letzten Woche sind noch offen.</p>
+  <p>Heute läuft die Frist der US-Behörde CISA für zwei aktiv ausgenutzte Lücken ab. Die erste steckt im eingebauten Office-Server von Nextcloud, also in der Collabora-App. Angreifer nutzen sie seit dem zehnten September, um Webshells abzulegen, einen Monat bevor überhaupt ein Advisory erschien. Die App nur abzuschalten reicht nicht, man braucht die Version sechsundzwanzig Punkt vier Punkt dreihundertdrei. Die zweite Lücke betrifft den Arista VeloCloud Orchestrator.</p>
+  <p>Bei PHP2Shell hat Palo Altos Unit zweiundvierzig die Behauptung zurückgezogen, die Lücken seien gegen eine europäische Behörde eingesetzt worden. An der Technik ändert das nichts. Wer noch PHP vor Version acht Punkt zwei Punkt fünfunddreißig betreibt, sollte das ändern.</p>
+  <p>Ruby hat am dreiundzwanzigsten Oktober drei Releases nachgeschoben. Sie reparieren Fehler im Regex-Motor Onigmo, die hinter der schweren GitLab-Lücke stecken. Betroffen ist jede Anwendung, die reguläre Ausdrücke aus fremdem Text baut.</p>
+  <p>Außerdem: Plex-Server werden seit dem siebzehnten Oktober für Kryptominer gekapert, sicher ist man ab Version eins Punkt dreiundvierzig Punkt drei. Über Tailscale SSH gibt es einen Bericht zu ungepatchten Fehlern, aber bisher nur aus einer Quelle und ohne Bestätigung durch Tailscale. Die Zertifizierungsstelle eMudhra hat wegen schwacher Schlüssel acht Zwischen-Zertifikate verloren.</p>
+  <p>Gute Nachrichten gibt es auch: Python drei Punkt fünfzehn Punkt zwei ist seit Sonntag da, und Linux sieben Punkt drei seit dem achtzehnten Oktober. Für PostgreSQL vierzehn endet der Support am zwölften November.</p>
+  <p>Mein Rat für heute: weniger Neues lesen, mehr Altes abhaken. Nextcloud, PHP, Ruby und Plex prüfen, dann ist die Woche gut gestartet.</p>
+</div>
+
+</body>
+</html>
