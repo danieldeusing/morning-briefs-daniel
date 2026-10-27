@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-27</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-27</span>
+    <span class="dot">·</span>
+    <span>Tuesday, October 27, 2026 · Ribeirão Claro/PR</span>
+  </div>
+  <h1 class="masthead-title">PHP2Shell lands in the KEV catalog, the Brotli flaw reaches .NET and PHP for Windows, and Python cleans up after eMudhra</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Yesterday we wrote that nothing new had been added to the KEV catalog since Oct 23. On that same day, CISA added the two PHP2Shell flaws, with a deadline of Thursday. That makes official what BleepingComputer had already reported: the flaws are being exploited successfully. In parallel, the Brotli flaw from the Node.js release is working its way through half the ecosystem, all the way to an out-of-band .NET update and a second PHP update for Windows. And on Sunday Python did not simply ship bugfixes, but five accelerated security releases because of eMudhra. My take: this week is about runtimes, not frameworks. Whoever has their runtimes under control has the week under control.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>PHP2Shell</strong>: in the CISA KEV catalog since Oct 26, deadline Oct 29; fix in 8.5.12 / 8.4.27 / 8.3.36 / 8.2.35. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Brotli CVE-2026-111497</strong>: emergency .NET update on Oct 25, second PHP Windows update, Bun and Python also affected. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Node.js 20</strong>: no fix for the Brotli flaw because it is end of life. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>Python 3.15.2 through 3.11.18</strong>: accelerated security releases, <code>ssl</code> blocks the eMudhra keys. <span class="chip">Global</span></li>
+      <li><span class="chip">Browser</span> <strong>Chrome</strong>: per ssl.com, removes the eMudhra root emSign ECC Root CA G3 around Oct 27. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Wasmtime</strong>: two critical sandbox escapes, fixed since Oct 19/20, no known attacks. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>Tailscale 1.104.2</strong>: distrusts the eMudhra intermediate certificates; still no fix for the SSH reports. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>OpenSSL 4.1.0</strong>: DTLS 1.3 and GREASE, released on Oct 23. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Gheist</strong>: stolen GitHub tokens, secrets pulled from Actions logs. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>BND and BfV</strong>: per heise, Google Cloud planned for exchanging classified data. <span class="chip">DE</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Two hard dates: today Chrome removes the eMudhra root, on Thursday the KEV deadline for PHP2Shell. Nothing confirmed after that.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Tue Oct 27</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Chrome removes emSign ECC Root CA G3 (eMudhra), timing per ssl.com on Pacific-time morning</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed Oct 28</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>No confirmed dates</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu Oct 29</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>CISA KEV deadline: PHP2Shell CVE-2026-109618 and CVE-2026-109619</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri Oct 30 – Tue Nov 3</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>No confirmed dates</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PHP2Shell: now officially exploited</h2>
+        <p><span class="update-since">New since Monday</span> CISA added <strong>CVE-2026-109618</strong> and <strong>CVE-2026-109619</strong> to the KEV catalog on Oct 26. US federal agencies must patch by <strong>Oct 29</strong>.<sup>[1]</sup> BleepingComputer reported the same day that the flaws are now being exploited successfully.<sup>[2]</sup> Both allow code execution without a login. They have been fixed since Oct 21 in <strong>8.5.12, 8.4.27, 8.3.36 and 8.2.35</strong>.<sup>[3]</sup></p>
+        <p>For Windows builds that is not enough. According to The Hacker News, PHP released a second Windows update within five days that raises the bundled Brotli library to 1.2.1. The reason is the Brotli flaw CVE-2026-111497 (next story).<sup>[4]</sup> We did not check the often-cited CVSS score for PHP2Shell against NVD and therefore leave it out.</p>
+        <p>Two voices from Germany add to this. On Oct 23, heise reported on Censys data showing that a great many PHP services in Germany are still vulnerable. On Oct 26 came a comment from iX (“the grace period is over”) and an assessment from the Cloudflare chief: because AI scans code at scale, he expects many more flaws of this kind.<sup>[5]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">KEV catalog:</strong> The US cybersecurity agency CISA keeps a list of flaws that are proven to be used in real attacks. US agencies get a deadline for every entry. Think of a car recall: not every defect ends up there, only the ones where something has already happened.
+        </div>
+        <div class="callout info"><span class="callout-label">Our view</span> The KEV entry changes nothing technically, but it ends every discussion. The scenario I consider realistic is not your own main server. It is the old client project on a shared host or the Windows XAMPP on an office PC. Anyone running PHP on Windows needs the second update, not just the first.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (Oct 27)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/">bleepingcomputer.com (Oct 26)</a> · [3] <a href="https://bleepingcomputer.com/news/security/php-ships-emergency-patches-for-critical-php2shell-flaws">bleepingcomputer.com (Oct 21)</a> · [4] <a href="https://thehackernews.com/">thehackernews.com (Oct 26)</a> · [5] <a href="https://www.heise.de/security/">heise.de (Oct 23/26)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Brotli: one flaw, many runtimes</h2>
+        <p><span class="update-since">New since Monday</span> <strong>CVE-2026-111497</strong> is an out-of-bounds write in the Brotli decoder. Node.js fixed it on Oct 21 in <strong>22.23.4, 24.22.1 and 26.12.1</strong>. <strong>Node.js 20</strong> gets no fix because that line has reached end of life.<sup>[1][2]</sup> According to The Hacker News, the same bug also hits Bun, the Python packages <code>brotli</code> and <code>brotlicffi</code>, and .NET.<sup>[3]</sup></p>
+        <p>On Oct 25, Microsoft released an out-of-band .NET security update. It fixes the Brotli flaw and a file-ownership bug in tar archives; we did not pull version numbers or CVE IDs from the post.<sup>[4]</sup> Node.js rates the flaw as high, and NVD has not scored it yet. A higher score that Google is said to have assigned as CNA is known to us only from search hits.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Brotli and “writing past the end of a buffer”:</strong> Brotli is a compression format from Google that web servers and clients use for HTTP, similar to gzip. The decoder unpacks the data into a memory area of fixed size. Picture a glass into which someone pours more water than fits: it overflows and soaks the table next to it. In memory, that table is program code or control data, and that is exactly how an attacker can smuggle in their own code.
+        </div>
+        <div class="callout warn"><span class="callout-label">Heads up</span> A service on Node.js 20 that unpacks compressed data from outside stays permanently exposed. No patch helps here, only an upgrade to 22 or newer. For Python, updating the interpreter is not enough: the Brotli packages come via pip and need their own update.</div>
+        <p>By the way: the press cannot agree on a name. Imperva says “Node2Shell,” BleepingComputer says “HTTP2Shell”; no vendor uses any of them.<sup>[5]</sup> After PHP2Shell and Plex2Shell, “*2Shell” is apparently the new “-Bleed.”</p>
+        <span class="src">[1] <a href="https://vercel.com/kb/bulletin/node-js-security-advisory">vercel.com (Oct 27)</a> · [2] <a href="https://nodejs.org/en/blog/vulnerability">nodejs.org (Oct 21)</a> · [3] <a href="https://thehackernews.com/">thehackernews.com (Oct 24)</a> · [4] <a href="https://devblogs.microsoft.com/dotnet/">devblogs.microsoft.com (Oct 25)</a> · [5] <a href="https://www.bleepingcomputer.com/news/security/">bleepingcomputer.com (Oct 26)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Wasmtime: two ways out of the sandbox <span class="h2-refs">[1][2]</span></h2>
+        <p>According to The Hacker News on Oct 26, two critical bugs in Wasmtime allow a malicious WebAssembly module to break out of its sandbox. The outlet names <strong>CVE-2026-115889</strong> (all architectures) and <strong>CVE-2026-115893</strong> (ARM64 only), fixes from Oct 19 and 20, and no known attacks. On GitHub there are two matching advisories rated “Critical,” published on Oct 19, including a bit-packing bug in the Cranelift compiler that silently miscompiles code. We could not confirm how the CVE numbers map to the advisories, nor the CVSS score from the press.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Wasm sandbox:</strong> WebAssembly is a format for small programs that run in a walled-off area, such as plugins or edge functions. Wasmtime is a runtime for it, and Cranelift translates the code into machine instructions. Picture a sandbox with a high rim. If the blueprint for the rim has an error, a gap appears through which the sand runs out.
+        </div>
+        <p>This matters for anyone who runs third-party Wasm code. Anyone who uses Wasmtime only for their own code has a smaller problem.</p>
+        <span class="src">[1] <a href="https://thehackernews.com/">thehackernews.com (Oct 26)</a> · [2] <a href="https://github.com/bytecodealliance/wasmtime/security/advisories">github.com/bytecodealliance (Oct 19)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>eMudhra: Chrome pulls the root today <span class="h2-refs">[1][2][3]</span></h2>
+        <p><span class="update-since">New since Monday</span> As a reminder: eight intermediate certificates from eMudhra (six for TLS, two for code signing, 16 certificates in total) had keys that could be reconstructed. This was reported on Oct 17, and the browsers blocked them within hours. The root itself is not compromised, but Firefox no longer trusts it.<sup>[1]</sup> According to ssl.com, Chrome removes the root <strong>emSign ECC Root CA G3</strong> on the morning of Oct 27, Pacific time.<sup>[2]</sup> According to The Hacker News, eMudhra is exiting the global TLS business following a board decision on Oct 22.<sup>[3]</sup></p>
+        <div class="callout info"><span class="callout-label">Our view</span> For most European teams this is a non-issue; eMudhra is common mainly in India. Still, check partner APIs and webhooks from that region. A certificate from this chain now produces errors in the browser and in every client that has updated Python or Tailscale (see below).</div>
+        <span class="src">[1] <a href="https://redsift.com/blog/emudhra-ca-key-compromise">redsift.com (Oct 21)</a> · [2] <a href="https://www.ssl.com/article/check-your-certificates-before-october-27-chrome-is-removing-an-emudhra-root/amp/">ssl.com</a> · [3] <a href="https://thehackernews.com/2026/10/emudhra-to-exit-global-ssltls-business.html">thehackernews.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Python: five releases, more than bugfixes <span class="h2-refs">[1][2]</span></h2>
+        <p><span class="update-since">Correction to Monday</span> Yesterday we described Python 3.15.2 as a regular bugfix release. That was wrong. On Oct 25, <strong>3.15.2, 3.14.10, 3.13.18, 3.12.16 and 3.11.18</strong> were released as accelerated security releases.<sup>[1]</sup> The core is <strong>CVE-2026-115557</strong>: the <code>ssl</code> module now blocks the eMudhra keys “as a last line of defense.” There is also a <code>tarfile</code> bug, CVE-2026-114583.<sup>[2]</sup></p>
+        <p>The second half of the advice is on python.org itself: the emSign root has been removed from <code>certifi</code>, and you should update <strong>certifi, pip, uv and sigstore</strong> immediately.<sup>[1]</sup> According to the release page, pip itself remains safe to use.<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Our view</span> This is the point many people will miss. <code>requests</code> and <code>httpx</code> usually use <code>certifi</code>, not the system certificate store. A new interpreter with an old <code>certifi</code> in the lockfile keeps trusting the old root. In FastAPI projects that means: bump the interpreter image and bump <code>certifi</code> in the lockfile.</div>
+        <span class="src">[1] <a href="https://www.python.org/downloads/">python.org (Oct 27)</a> · [2] <a href="https://www.python.org/downloads/release/python-3152/">python.org 3.15.2 (Oct 27)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Tailscale: certificates yes, SSH not yet <span class="h2-refs">[1][2]</span></h2>
+        <p>Release <strong>1.104.2</strong> from Oct 21 raises Go to 1.27.3 so that the client explicitly distrusts the compromised eMudhra intermediate certificates; bulletin TS-2026-013.<sup>[1]</sup> For the reports about unpatched bugs in Tailscale SSH (The Hacker News, Oct 25), by contrast, the October changelog shows no fix. According to the report, 1.104.2 and headscale 0.29.5 are affected, and there is no CVE.<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Our view</span> Our position from yesterday still holds: a hint from lab tests, not a confirmed flaw with a fix. Moving clients to 1.104.2 is still right, because of eMudhra. For SSH, tight ACLs remain the answer until Tailscale comments.</div>
+        <span class="src">[1] <a href="https://tailscale.com/changelog">tailscale.com/changelog (Oct 27)</a> · [2] <a href="https://thehackernews.com/">thehackernews.com (Oct 25)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>OpenSSL 4.1.0: DTLS 1.3 arrives <span class="h2-refs">[1]</span></h2>
+        <p>On Oct 23, <strong>OpenSSL 4.1.0</strong> was released as the new stable release. New are <strong>DTLS 1.3</strong> per RFC 9147 and <strong>GREASE</strong> per RFC 8701. The release notes list known problems with DTLS 1.3. The latest security patches date from Sep 29 (4.0.3, 3.6.5, 3.5.9, 3.4.8).<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">GREASE:</strong> When opening a connection, the client deliberately sends along a few nonsense options. Correctly built servers ignore them. Badly built middleboxes stumble over them, and that gets noticed early. Like a child who jiggles every door for a moment so that nobody lets the hinges rust shut.
+        </div>
+        <p>For production I would wait for 4.1.x until the DTLS items are resolved. Anyone who does not use DTLS, which is almost every web stack, is under no pressure.</p>
+        <span class="src">[1] <a href="https://github.com/openssl/openssl/releases">github.com/openssl (Oct 23)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Gheist: secrets from Actions logs <span class="h2-refs">[1]</span></h2>
+        <p>On Oct 26, The Hacker News describes a campaign called <strong>Gheist</strong>: attackers use stolen GitHub tokens to pull secrets out of the logs of GitHub Actions.<sup>[1]</sup> We have nothing beyond the headline. But the mechanism is known. Whatever a workflow writes to the log can be read by anyone with read access to the repository.</p>
+        <div class="callout info"><span class="callout-label">Our view</span> Masking only protects exact matches. Base64-encoded or split-up secrets still end up in plain text in the log. Short-lived OIDC tokens instead of fixed secrets take the value out of this kind of attack.</div>
+        <span class="src">[1] <a href="https://thehackernews.com/">thehackernews.com (Oct 26)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Magento: 953 stores with a hidden script <span class="h2-refs">[1]</span></h2>
+        <p>According to The Hacker News on Oct 26, <strong>953</strong> Magento stores are infected with JavaScript that deliberately evades scanners.<sup>[1]</sup> Such scripts usually skim payment data at checkout. Anyone who looks after clients on Magento or Adobe Commerce should check Content Security Policy reports and file integrity, not just the scanner report.</p>
+        <span class="src">[1] <a href="https://thehackernews.com/">thehackernews.com (Oct 26)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Microsoft 365: token replay in 79 organizations <span class="h2-refs">[1]</span></h2>
+        <p>The Hacker News reports on Oct 26 token-replay attacks on <strong>97 accounts in 79 organizations</strong>.<sup>[1]</sup> A stolen session token is reused. The password and the second factor then no longer matter, because the sign-in has already happened.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Token replay:</strong> After login, the browser gets a token, like a wristband at a festival. Whoever steals the wristband gets in without going past the ticket counter. Countermeasures are short token lifetimes and binding the token to the device.
+        </div>
+        <span class="src">[1] <a href="https://thehackernews.com/">thehackernews.com (Oct 26)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>BlackX uses “Baton Drop” <span class="h2-refs">[1]</span></h2>
+        <p>There is a technical detail on the bootkit from recent days: according to BleepingComputer on Oct 24, BlackX uses the “Baton Drop” technique to bypass Secure Boot.<sup>[1]</sup> That is the same class as BlackLotus. The mitigation remains: enable the Secure Boot revocations, and have a current boot medium ready first.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/">bleepingcomputer.com (Oct 24)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>BND and BfV: classified data in the Google Cloud? <span class="h2-refs">[1]</span></h2>
+        <p>On Oct 26, heise reports that the BND and the Verfassungsschutz are planning a Google cloud for exchanging classified data.<sup>[1]</sup> We have no details on the setup, such as isolated operation by a German partner.</p>
+        <div class="callout info"><span class="callout-label">Our view</span> This is more politically explosive than technical. Germany has talked about digital sovereignty for years, and the intelligence services of all things are betting on a US provider. If it comes to that, it will become an argument in every tender where someone demands a “sovereign cloud.”</div>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de (Oct 26)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV catalog: status Tuesday <span class="h2-refs">[1]</span></h2>
+        <ul>
+          <li><strong>Oct 26</strong>: PHP CVE-2026-109618 and CVE-2026-109619, deadline Oct 29.</li>
+          <li><strong>Oct 23</strong>: Collabora Online CODE (CVE-2026-110447) and Arista VeloCloud (CVE-2026-114625), deadline was yesterday.</li>
+        </ul>
+        <p>The catalog now counts <strong>1,758</strong> entries.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (Oct 27)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: PHP2Shell as a case study</h2>
+        <p>Since Sep 11, reporting obligations for actively exploited flaws apply under the Cyber Resilience Act. With the KEV entry, PHP2Shell is exactly such a case. Anyone who offers a PHP product commercially in the EU should check whether they have a reporting duty toward their customers. We have no new figures from ENISA on this. On the EU AI Omnibus there is no confirmed status from the Council.</p>
+        <span class="src"><a href="https://www.reedsmith.com/articles/european-digital-regulation-key-dates-2026/">reedsmith.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief</h2>
+        <ul>
+          <li><strong>Kali Linux 2026.3</strong> has been out since Oct 26, with six new tools and desktop updates.<sup>[1]</sup></li>
+          <li><strong>Oracle CPU October</strong>: the number of Java SE fixes is still contradictory between the secondary sources; we name none.</li>
+          <li><strong>Prompt injection via AGENTS.md</strong> and the <strong>LiteLLM leak</strong>: details in the ai-dev brief.</li>
+          <li><strong>Spring, Angular, React, Docker, PostgreSQL</strong>: not rechecked today.</li>
+          <li><strong>BR</strong>: no verified report today.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/">bleepingcomputer.com (Oct 26)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>What Tuesday is worth</h2>
+        <ol>
+          <li><strong>PHP</strong>: every branch to 8.2.35 / 8.3.36 / 8.4.27 / 8.5.12 or newer; on Windows additionally the second update with Brotli 1.2.1.</li>
+          <li><strong>Node.js</strong>: 22.23.4 / 24.22.1 / 26.12.1; actively migrate everything on Node 20.</li>
+          <li><strong>Python</strong>: bump interpreter images and update <code>certifi</code>, <code>brotli</code>, pip and uv.</li>
+          <li><strong>.NET</strong>: apply the out-of-band update from Oct 25.</li>
+          <li><strong>Tailscale</strong>: clients to 1.104.2, keep SSH ACLs tight.</li>
+        </ol>
+        <p>OpenSSL 4.1 and everything else can wait.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Good morning, it's Tuesday, October twenty-seventh. Yesterday we reported that nothing new had been added to the catalog of exploited vulnerabilities. That same day, the US agency CISA added the two PHP2Shell flaws.</p>
+  <p>That makes it official: PHP2Shell is being used in real attacks. US agencies have until Thursday to patch. The flaws are fixed in PHP eight point five point twelve, eight point four point twenty-seven, eight point three point thirty-six and eight point two point thirty-five. If you run PHP on Windows, you also need a second update that refreshes the Brotli library.</p>
+  <p>That Brotli flaw is the second big story. A bug in the decoder of the compression format allows code execution. Node.js fixed it on October twenty-first, but not for Node twenty, which no longer receives updates. According to The Hacker News, Bun and Python packages are affected too, and on Sunday Microsoft released an out-of-band update for .NET.</p>
+  <p>A correction to yesterday: Python three point fifteen point two was not a regular bugfix release. On Sunday, Python published five accelerated security releases because the certificate authority eMudhra lost control of its keys. The ssl module now blocks those keys. The certifi package matters too: it no longer contains the emSign root and has to be updated separately. According to ssl.com, Chrome removes the eMudhra root today.</p>
+  <p>Also: Wasmtime had two critical sandbox escapes, both already fixed. With version one point one-oh-four point two, Tailscale distrusts the eMudhra certificates, but there is still no fix for the reports about SSH bugs. OpenSSL four point one has shipped with DTLS one point three.</p>
+  <p>From the attack corner: a campaign called Gheist uses stolen GitHub tokens to pull secrets out of Actions logs. Nine hundred fifty-three Magento stores carry a hidden script. And according to heise, the BND and the Verfassungsschutz are planning a Google cloud for classified data.</p>
+  <p>My advice for today: runtimes first. PHP, Node, Python with certifi, and .NET. Tomorrow we'll see whether the PHP attacks pick up further before Thursday's deadline.</p>
+</div>
+
+</body>
+</html>
