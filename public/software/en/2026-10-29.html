@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-29</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-10-29</span>
+  </div>
+  <h1 class="masthead-title">PHP2Shell plus Fragnesia equals root, Tailscale plugs “Tailworm,” and macOS still trusts eMudhra on the command line</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Last night CISA added two new entries to the KEV catalog. One of them changes the picture for PHP2Shell: the agency describes attackers chaining the PHP flaws with the Linux kernel bug “Fragnesia” to drop web shells and run commands as root. “The web server is compromised” becomes “the whole machine is compromised.” Our view: if you have already patched PHP, you are not done. The kernel belongs on the same list this week. Two more items come straight from Daniel’s toolbox: Tailscale fixes privilege bugs in Tailscale SSH and Serve, and on the Mac the eMudhra problem still sits in the certificate file that curl, git and python3 use.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Fragnesia CVE-2026-46300</strong>: Linux kernel bug in the KEV since Oct 28; per CISA, chained with PHP2Shell into root web shells. Deadline Oct 31. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>PHP2Shell</strong>: the KEV deadline for US agencies expires today; a third RCE (CVE-2026-115560) is still unpatched, according to BleepingComputer. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>VMware ESX CVE-2026-41709</strong>: logging flaw in the KEV, deadline Nov 11. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Tailscale 1.104.4</strong>: four bulletins on SSH and Serve, including access to root-only sockets. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>eMudhra on macOS</strong>: <code>/etc/ssl/cert.pem</code> not yet cleaned up; curl, git, python3 affected. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Brotli</strong>: CISA reports exploitation; fixes now also for Python, Go and Bun. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Veeam B&amp;R 13</strong>: critical flaw in the CDP service without authentication, no attacks so far. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>Ghostty 1.4.0</strong>: <code>+ssh</code> wrapper, ASCII parser at 725 instead of 128 MB/s, ten security fixes. <span class="chip">Global</span></li>
+      <li><span class="chip">OSS</span> <strong>Octoverse 2026</strong>: TypeScript and Python at about 13 million contributors per month each; Germany ranks 8th. <span class="chip">DE</span></li>
+      <li><span class="chip">Regulation</span> <strong>CRA</strong>: since Sept 11, a new KEV entry can trigger a reporting duty for EU manufacturers that ship the component. <span class="chip">EU</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Deadline horizon</div>
+      <div class="timeline-sub">KEV deadlines for the next two weeks — a reference point, even though they formally bind only US agencies</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Thu 10/29</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Today</span><span>KEV deadline: PHP CVE-2026-109618 / -109619 (PHP2Shell)</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Sat 10/31</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Linux kernel CVE-2026-46300 (Fragnesia)</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu 11/05</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>betterCode() Rust: early-bird ends</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 11/10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Brotli CVE-2026-111497 and Adobe Commerce CVE-2026-48356</span><span>Microsoft Patch Tuesday (scheduled, second Tuesday)</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 11/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: VMware ESX CVE-2026-41709</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Fragnesia: the kernel bug that turns PHP2Shell into root</h2>
+        <p><span class="update-since">New since yesterday</span> On Oct 28, CISA added <strong>CVE-2026-46300</strong> to the KEV catalog. The deadline for US federal agencies is unusually short: <strong>Oct 31</strong>, three days. According to the KEV entry, an uninitialized variable in the kernel can let data in the page cache be modified without permission. The key sentence is in the description: the bug can be chained with <strong>CVE-2026-109618</strong> and <strong>-109619</strong> (PHP2Shell) to drop PHP web shells and run commands as root.<sup>[1]</sup></p>
+        <p>The bug itself is not new. Rapid7 lists an exploit module and describes it as a local privilege escalation in the IPsec path “ESP-in-TCP,” present since kernel <strong>4.10</strong> and public since <strong>May 14, 2026</strong>. An unprivileged attacker can use it to overwrite bytes of a read-only file.<sup>[2]</sup> The distributions have backported the fix individually; the KEV entry points to eight stable-kernel commits.<sup>[1]</sup> We did not find a CVSS score on the pages we read.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Page cache:</strong> The kernel keeps files that are read often as a copy in memory. Programs then read the copy, not the disk. Like a notice on a bulletin board: if someone secretly changes the notice, they change what everyone reads, even though the original in the binder stays untouched.
+        </div>
+        <div class="eli5">
+          <strong class="eli5-term">Chaining (exploit chain):</strong> One flaw gets the attacker in, the second makes them the boss. PHP2Shell gives code execution as the web server user, Fragnesia lifts that to root. Like a thief who first climbs in through an open window and then finds the master key in the hallway.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> This is the most important item of the day because it changes the cleanup work. Until now, PHP2Shell meant: web server user compromised, check files, patch PHP. With root in play, that is no longer enough. On a host that was exposed before the PHP patch, you have to treat the whole machine as suspect. And because Fragnesia is local, even patched PHP does not protect you from the next flaw that gets a foot in the door. Kernel update and reboot belong on the same list this week.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV, version 2026.10.28</a> · [2] <a href="https://www.rapid7.com/db/modules/exploit/linux/local/cve_2026_46300_fragnesia/">rapid7.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PHP2Shell: deadline today, and a third flaw still open</h2>
+        <p>The KEV deadline for the two PHP2Shell flaws ends <strong>today, Oct 29</strong>. CISA added them on Oct 26.<sup>[1]</sup> The fixes are in <strong>8.5.12</strong> and <strong>8.4.27</strong>, per php.net, released Oct 21, as well as in <strong>8.3.36</strong> and <strong>8.2.35</strong>.<sup>[2]</sup> Branches from 8.1 downward get no official release; PHP only published source backports, and some distributions ship patched packages.<sup>[3]</sup></p>
+        <p>BleepingComputer also reports a separate, still unpatched RCE: <strong>CVE-2026-115560</strong>. As a mitigation, the report names <code>session.upload_progress.enabled=0</code> in <code>php.ini</code>.<sup>[3]</sup> We did not find a vendor fix for it. If you do not need upload progress (most people do not), turn it off.</p>
+        <div class="callout warn"><span class="callout-label">Heads up</span> A heise webinar with Sebastian Bergmann on Nov 6 (9:30 a.m.–noon CET) is devoted to exactly this question: how to secure legacy PHP and move it to a maintained version.<sup>[4]</sup> The topic is bigger than one patch: anyone on 8.1 or older will have this problem every week from now on.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (Oct 28)</a> · [2] <a href="https://www.php.net/releases/index.php?json&max=10&version=8">php.net Releases (Oct 21)</a> · [3] <a href="https://www.bleepingcomputer.com/news/security/php2shell-security-flaws-now-sucessfully-exploited-in-the-wild/">bleepingcomputer.com (Oct 26)</a> · [4] <a href="https://www.heise.de/news/PHP2Shell-und-danach-Legacy-Code-auf-aktuelles-PHP-bringen-11501844.html">heise.de (Oct 28)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>VMware ESX: a “low” flaw in the KEV</h2>
+        <p>The second KEV entry of Oct 28 is <strong>CVE-2026-41709</strong> in Broadcom VMware ESX, deadline <strong>Nov 11</strong>. CISA describes a logging weakness: an attacker with admin rights can perform certain operations without them being logged. The entry points to Broadcom’s advisory 38017. Ransomware link: “Unknown.”<sup>[1]</sup> According to search results, Broadcom itself rates the bug as low (CVSS 2.7, advisory of Jul 29); we did not read that page directly.<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> A low score in the KEV looks paradoxical, but it is not. The flaw does not break in; it blurs tracks after someone is already admin. For attackers on hypervisors, that is exactly what is valuable. Lesson: the CVSS score says how bad a bug is on its own. The KEV entry says someone is actually using it.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (Oct 28)</a> · [2] <a href="https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/38017">support.broadcom.com (Jul 29)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Tailscale: “Tailworm” in SSH and Serve</h2>
+        <p>On Oct 26, Tailscale published four security bulletins, <strong>TS-2026-014 to -017</strong>. All are fixed in <strong>1.104.4</strong>.<sup>[1]</sup> heise groups the series under the name “Tailworm” on Oct 28.<sup>[2]</sup> The details:</p>
+        <ul>
+          <li><strong>TS-2026-014</strong>: Unix socket forwarding in Tailscale SSH ran as root and checked paths only as text. Peers could reach sockets that are open to root only. Workaround: set <code>TS_SSH_DISABLE_FORWARDING=1</code> and restart the service.<sup>[1]</sup></li>
+          <li><strong>TS-2026-015</strong>: A logged-in SSH session could make the memory of <code>tailscaled</code> grow without limit, until it crashed.<sup>[1]</sup></li>
+          <li><strong>TS-2026-016</strong>: <code>tailscale serve</code> with Unix backends could reach privileged sockets, including the local API of <code>tailscaled</code>.<sup>[1]</sup></li>
+          <li><strong>TS-2026-017</strong>: With HTTP/2 and several Serve mounts, capability values from one mount could end up on another.<sup>[1]</sup></li>
+        </ul>
+        <p>The good news: for the SSH flaws, an attacker must already control a device in the tailnet that the policy allows to use SSH.<sup>[2]</sup> Neither the bulletins nor heise give CVE numbers or scores.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Unix socket:</strong> A kind of phone line between programs on the same machine that looks like a file. Whoever reaches the line can talk to the service behind it. If a root service sits behind it, it is like an intercom straight into the boss’s office.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> For a private tailnet with a few devices this is not an emergency, but it is a clear reason to update. If you allow Tailscale SSH with forwarding, check the ACLs: does every node really need forwarding? Usually not.</div>
+        <span class="src">[1] <a href="https://tailscale.com/security-bulletins">tailscale.com/security-bulletins (Oct 26)</a> · [2] <a href="https://www.heise.de/news/Tailscale-SSH-Update-stopft-Tailworm-Sicherheitsluecken-11502847.html">heise.de (Oct 28)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>eMudhra: the Mac browser is clean, the command line is not</h2>
+        <p>After the leak of the eMudhra intermediate certificates, Safari, Chrome and Firefox have cleaned their trust lists. On macOS, however, this does not apply to <code>/etc/ssl/cert.pem</code>. The Xcode Command Line Tools, <code>curl</code>, <code>git</code>, <code>python3</code>, <code>ruby</code>, <code>perl</code> and <code>openssl</code> use this file. Apple plans to adjust the file “with a later software update”; macOS 27.2 shipped without this fix.<sup>[1]</sup></p>
+        <p>Apple has published instructions in English: check whether <code>cert.pem</code> still contains “emSign ECC Root CA - G3” or “AAA Certificate Services,” back up the file, remove the entries, check again. Developer Dennis Jackson warns that macOS updates can reset manual changes to <code>cert.pem</code>.<sup>[1]</sup> Tools with their own certificate store, such as Python from Homebrew, need their own update. For the same case, Tailscale already shipped version 1.104.2 on Oct 21; according to Tailscale, WireGuard traffic between nodes was not affected.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Intermediate certificate:</strong> A body that a root CA allows to issue IDs for websites in its name. If its private key is stolen, the thief can print valid-looking IDs for any domain. Like a stolen stamp from the town hall.
+        </div>
+        <span class="src">[1] <a href="https://www.heise.de/news/eMudhra-TLS-Leck-Apple-laesst-Problem-auf-macOS-Kommandozeile-zunaechst-bestehen-11500945.html">heise.de (update Oct 28)</a> · [2] <a href="https://tailscale.com/security-bulletins">tailscale.com TS-2026-013 (Oct 21)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Brotli: exploited, and the fix list keeps growing</h2>
+        <p><strong>CVE-2026-111497</strong> (“Broccoli2Shell”) has been in the KEV since Oct 27, deadline <strong>Nov 10</strong>.<sup>[1]</sup> On Oct 28, heise writes that CISA reports attacks but gives no details on type or scale. heise cites <strong>9.2 on CVSS 4.0</strong>. The Brotli libraries <strong>1.0.3 to 1.2.0</strong> are affected; fixed in <strong>1.0.10, 1.1.1 and 1.2.1</strong>. heise advises treating affected systems as compromised.<sup>[2]</sup></p>
+        <p>Important for polyglot stacks: according to Wiz, the bug does not affect only Node.js (fixes in <strong>22.23.4, 24.22.1, 26.12.1</strong>). There are also fixes for the Python package Brotli (<strong>1.2.1</strong>), the Go implementation <code>andybalholm/brotli</code> (<strong>v1.2.7</strong>) and Bun (<strong>1.4.4</strong>).<sup>[3]</sup> Node.js 20 and older are EOL and get no fix.</p>
+        <div class="callout info"><span class="callout-label">Our take</span> Brotli is a lesson in transitive dependencies. Hardly anyone installed “brotli” on purpose, but almost every HTTP stack uses it to unpack responses. An <code>npm ls</code>, <code>pip show brotli</code> and <code>go list -m all | grep brotli</code> show in a minute where it lives.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (Oct 28)</a> · [2] <a href="https://www.heise.de/news/Angreifer-nehmen-Brotli-Adobe-Commerce-und-Magento-Lecks-ins-Visier-11502623.html">heise.de (Oct 28)</a> · [3] <a href="https://www.wiz.io/blog/cve-2026-111497-brotli-rce-node-js">wiz.io (Oct 25)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Magento: 953 shops since July 2025</h2>
+        <p>On the KEV entry for Adobe Commerce / Magento (<strong>CVE-2026-48356</strong>, since Oct 27, deadline Nov 10), heise provides the background. Sansec describes a group that has compromised at least <strong>953 shops</strong> since July 2025, mostly on Magento. The flaw allows uploading dangerous file types; NVD rates it <strong>9.3</strong>. Anyone who installed Adobe’s updates from July 2026 (APSB26-73) is protected.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Angreifer-nehmen-Brotli-Adobe-Commerce-und-Magento-Lecks-ins-Visier-11502623.html">heise.de (Oct 28)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Veeam: backup server reachable without authentication</h2>
+        <p>On Oct 28, Veeam released updates for Backup &amp; Replication, the Linux agent and Veeam ONE. The most critical flaw, <strong>CVE-2026-108142</strong>, allows unauthenticated access to the CDP service of the backup server; attackers could use it to disrupt backup schedules. There are also two path traversal bugs (medium) and a privilege escalation in the Linux agent (high). In Veeam ONE, an admin can switch off MFA (high). Fixes: B&amp;R <strong>13.1.2.57</strong> or <strong>13.0.3.63</strong>, Linux agent <strong>13.1.2.11</strong>, ONE <strong>13.1.0.7940</strong>. According to the vendor, there are no attacks yet.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> Backup servers are the favorite target of ransomware groups because they prevent recovery. This is (still) not a KEV case, but one you do not leave sitting until Patch Tuesday.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Veeam-Backup-Server-manipulierbar-und-MFA-deaktivierbar-11502821.html">heise.de (Oct 28)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Ghostty 1.4.0: faster, leaner, with an SSH wrapper</h2>
+        <p>After seven months, Ghostty 1.4.0 is here. The new command <code>ghostty +ssh</code> copies the matching terminfo file to the target machine and falls back to <code>xterm-256color</code> on errors. That ends the annoyance of broken keys and colors on foreign servers. Idle scrollback is compressed, with <strong>70 to 90%</strong> less memory for text-heavy output, according to heise. The parser handles plain ASCII at <strong>725 instead of 128 MB/s</strong>. Add the full Kitty graphics protocol and <strong>ten</strong> fixed security flaws. A native Windows UI has been struck from the roadmap.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Schluss-mit-kaputten-SSH-Sessions-Update-fuer-das-moderne-Terminal-Ghostty-11503392.html">heise.de (Oct 28)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Octoverse 2026: TypeScript and Python neck and neck</h2>
+        <p>On Oct 28, GitHub presented the Octoverse report at Universe. TypeScript and Python each have about <strong>13 million</strong> contributors per month, JavaScript follows with <strong>7.4 million</strong>. GitHub has <strong>225 million</strong> registered users, up from 180 million a year earlier. Over twelve months, about <strong>1.3 billion</strong> pull requests were merged, an average of 3.5 million per day. Germany ranks 8th with <strong>6.3 million</strong> users; the US leads with 38.2 million, ahead of India with 32 million.<sup>[1]</sup> The ai-dev brief covers the agent share of pull requests and GitHub’s new “Copilot Access.”</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/GitHub-TypeScript-bleibt-dank-KI-Agenten-populaerste-Programmiersprache-11493892.html">heise.de (Oct 28)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: every KEV entry is now also a reporting case</h2>
+        <p>Since <strong>Sept 11, 2026</strong>, the reporting obligations of the Cyber Resilience Act apply. Manufacturers report actively exploited flaws in their products through ENISA’s Single Reporting Platform: early warning within <strong>24 hours</strong>, notification within <strong>72 hours</strong>, final report <strong>14 days</strong> after the fix. The rest of the law applies from <strong>Dec 11, 2027</strong>.<sup>[1]</sup> This week shows what that means: Brotli, PHP, Magento, the Linux kernel, ESX. If you ship any of these in a product for the EU market and learn of exploitation, you have a reporting case.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Cyber Resilience Act (CRA):</strong> EU law that makes manufacturers of software and connected devices responsible for their security. Like a carmaker’s duty to report a brake recall, only for code.
+        </div>
+        <span class="src">[1] <a href="https://www.crowell.com/en/insights/client-alerts/its-live-the-cyber-resilience-act-reporting-is-mandatory-as-of-today-11-september-2026">crowell.com (Sept 11)</a> · <a href="https://www.mccannfitzgerald.com/knowledge/data-privacy-and-cyber-risk/cyber-resilience-act-reporting-obligations-apply-from-11-september-2026">mccannfitzgerald.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief</h2>
+        <ul>
+          <li><strong>KEV catalog</strong>: version 2026.10.28 with <strong>1,762</strong> entries.<sup>[1]</sup></li>
+          <li><strong>Oracle CPU October</strong> (Oct 20): The primary source was not retrievable today either. PCWelt lists new Java SE builds: 25.0.5, 21.0.13, 17.0.21, 11.0.33, 8u511 and 27.0.1.<sup>[2]</sup> We do not give the fix counts because the secondary sources contradict each other.</li>
+          <li><strong>Python</strong>: 3.15.0 has been final since Oct 9; current are 3.15.2 and 3.14.10 from Oct 25.<sup>[3]</sup></li>
+          <li><strong>Chrome</strong>: Google released a stable update on Oct 27 and an “Early Stable Update” for desktop on Oct 28. We did not read versions or fix counts.<sup>[4]</sup></li>
+          <li><strong>Android 18</strong> further restricts apps’ direct write access to contacts (heise, Oct 28).<sup>[5]</sup></li>
+          <li><strong>AI</strong>: Google’s new model “Gemini 4 Carbon” is marketed as an exploit expert, and Cisco manages networks via MCP. Details in the ai-dev brief.</li>
+          <li><strong>Spring, Angular, React, PostgreSQL, Docker, Caddy</strong>: not rechecked today. <strong>BR</strong>: no verified report.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (Oct 28)</a> · [2] <a href="https://www.pcwelt.de/3265699">pcwelt.de (Oct 21)</a> · [3] <a href="https://www.python.org/downloads/">python.org</a> · [4] <a href="https://chromereleases.googleblog.com/2026/10/">chromereleases.googleblog.com</a> · [5] <a href="https://www.heise.de/news/Android-18-Google-dichtet-Zugriff-auf-Kontakte-weiter-ab-11503204.html">heise.de (Oct 28)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>What Thursday is worth</h2>
+        <p>Three things for today. First: the kernel goes on the list next to PHP, even on hosts without PHP, because Fragnesia only needs some local foot in the door. Second: raise Tailscale to 1.104.4 and check the SSH forwarding rules. Third, on the Mac: check <code>cert.pem</code> against Apple’s instructions, and again after every macOS update. The rest of this week is routine, and that is a good thing.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It’s Thursday, October twenty-ninth. This is still a patch week, but today brings a new twist: the PHP flaws known as PHP2Shell now lead all the way to root.</p>
+  <p>The federal agency CISA yesterday added a Linux kernel bug nicknamed Fragnesia to its catalog of exploited vulnerabilities. According to CISA, attackers chain it with PHP2Shell to plant web shells and run commands as root. The bug has been in the code since kernel four point ten and has been public since May. So if you’ve already patched PHP, you should update the kernel and reboot, too.</p>
+  <p>For PHP2Shell itself, the deadline for US federal agencies runs out today. The fixes are in PHP eight point five point twelve and eight point four point twenty-seven, as well as in the older maintained branches. BleepingComputer also reports a third flaw with no patch. The report’s suggested workaround is to turn off upload progress in the PHP configuration.</p>
+  <p>The second new catalog entry is for VMware ESX. It’s a logging weakness: an admin can do things without them showing up in the logs. The severity is low, but for attackers trying to cover their tracks, that’s exactly what’s useful.</p>
+  <p>Tailscale has published four security notices on Tailscale SSH and Serve, all fixed in version one point one hundred four point four. The most serious one allowed access, through socket forwarding, to services open only to root. An attacker would need an authorized device on the tailnet first, though.</p>
+  <p>On the Mac, the eMudhra certificate problem is only half solved. The browsers are clean, but the file used by curl, git and python three still contains the affected entries. Apple has published instructions for removing them. According to heise, macOS updates can undo that change.</p>
+  <p>On Brotli, CISA now reports attacks. There are fixes not just for Node.js but, according to Wiz, for the Python package, the Go library and Bun as well. On Magento, Sansec describes a group that has taken over at least nine hundred fifty-three shops since July of twenty twenty-five. And Veeam has closed a critical hole in its backup server, with no known attacks so far.</p>
+  <p>Two friendlier items: the Ghostty terminal has reached version one point four, with an SSH wrapper and a much faster parser. And according to GitHub’s Octoverse report, TypeScript and Python are neck and neck at about thirteen million contributors a month. Germany ranks eighth.</p>
+  <p>Tomorrow we’ll see whether the distributions add more kernel guidance on Fragnesia, and whether the third PHP flaw gets an official patch.</p>
+</div>
+
+</body>
+</html>
