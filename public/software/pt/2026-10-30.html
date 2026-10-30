@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-10-30</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Edição 30/10/2026</span>
+  </div>
+  <h1 class="masthead-title">Firewalls da Cisco e GitLab no KEV com prazo no domingo, um worm de npm com wiper como vingança, e o PHP2Shell já obteve root em 25 servidores</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">A CISA incluiu ontem duas entradas no catálogo KEV, ambas com prazo de apenas três dias: uma falha de travamento nos firewalls ASA e FTD da Cisco e uma falha de execução remota de código no GitLab, que está no mecanismo de regex do Ruby. Além disso, o dia gira em torno da cadeia de suprimentos. Um worm de npm chamado "testmetest" é disparado pela configuração de projeto de editores e agentes de código e, segundo a SafeDep, apaga o diretório home assim que o token roubado do GitHub é revogado. E uma segunda campanha esconde comandos em issues do GitHub, na esperança de que um workflow os despeje em um shell. Nossa visão: o caso do GitLab é o mais importante para quem hospeda a própria instância, e a campanha dos workflows é a mais instrutiva. Muitas notícias de hoje se apoiam em uma única fonte; sinalizamos isso a cada vez.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Cisco ASA/FTD CVE-2026-76418</strong>: reinício pela rede, explorada, prazo do KEV em 01/11. Afeta só quem usa autenticação secundária na VPN. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>GitLab CVE-2026-97229</strong>: RCE sem login por meio de uma regex manipulada na configuração de CI/CD; prazo do KEV em 01/11. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>PHP2Shell + Fragnesia</strong>: a Dream Security conta 25 servidores com root obtido; prazo do kernel amanhã. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Worm de npm "testmetest"</strong>: 42 repositórios do GitHub sequestrados; revogar o token pode acionar um wiper. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Issues do GitHub como vetor de ataque</strong>: 83 postagens manipuladas em 61 repositórios públicos, entre eles trivy e Homebrew. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>WatchGuard Fireware</strong>: 18 falhas, sete com CVSS de 9,1 a 9,5; o CERT-Bund alerta. <span class="chip">DE</span></li>
+      <li><span class="chip">Sec</span> <strong>Oracle EBS</strong>: falha com CVSS 9,8 do CPU de outubro já está sendo sondada. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Cisco SD-WAN</strong>: falha antiga, novo malware "KeyDrift" rouba chaves IPsec. <span class="chip">Global</span></li>
+      <li><span class="chip good">OSS</span> <strong>systemd 263</strong>: o Rust entrou, por enquanto só para novos componentes periféricos. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>Spring Boot</strong> 4.0.9, 4.1.2 e 4.2.0-RC1 desde 23/10. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Horizonte de prazos</div>
+      <div class="timeline-sub">Prazos do KEV das próximas duas semanas — um ponto de referência, mesmo que formalmente só obriguem órgãos federais dos EUA</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Sex 30/10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Hoje</span><span>O prazo do KEV para o PHP2Shell expirou ontem</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Sáb 31/10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Prazo do KEV: kernel Linux CVE-2026-46300 (Fragnesia)</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Dom 01/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Prazo do KEV: Cisco ASA/FTD CVE-2026-76418</span><span>Prazo do KEV: GitLab CVE-2026-97229</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Ter 10/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Prazo do KEV: Brotli CVE-2026-111497 e Adobe Commerce CVE-2026-48356</span><span>Patch Tuesday da Microsoft (previsto, segunda terça-feira)</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Qua 11/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Prazo do KEV: VMware ESX CVE-2026-41709</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>GitLab: uma regex no arquivo de CI basta para executar código</h2>
+        <p><span class="update-since">Novo desde ontem</span> A CISA incluiu em 29/10 a <strong>CVE-2026-97229</strong> no catálogo KEV, com prazo em <strong>01/11</strong>. Segundo a entrada do KEV, um estouro de inteiro permite que um invasor sem login execute código, usando uma expressão regular manipulada na configuração de CI/CD. A CISA diz que a causa está no Onigmo, o mecanismo de regex do Ruby. Outros produtos com o mesmo mecanismo também podem, portanto, ser afetados. Como correção, a entrada cita o GitLab <strong>19.4.2</strong>.<sup>[1]</sup></p>
+        <p>O BleepingComputer já havia noticiado a falha em 12/10: <strong>CVSS 10,0</strong>, afetando 19.2 antes da <strong>19.2.8</strong>, 19.3 antes da <strong>19.3.5</strong> e 19.4 antes da 19.4.2. O GitLab.com está corrigido, e clientes do GitLab Dedicated não precisam fazer nada. O pesquisador joaxcar reportou o bug pelo HackerOne. No momento da reportagem não havia exploit público.<sup>[2]</sup> Esses dados vêm de um resumo de busca do artigo; não lemos o advisory do próprio GitLab. A única novidade agora é que a CISA relata exploração. <strong>Atenção:</strong> em 21/10 veio uma segunda falha do Onigmo, a CVE-2026-110264 (CVSS 10,0). Segundo fontes secundárias, 19.4.2, 19.3.5 e 19.2.8 também são vulneráveis a ela; os alvos são 19.5.1, 19.4.3, 19.3.6 ou 19.2.9. Não lemos o advisory do próprio GitLab.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Estouro de inteiro:</strong> Um número cresce além do espaço reservado para ele e então volta para um valor pequeno ou negativo. Como um hodômetro que volta a 0 depois de 999.999. Se o código passa a calcular com o valor errado, ele escreve em lugares da memória onde não deveria.
+        </div>
+        <div class="eli5">
+          <strong class="eli5-term">Mecanismo de regex:</strong> A parte de uma linguagem de programação que transforma padrões de busca como <code>^v[0-9]+$</code> em um pequeno programa e o executa. Quem pode escrever o padrão controla, portanto, um pedaço de código dentro do servidor.
+        </div>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Para quem hospeda o GitLab por conta própria, esta é a notícia mais importante do dia. "Sem login" mais "configuração de CI" significa, na prática: toda instância em que estranhos podem criar um projeto ou abrir um merge request com seu próprio <code>.gitlab-ci.yml</code> está exposta. O segundo ponto é a frase sobre o Onigmo. Toda aplicação Ruby que compila regex digitada por usuários deveria perguntar por uma atualização do Ruby. Segundo fontes secundárias, o GitLab corrige o Onigmo no Ruby incluído; outras aplicações Ruby devem acompanhar atualizações de regex para Ruby 3.3, 3.4 e 4.0.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV, versão 2026.10.29</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/gitlab-warns-of-max-severity-rce-flaw-in-regex-compiler-engine/">bleepingcomputer.com (12/10, resumo de busca)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cisco ASA/FTD: reinício do firewall sob demanda</h2>
+        <p><span class="update-since">Novo desde ontem</span> A segunda entrada do KEV de 29/10 é a <strong>CVE-2026-76418</strong> no Secure Firewall ASA e no Secure FTD da Cisco, com prazo também em <strong>01/11</strong>. Um invasor sem login pode forçar o dispositivo a reiniciar remotamente. É uma negação de serviço, não uma invasão. Vínculo com ransomware segundo a CISA: "Unknown".<sup>[1]</sup></p>
+        <p>A Cisco publicou o advisory em 28/10: <strong>CVSS 8,6</strong>, a causa é uma desreferência de ponteiro NULL. O PSIRT da Cisco tem conhecimento de ataques em outubro de 2026. Um dispositivo só é vulnerável quando duas coisas coincidem: o login da VPN de acesso remoto SSL está acessível e há autenticação secundária configurada no grupo de túnel. FMC, cdFMC e Secure Access não são afetados. Segundo a Cisco, não há workarounds; como mitigação resta desativar a autenticação secundária.<sup>[2]</sup></p>
+        <p>As correções: ASA <strong>9.16.4.104, 9.18.4.96, 9.20.4.50, 9.22.3.200, 9.23.1.48, 9.24.1.27</strong>; FTD <strong>7.0.11, 7.2.13, 7.4.9, 7.6.7, 7.7.14, 10.0.3, 10.1.1</strong>.<sup>[2]</sup> Não encontramos uma segunda fonte independente para este número de CVE; a entrada do KEV e o advisory do fabricante, porém, coincidem.</p>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Um DoS parece inofensivo, mas em um firewall de VPN não é: se ele cai, o acesso remoto cai para todos. Invasores também usam esses reinícios para interromper logs ou forçar a troca para um dispositivo mais fraco. A mitigação custa comodidade, não proteção contra invasão. Quem não puder aplicar o patch imediatamente desativa a autenticação secundária de forma temporária.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (29/10)</a> · [2] <a href="https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-asaftd-tunnel-dos-s6mgkb75">cisco.com Advisory (28/10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PHP2Shell mais Fragnesia: 25 servidores com root obtido</h2>
+        <p>Ontem foi a teoria do encadeamento; hoje vêm os números. O BleepingComputer cita a Dream Security: com o PHP2Shell (<strong>CVE-2026-109618</strong> / <strong>-109619</strong>) e o Fragnesia (<strong>CVE-2026-46300</strong>), os invasores obtiveram root em <strong>25 servidores</strong> nos EUA, Japão, Taiwan e Coreia do Sul. Três servidores em um ambiente ligado ao governo dos EUA também foram alvo. Um honeypot de Adel Karimi mostrou ataques ao Apache com <code>mod_php</code> e PHP <strong>8.4.26</strong>.<sup>[1]</sup></p>
+        <p>Segundo o mesmo relatório, o Fragnesia afeta as grandes distribuições Linux com kernels lançados antes de <strong>13/05/2026</strong>; existe um exploit público.<sup>[1]</sup> O prazo do KEV para a falha do kernel termina amanhã, <strong>31/10</strong>.<sup>[2]</sup> As correções do PHP estão na <strong>8.5.12</strong> e na <strong>8.4.27</strong>.<sup>[3]</sup> O número de vítimas vem de uma única fonte.</p>
+        <div class="callout warn"><span class="callout-label">Atenção</span> Um PHP corrigido em um kernel antigo é só metade do trabalho. Um host que estava aberto antes da atualização do PHP é considerado suspeito até que alguém o verifique. Acesso root significa: logs e binários na própria máquina deixam de ser uma testemunha confiável.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/cisa-warns-of-fragnesia-linux-flaw-chained-in-php2shell-attacks/">bleepingcomputer.com (29/10, fonte única)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (29/10)</a> · [3] <a href="https://www.php.net/ChangeLog-8.php">php.net ChangeLog</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>"testmetest": o worm de npm que se vinga com um wiper</h2>
+        <p>O heise descreve uma campanha descoberta pela JFrog. Invasores sequestraram <strong>42 repositórios do GitHub</strong> de <strong>11 donos legítimos</strong>. A carga maliciosa está em <code>.github/init.js</code> e tem <strong>12,9 a 13,7 MB</strong>, tão grande que a busca de código do GitHub não a exibe. Ela é disparada pela configuração de workspace do Claude Code, Gemini, Cursor e VS Code: quem abre o repositório em uma dessas ferramentas executa o código. Somam-se <strong>15</strong> pacotes npm, como <code>@testsecuiitytestme/cache-helper</code>, e <strong>17</strong> repositórios dos invasores com o nome "CementBeetleSteeple".<sup>[1]</sup></p>
+        <p>Dois detalhes tornam o caso desagradável. Primeiro, segundo a SafeDep, o <code>--ignore-scripts</code> não protege mais. Segundo, o worm instala um wiper que apaga o diretório home assim que o token roubado do GitHub é revogado. Além disso, workflows "Shellpanel" visam a falha do cPanel <strong>CVE-2026-41940</strong>. Quantas vítimas existem e o que foi exfiltrado é desconhecido.<sup>[1]</sup> Todas as informações vêm do artigo do heise, que cita a JFrog e a SafeDep.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Configuração de workspace:</strong> Arquivos no repositório (por exemplo em <code>.vscode/</code>) que dizem a um editor o que fazer ao abrir: iniciar tarefas, executar hooks, carregar extensões. Prático para equipes, perigoso com código de terceiros. Como um pacote que se desembrulha sozinho quando você abre a porta de casa.
+        </div>
+        <div class="eli5">
+          <strong class="eli5-term">Wiper:</strong> Código malicioso que não rouba nada, mas destrói dados. Aqui ele é construído como um dispositivo de homem morto: espera a vítima reagir e então apaga.
+        </div>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Esta é exatamente a história de IA que pertence ao brief de software: o assunto não é o modelo, e sim a camada de ferramentas como plataforma de lançamento. A lição prática diz respeito à ordem diante de uma suspeita. O reflexo "revogar o token imediatamente" está errado aqui. Primeiro desconecte a máquina da rede e salve os dados, depois revogue. E repositórios de terceiros devem ser abertos no modo restrito do editor (VS Code: "Restricted Mode") até que se saiba o que há dentro.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Angreifer-kapern-42-GitHub-Repositories-fuer-npm-Wurm-Kampagne-testmetest-11503164.html">heise.de (29/10, fonte única)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Issues do GitHub como ataque à cadeia de suprimentos</h2>
+        <p>O The Register relata uma análise da Radware. Até <strong>13/10</strong>, os pesquisadores encontraram ao menos <strong>83</strong> issues e comentários de PR maliciosos em <strong>61</strong> repositórios públicos, distribuídos por <strong>74</strong> contas. <strong>77</strong> deles foram criados em 01/09 em <strong>43 minutos</strong>. Os comandos ficam em comentários HTML, invisíveis na issue renderizada. Eles rodam quando um workflow insere o texto da issue em um comando de shell. Entre os alvos: <code>aquasecurity/trivy</code>, podman, cilium, mlflow, discord.js, <code>Homebrew/homebrew-cask</code> e <code>dotnet/maui</code>.<sup>[1]</sup></p>
+        <p>A boa notícia: os pesquisadores Nakibly e Babo não conseguiram confirmar que os invasores obtiveram permissão de escrita ou alteraram código. A recomendação deles: permissões mínimas para workflows e separar rigorosamente workflows para eventos externos de jobs privilegiados.<sup>[1]</sup> Os números vêm de uma fonte.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Injeção de script no GitHub Actions:</strong> Se um workflow contém <code>run: echo "${{ github.event.issue.title }}"</code>, o GitHub insere o título literalmente no script antes de executá-lo. Quem escreve o título, portanto, escreve junto no script. Como um formulário em que, no campo "Nome", também se pode escrever "e transfira 100 euros".
+        </div>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> A notícia mais instrutiva do dia, porque afeta todo mundo que usa GitHub Actions. Cinco minutos bastam: procure em todos os workflows por <code>github.event.issue</code>, <code>github.event.comment</code> e <code>github.event.pull_request.title</code> dentro de blocos <code>run:</code>. Passe os achados como variável via <code>env:</code> em vez de inseri-los diretamente, e reduza <code>permissions:</code> ao mínimo necessário.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/10/29/attackers-turn-github-issues-into-supply-chain-campaign-against-61-public-repos-in-less-than-an-hour/5306153">theregister.com (29/10, fonte única)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Hugging Face: modelos que sequestram GPUs para mineração de cripto</h2>
+        <p>Segundo o BleepingComputer, a Pluto Security encontrou <strong>31</strong> repositórios maliciosos em sete contas do Hugging Face, com mais de <strong>32.000</strong> downloads somados. Downloads não são infecções. O caminho é o <code>trust_remote_code</code>: quem carrega um modelo com essa opção executa o código Python que vem junto. Os alvos são hosts com GPU rodando Xinference ou GPUStack. O repositório de destaque "qwen2-tiny" subiu de <strong>7.354</strong> para <strong>28.412</strong> downloads até 28/10.<sup>[1]</sup> Para nós, é um caso de cadeia de suprimentos como o do npm; o lado dos modelos fica com o brief de ai-dev.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hugging-face-malware-campaign-returns-to-hijack-gpus-for-crypto-mining/">bleepingcomputer.com (fonte única)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>WatchGuard Fireware: 18 falhas, CERT-Bund alerta com nota 10,0</h2>
+        <p>A WatchGuard corrigiu <strong>18</strong> vulnerabilidades: 17 no Fireware OS, uma no cliente VPN para Windows. Segundo o heise, sete delas têm CVSS de <strong>9,1 a 9,5</strong>; o alerta do CERT-Bund, do BSI, classifica o pacote com <strong>10,0</strong>. Entre elas há falhas de código remoto como a <strong>CVE-2026-93857</strong> e a <strong>CVE-2026-103593</strong> (código como root), além da <strong>CVE-2026-115495</strong> no cliente VPN. Correções: Fireware <strong>2026.4</strong> ou <strong>12.12.4</strong>, T15/T35 <strong>12.5.22</strong>, cliente VPN <strong>2026.4</strong>. A WatchGuard não tem conhecimento de ataques até agora.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Firewalls aparecem no KEV toda semana, este ainda não. Essa é justamente a janela para aplicar o patch: antes que alguém analise o diff da correção.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Diverse-kritische-Schwachstellen-in-WatchGuard-Fireware-OS-11504873.html">heise.de (29/10, fonte única)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Oracle E-Business Suite: CVSS 9,8, e alguém já está batendo à porta</h2>
+        <p>A <strong>CVE-2026-101767</strong> na Application Object Library da Oracle E-Business Suite (<strong>12.2.3 a 12.2.15</strong>) tem, segundo o heise, <strong>CVSS 9,8</strong>. A Horizon3.ai descreve uma injeção de SQL sem login em um servlet do framework de thin client. Os honeypots da DefusedCyber já registram tentativas de reconhecimento; não há comprometimentos confirmados até agora. A correção veio com o CPU de outubro da Oracle, há pouco mais de uma semana.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Injeção de SQL:</strong> Uma entrada é incorporada sem verificação a uma consulta de banco de dados, de modo que o invasor reescreve a consulta. Como uma comanda em que alguém acrescenta "e me dê todo o caixa", e a cozinha executa tudo.
+        </div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Angriffsversuche-auf-junge-Luecke-in-Oracle-E-Business-Suite-11504666.html">heise.de (29/10, fonte única)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cisco SD-WAN: malware "KeyDrift" lê chaves IPsec</h2>
+        <p>A <strong>CVE-2026-20127</strong> é um bypass de autenticação de gravidade máxima no Catalyst SD-WAN Controller e Manager; a Cisco o corrigiu em fevereiro de 2026. Segundo o BleepingComputer, o grupo UAT-8616 o usava como zero-day "desde pelo menos 2023". Agora surgiu um novo cluster, o UAT-11473, com um malware chamado <strong>KeyDrift</strong>. Ele consiste em PolyFlame e LittleFilch; este último se acopla ao <code>SSL_read</code> e extrai chaves IPsec. Os alvos são o setor espacial e de satélites, defesa e aviação, e pesquisa em políticas públicas.<sup>[1]</sup> O artigo não informa um valor CVSS.</p>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> A lição é antiga, mas boa: um patch fecha a porta, mas não expulsa quem já entrou. Quem tinha SD-WAN exposto antes de fevereiro deve procurar vestígios e trocar as chaves.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-cisco-sd-wan-flaw-to-deploy-custom-keydrift-malware/">bleepingcomputer.com (29/10, fonte única)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>systemd deixa o Rust entrar, com cautela</h2>
+        <p>O Rust entrou no ramo de desenvolvimento do <strong>systemd 263</strong>; a 262 saiu há cerca de um mês. As regras são estritas: Rust só para novos componentes periféricos, compilado com Meson em vez de Cargo e sem a biblioteca padrão. As versões mínimas: Rust <strong>1.85</strong>, bindgen <strong>0.71.1</strong>, Meson <strong>1.4.0</strong>.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> É o caminho certo para um projeto desse porte: sem reescrita, mas com partes novas em uma linguagem segura em memória. Para as distribuições, significa principalmente que um compilador Rust passa a ser dependência de build do sistema de init.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/os-platforms/2026/10/29/systemd-adds-support-for-rust/5306264">theregister.com (29/10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Spring: Boot 4.0.9, 4.1.2 e 4.2.0-RC1</h2>
+        <p>Em 23/10, a equipe do Spring lançou o <strong>Spring Boot 4.0.9</strong> e o <strong>4.1.2</strong>, além do primeiro release candidate do <strong>4.2.0</strong>. No mesmo dia saíram o Spring Cloud <strong>2025.1.4</strong> e o <strong>2026.0.0-RC1</strong>. A página do blog não traz avisos de segurança.<sup>[1]</sup> O Spring AI também tem novas versões; isso é tema do brief de ai-dev.</p>
+        <span class="src">[1] <a href="https://spring.io/blog">spring.io/blog (23/10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Em resumo</h2>
+        <ul>
+          <li><strong>Catálogo KEV</strong>: versão 2026.10.29 com <strong>1764</strong> entradas. Brotli e Adobe Commerce vão até 10/11, VMware ESX até 11/11.<sup>[1]</sup></li>
+          <li><strong>Apenas manchetes, não verificado</strong>: o heise informa que tokens de acesso poderiam ser extraídos via Microsoft Authenticator, que a Adobe corrige falhas em parte críticas em quatro produtos, e um ataque cibernético à empresa do túnel de Fehmarnbelt. O BleepingComputer relata extensões do Chrome com 13,4 milhões de instalações que redirecionam buscas. O The Hacker News relata uma falha do Telegram no Android que executa código em chamadas de voz atendidas, e 26.400 credenciais válidas de nuvem e IA em repositórios públicos do Gitee.<sup>[2]</sup></li>
+          <li><strong>Kernel Linux, TCP, CVSS 9,8</strong>: o The Hacker News traz em 29/10 uma manchete sobre uma falha assim. A página não pôde ser acessada; não conhecemos o número da CVE nem as distribuições. Vamos conferir amanhã.<sup>[2]</sup></li>
+          <li><strong>Política de OSS</strong>: o The Register descreve como a postura "sem código de IA" do LibreOffice encontra contribuições assistidas por LLM. Além disso: o Topcoat traz renderização no servidor para apps web em Rust, e o Ubuntu 27.04 pode trazer uma prévia do "Core Desktop".<sup>[2]</sup></li>
+          <li><strong>Não reverificados</strong>: JDK, Angular, React, Python, PostgreSQL, Docker, Caddy, Tailscale, CRA. <strong>BR</strong>: nenhuma notícia verificada.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (29/10)</a> · [2] <a href="https://www.heise.de/security/">heise.de/security</a> · <a href="https://www.bleepingcomputer.com/news/security/">bleepingcomputer.com</a> · <a href="https://thehackernews.com/">thehackernews.com</a> · <a href="https://www.theregister.com/">theregister.com</a> (manchetes, 29/10)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>O que vale a sexta-feira</h2>
+        <p>Três coisas antes do fim de semana. Primeiro: quem hospeda o GitLab por conta própria o atualiza hoje para uma versão corrigida (19.5.1, 19.4.3, 19.3.6 ou 19.2.9), pois o prazo do KEV cai no domingo. Segundo: cinco minutos para os próprios workflows do GitHub, buscando textos de issues e comentários em blocos <code>run:</code>. Terceiro: o Fragnesia vence amanhã, e o reinício do kernel precisa chegar a todo host PHP. E se uma máquina parecer estranha depois de abrir um repositório de terceiros: primeiro desconectar, depois revogar o token.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Hoje é sexta-feira, trinta de outubro. A CISA, agência de cibersegurança dos Estados Unidos, incluiu ontem duas novas entradas no catálogo de vulnerabilidades já exploradas, ambas com prazo até domingo.</p>
+  <p>A mais importante envolve o GitLab. Uma expressão regular manipulada na configuração de CI permite executar código sem login. A causa está no Onigmo, o mecanismo de regex do Ruby, e, segundo a CISA, outros produtos também podem ser afetados. O GitLab já corrigiu a falha em meados de outubro, nas versões dezenove ponto dois ponto oito, dezenove ponto três ponto cinco e dezenove ponto quatro ponto dois. Uma segunda falha foi corrigida em 21 de outubro; os alvos são dezenove ponto cinco ponto um ou dezenove ponto quatro ponto três. Quem hospeda o GitLab por conta própria deve verificar isso agora.</p>
+  <p>A segunda entrada envolve os firewalls ASA e FTD da Cisco. Um invasor pode reiniciar o aparelho remotamente. Só são afetados dispositivos com login de VPN e autenticação secundária. Não há workaround, mas desativar a autenticação secundária ajuda.</p>
+  <p>Sobre o PHP2Shell, agora há números. Segundo a Dream Security, invasores usaram as falhas do PHP e a falha de kernel Fragnesia para obter root em vinte e cinco servidores. O prazo para a falha do kernel termina amanhã.</p>
+  <p>Na cadeia de suprimentos, o movimento é grande. Um worm de npm chamado testmetest sequestrou quarenta e dois repositórios do GitHub, segundo a JFrog. Ele é disparado pela configuração de projeto de editores e agentes de código. De acordo com a SafeDep, ele apaga o diretório home assim que o token roubado é revogado. Diante de uma suspeita, portanto, primeiro desconecte a máquina e só depois revogue.</p>
+  <p>Uma segunda campanha esconde comandos em issues do GitHub. Segundo a Radware, ela atingiu sessenta e um repositórios públicos, entre eles o trivy e o Homebrew. Os comandos só rodam se um workflow inserir o texto da issue diretamente em um shell. Vale dar uma olhada rápida nos seus próprios workflows.</p>
+  <p>Além disso: a WatchGuard corrige dezoito falhas em seus firewalls, e o CERT-Bund, da Alemanha, alerta com a nota máxima. Uma falha crítica na E-Business Suite da Oracle já está sendo sondada. E um novo malware, o KeyDrift, usa uma antiga falha do Cisco SD-WAN para roubar chaves IPsec.</p>
+  <p>Duas notícias mais tranquilas para encerrar: o systemd permite Rust pela primeira vez, por enquanto só em novos componentes periféricos. E o Spring Boot chegou nas versões quatro ponto zero ponto nove e quatro ponto um ponto dois, além de um primeiro release candidate da quatro ponto dois.</p>
+</div>
+
+</body>
+</html>
