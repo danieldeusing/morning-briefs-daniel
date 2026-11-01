@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-11-01</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-11-01</span>
+  </div>
+
+  <h1 class="masthead-title">Ruhiger Sonntag: zwei Terminal-Bench-Werte für Carbon und ein neuer Effort-Regler</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Ruhig heute. In den letzten 24 Stunden kam kein neues Modell und kein neues Tool-Release. Wir nutzen den Sonntag für drei Dinge, die in der Woche untergingen: einen Effort-Regler für Subagenten in Claude Code, eine Preis-Übersicht der drei neuen Modelle und eine Warnung zum Lesen von Terminal-Bench-Zahlen. Carbon hat dort zwei verschiedene Werte, je nachdem, wen du fragst. Der nächste feste Termin ist Mittwoch: Moonshot will die Gewichte von Kimi K3.1 Pro freigeben.</p>
+    <ul>
+      <li><span class="chip good">Claude</span> <strong>Neu in 2.1.316</strong> (31.10.): <code>CLAUDE_CODE_SUBAGENT_EFFORT</code> setzt den Effort für Subagenten getrennt vom Hauptagenten.</li>
+      <li><span class="chip hot">Claude</span> <strong>Fast Mode für Opus 4.8</strong> fällt am 30.11. weg. Noch 29 Tage.</li>
+      <li><span class="chip">Claude</span> <strong>Messages API</strong>: Request-Grenze von 32 MB auf 128 MB (28.10.).</li>
+      <li><span class="chip">Bench</span> <strong>Carbon auf Terminal-Bench 4.0</strong>: 63,13 % bei Vals, 65,2 % bei einem Tracker. Wir zitieren Vals.</li>
+      <li><span class="chip">OpenAI</span> <strong>GPT-6.1 Terra</strong>: 50,3 % auf Terminal-Bench 4.0, nur Herstellerangabe.</li>
+      <li><span class="chip">Local</span> <strong>Kimi K3.1 Pro</strong>: Gewichte für den 04.11. angekündigt. Index 55, knapp unter Opus 5.5.</li>
+      <li><span class="chip">Tool</span> <strong>Pflicht-Runde</strong>: keine neue Bewegung bei Cursor, Cline, OpenHands, Aider.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event-Horizont</div>
+      <div class="timeline-sub">Die letzte Woche und die nächsten Termine</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Mo 26.10.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GPT-6.1 Terra</span>
+          <span>Cline 4.1.26</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 27.10.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.312 · OpenHands 1.34.0</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 28.10.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Gemini 4 Carbon</span>
+          <span>Messages API: 128 MB</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fr 30.10.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.314</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sa 31.10.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.316</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">So 01.11.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Heute · ruhig</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mi 04.11.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Kimi K3.1 Pro: Gewichte angekündigt</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mo 30.11.</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Fast Mode für Opus 4.8 wird entfernt</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid cols-2">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Claude Code: ein Effort-Regler nur für Subagenten</h2>
+        <p>Gestern ging es um den Fast Mode. Dabei rutschte eine zweite Zeile aus 2.1.316 durch: „Added <code>CLAUDE_CODE_SUBAGENT_EFFORT</code> to set the effort level subagents run at“.<sup>[1]</sup> Du kannst also dem Hauptagenten viel Denkzeit geben und den Subagenten wenig, oder umgekehrt.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Effort-Level:</strong> Wie lange das Modell nachdenkt, bevor es antwortet. Mehr Effort heißt bessere Antworten bei schweren Aufgaben, aber mehr Token und mehr Wartezeit. Das ist wie die Wahl zwischen einem schnellen Blick und einer gründlichen Prüfung.
+        </div>
+        <p>Meine Sicht: Das ist der nützlichste Schalter der Woche für alle, die viele Subagenten starten. Subagenten erledigen oft die mechanische Arbeit: Dateien suchen, Logs lesen, Tests laufen lassen. Dafür brauchen sie keine maximale Denkzeit. Wer das Effort für sie senkt, spart Token und Zeit, ohne den Hauptagenten dümmer zu machen. Umgekehrt gilt: Wenn deine Subagenten die eigentliche Recherche machen, setz den Wert nicht zu tief.</p>
+        <p><span class="chip good">Ausprobieren</span> Setz <code>CLAUDE_CODE_SUBAGENT_EFFORT</code> für eine Woche auf eine niedrigere Stufe und vergleiche Token-Verbrauch und Ergebnis. Warum: Es ist eine Zeile in der Umgebung, und du merkst schnell, ob die Qualität leidet.</p>
+        <h3>Zur Erinnerung: Fast Mode für Opus 4.8</h3>
+        <p>„Deprecated fast mode for Opus 4.8 as of October 30, 2026; it will be removed on November 30, 2026.“<sup>[1]</sup> Laut Changelog gibt es danach keinen automatischen Rückfall, Anfragen schlagen fehl. Der empfohlene Ersatz ist Opus 5.5. Noch 29 Tage.</p>
+        <h3>API: größere Requests</h3>
+        <p>Anthropic hat am 28.10. die maximale Request-Größe der Messages API und der Token Counting API von 32 MB auf 128 MB angehoben. Am 29.10. kam eine Usage and Cost Analytics API als Beta dazu.<sup>[2]</sup> Für dich heißt das: Große PDFs, viele Bilder oder lange Logs passen jetzt in einen einzigen Request. Das Kontextfenster des Modells bleibt aber die eigentliche Grenze.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code</a> — offizieller Changelog, abgerufen 01.11.2026 · [2] <a href="https://releasebot.io/updates/anthropic">releasebot.io</a> — Drittanbieter-Spiegel, abgerufen 01.11.2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kimi K3.1 Pro: Mittwoch ist der Test</h2>
+        <p>Moonshot bietet Kimi K3.1 Pro seit dem 23.10. nur über die API an, für 2 $ pro Million Input-Token und 10 $ pro Million Output-Token. Die Zusage lautet: „Full model weights will be released by Nov 4, 2026.“<sup>[1]</sup> Im Index von Artificial Analysis stand Kimi am 23.10. bei 55, Opus 5.5 bei 58.<sup>[1]</sup> Das war vor Carbon.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Open Weights:</strong> Der Hersteller gibt die trainierten Zahlen des Modells frei. Dann kannst du es selbst betreiben, auf eigener Hardware oder bei einem Anbieter deiner Wahl. Das ist wie ein Rezept statt eines Restaurantbesuchs.
+        </div>
+        <p>Meine Sicht: Halten sie den Termin, hat die offene Welt ein Modell drei Index-Punkte hinter dem besten geschlossenen. Auf deinem Rechner läuft es trotzdem nicht. Ein Modell dieser Klasse braucht Server-Hardware. Für dich zählt es als günstige, austauschbare Alternative bei Hostern, nicht als Ollama-Modell. Prüf am Mittwoch zuerst die Lizenz, dann die Größe.</p>
+        <span class="src">[1] <a href="https://simonwillison.net/2026/Oct/23/kimi-k31-pro/">simonwillison.net</a> — 23.10.2026, Moonshot-Angaben</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Terminal-Bench lesen: zwei Werte für ein Modell</h2>
+        <p>Für Gemini 4 Carbon gibt es auf Terminal-Bench 4.0 zwei Zahlen. Vals misst 63,13 % (±2,20), Platz 4 von 59.<sup>[1]</sup> Ein Release-Tracker nennt 65,2 %.<sup>[2]</sup> Den Tracker konnten wir selbst nicht laden, die Zahl stammt aus einem Such-Snippet.</p>
+        <p>Der Unterschied ist wahrscheinlich kein Fehler. Benchmarks hängen am Harness, also an dem Programm, das das Modell durch die Aufgaben führt, und am Effort-Level. Andere Einstellungen geben andere Werte. Deshalb zitieren wir Vals: eine unabhängige Messung mit Fehlerspanne.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Terminal-Bench:</strong> Ein Test, bei dem ein Modell echte Aufgaben in einer Kommandozeile löst, etwa ein Projekt bauen oder einen Server einrichten. Gezählt wird, wie viele Aufgaben am Ende wirklich funktionieren. Das ist näher an deiner Arbeit mit Claude Code als ein reiner Code-Quiz-Test.
+        </div>
+        <p>Bei GPT-6.1 Terra ist die Lage dünner. OpenAI meldet 50,3 % im höchsten Effort-Modus, gegen 21,5 % beim Vorgänger GPT-5.6 Terra.<sup>[3]</sup> Eine unabhängige Terminal-Bench-Messung für Terra haben wir nicht gefunden.</p>
+        <table>
+          <thead>
+            <tr><th>Modell</th><th>Preis pro 1 Mio. Token (in / out)</th><th>Terminal-Bench 4.0</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Gemini 4 Carbon</td><td>4 $ / 20 $<sup>[4]</sup></td><td>63,13 % (Vals, unabhängig)</td></tr>
+            <tr><td>Kimi K3.1 Pro</td><td>2 $ / 10 $<sup>[5]</sup></td><td>heute nicht erhoben</td></tr>
+            <tr><td>GPT-6.1 Terra</td><td>1 $ / 5 $<sup>[3]</sup></td><td>50,3 % (nur OpenAI)</td></tr>
+          </tbody>
+        </table>
+        <p>Für Carbon nennt Artificial Analysis einen API-Preis. Ob Entwickler ohne Freigabe aus Googles Cyber-Programm wirklich Zugang bekommen, konnten wir heute nicht bestätigen. Gestern galt der Zugang noch als beschränkt.</p>
+        <p>Meine Sicht: Zwei Prozentpunkte Abstand zwischen zwei Quellen sind so groß wie der Abstand zwischen Platz 1 und Platz 4. Ranglisten mit Nachkommastellen täuschen also Genauigkeit vor. Lies Terminal-Bench als Gruppen, nicht als Rangfolge. Carbon gehört zur Spitzengruppe. Terra liegt laut eigener Angabe eine Stufe darunter, kostet aber ein Viertel von Carbon. Einen SWE-bench-Verified-Wert gibt es für keins der neuen Modelle, deshalb heute keine Grafik.</p>
+        <span class="src">[1] <a href="https://www.vals.ai/models/google_gemini-4-carbon">vals.ai</a> — unabhängig, Seite vom 28.10., abgerufen 01.11.2026 · [2] <a href="https://aireleasetracker.com/model/google/gemini-4-carbon">aireleasetracker.com</a> — nur Such-Snippet, 01.11.2026 · [3] <a href="https://www.bleepingcomputer.com/news/artificial-intelligence/openai-launches-gpt-61-terra-with-3x-faster-ai-agents-50-percent-lower-pricing">bleepingcomputer.com</a> — OpenAI-Angaben, 26.10.2026 · [4] <a href="https://artificialanalysis.ai/models/gemini-4-carbon">artificialanalysis.ai</a> — abgerufen 01.11.2026 · [5] <a href="https://simonwillison.net/2026/Oct/23/kimi-k31-pro/">simonwillison.net</a> — 23.10.2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Pflicht-Runde: still im Schatten</h2>
+        <ul>
+          <li><strong>Cursor</strong> — letzter Eintrag ist das Agent SDK vom 20.10.<sup>[1]</sup></li>
+          <li><strong>Cline</strong> — weiter v4.1.26 vom 26.10., mit GPT-6-Unterstützung.<sup>[2]</sup></li>
+          <li><strong>OpenHands</strong> — weiter v1.34.0 vom 27.10.<sup>[3]</sup></li>
+          <li><strong>Continue</strong> — neuestes stabiles Release v2.0.0-vscode (v2.1.0 als Pre-Release) vom 19.06., ein Jahr steht nicht dabei. Ob das Projekt ruht, ist offen.<sup>[4]</sup></li>
+          <li><strong>Aider</strong> — weiter v0.86.1, ohne Datum auf der History-Seite.<sup>[5]</sup></li>
+          <li><strong>Copilot, Windsurf, JetBrains AI, Devin, Bolt, Plandex</strong> — heute nicht geprüft.</li>
+        </ul>
+        <p>Meine Sicht: Ein Sonntag ohne Releases ist normal. Auffällig ist eher Continue: Über vier Monate ohne Release sind bei Coding-Tools in diesem Tempo eine lange Zeit. Wer Continue noch nutzt, sollte sich Cline oder OpenHands als offene Alternative ansehen.</p>
+        <span class="src">[1] <a href="https://cursor.com/changelog">cursor.com/changelog</a> · [2] <a href="https://github.com/cline/cline/releases">github.com/cline/cline</a> · [3] <a href="https://github.com/All-Hands-AI/OpenHands/releases">github.com/All-Hands-AI/OpenHands</a> · [4] <a href="https://github.com/continuedev/continue/releases">github.com/continuedev/continue</a> · [5] <a href="https://aider.chat/HISTORY.html">aider.chat</a> — alle abgerufen 01.11.2026</span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Sonntag, der erste November. Ein ruhiger Tag ohne neue Modelle und ohne neue Tool-Releases. Wir holen drei Dinge nach, die in der Woche untergingen.</p>
+  <p>Erstens: Claude Code hat in der Version vom Samstag einen neuen Regler. Mit einer Umgebungsvariable stellst du ein, wie lange Subagenten nachdenken, getrennt vom Hauptagenten. Wer viele Subagenten für einfache Suchaufgaben startet, spart damit Token und Zeit. Und zur Erinnerung: Der schnelle Modus für Opus vier Punkt acht fällt am dreißigsten November weg.</p>
+  <p>Zweitens: Für Gemini vier Carbon gibt es auf Terminal-Bench zwei Werte. Vals misst dreiundsechzig Prozent, ein Tracker nennt fünfundsechzig. Der Unterschied kommt wahrscheinlich von anderen Testeinstellungen. Wir zitieren die unabhängige Messung von Vals. GPT-sechs Punkt eins Terra kommt laut OpenAI auf rund fünfzig Prozent, das ist aber nur eine Herstellerangabe. Dafür kostet Terra nur ein Viertel von Carbon.</p>
+  <p>Drittens: Am Mittwoch will Moonshot die Gewichte von Kimi K drei Punkt eins Pro freigeben. Das Modell liegt im Index von Artificial Analysis nur drei Punkte hinter Opus fünf Punkt fünf. Auf einem normalen Rechner läuft es aber nicht.</p>
+  <p>Bei Cursor, Cline, OpenHands und Aider gibt es nichts Neues. Continue hat seit einem neunzehnten Juni kein Release mehr. Morgen schauen wir, ob Carbon für Entwickler freigegeben wird.</p>
+</div>
+
+</body>
+</html>

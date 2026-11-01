@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-01</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Edición 2026-11-01</span>
+  </div>
+  <h1 class="masthead-title">Falla TCP en Linux desde el kernel 4.4: Red Hat ahora también sube a CVSS 9,8</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Domingo, y la semana todavía trajo más. En el código TCP del kernel de Linux hay un use-after-free que la calificación del kernel clasifica con CVSS 9,8; Red Hat ya subió también su calificación a 9,8 («Critical»). En GitLab, el caso de Alpine Linux muestra que una actualización de GitLab no basta si el Ruby que va debajo sigue siendo viejo. A eso se suma una racha de incidentes en la cadena de suministro: un plugin de editor manipulado, comandos inyectados mediante issues de GitHub, un proveedor de PaaS con variables de entorno robadas y un robo de miles de millones a través de la laptop de un DevOps. Nuestra opinión: instala la actualización del kernel en cuanto tu distribución la entregue. El segundo gran tema de la semana es el puesto de trabajo del desarrollador como puerta de entrada.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Kernel de Linux CVE-2026-98432</strong>: use-after-free en TCP desde 4.4, correcciones en 6.12.113, 6.18.56, 7.2.10. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>GitLab/Ruby</strong>: cuatro fallas en Onigmo, CVSS 9,9–10,0 según heise; se necesita Ruby 3.3.13, 3.4.12, 4.0.9. Plazo KEV hoy. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Cadena de suministro</strong>: extensión de editor manipulada en el marketplace de Cursor, unas 11 horas en línea, hasta 5.000 afectados. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Northflank</strong>: intrusión; se pide a los clientes considerar robadas todas las variables de entorno. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Binance</strong>: robo de unos 6,4 mil millones de USD a través de la laptop comprometida de un DevOps. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>WordPress 7.1.4</strong> y <strong>Drupal Commerce</strong>: se observaron escaneos y ataques, respectivamente. <span class="chip">Web</span></li>
+      <li><span class="chip">Sec</span> <strong>TeamViewer 15.83</strong>, <strong>Cisco ASA/FTD</strong>, «SMS de la muerte» de Android. <span class="chip">Global</span></li>
+      <li><span class="chip good">OSS</span> <strong>systemd 263</strong> incorpora Rust; <strong>PDFsharp</strong> pasa de MIT a AGPL. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>Spring Boot 4.0.9/4.1.2</strong>, <strong>Node 27 Alpha</strong>; <strong>PostgreSQL 14</strong> termina el 12/11. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Perspectiva semanal</div>
+      <div class="timeline-sub">Plazos KEV y fechas de lanzamiento hasta el sábado — los plazos KEV solo obligan formalmente a las agencias federales de EE. UU., pero sirven como punto de referencia</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Dom 01/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Hoy</span><span>Plazo KEV: GitLab CVE-2026-97229</span><span>Plazo KEV: Cisco ASA/FTD CVE-2026-76418</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Lun 02/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Plazo KEV: Ivanti Connect Secure CVE-2026-111357</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Jue 05/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>PHP 8.6.0 RC5 (planeado)</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sáb 07/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Perspectiva: 10/11 plazo KEV de Brotli, 12/11 fin de vida de PostgreSQL 14</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Kernel de Linux: use-after-free en el código TCP de IPv4</h2>
+        <p><span class="update-since">Nuevo desde ayer</span> <strong>CVE-2026-98432</strong> es un use-after-free en el código TCP de IPv4 del kernel y, según BleepingComputer, está presente en todos los kernels desde la <strong>4.4</strong>.<sup>[1]</sup> Según heise, está corregido en <strong>6.12.113</strong>, <strong>6.18.56</strong>, <strong>7.2.10</strong> y <strong>7.3-rc7</strong>; IPv6 no está afectado.<sup>[2]</sup> Debian tiene paquetes para Debian 12 (<strong>6.1.190-1</strong>) y Debian 13 (<strong>6.12.113-1</strong>). Para Ubuntu y RHEL aún no había correcciones disponibles al momento de la publicación.<sup>[1]</sup></p>
+        <p>La calificación del kernel es, según BleepingComputer, <strong>CVSS 9,8</strong>; Red Hat todavía indicaba ahí el 30/10 un <strong>5,9</strong>, porque la explotación sería complicada.<sup>[1]</sup> Entretanto, Red Hat mismo marca <strong>CVSS 9,8</strong> (provisional) y clasifica la falla como «Critical» para RHEL, con el boletín RHSB-2026-016.<sup>[3]</sup> La falla la encontró Claude de Anthropic, y Anthropic construyó un exploit vía MPTCP que, según el reporte, obtiene root en el servidor en «about 53 minutes» y esquiva KASLR. El exploit no es público y no se conocen ataques en el mundo real. Según BleepingComputer, no basta con desactivar solo MPTCP.<sup>[1]</sup> No hicimos una verificación contra NVD.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Use-after-free:</strong> Un programa libera memoria y aun así sigue usándola después. Quien mientras tanto coloque datos propios en ese lugar puede controlar el programa. Como una habitación de hotel cuya vieja tarjeta de acceso sigue funcionando después de que ya se instaló un huésped nuevo.
+        </div>
+        <div class="eli5">
+          <strong class="eli5-term">MPTCP:</strong> Multipath TCP reparte una conexión entre varios caminos, por ejemplo Wi-Fi y red celular al mismo tiempo. Viene incluido en el kernel, pero en la mayoría de los servidores no es un tema de uso diario.
+        </div>
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> Desde que Red Hat subió a 9,8, ya no hay discusión sobre la gravedad. «Desde 4.4» significa: prácticamente cualquier máquina Linux que tengas. Un exploit público y ataques no se conocen hasta ahora, pero es una actualización de kernel con reinicio que debes instalar en cuanto tu distribución la entregue. Quien use Ubuntu o RHEL debe vigilar los advisories, porque allí la corrección aún faltaba al momento de la publicación.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/critical-linux-kernel-flaw-allows-remote-root-attacks-on-mptcp-servers/">bleepingcomputer.com (30/10)</a> · [2] <a href="https://www.heise.de/news/Erneut-kritischer-Bug-in-Linux-TCP-IP-aufgedeckt-Updates-in-Arbeit-11506050.html">heise.de (30/10)</a> · [3] <a href="https://access.redhat.com/security/cve/cve-2026-98432">access.redhat.com (al 01/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>GitLab: el problema está en Ruby</h2>
+        <p><span class="update-since">Corrección a lo de ayer</span> Ayer dijimos aquí que solo importaban las nuevas versiones de GitLab. Eso no es correcto. Según heise, detrás de cuatro fallas críticas de GitLab hay errores en <strong>Onigmo</strong>, el motor de expresiones regulares de Ruby: un double free, un desbordamiento de enteros y un desbordamiento de contador. heise indica <strong>CVSS 9,9</strong> para CVE-2026-89078 y CVE-2026-93577, y <strong>CVSS 10,0</strong> para CVE-2026-97229 y CVE-2026-110264. GitLab las cerró entre el 23/09 y el 21/10. Quien opera GitLab por su cuenta necesita, según heise, Ruby <strong>3.3.13</strong>, <strong>3.4.12</strong> o <strong>4.0.9</strong>.<sup>[1]</sup></p>
+        <p>El caso de <strong>Alpine Linux</strong> muestra por qué esto importa. La instancia de GitLab del proyecto corría desde el 13/10, por error, en la 19.3.4 y fue atacada el 20 y 21/10. La actualización a la 19.3.6 el 22/10 no cerró la falla, porque el Ruby que va debajo siguió siendo viejo. Solo la imagen del 27/10 incluye Ruby 3.3.13.<sup>[2]</sup></p>
+        <p>Sobre <strong>CVE-2026-97229</strong> en sí: una expresión regular manipulada en la configuración de CI/CD lleva a ejecución de código sin autenticación. heise indica como versiones corregidas <strong>19.2.8</strong>, <strong>19.3.5</strong> y <strong>19.4.2</strong>.<sup>[2]</sup> BleepingComputer reporta ataques activos; según la prensa, la falla entró al catálogo KEV el 29/10 y el plazo termina hoy.<sup>[3]</sup> La entrada KEV misma no pudimos consultarla hoy. Qué versiones están afectadas, las fuentes lo indican de forma contradictoria; omitimos ese dato.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Motor de expresiones regulares:</strong> La parte de un lenguaje de programación que evalúa patrones de búsqueda como <code>^v[0-9]+</code>. GitLab deja que los usuarios escriban esos patrones en la configuración de CI. Si el motor tiene fallas, un patrón de búsqueda se convierte en arma.
+        </div>
+        <div class="callout warn"><span class="callout-label">Atención</span> El número de versión de GitLab por sí solo no prueba nada. Revisa además la versión de Ruby con la que GitLab realmente corre, sobre todo en instalaciones desde paquetes de la distribución o desde el código fuente. Esta es nuestra lectura del caso Alpine; los paquetes Omnibus oficiales no los revisamos.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Hinter-kritischen-GitLab-Luecken-stecken-Fehler-in-der-Regex-Engine-von-Ruby-11505663.html">heise.de (30/10)</a> · [2] <a href="https://www.heise.de/news/Cisco-Firewalls-und-GitLab-Luecke-werden-angegriffen-11505669.html">heise.de (30/10)</a> · [3] <a href="https://www.bleepingcomputer.com/news/security/hackers-now-exploiting-max-severity-gitlab-flaw-in-attacks/">bleepingcomputer.com (30/10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cisco ASA/FTD: versiones con corrección para el plazo de hoy</h2>
+        <p><strong>CVE-2026-76418</strong> permite a atacantes forzar el reinicio del firewall de forma remota, según heise con <strong>CVSS 8,6</strong>. Afecta a SSL-VPN con autenticación secundaria en el grupo de túnel. No existe un workaround oficial. La falla está corregida, según heise, en ASA <strong>9.16.4.104</strong>, <strong>9.18.4.96</strong>, <strong>9.20.4.50</strong>, <strong>9.22.3.200</strong>, <strong>9.23.1.48</strong>, <strong>9.24.1.27</strong> y <strong>9.24.10.1</strong>, así como en FTD <strong>7.0.11</strong>, <strong>7.2.13</strong>, <strong>7.4.9</strong>, <strong>7.6.7</strong>, <strong>7.7.14</strong>, <strong>10.0.3</strong> y <strong>10.1.1</strong>. Inclusión en KEV según heise el 29/10, plazo hoy.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Cisco-Firewalls-und-GitLab-Luecke-werden-angegriffen-11505669.html">heise.de (30/10)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Cadena de suministro: el puesto del desarrollador como puerta de entrada</h2>
+        <p>Cuatro incidentes en una semana, un patrón: los atacantes ya no apuntan a producción, sino a las herramientas de quienes la construyen.</p>
+
+        <h3>Extensión de editor manipulada en el marketplace de Cursor</h3>
+        <p>Según BleepingComputer, el 29/10 estuvo en línea unas <strong>11 horas</strong> (02:27 a 13:35 PT) una versión manipulada <strong>2.1.313</strong> de la extensión de Claude Code en el marketplace del editor Cursor. Hasta <strong>5.000</strong> desarrolladores podrían haberla instalado. Instala una puerta trasera SSH; la señal es una llave SSH llamada <code>svc-telemetry</code>.<sup>[1]</sup> Una actualización por sí sola no elimina la puerta trasera.<sup>[2]</sup> Según The Register, el empleado de Anthropic Felix Rieseberg dice en X que los sistemas propios no están afectados: «A malicious actor used access to Cursor's marketplace to publish a tampered copy …»<sup>[2]</sup> Cómo llegó el paquete al marketplace sigue sin saberse. La herramienta de IA en sí es tema del brief de ai-dev.</p>
+        <div class="callout warn"><span class="callout-label">Atención</span> Si usas Cursor: busca <code>svc-telemetry</code> en <code>~/.ssh/authorized_keys</code>. Cuesta un minuto, incluso si no instalaste la extensión de forma consciente.</div>
+
+        <h3>Issues de GitHub como lanzadera de comandos</h3>
+        <p>Según The Register, Radware encontró <strong>83</strong> issues, pull requests y comentarios de GitHub con código malicioso en <strong>61</strong> repositorios públicos, creados por 74 cuentas. El 01/09 llegaron 77 de ellos en 43 minutos. El objetivo son workflows que toman texto de issues y lo convierten en comandos sin revisarlo. En dos casos hay pruebas de que el comando se ejecutó. Entre los objetivos: Trivy, Podman, Brave y MLflow.<sup>[3]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Inyección en workflows:</strong> Un workflow de GitHub Actions inserta, por ejemplo, el título de un issue directamente en un comando de shell. Si un atacante escribe comandos en el título, el CI los ejecuta. Como un formulario en el que en el campo «Nombre» también se puede escribir «y transfiéreme 100 euros», y contabilidad lo hace.
+        </div>
+
+        <h3>Northflank: considerar robadas todas las variables de entorno</h3>
+        <p>El proveedor de PaaS Northflank reportó una intrusión el 30/10, según BleepingComputer. La instrucción a los clientes es clara: «Assume all environment variables have been decrypted. Disable/rotate all keys.» Según Wiz hubo en octubre al menos <strong>9</strong> incidentes en plataformas para desarrollo con IA, entre ellas Railway, OpenCode, Warp y Lightning AI. En dos casos, con llaves robadas se ejecutaron unos 2,5 millones de llamadas a Bedrock por cerca de <strong>100.000 USD</strong>.<sup>[4]</sup></p>
+
+        <h3>Binance: la laptop de DevOps como punto de partida</h3>
+        <p>El 29/10 desde las 20:05 UTC salieron de Binance, según TRM, unos <strong>6,36 mil millones de USD</strong>, según Chainalysis 6,4 mil millones. Unos 2,7 mil millones están congelados. Binance describe el camino, según BleepingComputer, así: laptop de DevOps comprometida, luego un contenedor de servicio, luego retiros. TRM y Chainalysis atribuyen el hecho al grupo TraderTraitor.<sup>[5]</sup> Cuidado con las cifras: los montos del artículo no cuadran, queda una brecha de unos 1,2 mil millones de USD.</p>
+
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> Esta es la historia de la semana, no el kernel. Plugins de editor, workflows de CI, secretos de PaaS y la laptop con acceso a producción son hoy el punto más débil. Tres contramedidas baratas: buscar en los workflows de CI <code>${{ github.event.issue.title }}</code> y expresiones similares en líneas <code>run:</code>, mantener los secretos de vida corta y separados por entorno, y tratar las extensiones de editor como dependencias, es decir, pocas, conocidas y fijadas a una versión.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/malicious-claude-code-extension-on-cursor-planted-ssh-backdoors/">bleepingcomputer.com (30/10)</a> · [2] <a href="https://www.theregister.com/cyber-crime/2026/10/30/anthropic-that-claude-code-extension-compromise-couldnt-be-us/5306682">theregister.com (30/10)</a> · [3] <a href="https://www.theregister.com/security/2026/10/29/attackers-turn-github-issues-into-supply-chain-campaign-against-61-public-repos-in-less-than-an-hour/5306153">theregister.com (29/10)</a> · [4] <a href="https://www.bleepingcomputer.com/news/security/northflank-security-breach-leads-to-abuse-of-customers-ai-api-keys/">bleepingcomputer.com (31/10)</a> · [5] <a href="https://www.bleepingcomputer.com/news/security/binance-links-63-billion-crypto-theft-to-compromised-devops-laptop/">bleepingcomputer.com (30/10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CMS web: WordPress y Drupal Commerce</h2>
+        <h3>WordPress 7.1.4</h3>
+        <p>La actualización cierra una inyección de código en el proceso de actualización del núcleo, explotable sin autenticación, según heise con <strong>CVSS 8,1</strong>. La falla solo se activa durante una actualización completa del núcleo. Hay backports para todas las ramas de la 4.7.39 a la 7.0.8. Aún falta un número CVE. Wordfence contó, según heise, más de <strong>18.500</strong> solicitudes de escaneo en 21 horas.<sup>[1]</sup></p>
+        <h3>Drupal Commerce Core</h3>
+        <p>Drupal advierte de una falla «highly critical» en Commerce Core que, según BleepingComputer, se explota activamente: «This vulnerability is being actively exploited in the wild.» Corregida en <strong>3.3.13</strong> y <strong>8.x-2.41</strong>; más de <strong>42.000</strong> sitios usan el módulo. El número CVE no lo verificamos contra NVD.<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> En WordPress la actualización automática es la mejor protección, y justo ahí está la falla. Paradójico, pero no es motivo para desactivar las actualizaciones automáticas. En Drupal Commerce, en cambio, ya hay ataques en curso; quien opere una tienda con él, que parche antes que todo lo demás de esta lista.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/WordPress-Update-stopft-Schadcode-Luecke-Exploit-Versuche-beobachtet-11505811.html">heise.de (30/10)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/drupal-warns-of-critical-commerce-core-flaw-exploited-in-attacks/">bleepingcomputer.com (30/10)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>systemd 263 incorpora Rust <span class="h2-refs">[1]</span></h2>
+        <p>systemd incorporó soporte de Rust para la versión 263; la actual es la 262. El alcance es limitado: solo componentes periféricos, sin la biblioteca estándar de Rust, compilados con Meson. «No cargo. Everything is built with meson.» La versión mínima es Rust 1.85.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> Un comienzo cauteloso, igual que en el kernel. Para quienes operan sistemas no cambia nada. Para las distribuciones significa: un compilador de Rust se vuelve dependencia de compilación del sistema de init. Eso avivará la discusión en arquitecturas pequeñas y distribuciones mínimas.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/os-platforms/2026/10/29/systemd-adds-support-for-rust/5306264">theregister.com (29/10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PDFsharp pasa de MIT a AGPL <span class="h2-refs">[1]</span></h2>
+        <p>Según heise, la biblioteca .NET PDFsharp cambia de la licencia MIT a AGPL más una opción comercial con el salto de la 6.2.4 a la <strong>6.5.0</strong>.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">AGPL:</strong> Una licencia copyleft. Quien usa la biblioteca en un software que otros utilizan por la red debe publicar su propio código fuente, o compra una licencia comercial.
+        </div>
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> El patrón conocido: primero difusión con MIT, luego monetización con AGPL. Quien use PDFsharp en proyectos de clientes debe fijar ahora la versión en 6.2.x y revisar si Dependabot o Renovate proponen automáticamente la actualización mayor. Un cambio de licencia sin notar es más caro que cualquier CVE.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Developer-Haeppchen-dotnetup-statt-rustup-Node-27-Webframework-in-Rust-11505731.html">heise.de Developer-Häppchen (31/10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Lanzamientos y fechas</h2>
+        <ul>
+          <li><strong>Spring Boot</strong> <strong>4.0.9</strong>, <strong>4.1.2</strong> y <strong>4.2.0-RC1</strong>, así como Spring Cloud 2025.1.4, salieron el 23/10.<sup>[1]</sup></li>
+          <li><strong>Python</strong>: 3.15.2 y 3.14.10 (corrección de errores) y 3.13.18, 3.12.16 y 3.11.18 (solo seguridad) salieron todas el 25/10. La serie 3.10 llega a su fin con 3.10.22.<sup>[2]</sup> LWN reporta además que el compilador JIT experimental volverá a eliminarse; el artículo no lo leímos.<sup>[3]</sup></li>
+          <li><strong>PostgreSQL 14</strong> deja de recibir correcciones, según postgresql.org, después del <strong>12/11/2026</strong>. LWN enlaza un texto de Robert Haas titulado «Postgres 19 is late, and it's AI's fault».<sup>[4]</sup></li>
+          <li><strong>Node 27.0.0-alpha.0</strong> con V8 15.6, además de VS Code 1.144, Grafana 13.3 y Apache Wicket 9.25 como última 9.x.<sup>[5]</sup></li>
+          <li><strong>PHP 8.6.0 RC5</strong> está planeado para el 05/11.<sup>[6]</sup></li>
+        </ul>
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> PostgreSQL 14 es la fecha con consecuencias: quien aún corre en esa versión tiene once días hasta la última corrección. Nada dramático, la base de datos sigue funcionando, pero a partir de entonces acumula fallas sin parchar. Python 3.10 ya va más adelante: desde el 01/10 (última versión 3.10.22) ya no recibe correcciones.</div>
+        <span class="src">[1] <a href="https://spring.io/blog">spring.io/blog</a> · [2] <a href="https://www.python.org/downloads/">python.org/downloads (al 01/11)</a> · [3] <a href="https://lwn.net/">lwn.net (26/10)</a> · [4] <a href="https://www.postgresql.org/">postgresql.org (al 01/11)</a> · [5] <a href="https://www.heise.de/news/Developer-Haeppchen-dotnetup-statt-rustup-Node-27-Webframework-in-Rust-11505731.html">heise.de (31/10)</a> · [6] <a href="https://www.php.net/">php.net (al 31/10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>En breve</h2>
+        <ul>
+          <li><strong>TeamViewer 15.83</strong> cierra, según heise, CVE-2026-111585 y CVE-2026-92372 (ambas <strong>CVSS 8,8</strong>) así como CVE-2026-92374 (7,8). Para Linux hay 15.83.3.<sup>[1]</sup></li>
+          <li><strong>Android «SMS de la muerte»</strong>: CVE-2026-58882 hace que los teléfonos se bloqueen por un SMS sin intervención del usuario; hay una prueba de concepto en GitHub. Android 12 y 13 siguen sin parche, según BleepingComputer; la falla no aparece en el boletín de octubre de Google.<sup>[2]</sup></li>
+          <li><strong>Fragnesia</strong> (CVE-2026-46300): el plazo KEV para la falla del kernel venció ayer, según la consulta KEV de ayer.<sup>[3]</sup></li>
+          <li><strong>Ivanti Connect Secure</strong>: el plazo KEV para CVE-2026-111357 termina mañana, lunes.<sup>[3]</sup></li>
+          <li><strong>Reddit</strong> quiere mostrar contenido gradualmente solo a usuarios con sesión iniciada, para frenar a los scrapers; primero en mercados selectos fuera de EE. UU.<sup>[4]</sup></li>
+          <li><strong>Cyber Resilience Act</strong>: las obligaciones de notificación (alerta temprana en 24 horas, notificación en 72 horas a través de la plataforma de ENISA) rigen desde el 11/09/2026; la mayor parte de las obligaciones, desde el 11/12/2027. La fuente es un despacho de abogados.<sup>[5]</sup></li>
+          <li><strong>Solo titulares, sin verificar</strong>: un exploit propio de PHP2Shell con el que atacantes presuntamente chinos tomaron 25 servidores (The Register); servidores de actualización abandonados de Popcorn Time como riesgo para usuarios de Mac; una intrusión en Chainalysis; Microsoft corrige problemas de VPN de las actualizaciones de septiembre; la Universidad de Leipzig sigue fuera de línea.<sup>[6]</sup></li>
+          <li><strong>No revisado hoy</strong>: Chrome, Firefox, WebKit, Angular, React, Docker, Caddy, Tailscale, JDK. <strong>BR</strong>: Tecnoblog respondió con 403, sin noticia verificada.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.heise.de/news/TeamViewer-stopft-Codeschmuggel-Luecke-11506072.html">heise.de (30/10)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/new-android-sms-of-death-exploit-can-remotely-crash-unpatched-phones/">bleepingcomputer.com (31/10)</a> · [3] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (al 31/10)</a> · [4] <a href="https://www.bleepingcomputer.com/news/security/reddit-to-lock-content-behind-logins-to-fight-scrapers/">bleepingcomputer.com (31/10)</a> · [5] <a href="https://www.jonesday.com/en/insights/2026/07/eu-cyber-resilience-act-24hour-reporting-duties-start-september-11-2026">jonesday.com (fuente secundaria)</a> · [6] <a href="https://www.theregister.com/">theregister.com</a> · <a href="https://www.heise.de/security/">heise.de/security</a> · <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Lo que vale el domingo</h2>
+        <p>Tres cosas, ninguna urgente. Primero: quien opere GitLab por su cuenta revisa hoy la versión de Ruby, no solo la de GitLab. Segundo: quien use Cursor busca <code>svc-telemetry</code> en <code>authorized_keys</code>, y quien mantenga GitHub Actions busca títulos de issues en líneas <code>run:</code>. Tercero: para la corrección del kernel, planea una ventana de reinicio esta semana, y pon las instancias de PostgreSQL 14 en la lista antes del 12/11.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Hoy es domingo primero de noviembre. La semana todavía trajo más: una vieja falla en el kernel de Linux y varios ataques contra las herramientas de los desarrolladores.</p>
+  <p>En el código TCP del kernel de Linux hay, desde la versión cuatro punto cuatro, un use-after-free. La calificación del kernel es nueve punto ocho de diez, y Red Hat ya subió también su calificación a nueve punto ocho, es decir, crítica. Existe un exploit, pero no es público, y no se conocen ataques. Debian ya tiene correcciones; Ubuntu y Red Hat todavía no las tenían al momento de la publicación. Nuestra opinión: instala la actualización del kernel, con reinicio, en cuanto tu distribución la entregue.</p>
+  <p>En GitLab, el verdadero problema está en el motor de expresiones regulares de Ruby. Según heise, detrás hay cuatro fallas críticas, y GitLab necesita un Ruby actualizado. El proyecto Alpine Linux lo comprobó: la actualización de GitLab sola no ayudó, porque se quedó el Ruby viejo. Para la falla más mencionada, hoy vence el plazo de la agencia estadounidense CISA. El plazo para la falla del firewall de Cisco también vence hoy.</p>
+  <p>El gran tema es la cadena de suministro. En el marketplace del editor Cursor estuvo en línea once horas, según BleepingComputer, una extensión manipulada que instala una puerta trasera SSH. Hasta cinco mil desarrolladores podrían estar afectados. Radware encontró código malicioso en issues de GitHub de sesenta y un proyectos, dirigido a workflows mal construidos. El proveedor Northflank recomienda a todos sus clientes cambiar sus llaves. Y en Binance desaparecieron unos seis punto cuatro mil millones de dólares; según Binance, a través de una laptop de DevOps hackeada.</p>
+  <p>WordPress cierra con la versión siete punto uno punto cuatro una falla en el proceso de actualización, por la que ya hay escaneos. En Drupal Commerce hay ataques en curso; quien opere una tienda con él debería parchar primero ahí. Además llegan actualizaciones para TeamViewer y un SMS que bloquea teléfonos Android más viejos.</p>
+  <p>Del mundo del código abierto: systemd incorpora Rust, con cautela y solo en la periferia. La biblioteca de dotnet PDFsharp cambia de la licencia MIT a la AGPL; quien la use debería fijar la versión. Spring Boot salió en versiones nuevas, y PostgreSQL catorce deja de recibir correcciones después del doce de noviembre.</p>
+  <p>Mañana vence el plazo para el gateway VPN de Ivanti, y revisaremos si Ubuntu y Red Hat ya entregaron la corrección del kernel.</p>
+</div>
+
+</body>
+</html>
