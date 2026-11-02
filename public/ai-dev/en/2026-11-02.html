@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-11-02</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-02</span>
+  </div>
+
+  <h1 class="masthead-title">Quiet Monday: a write lock for Claude Code and Kimi's Wednesday test</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Quiet today. No new model and no new tool release over the weekend. So Monday is a week-opener: what from last week is still worth your time, and what should we watch until Friday? My tip for today is an unassuming switch in Claude Code that blocks writes outside your project. The key date this week is Wednesday: Moonshot plans to release the weights of Kimi K3.1 Pro. And on Terminal-Bench, nearly all the numbers for the new models still come from the vendors themselves.</p>
+    <ul>
+      <li><span class="chip good">Claude</span> <strong>Write lock</strong> (2.1.314, Oct 30): <code>permissions.blockWritesOutsideWorkingDirectories</code> blocks Write and Edit outside the project, in every mode.</li>
+      <li><span class="chip">Claude</span> <strong>ultrathink can be turned off</strong> (2.1.316, Oct 31): <code>CLAUDE_CODE_DISABLE_ULTRATHINK</code>.</li>
+      <li><span class="chip hot">Claude</span> <strong>Fast Mode for Opus 4.8</strong> goes away on Nov 30. 28 days left.</li>
+      <li><span class="chip hot">OSS</span> <strong>Kimi K3.1 Pro</strong>: weights announced for Wed, Nov 4. License and size are the open questions.</li>
+      <li><span class="chip">Bench</span> <strong>Terminal-Bench 4.0</strong>: Sonnet 5.5 70.6%, Opus 5.5 66.4%, Terra 50.3%. All vendor-reported.</li>
+      <li><span class="chip">Tool</span> <strong>Octoverse 2026</strong>: 220 million merged PRs per month, about three times as many as a year ago.</li>
+      <li><span class="chip">Tool</span> <strong>Mandatory round</strong>: no new movement at Cursor, Cline, OpenHands, Continue, Aider.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">Last week and the dates through the end of November</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Mon 10/26</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GPT-6.1 Terra</span>
+          <span>Cline 4.1.26</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 10/27</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.312 · OpenHands 1.34.0</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 10/28</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Gemini 4 Carbon (cyber program only)</span>
+          <span>GitHub Octoverse 2026</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 10/30</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.314: write lock</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 10/31</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.316</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Mon 11/02</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today · quiet</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Wed 11/04</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Kimi K3.1 Pro: weights announced</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 11/30</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Fast Mode for Opus 4.8 removed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid cols-2">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Claude Code: the switch you should set today</h2>
+        <p>Over the weekend the story was the effort dial for subagents. More important, I think, is one line from 2.1.314 on Oct 30: "Added <code>permissions.blockWritesOutsideWorkingDirectories</code>: Write, Edit and NotebookEdit refuse paths outside the working directories in every permission mode".<sup>[1]</sup> With this setting, the agent can only write in the folders where you started it.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Working directory:</strong> The folder where you start Claude Code, plus any folders you add on purpose. The switch puts a fence around exactly those folders. It is like a contractor who may only remodel the kitchen and has no key to the bedroom.
+        </div>
+        <p>The core is the "in every permission mode". The lock also applies in auto mode, where the agent works without asking. Until now this depended on your allow and deny rules. One forgotten path, and the agent wrote to <code>~/.zshrc</code> or to a neighboring repo. The lock covers only the file tools. A shell command through the Bash tool is not covered; the sandbox is still responsible for that.</p>
+        <p><span class="chip good">Try it</span> Set the switch to <code>true</code> in your global settings. Why: it costs nothing, and for the rare cases where the agent really should write outside, you add the folder on purpose.</p>
+        <h3>More small things from the week</h3>
+        <ul>
+          <li><strong>Turn off ultrathink</strong>: 2.1.316 brings <code>CLAUDE_CODE_DISABLE_ULTRATHINK</code>, "which turns the <code>ultrathink</code> keyword off".<sup>[1]</sup> Since 2.1.311 (Oct 26), a turn with ultrathink runs at xhigh effort, on Opus 5.5, Sonnet 5.5, Haiku 5.5 and Fable 5.1. If you manage teams with a cost cap, you can now make the word have no effect.</li>
+          <li><strong>Idle compaction</strong> in VS Code and in the Code tab of Claude Desktop: a conversation over 200K tokens that sits idle gets summarized. The summary is used when the prompt cache has expired by the next prompt.<sup>[1]</sup> That saves a lot of tokens when you come back. The price: details from early in the conversation can be missing.</li>
+          <li><strong>Fast Mode for Opus 4.8</strong>: from Nov 30, such requests return an error, with no fallback to regular Opus 4.8. The recommended replacement is Opus 5.5.<sup>[1]</sup> 28 days left. Check scripts and CI jobs that hard-code the model.</li>
+        </ul>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code</a> — official changelog, retrieved Nov 2, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kimi K3.1 Pro: what to watch on Wednesday</h2>
+        <p>Moonshot has offered Kimi K3.1 Pro through its API since Oct 23, at $2 per million input tokens and $10 per million output tokens. The weights are "planned for release on November 4".<sup>[1]</sup> According to latent.space, the model has 2.8 trillion parameters, of which 104 billion are active.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Active parameters:</strong> Large open models often consist of many specialist parts. For each word, only a small share of them computes, here 104 billion out of 2.8 trillion. It is like a hospital with a hundred doctors, of whom you only see three. That makes it faster, but the whole hospital still has to fit in memory.
+        </div>
+        <p>My view: this will not run on your machine. 2.8 trillion parameters need several server GPUs even when heavily compressed. Kimi becomes interesting to you as a cheap option at hosting providers. Three things decide on Wednesday whether the release is any good:</p>
+        <ul>
+          <li><strong>License</strong>: Can you use it commercially, and is there a user limit? The announcement says nothing about this.<sup>[1]</sup></li>
+          <li><strong>Completeness</strong>: A report in a search snippet says the open version does not include the cyber capabilities. We did not verify that ourselves. If it is true, the open model is not the same as the API model, and API benchmarks do not carry over 1:1.</li>
+          <li><strong>Host pricing</strong>: How quickly do third parties offer it below the Moonshot price?</li>
+        </ul>
+        <p>Terminal-Bench scores for Kimi are circulating, but only from snippets we could not load. The announcement itself gives no benchmark number.<sup>[1]</sup> So no number today.</p>
+        <span class="src">[1] <a href="https://letsdatascience.com/news/moonshot-releases-kimi-k31-pro-api-open-weights-due-nov-4-786e160c">letsdatascience.com</a> — Oct 23, 2026, retrieved Nov 2, 2026 · [2] <a href="https://latent.space/news/">latent.space</a> — retrieved Nov 2, 2026</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Terminal-Bench 4.0: a leaderboard of self-promotion</h2>
+        <p>Terminal-Bench 4.0 is the new standard currency for coding models. The problem: for the current models, it lists almost only values the vendor measured itself. On Sonnet 5.5, Mixed writes that all the numbers "come from Anthropic's own page and not from an independent public leaderboard".<sup>[2]</sup></p>
+        <table>
+          <thead>
+            <tr><th>Model</th><th>Terminal-Bench 4.0</th><th>Who measures</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Claude Sonnet 5.5 (max)</td><td>70.6%<sup>[2]</sup></td><td>Anthropic</td></tr>
+            <tr><td>Claude Opus 5.5 (xhigh)</td><td>66.4%<sup>[1]</sup></td><td>Anthropic</td></tr>
+            <tr><td>Gemini 4 Carbon</td><td>65.2%<sup>[3]</sup></td><td>Google, via aggregator</td></tr>
+            <tr><td>GPT-6.1 Terra (max)</td><td>50.3%<sup>[4]</sup></td><td>OpenAI</td></tr>
+          </tbody>
+        </table>
+        <p>For Opus 5.5, Anthropic gives a margin of error of ±2.6 points.<sup>[1]</sup> That puts Opus 5.5 and Carbon statistically level. The gaps also come from different effort levels and custom harnesses. Sonnet "max" against Opus "xhigh" is not a fair comparison.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Harness:</strong> The program that walks a model through the test tasks: which tools it gets, how often it may retry, how much time it has. A different harness gives a different score. It is like a driving test where every manufacturer brings its own car and its own course.
+        </div>
+        <p>My view: read the table as two groups. At the top are the three models around 65–70%, and one step below is Terra, which in return costs $1 / $5 per million tokens.<sup>[4]</sup> If you want the order within the top group, you have to test it on your own tasks. We found no dated SWE-bench Verified score for any of these models. So no chart today.</p>
+        <span class="src">[1] <a href="https://www.anthropic.com/news/claude-opus-5-5">anthropic.com</a> — vendor-reported, released Sep 22, 2026 · [2] <a href="https://mixed-news.com/en/?p=34691">mixed-news.com</a> — Sep 29, 2026 · [3] <a href="https://benchmarklist.com/models/google-gemini-4-carbon/">benchmarklist.com</a> — aggregator, Google-reported · [4] <a href="https://www.bleepingcomputer.com/news/artificial-intelligence/openai-launches-gpt-61-terra-with-3x-faster-ai-agents-50-percent-lower-pricing">bleepingcomputer.com</a> — OpenAI-reported, Oct 26, 2026 · all retrieved Nov 2, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Octoverse: three times as many pull requests</h2>
+        <p>Simon Willison summarizes GitHub's Octoverse 2026: "Merged PRs reached 220 million per month, roughly tripling in under a year."<sup>[1]</sup> We did not read the report itself. The number comes from Willison's summary of Oct 28.</p>
+        <p>My view: a large part of this growth very likely comes from agents opening PRs. The bottleneck moves from writing to reviewing. If you use agents on a team, you should now invest in review tools and tests, not in even more generation.</p>
+        <span class="src">[1] <a href="https://simonwillison.net/">simonwillison.net</a> — Oct 28, 2026, retrieved Nov 2, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Mandatory round: quiet in the shadows</h2>
+        <ul>
+          <li><strong>Cursor</strong> — latest entry is the Agent SDK from Oct 20.<sup>[1]</sup></li>
+          <li><strong>Cline</strong> — still v4.1.26 from Oct 26.<sup>[2]</sup></li>
+          <li><strong>OpenHands</strong> — still v1.34.0 from Oct 27.<sup>[3]</sup></li>
+          <li><strong>Continue</strong> — still v2.0.0-vscode (v2.1.0 as a pre-release) from Jun 19.<sup>[4]</sup></li>
+          <li><strong>Aider</strong> — still v0.86.1, undated on the history page.<sup>[5]</sup></li>
+          <li><strong>Copilot, Windsurf, JetBrains AI, Devin, Bolt, Plandex</strong> — not checked today.</li>
+        </ul>
+        <p><span class="chip">Local</span> At Ollama, the <code>qwen3.8</code> tags were updated two days ago.<sup>[6]</sup> That is tag maintenance, not a new model.</p>
+        <span class="src">[1] <a href="https://cursor.com/changelog">cursor.com/changelog</a> · [2] <a href="https://github.com/cline/cline/releases">github.com/cline/cline</a> · [3] <a href="https://github.com/All-Hands-AI/OpenHands/releases">github.com/All-Hands-AI/OpenHands</a> · [4] <a href="https://github.com/continuedev/continue/releases">github.com/continuedev/continue</a> · [5] <a href="https://aider.chat/HISTORY.html">aider.chat</a> · [6] <a href="https://ollama.com/library?sort=newest">ollama.com/library</a> — all retrieved Nov 2, 2026</span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Monday, November second. No new model and no new tool release over the weekend. So we're looking at what from last week is still worth your time, and at the date on Wednesday.</p>
+  <p>My tip for today is a switch in Claude Code. Since the October thirtieth release, you can set the agent to write files only inside your project folders. That holds in every mode, including auto mode. One caveat: the switch does not cover shell commands. It costs nothing, so turn it on.</p>
+  <p>Two smaller items. The ultrathink keyword can now be turned off, which helps teams with a cost cap. And fast mode for Opus four point eight goes away on November thirtieth. That's twenty-eight days from now.</p>
+  <p>On Wednesday, Moonshot plans to release the weights of Kimi K three point one Pro. The model is huge, about two point eight trillion parameters, and won't run on an ordinary computer. On Wednesday, watch the license first, and whether the open version is the same model as the one in the API.</p>
+  <p>On Terminal-Bench four, keep skepticism. According to Anthropic, Sonnet five point five scores just over seventy percent, and Opus five point five just over sixty-six. GPT six point one Terra comes in around fifty percent, according to OpenAI. These are all vendor-reported numbers with different settings. Read them as groups, not as a ranking.</p>
+  <p>According to Simon Willison's summary of the Octoverse report, GitHub now sees two hundred twenty million pull requests merged per month, about three times as many as a year ago. The bottleneck is now reviewing, not writing.</p>
+  <p>Nothing new at Cursor, Cline, OpenHands, Continue, or Aider. Tomorrow we'll see whether Kimi confirms the Wednesday date.</p>
+</div>
+
+</body>
+</html>
