@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-11-03</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Edición 2026-11-03</span>
+  </div>
+
+  <h1 class="masthead-title">Claude Code ahora pregunta antes de que salga tu correo electrónico — y mañana llega Kimi</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Día tranquilo. De domingo a martes no salió ningún modelo nuevo de programación, ni de Anthropic, ni de OpenAI, Google o Cursor. La única novedad es Claude Code 2.1.317 de hoy: una confirmación antes de que una llamada web o de shell envíe el correo de tu cuenta a la red, y un modo de hook para el Agent SDK que bloquea ante un error en lugar de dejar pasar la acción. Para agentes en CI, eso importa más de lo que parece. Mañana Moonshot quiere liberar los pesos de Kimi K3.1 Pro. Y OpenAI regala crédito de API a clientes de pago de ChatGPT.</p>
+    <ul>
+      <li><span class="chip good">Claude</span> <strong>Claude Code 2.1.317</strong> (03/11): confirmación antes de que una llamada web o de shell envíe el correo de tu cuenta.</li>
+      <li><span class="chip good">Claude</span> <strong>Agent SDK</strong>: <code>onFailure: "block"</code> para callbacks de hook. Un vigilante que se cae detiene la acción.</li>
+      <li><span class="chip">Claude</span> <strong><code>claude -p</code></strong> termina con código de salida 1 cuando falla la escritura de la transcripción por disco lleno.</li>
+      <li><span class="chip hot">Claude</span> <strong>Fast Mode de Opus 4.8</strong> desaparece el 30/11. Faltan 27 días.</li>
+      <li><span class="chip hot">OSS</span> <strong>Kimi K3.1 Pro</strong>: pesos anunciados para el miércoles 04/11.</li>
+      <li><span class="chip">OpenAI</span> <strong>Hasta US$ 500 de crédito de API al mes</strong> para ChatGPT Pro y Business (desde el 28/10).</li>
+      <li><span class="chip">Bench</span> Sin scores nuevos medidos de forma independiente. Hoy no hay gráfica.</li>
+      <li><span class="chip">Tool</span> <strong>Ronda obligatoria</strong>: sin novedades en Cursor, Cline, OpenHands, Continue, Aider.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Horizonte de eventos</div>
+      <div class="timeline-sub">Los últimos días y las fechas hasta fin de noviembre</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Lun 26/10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GPT-6.1 Terra</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mié 28/10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Gemini 4 Carbon (solo programa de ciberseguridad)</span>
+          <span>OpenAI: crédito de API para planes de ChatGPT</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Vie 30/10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.314: protección de escritura</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sáb 31/10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.316</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Lun 02/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>LLM 0.37 (Willison)</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Mar 03/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Hoy · Claude Code 2.1.317</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mié 04/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Kimi K3.1 Pro: pesos anunciados</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Lun 30/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Se elimina el Fast Mode de Opus 4.8</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid cols-2">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Claude Code 2.1.317: tres pequeños resguardos para agentes</h2>
+        <p>El release de hoy no es una lluvia de funciones. Cierra tres huecos que se notan sobre todo cuando un agente corre sin supervisión.<sup>[1]</sup></p>
+        <h3>1 · Confirmación antes de enviar tu correo electrónico</h3>
+        <p>Textualmente: "Added a check that asks before a web or shell tool call sends your account email address to the network".<sup>[1]</sup> El escenario detrás: una página web o un archivo del repositorio contiene instrucciones ocultas, y el agente incrusta tu dirección en una llamada <code>curl</code> o en una URL. Ahora Claude Code pregunta antes.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Prompt injection:</strong> Texto que el agente lee mientras trabaja (una página web, un README, un issue) y que suena como una instrucción para él. El modelo no siempre distingue si tú quieres algo o si solo es un texto ajeno que lo finge. Es como una nota dentro del paquete, "Por favor envía la factura a esta dirección", que el almacenista simplemente obedece.
+        </div>
+        <p>Mi opinión: bueno, pero limitado. La verificación reconoce exactamente un valor, la dirección de tu cuenta. Claves de API, datos de clientes o fragmentos de código no los cubre, según el texto del changelog. Para esos siguen encargándose el sandbox y las reglas de red. Lee la pregunta como un detector de humo: cuando aparezca, revisa qué texto llevó al agente a hacerlo.</p>
+        <h3>2 · Hooks que bloquean ante un error</h3>
+        <p>El Agent SDK incorpora <code>onFailure: "block"</code>, "so a callback that fails blocks the action instead of letting it run".<sup>[1]</sup> Hasta ahora, si tu callback de verificación se caía, la acción se ejecutaba de todos modos.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Fail-open vs. fail-closed:</strong> ¿Qué pasa cuando el propio vigilante falla? Fail-open significa: la puerta queda abierta. Fail-closed significa: la puerta queda cerrada. Un cadenero que se desmaya no debería abrirle el antro a todo el mundo.
+        </div>
+        <p><span class="chip good">Pruébalo</span> Si usas un hook en el SDK como verificación de seguridad (por ejemplo, "ningún <code>git push</code> a main"), configura <code>onFailure: "block"</code>. Por qué: un vigilante que deja pasar todo en silencio ante un timeout no es vigilante. Para hooks que solo registran no vale la pena; ahí un bloqueo solo estorbaría.</p>
+        <h3>3 · <code>claude -p</code> avisa de escrituras perdidas</h3>
+        <p>Hasta ahora, <code>claude -p</code> terminaba con código de salida 0 incluso cuando un disco lleno o una cuota se había tragado la transcripción o <code>~/.claude.json</code>. Ahora hay un mensaje de error y, con salida en texto y JSON, código de salida 1.<sup>[1]</sup> Para cron jobs y CI significa que una ejecución que perdió datos en silencio ahora se nota. Revisa que tus scripts aborten bien con exit 1 y no caigan en un ciclo de reintentos.</p>
+        <h3>Como recordatorio</h3>
+        <ul>
+          <li><strong>Fast Mode de Opus 4.8</strong>: a partir del 30/11 regresa un error, "and do not fall back to standard Opus 4.8". El reemplazo es Opus 5.5.<sup>[1]</sup> Faltan 27 días.</li>
+          <li><strong>Protección de escritura</strong> de 2.1.314 (30/10): <code>permissions.blockWritesOutsideWorkingDirectories</code> bloquea Write, Edit y NotebookEdit fuera de tus carpetas de trabajo, en cualquier modo.<sup>[1]</sup> Ese interruptor lo recomendamos ayer.</li>
+          <li><strong>Effort de subagentes</strong> de 2.1.316: <code>CLAUDE_CODE_SUBAGENT_EFFORT</code> define con qué effort corren los subagentes cuando nada más lo indica.<sup>[1]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code</a> — changelog oficial, consultado el 03/11/2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kimi K3.1 Pro: la fecha es mañana</h2>
+        <p>Moonshot ofrece Kimi K3.1 Pro por API desde el 23/10, a US$ 2 por millón de tokens de entrada y US$ 10 por millón de tokens de salida en la tarifa estándar. Los pesos están "planned for release on November 4".<sup>[1]</sup> Eso es mañana.</p>
+        <p>El panorama de ayer no cambió. El anuncio no menciona licencia ni valores de benchmark.<sup>[1]</sup> Circulan cifras de Terminal-Bench para Kimi, pero no pudimos confirmar ninguna en una fuente cargada. Por eso no citamos ninguna.</p>
+        <p>Mi opinión: el modelo es demasiado grande para tu computadora. Kimi es interesante como modelo abierto que los proveedores de hosting pueden ofrecer barato. Mañana fíjate en tres cosas: la licencia, si la versión abierta es el mismo modelo que el de la API y qué tan rápido lo ofrecen terceros por debajo del precio de Moonshot. Informamos el jueves.</p>
+        <span class="src">[1] <a href="https://letsdatascience.com/news/moonshot-releases-kimi-k31-pro-api-open-weights-due-nov-4-786e160c">letsdatascience.com</a> — consultado el 03/11/2026</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>OpenAI: crédito de API para suscriptores de ChatGPT</h2>
+        <p>En el changelog de la API del 28/10 dice: "Eligible ChatGPT Pro and Business subscribers can now claim up to $500 per month in free API credits."<sup>[1]</sup> Quién cumple las condiciones no aparece en la entrada. "Up to" además significa: US$ 500 es el tope, no el caso normal.</p>
+        <p>Mi opinión: es un anzuelo para justo tu público. Quien ya tiene una suscripción a ChatGPT ahora puede probar GPT-6.1 Terra en un harness propio o en Cline sin pagar extra. Según OpenAI, Terra cuesta US$ 1 por millón de tokens de entrada y US$ 5 por millón de tokens de salida.<sup>[2]</sup> Con US$ 500 rinde mucho. El valor de 50,3 % en Terminal-Bench 4.0 con esfuerzo máximo lo midió la propia OpenAI.<sup>[2]</sup> No encontramos una medición independiente.</p>
+        <p><span class="chip good">Pruébalo</span> Si tienes Pro o Business: solicita el crédito y corre Terra en dos o tres tareas reales de tu repositorio contra tu modelo estándar. Por qué: un modelo barato y rápido para tareas rutinarias ahorra dinero, y la prueba no te cuesta nada.</p>
+        <p>No es de programación, pero está en el mismo changelog: GPT-6 Rosalind (30/10) es un modelo de biología solo para investigadores verificados.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://developers.openai.com/api/docs/changelog">developers.openai.com</a> — changelog oficial, consultado el 03/11/2026 · [2] <a href="https://www.bleepingcomputer.com/news/artificial-intelligence/openai-launches-gpt-61-terra-with-3x-faster-ai-agents-50-percent-lower-pricing">bleepingcomputer.com</a> — datos de OpenAI, 26/10/2026, consultado el 02/11/2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Benchmarks: hoy nada nuevo, y esa es la noticia</h2>
+        <p>Para ninguno de los modelos actuales encontramos un valor nuevo y fechado en SWE-bench Verified, LiveCodeBench o el ranking de Aider. Los valores de Terminal-Bench 4.0 que circulan siguen viniendo de los fabricantes: Opus 5.5 con 66,4 % (Anthropic, xhigh)<sup>[1]</sup>, Gemini 4 Carbon con 65,2 % (Google, vía un agregador)<sup>[2]</sup>, Terra con 50,3 % (OpenAI). Por eso hoy no hay gráfica.</p>
+        <p>Gemini 4 Carbon además sigue fuera de tu alcance. Desde el 28/10 el modelo solo existe para defensores de ciberseguridad en el programa Fairwind, y "there is no public API model or model card yet".<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.anthropic.com/news/claude-opus-5-5">anthropic.com</a> — dato del fabricante, lanzamiento 22/09/2026 · [2] <a href="https://benchmarklist.com/models/google-gemini-4-carbon/">benchmarklist.com</a> — agregador, dato de Google, consultado el 02/11/2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Desde la comunidad</h2>
+        <ul>
+          <li><strong>nesformer</strong> (Willison, 30/10): Un experimento incrustó un emulador funcional de la CPU 6502 del NES "into the weights of Qwen3.5-4B", desarrollado con Opus 5.5.<sup>[1]</sup> Un juguete, pero un buen ejemplo de lo que un agente de programación arma en un fin de semana.</li>
+          <li><strong>LLM 0.37</strong> (02/11): nuevo release de la herramienta de línea de comandos de Willison para modelos.<sup>[1]</sup> No revisamos los detalles.</li>
+          <li><strong>Newsroom de Anthropic</strong>: última entrada del 28/10 (AI for Science), ningún modelo nuevo desde Haiku 5.5 el 07/10.<sup>[2]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://simonwillison.net/">simonwillison.net</a> · [2] <a href="https://www.anthropic.com/news">anthropic.com/news</a> — ambos consultados el 03/11/2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Ronda obligatoria: callados en la sombra</h2>
+        <ul>
+          <li><strong>Cursor</strong> — la última entrada es el Agent SDK del 20/10.<sup>[1]</sup></li>
+          <li><strong>Cline</strong> — situación de ayer: v4.1.26 del 26/10.<sup>[2]</sup></li>
+          <li><strong>OpenHands</strong> — situación de ayer: v1.34.0 del 27/10.<sup>[3]</sup></li>
+          <li><strong>Continue</strong> — situación de ayer: sin release desde el 19/06.<sup>[4]</sup></li>
+          <li><strong>Aider</strong> — sin fecha en la página de historial.<sup>[5]</sup></li>
+          <li><strong>Copilot, Windsurf, JetBrains AI, Devin, Bolt, Plandex, Ollama</strong> — hoy no se revisaron.</li>
+        </ul>
+        <span class="src">[1] <a href="https://cursor.com/changelog">cursor.com/changelog</a> — consultado el 03/11/2026 · [2] <a href="https://github.com/cline/cline/releases">github.com/cline/cline</a> · [3] <a href="https://github.com/All-Hands-AI/OpenHands/releases">github.com/All-Hands-AI/OpenHands</a> · [4] <a href="https://github.com/continuedev/continue/releases">github.com/continuedev/continue</a> · [5] <a href="https://aider.chat/HISTORY.html">aider.chat</a> — [2]–[5] consultados el 02/11/2026</span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Hoy es martes tres de noviembre. De domingo a hoy no salió ningún modelo nuevo de programación, ni de Anthropic, ni de OpenAI, Google o Cursor. La única novedad es un pequeño release de Claude Code.</p>
+  <p>La versión dos punto uno punto trescientos diecisiete trae tres resguardos. Primero, Claude Code ahora pregunta antes de que una llamada web o de shell envíe a la red el correo electrónico de tu cuenta. Eso protege contra textos que le cuelan instrucciones ocultas al agente. Pero la verificación solo reconoce esa dirección, no por ejemplo las claves de API.</p>
+  <p>El Agent SDK incorpora un modo de hook que bloquea ante un error. Hasta ahora, si tu callback de verificación se caía, la acción seguía su curso. Quien use hooks como verificación de seguridad debería activar este modo. Además, el modo de línea de comandos ahora termina con un código de error cuando un disco lleno se traga la transcripción. Para los cron jobs es una buena noticia.</p>
+  <p>Como recordatorio: el modo rápido de Opus cuatro punto ocho desaparece el treinta de noviembre. Faltan veintisiete días.</p>
+  <p>Mañana Moonshot quiere liberar los pesos de Kimi K tres punto uno Pro. La licencia y los valores de benchmark siguen abiertos. Fíjate sobre todo en si la versión abierta es el mismo modelo que el de la API.</p>
+  <p>OpenAI da a los suscriptores de ChatGPT Pro y Business hasta quinientos dólares al mes en crédito de API. Con eso se puede probar gratis, en tareas reales, el económico GPT-seis punto uno Terra. Eso sí, sus valores de benchmark vienen de la propia OpenAI.</p>
+  <p>En benchmarks, hoy no hay mediciones independientes nuevas. Y en Cursor, Cline, OpenHands, Continue y Aider todo está en calma. El jueves veremos qué publicó realmente Kimi.</p>
+</div>
+
+</body>
+</html>
