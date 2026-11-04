@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-04</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-04</span>
+  </div>
+  <h1 class="masthead-title">WordPress Lands in the KEV, and an Update Channel Ships a Backdoor</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Wednesday, and today's theme is trust in updates. Yesterday CISA added a WordPress core flaw to its catalog of actively exploited vulnerabilities, with a deadline of just three days. At the same time, the update channel of the server security software cPGuard pushed a backdoor to nearly 3,000 servers for twelve hours. And Binance lost $6.34 billion, by its own account, because a developer ran a coding assignment from a fake job interview. Add the Android patch day, a botnet that shipped from the factory, and a certificate withdrawal that hits Python and WordPress at once. Our take: automatic updates remain the right call, but whoever controls the channel controls the server.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>WordPress Core</strong>: CVE-2026-119977 in the KEV since Nov. 3, deadline Nov. 6; unauthenticated RCE during core upgrades, fixed in 7.1.4. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>cPGuard</strong>: update CDN hijacked, 2,946 servers backdoored, fix from 5.88.25. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Binance</strong>: $6.34B gone after a fake job interview with a coding assignment. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Android patch day</strong>: critical flaws with no user interaction, no known attacks. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>XCPE botnet</strong>: over 1.3M TV boxes, Google blames manufacturer Videostrong. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Barracuda</strong>: two flaws, chained to root, access to the admin interface required, no login. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>emSign/eMudhra</strong>: root CA removed from certifi, WordPress 7.1.4 follows. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>notebooksbilliger, Pÿur</strong>: data leaks; first fridge hacks in Bavaria and NRW. <span class="chip">DE</span></li>
+      <li><span class="chip">Release</span> <strong>FreeRDP 3.33</strong> with WebAssembly, <strong>WordPress 7.2 Beta 4</strong>. <span class="chip">Global</span></li>
+      <li><span class="chip good">OSS</span> <strong>C++26</strong>: nothing new, WG21 meets from Nov. 16 in Búzios. <span class="chip">BR</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Deadline Horizon</div>
+      <div class="timeline-sub">KEV deadlines and dates through Nov. 16 — KEV deadlines formally bind only US federal agencies, but serve as a useful reference point</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Wed 11/04</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Today</span><span>Ivanti CVE-2026-111357 (Nov. 2) and Cisco ASA (Nov. 1): KEV deadlines expired</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Fri 11/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: WordPress Core CVE-2026-119977</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 11/10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Brotli CVE-2026-111497</span><span>KEV deadline: Adobe Commerce/Magento CVE-2026-48356</span><span>Microsoft Patch Tuesday</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 11/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: VMware ESX CVE-2026-41709</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri 11/13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Ivanti Connect Secure CVE-2026-118527</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mon 11/16</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>WG21 meeting in Búzios: What happens next with C++26?</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>WordPress Core in the KEV: Three Days to Patch an Upgrade RCE</h2>
+        <div class="eli5">
+          <strong class="eli5-term">KEV catalog:</strong> The US agency CISA's list of flaws proven to be used in real attacks. Like a wanted poster at the police station: it doesn't just say "dangerous," it says "already out there."
+        </div>
+        <p>The newest KEV entry is <strong>CVE-2026-119977</strong> in WordPress Core, added on <strong>Nov. 3</strong>, with a deadline for US federal agencies of <strong>Nov. 6</strong>.<sup>[1]</sup> According to NVD (published Oct. 31, updated Nov. 4), the flaw allows code execution without authentication: during an upgrade with the full core package, files sit briefly in predictable, web-accessible staging paths. An attacker exploits this time window (CWE-367, a TOCTOU race condition). Like a parcel left unguarded at the door for a moment. Versions 4.7 through 7.1.3 are affected. Wordfence rates the flaw CVSS 3.1 <strong>8.1</strong> (high).<sup>[3]</sup></p>
+        <p>The fix is the security release <strong>WordPress 7.1.4</strong> of Oct. 28. According to WordPress, it fixes twelve flaws, including "A weakness in the WordPress upgrade process which can lead to remote code execution" and several stored XSS bugs. <sup>[2]</sup> For CVE-2026-119977, NVD references this release post and the changed files <code>class-wp-upgrader.php</code> and <code>update-core.php</code> in 7.1.4.<sup>[3]</sup> According to WordPress, the fixes were "backported to all branches eligible to receive security fixes (currently through 4.7)". According to the 7.1.4 post, backports are still in progress and ship as they become ready.<sup>[2]</sup> If you are on an older branch, check whether your backport is out yet; otherwise move to 7.1.4. So the action is: update to 7.1.4 or the matching backport for your branch.</p>
+        <div class="callout info"><span class="callout-label">Our take</span> If you run WordPress, check two things today: is 7.1.4 (or the matching backport) running, and do the automatic background updates really work? According to WordPress, the update starts on its own there. According to the KEV, sites on 7.1.3 or older are already targets of real attacks.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of Nov. 4)</a> · [2] <a href="https://wordpress.org/news/2026/10/wordpress-7-1-4/">wordpress.org (Oct. 28)</a> · [3] <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-119977">nvd.nist.gov (Nov. 4)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>cPGuard: The Update Channel as an Entry Point</h2>
+        <div class="eli5">
+          <strong class="eli5-term">Compromised update channel:</strong> Software fetches its updates from a vendor's server. If an attacker takes over that server, they deliver their own goods. Like a delivery driver in a real uniform bringing fake packages: nobody opens the door suspiciously.
+        </div>
+        <p><strong>cPGuard</strong> from OpsShield is a security suite for Linux web servers that runs alongside panels such as cPanel, DirectAdmin and Plesk. According to BleepingComputer, an unknown attacker gained access to the update CDN with stolen credentials. From <strong>Nov. 2, 02:06 UTC</strong>, the attacker distributed versions <strong>5.88.12 through 5.88.19</strong> with a backdoor and a script.<sup>[1]</sup> The script collected password hashes, the root configuration of MariaDB/MySQL, root's shell history and the SSH files <code>authorized_keys</code> and <code>known_hosts</code>. The attacker pulled 32 files per customer.</p>
+        <p>OpsShield says it stopped the distribution within twelve hours. A spokesperson: "We detected 2946 servers were affected."<sup>[1]</sup> Remedy: update to <strong>5.88.25</strong> or newer, which removes the backdoor. Then change passwords, database credentials, cloud secrets and SSH keys.</p>
+        <div class="callout warn"><span class="callout-label">Heads up</span> The update alone is not enough. The data is already gone. Anyone who had cPGuard in the update window must rotate their credentials, or they lock the door and leave the thief the key.</div>
+        <div class="callout info"><span class="callout-label">Our take</span> Of all things, a security product with root privileges. That is the bitter punchline: the more privileges an agent has on the server, the more valuable its update channel. Signed updates with a key that does not sit on the CDN would have been the defense here. Whether cPGuard signs this way, the report does not say.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-hijack-cpguard-autoupdate-to-deploy-backdoor-steal-data/">bleepingcomputer.com (Nov. 3)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Binance: The Coding Assignment Was the Malware</h2>
+        <p>According to BleepingComputer, Binance reports a loss of "about $6.34 billion in digital assets" on <strong>Oct. 29</strong>.<sup>[1]</sup> The way in was a software engineer. On a job platform, a supposed project director of a made-up company got in touch. After two conversations, one of them by video, the developer was asked to download a coding assignment from an online repository. The code installed malware that no antivirus detected and replaced the <code>pyenv</code> file in the Homebrew directory on macOS.<sup>[1]</sup></p>
+        <p>The FBI attributes the scheme to the North Korean group <strong>TraderTraitor</strong>, also known as Lazarus. Binance itself has not yet tied the incident to a campaign; according to the article, though, the approach matches known North Korean operations exactly. The first access began as early as September.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> This is the story of the day for every developer. You run foreign code from a hiring process only in a throwaway VM or a container with no access to keys or the company network. And: a tool like <code>pyenv</code> in Homebrew is not a harmless place. Whoever can write there runs along with every Python call.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/binance-says-fake-job-interview-led-to-63-billion-crypto-heist/">bleepingcomputer.com (Nov. 3)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Ivanti Connect Secure: The CVSS Scores</h2>
+        <p><span class="update-since">Update since yesterday</span> heise now gives CVSS scores for the chain that Volexity attributes to the group UTA0576<sup>[2]</sup>: <strong>CVE-2026-104935</strong> (authentication bypass) CVSS 8.6, <strong>CVE-2026-111357</strong> CVSS 8.8 and <strong>CVE-2026-118527</strong> CVSS 4.3.<sup>[1]</sup> NVD confirms two of the three scores (8.6 and 4.3). For CVE-2026-111357: heise: 8.8; NVD entry (MITRE): 7.0, local attack vector.<sup>[4]</sup> The low score of the third flaw is deceptive: the file upload is one link of a chain that, according to Volexity, gives unauthenticated code execution as root overall. NVD ties the step to root to CVE-2026-111357.<sup>[4]</sup> According to BleepingComputer, attacks began on Oct. 1; Volexity sees the chain on fully patched devices since at least Oct. 3.<sup>[2]</sup> The KEV deadline for CVE-2026-111357 expired on Nov. 2; the one for CVE-2026-118527 ends on Nov. 13.<sup>[3]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Schwachstellen-in-Drupal-Ivanti-Connect-Secure-und-Synology-angegriffen-11507497.html">heise.de (Nov. 2)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/ivanti-patches-two-more-connect-secure-zero-days-chained-in-attacks/">bleepingcomputer.com (Nov. 2)</a> · [3] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV</a> · [4] <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-111357">nvd.nist.gov</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-118527">nvd.nist.gov</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Android: Patch Day and a Factory-Installed Botnet</h2>
+        <h3>November patch day: critical, but still quiet</h3>
+        <div class="eli5">
+          <strong class="eli5-term">Patch level:</strong> A date in the Android settings showing up to which monthly bulletin the device is repaired. Like the inspection sticker on a car: it doesn't say everything is fine, only until when it was checked.
+        </div>
+        <p>According to heise, Google closes several critical flaws that allow code execution "without user interaction": <strong>CVE-2026-58868</strong> in the framework as well as <strong>CVE-2026-58876</strong> and <strong>CVE-2026-58936</strong> in the system component. Android 14 through 17 are affected. The fixes arrive with the patch levels <strong>2026-11-01</strong> and <strong>2026-11-05</strong>.<sup>[1]</sup> "So far there are no indications of attacks." The official bulletin of Nov. 2 confirms the three critical RCE flaws and both patch levels; it notes no active exploitation.<sup>[3]</sup></p>
+        <h3>XCPE: The malware came with the device</h3>
+        <p>Google's Threat Intelligence Group (GTIG) has disrupted the <strong>XCPE</strong> botnet. According to heise, it comprised "over 1.3 million Android devices," mainly set-top boxes.<sup>[2]</sup> The accusation is harsh: the devices were infected from the factory, and Google blames the manufacturer <strong>Videostrong</strong>. Japanese police were a partner in the operation. Yesterday we wrote "around one million"; the number is now higher.</p>
+        <div class="callout info"><span class="callout-label">Our take</span> A cheap TV box without Play Protect certification is not a device but a stranger's computer on your own Wi-Fi. At home, something like that belongs on the guest or IoT network, separate from the NAS and your work computer.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Android-Patchday-Kritische-Luecken-ermoeglichen-Angriffe-ohne-Nutzerinteraktion-11508886.html">heise.de (Nov. 3)</a> · [2] <a href="https://www.heise.de/news/Google-legt-Botnetz-lahm-beschuldigt-Hersteller-von-Android-Set-Top-Boxen-11510056.html">heise.de (Nov. 3)</a> · [3] <a href="https://source.android.com/docs/security/bulletin/2026/2026-11-01">source.android.com (Nov. 2)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Barracuda: Two Flaws, Chained to Root</h2>
+        <p>According to BleepingComputer, Barracuda warns of <strong>CVE-2026-116606</strong> (critical, in the Email Security Gateway) and <strong>CVE-2026-111560</strong> (several products). Together they yield command execution as root.<sup>[1]</sup> The caveat: "Successful exploitation requires an attacker to have access to the administrative interface". According to NVD, however, CVE-2026-116606 is an authentication bypass: anyone who reaches the interface needs no account (CVSS 4.0: 9.3).<sup>[2]</sup> No attacks are known. Our take: the admin interface doesn't belong on the open internet anyway.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/barracuda-warns-of-critical-flaws-allowing-root-access-to-devices/">bleepingcomputer.com (Nov. 3)</a> · [2] <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-116606">nvd.nist.gov</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Certificates: emSign Gets Thrown Out</h2>
+        <div class="eli5">
+          <strong class="eli5-term">Root CA:</strong> An authority whose signature your system believes without further checks. This is where the padlock in the browser comes from. Like a notary: if their license is revoked, their stamps no longer count.
+        </div>
+        <p>python.org carries a conspicuous notice: "Security notice: the emSign root CA has been removed from certifi. Upgrade certifi, pip, uv and sigstore now."<sup>[1]</sup> WordPress pulls on the same thread: according to the release post, version 7.1.4 includes an update of the bundled root certificates "due to the eMudhra revocation".<sup>[2]</sup> eMudhra operates the emSign CA. We did not find the reason for the withdrawal in a primary source.</p>
+        <p>For Python projects this means: update <code>certifi</code> in every lockfile and every Docker image. The notice names <code>pip</code>, <code>uv</code> and <code>sigstore</code> explicitly, so updating certifi alone apparently isn't enough.</p>
+        <div class="callout info"><span class="callout-label">Our take</span> This is a job for the next dependency round, not a night shift. But it shows why a frozen base image goes stale even without a CVE: the trust list inside it ages.</div>
+        <span class="src">[1] <a href="https://www.python.org/downloads/">python.org (as of Nov. 4)</a> · [2] <a href="https://wordpress.org/news/2026/10/wordpress-7-1-4/">wordpress.org (Oct. 28)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Python: 3.15.2 Is Current, 3.10 at End of Life</h2>
+        <p>According to python.org, <strong>3.15.2</strong> is the latest version. 3.15 and 3.14 get bugfixes, 3.13 through 3.11 only security updates. <strong>3.10</strong> is at end of life, with 3.10.22 as the last version.<sup>[1]</sup> Anyone still running FastAPI services on 3.10 now has no security support. The jump to 3.13 or 3.14 is the sensible intermediate step.</p>
+        <span class="src">[1] <a href="https://www.python.org/downloads/">python.org (as of Nov. 4)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>More Security News</h2>
+
+        <h3>notebooksbilliger and Pÿur: customer data leaked</h3>
+        <p>According to heise, notebooksbilliger and Tele Columbus (Pÿur) are informing their customers by e-mail about "data leaks after IT attacks".<sup>[1]</sup> We did not retrieve which data is affected. Such mails are also a template for phishing; if you get one, better not click any links in it.</p>
+
+        <h3>Fridges in supermarkets: first cases in Germany</h3>
+        <p>According to BleepingComputer, attackers remotely changed the temperatures of refrigeration and freezer systems in European supermarkets.<sup>[2]</sup> After France and other countries, heise now reports first cases in Bavaria and NRW.<sup>[3]</sup> Our take: the refrigeration system is an industrial control system with internet access. It is no surprise that it gets attacked, and it's not uncharted IT territory either.</p>
+
+        <h3>mSecure: password manager advises changing all credentials</h3>
+        <p>According to heise, the developers of mSecure recommend, after an IT incident, to "re-secure all stored credentials".<sup>[4]</sup> The report's teaser does not state the exact scope. Anyone using mSecure has a long afternoon task ahead.</p>
+
+        <h3>Apple: spyware warnings also to German federal politics</h3>
+        <p>At the end of October, Apple again sent threat notifications to iPhone users. According to heise, people from German federal politics were also affected, and not only in Germany.<sup>[5]</sup></p>
+
+        <h3>Drupal Commerce, Synology, Harvard</h3>
+        <p>Briefly on the ongoing cases: the access bypass in Drupal Commerce Core (SA-contrib-2026-254) is still being attacked, with fixes in 3.3.13 and 8.x-2.41.<sup>[6]</sup> Synology warns of the C3RB3R ransomware on NAS devices without the December 2024 fixes. Advice: install the latest DSM; 360 also names two flaws patched in September 2026.<sup>[7]</sup> And at Harvard, according to Have I Been Pwned, data from 851,000 accounts from a breach in November 2025 surfaced.<sup>[8]</sup></p>
+
+        <span class="src">[1] <a href="https://www.heise.de/news/Cyberangriffe-auf-notebooksbilliger-de-und-Pyur-11508664.html">heise.de (Nov. 2)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/hackers-disrupt-refrigeration-systems-at-european-supermarkets/">bleepingcomputer.com (Nov. 2)</a> · [3] <a href="https://www.heise.de/news/Cyberangriffe-auf-Kuehlschraenke-Erste-deutsche-Faelle-in-Bayern-und-NRW-11508922.html">heise.de</a> · [4] <a href="https://www.heise.de/news/Passwort-Manager-mSecure-Nach-IT-Vorfall-Zugangsdaten-sichern-11509717.html">heise.de (Nov. 3)</a> · [5] <a href="https://www.heise.de/news/Auch-deutsche-Bundespolitik-Apple-bestaetigt-Spyware-Warnung-11508629.html">heise.de (Nov. 3)</a> · [6] <a href="https://www.heise.de/news/Schwachstellen-in-Drupal-Ivanti-Connect-Secure-und-Synology-angegriffen-11507497.html">heise.de (Nov. 2)</a> · [7] <a href="https://www.bleepingcomputer.com/news/security/synology-warns-customers-of-ongoing-c3rb3r-ransomware-attacks/">bleepingcomputer.com</a> · [8] <a href="https://www.bleepingcomputer.com/news/security/harvard-university-data-breach-exposed-info-of-851-000-accounts/">bleepingcomputer.com (Nov. 3)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>C++26: Waiting for Búzios</h2>
+        <p><span class="update-since">Quick update</span> There has been no new primary source since yesterday. Status unchanged: the DIS ballot ended after twelve weeks with "Disapproved," announced on Oct. 23. Two-thirds approval and at most one-quarter no votes would have been needed.<sup>[1]</sup> To his knowledge it is the first no on a C++ DIS ever, says Andreas Fertig. There is no ISO primary source; according to Fertig, the vote split is not public under ISO rules. The WG21 committee decides from <strong>Nov. 16 in Búzios</strong> (RJ) how to proceed.</p>
+        <span class="src">[1] <a href="https://www.heise.de/blog/Analyse-C-26-abgelehnt-war-es-das-oder-geht-es-weiter-11507334.html">heise.de, Andreas Fertig</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Releases and Tools</h2>
+        <h3>FreeRDP 3.33: Remote Desktop in the browser</h3>
+        <p>The free RDP implementation gains WebAssembly support with <strong>3.33.0</strong>, says heise.<sup>[1]</sup> That means an RDP client runs directly in the browser, without a vendor's gateway product. For self-hosted admin portals this is interesting. The security question then shifts to the path between browser and RDP server; that should be put behind Tailscale or a comparable VPN.</p>
+        <h3>WordPress 7.2 Beta 4</h3>
+        <p>The fourth beta of WordPress 7.2 arrived on Nov. 3.<sup>[2]</sup> Now is the time for plugin authors to test; for production sites, 7.1.4 still applies.</p>
+        <h3>Quick Share for apps from 2027</h3>
+        <p>According to heise developer, Google plans to open Quick Share to apps from 2027, on Android and iOS.<sup>[3]</sup> We did not retrieve the details of the interface. If it happens, it would be a cross-platform file exchange that app developers no longer have to build themselves.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/FreeRDP-bringt-Remote-Desktops-in-den-Browser-11510187.html">heise.de (Nov. 3)</a> · [2] <a href="https://wordpress.org/news/">wordpress.org</a> · [3] <a href="https://www.heise.de/news/Peer-to-Peer-Austausch-Google-bringt-Quick-Share-in-Apps-fuer-Android-und-iOS-11510041.html">heise.de (Nov. 3)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV Status: The Open Deadlines</h2>
+        <p>Besides WordPress (Nov. 6), the following deadlines are running: Brotli <strong>CVE-2026-111497</strong> and Adobe Commerce/Magento <strong>CVE-2026-48356</strong> on Nov. 10, VMware ESX <strong>CVE-2026-41709</strong> on Nov. 11 and Ivanti <strong>CVE-2026-118527</strong> on Nov. 13.<sup>[1]</sup> Expired are the deadlines for the Linux kernel (<strong>CVE-2026-46300</strong>, Oct. 31), Cisco ASA/FTD (<strong>CVE-2026-76418</strong>, Nov. 1) and GitLab (<strong>CVE-2026-97229</strong>, Nov. 1).<sup>[1]</sup> The GitLab and kernel background is in yesterday's brief.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of Nov. 4)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>AI on the Fringe: Two Break-ins</h2>
+        <p>Two incidents with AI as the attackers' tool, both per BleepingComputer: Chinese attackers used the open-source pentest framework ARTEX AI against around 200 organizations in 14 countries, and the developer platform WorkOS reports a breach of an internal sales app with the same tool.<sup>[1]</sup> Google also puts the damage from "LLMjacking," meaning stolen cloud access for AI compute time, at one million dollars in charges. The AI-side assessment is in the ai-usecases brief.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/workos-says-attacker-used-artex-ai-to-breach-internal-sales-app/">bleepingcomputer.com (Nov. 3)</a> · <a href="https://www.bleepingcomputer.com/news/security/chinese-hackers-use-artex-ai-in-automated-attacks-against-200-orgs/">bleepingcomputer.com (Nov. 2)</a> · <a href="https://www.bleepingcomputer.com/news/security/google-llmjacking-attacks-rack-up-1-million-in-cloud-ai-charges/">bleepingcomputer.com (Nov. 3)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>In Brief</h2>
+        <ul>
+          <li>Google's cloud bug bounty now pays up to $250,000 for "root-in-cloud" flaws.<sup>[1]</sup></li>
+          <li>European authorities seized more than 100 servers of an investment-fraud network and arrested seven suspects.<sup>[2]</sup></li>
+          <li>Microsoft's Smart App Control fix and OpenVDDK were covered yesterday.</li>
+          <li>Not checked today: Chrome, Firefox, WebKit, Angular, React, Spring, JDK, PostgreSQL, Docker, Caddy, Tailscale. On EU regulation and BR tech we have no new, verified report.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/google/google-adds-new-250-000-cloud-vrp-reward-for-root-in-cloud-bugs/">bleepingcomputer.com (Nov. 3)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/police-seizes-over-100-servers-in-investment-scam-crackdown/">bleepingcomputer.com (Nov. 3)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>What Wednesday Is Worth</h2>
+        <p>Three things. First: get WordPress sites onto 7.1.4 or the matching backport today, because the KEV flaw is an unauthenticated upgrade RCE. Second: if you use cPGuard, rotate the credentials, not just the package. Third: never run coding assignments from job applications on your work computer. And while you're at it, update <code>certifi</code>.</p>
+      </section>
+
+    </div>
+
+  </div>
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Wednesday, November fourth. Today's theme is trust in updates and in code from strangers: a WordPress flaw on the list of actively exploited vulnerabilities, a hijacked update channel, and a coding assignment that cost billions.</p>
+  <p>First, WordPress. On November third, the US agency CISA added a flaw in WordPress Core to its catalog and gave federal agencies just three days, until November sixth. According to the US database NVD, attackers without a login can run their own code on the server during a core upgrade. Versions four point seven through seven point one point three are affected. The fix is version seven point one point four from October twenty-eighth, or the matching backport for older branches.</p>
+  <p>Then cPGuard, a security suite for Linux web servers. According to BleepingComputer, an attacker took over the vendor's update network and pushed a backdoor for twelve hours. Nearly three thousand servers were affected, and the script stole password hashes, database credentials and SSH files. The key point: updating to five point eighty-eight point twenty-five removes the backdoor, but the credentials still have to be changed.</p>
+  <p>The story every developer should know comes from Binance. According to BleepingComputer, the exchange lost about six point three four billion dollars. The way in was an engineer who downloaded a coding assignment during a fake job interview. The code installed undetected malware. The FBI ties the scheme to North Korea. Our take: you run a stranger's hiring code only in a throwaway environment.</p>
+  <p>On Android, Google has patched several critical flaws that can be exploited without any action from the user. According to heise, no attacks are known yet. Google also disrupted a botnet of more than one point three million set-top boxes that were apparently infected right from the factory.</p>
+  <p>Two smaller infrastructure items: Python reports that the emSign root certificate authority has been removed from the certifi package, and WordPress has adjusted its bundled certificates as well. And Python three point ten no longer gets security updates.</p>
+  <p>From Germany, notebooksbilliger and Pÿur report data leaks after attacks. There are also the first German cases of attacks on refrigeration systems in supermarkets, in Bavaria and North Rhine-Westphalia. At Barracuda, two flaws together give root access, but they require access to the admin interface. No login is needed.</p>
+  <p>In the coming days, what matters most is the WordPress deadline on Friday, then Patch Tuesday on November tenth. And from November sixteenth, the C plus plus committee meets in Búzios to decide how to proceed with C plus plus twenty-six.</p>
+</div>
+</body>
+</html>
