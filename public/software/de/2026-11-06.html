@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-06</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-11-06</span>
+  </div>
+  <h1 class="masthead-title">OpenSSH: gesperrte Konten auf Alpine waren offen</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Freitag, und der wichtigste Patch des Tages ist klein und unscheinbar. OpenSSH 10.6p2 schließt eine Lücke, durch die auf Linux-Systemen mit musl und ohne PAM ein Login in Konten möglich war, die eigentlich gar kein Passwort haben. Das betrifft vor allem Alpine, also genau die Basis vieler Container und Cloud-Images. Dazu kommen eine Datenpanne bei der Zertifizierungsstelle DigiCert, ein Hintertür-Webserver in Control Web Panel und heute die KEV-Frist für WordPress. Unsere Sicht: Der OpenSSH-Fall ist ein Lehrstück über Defaults. Wer Passwort-Login auf Servern noch erlaubt, hat jetzt einen sehr konkreten Grund, ihn abzuschalten.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>OpenSSH 10.6p2</strong> (05.11.): Fix für einen Passwort-Login-Bypass auf musl-Systemen ohne PAM; keine CVE genannt. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>WordPress CVE-2026-119977</strong>: KEV-Eintrag jetzt bei der CISA bestätigt, Frist heute (06.11.); Fix 7.1.4. <span class="chip">USA</span></li>
+      <li><span class="chip hot">Sec</span> <strong>DigiCert</strong>: Einbruch in ein internes System, archivierte Kundendaten samt Ausweis-Dokumenten betroffen. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>CWPdoor</strong>: manipuliertes <code>cwpsrv</code> in Control Web Panel; über 340.000 CWP-Instanzen im Netz sichtbar. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>CISA KEV</strong>: Apple CVE-2024-27834 neu (04.11.), Frist 18.11.; zwölf Einträge seit 26.10. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>Zyxel GS1900</strong>: heise meldet beobachtete Angriffe; Firmware-Fix seit 22.10. <span class="chip">DE</span></li>
+      <li><span class="chip good">Release</span> <strong>Spring Cloud 2026.0.0-RC2</strong> (05.11.); Spring Boot 4.2.0-RC1 seit 23.10. <span class="chip">Global</span></li>
+      <li><span class="chip good">Browser</span> <strong>Tor Browser 16.0</strong>: erste stabile Version auf Firefox ESR 153. <span class="chip">Global</span></li>
+      <li><span class="chip good">OSS</span> <strong>FreeRDP 3.33.0</strong>: Remote-Desktop per WebAssembly im Browser. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>PostgreSQL 14</strong>: Support-Ende am Donnerstag, 12.11. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Fristen und Termine bis 13.11. — KEV-Fristen (Katalog-Stand 04.11.) binden formal nur US-Bundesbehörden, taugen aber als Bezugspunkt</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Fr 06.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Heute</span><span>KEV-Frist: WordPress CVE-2026-119977</span><span>Alpine/musl-Hosts: OpenSSH 10.6p2 prüfen</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 10.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Microsoft Patch Tuesday (planmäßig, zweiter Dienstag)</span><span>KEV-Frist: Brotli CVE-2026-111497</span><span>KEV-Frist: Adobe Commerce/Magento CVE-2026-48356</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 11.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: VMware ESX CVE-2026-41709</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Do 12.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>PostgreSQL 14: Support-Ende</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fr 13.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: Ivanti Connect Secure CVE-2026-118527</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>OpenSSH: gesperrte Konten auf Alpine waren offen</h2>
+        <div class="eli5">
+          <strong class="eli5-term">musl und PAM:</strong> musl ist eine schlanke C-Standardbibliothek, die Alpine Linux statt der üblichen glibc nutzt. PAM ist das Modul-System, über das Linux Logins prüft. Stell dir ein Haus mit Türsteher vor: PAM ist der Türsteher. Ohne ihn prüft das Schloss allein, und hier hatte das Schloss einen Fehler.
+        </div>
+        <p>Portable OpenSSH <strong>10.6p2</strong> kam am <strong>05.11.</strong> Die Release Notes sprechen von einem „critical security workaround that affects Linux systems that use the musl libc and PAM disabled“. Es geht um einen Passwort-Login-Bypass über <code>sshd</code>. Die Ursache liegt laut OpenSSH außerhalb von sshd, lässt sich aber dort abfangen.<sup>[1]</sup> Eine CVE-Nummer oder einen CVSS-Wert nennen weder die Release Notes noch BleepingComputer.</p>
+        <p>Betroffen sind laut BleepingComputer Systeme mit musl, ohne PAM (der Alpine-Default), mit erlaubtem Passwort-Login und mit einem Konto, dessen Passwort-Feld nur gesperrt ist (<code>*</code>). Genannt werden Alpine, OpenWrt, Buildroot und Yocto. Der Fehler steckt seit 2016 im Code. Systeme mit glibc oder PAM sind nicht betroffen. Von Angriffen in freier Wildbahn berichtet die Quelle nichts.<sup>[2]</sup></p>
+        <p>Die Abhilfe ist <code>apk upgrade openssh</code> oder, wenn das nicht sofort geht, <code>PasswordAuthentication no</code>. Laut Bericht haben die Alpine-Images für AWS und Azure ein Standardkonto „alpine“ mit passwortlosem <code>doas</code>, das macht die Lage dort ernster.<sup>[2]</sup> Maintainer Damien Miller schreibt laut LWN: „stop reading and set PasswordAuthentication=no or disable SSH for these systems IMMEDIATELY.“<sup>[3]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Ein Bug, der zehn Jahre schlief, weil die Kombination „musl ohne PAM mit Passwort-Login“ selten getestet wird. In Containern läuft meistens gar kein sshd, das entschärft viel. Aber Router mit OpenWrt und kleine Alpine-VMs in der Cloud sind genau die Kisten, die man einrichtet und vergisst. Unsere Regel bleibt: SSH nur mit Schlüssel, und am besten nur über ein privates Netz wie Tailscale erreichbar.</div>
+        <span class="src">[1] <a href="https://www.openssh.org/releasenotes.html">openssh.org (05.11.)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/openssh-flaw-lets-attackers-log-into-password-disabled-linux-accounts/">bleepingcomputer.com (05.11.)</a> · [3] <a href="https://lwn.net/Articles/1105464/">lwn.net (05.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>WordPress: KEV bestätigt, Frist heute</h2>
+        <p><span class="update-since">Update zu gestern</span> Gestern konnten wir den Katalog nicht selbst prüfen, heute schon. Die CISA führt <strong>CVE-2026-119977</strong> (WordPress Core) seit <strong>03.11.</strong> als aktiv ausgenutzt, die Frist für US-Bundesbehörden ist <strong>heute, 06.11.</strong><sup>[1]</sup></p>
+        <p>Bei der Schwere bleibt der Widerspruch. Im CVE-Eintrag bewertet Wordfence als CNA die Race-Condition im Update-Prozess mit CVSS 3.1 <strong>8,1</strong> (High, Vektor AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H).<sup>[2]</sup> Das WordPress-Advisory GHSA-4w3m-c66w-69mg vom 29.10. stuft sie als „Low“ ein. Der Fix ist <strong>7.1.4</strong> vom 28.10., mit Backports bis 4.7.39; für 4.6 und älter gibt es keinen.<sup>[3]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Wenn Angreifer eine Lücke nutzen, ist die Debatte um „Low“ oder „High“ akademisch. Wer noch eine WordPress-Installation unter 4.7 betreibt, betreibt keine Website mehr, sondern ein Risiko.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov (Stand 04.11.)</a> · [2] <a href="https://cveawg.mitre.org/api/cve/CVE-2026-119977">CVE-Eintrag CVE-2026-119977</a> · [3] <a href="https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-4w3m-c66w-69mg">WordPress GHSA-4w3m-c66w-69mg (29.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>DigiCert: Ausweis-Kopien im Archiv erwischt</h2>
+        <div class="eli5">
+          <strong class="eli5-term">Zertifizierungsstelle (CA):</strong> Eine Firma, die bestätigt, dass eine Website oder Firma wirklich die ist, die sie vorgibt zu sein. Wie ein Notar, der einen Ausweis prüft und dann einen Stempel gibt. Für manche Zertifikate prüft sie dafür echte Ausweis-Dokumente.
+        </div>
+        <p>Laut BleepingComputer (<strong>05.11.</strong>) verschickt DigiCert Benachrichtigungen über einen Einbruch. Bei einer Server-Migration im Februar 2025 wurde ein internes System erreichbar. Angreifer hatten laut Bericht vom <strong>27.06. bis 02.07.2026</strong> Zugriff, bestätigt hat DigiCert das am <strong>19.10.</strong> Betroffen ist „a small portion of its archived customer data“, darunter Identitätsdokumente. Wie viele Kunden es trifft, sagt DigiCert nicht. CertCentral und DigiCert ONE waren laut Bericht nicht kompromittiert, und der Zugriff war nur lesend.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Ein Hinweis auf kompromittierte Zertifikate oder Schlüssel steht nicht im Bericht, die Vertrauenskette ist also nach heutigem Stand nicht das Thema. Das Thema ist Aufbewahrung: Warum liegen Ausweis-Kopien aus Validierungen in einem Archiv, das bei einer Migration offen bleibt? Gute Frage für jeden DSGVO-Verantwortlichen mit eigenem KYC-Archiv.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/digicert-data-breach-exposes-customer-information-identity-documents/">bleepingcomputer.com (05.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CWPdoor: Der Webserver des Panels selbst war die Hintertür</h2>
+        <p>Angreifer ersetzen auf Linux-Servern die Datei <code>cwpsrv</code>, den Webserver von <strong>Control Web Panel</strong>, durch eine manipulierte Version. Laut BleepingComputer trifft das die Versionen 1.15.10 und 1.24.0. Laut XLab waren im letzten Monat „more than 340,000 CWP instances“ im öffentlichen Netz sichtbar. Eine CVE gibt es nicht, weil es kein Programmierfehler ist, sondern ein Einbau.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Eine Hintertür im Admin-Panel ist die bequemste denkbare Persistenz, denn das Panel läuft ohnehin mit vielen Rechten. Wer CWP betreibt: Binärdatei gegen die Hersteller-Version prüfen und das Panel nicht offen ins Internet stellen. Wie die Datei auf die Server kam, beschreibt unsere Quelle nicht.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-backdoor-linux-servers-using-trojanized-cwp-web-server/">bleepingcomputer.com (05.11.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>KEV: die letzten zwölf Einträge <span class="h2-refs">[1]</span></h2>
+        <p>Neu seit gestern ist nur <strong>CVE-2024-27834</strong> (Apple, „Multiple Products“), aufgenommen am 04.11., Frist 18.11. Bemerkenswert: eine Lücke aus 2024, die erst jetzt als ausgenutzt gilt. Die Liste zeigt die ganze Woche, Stand Katalog 2026.11.04:</p>
+        <table>
+          <thead><tr><th>CVE</th><th>Produkt</th><th>Aufgenommen</th><th>Frist</th></tr></thead>
+          <tbody>
+            <tr><td>CVE-2024-27834</td><td>Apple Multiple Products</td><td>04.11.</td><td>18.11.</td></tr>
+            <tr><td>CVE-2026-119977</td><td>WordPress Core</td><td>03.11.</td><td>06.11.</td></tr>
+            <tr><td>CVE-2026-118527</td><td>Ivanti Connect Secure</td><td>30.10.</td><td>13.11.</td></tr>
+            <tr><td>CVE-2026-111357</td><td>Ivanti Connect Secure</td><td>30.10.</td><td>02.11.</td></tr>
+            <tr><td>CVE-2026-97229</td><td>GitLab CE/EE</td><td>29.10.</td><td>01.11.</td></tr>
+            <tr><td>CVE-2026-76418</td><td>Cisco Secure Firewall ASA / FTD</td><td>29.10.</td><td>01.11.</td></tr>
+            <tr><td>CVE-2026-41709</td><td>VMware ESX</td><td>28.10.</td><td>11.11.</td></tr>
+            <tr><td>CVE-2026-46300</td><td>Linux Kernel</td><td>28.10.</td><td>31.10.</td></tr>
+            <tr><td>CVE-2026-48356</td><td>Adobe Commerce / Magento</td><td>27.10.</td><td>10.11.</td></tr>
+            <tr><td>CVE-2026-111497</td><td>Google Brotli</td><td>27.10.</td><td>10.11.</td></tr>
+            <tr><td>CVE-2026-109618</td><td>PHP</td><td>26.10.</td><td>29.10.</td></tr>
+            <tr><td>CVE-2026-109619</td><td>PHP</td><td>26.10.</td><td>29.10.</td></tr>
+          </tbody>
+        </table>
+        <p>Die sehr kurzen Fristen von drei Tagen (GitLab, Cisco, Ivanti, Linux, PHP, WordPress) sind ein Signal: Die CISA hält diese Fälle für besonders dringend.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (Katalog 2026.11.04)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PHP2Shell: Stand der Dinge</h2>
+        <p>Zur Erinnerung, weil PHP unter so vielem liegt: <strong>CVE-2026-109618</strong> und <strong>-109619</strong> erlauben Codeausführung ohne Anmeldung im PHP-Kern. Die Patches kamen am 21.10., laut Amazon Threat Intelligence liefen Angriffe schon vier Tage vorher.<sup>[1]</sup> Die Fix-Versionen sind laut php.net PHP 8.5.12, 8.4.27, 8.3.36 und 8.2.35.<sup>[2]</sup> Für die getrennte Lücke <strong>CVE-2026-115560</strong> gibt es seit 23.10. ein informatives Advisory auf php.net. Es empfiehlt <code>session.upload_progress.enabled=0</code>; einen Patch gibt es erst mit dem nächsten regulären Bugfix-Release (Stand 06.11.).<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/cisa-confirms-php2shell-vulnerabilities-now-exploited-in-attacks/">bleepingcomputer.com (27.10.)</a> · [2] <a href="https://www.php.net/">php.net (21.10./23.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Weitere Sicherheitsmeldungen</h2>
+        <h3>Zyxel GS1900: jetzt auch heise</h3>
+        <p><span class="update-since">Update zu gestern</span> heise titelt am 05.11. „Jetzt patchen! Attacken auf Zyxel-Switches beobachtet“.<sup>[1]</sup> Die 996 Geräte laut GreyNoise wurden zuerst CVE-2026-7273 zugeschrieben. Laut Binarly nutzte der Exploit aber die getrennte, neue Lücke <strong>CVE-2026-107441</strong>; Fix-Firmware gibt es seit 22.10. Im KEV-Katalog steht nur CVE-2026-7273.<sup>[2]</sup></p>
+        <h3>Knapp 1,5 Millionen Secrets sollen widerrufen werden</h3>
+        <p>Ein neues Programm zielt laut BleepingComputer auf „nearly 1.5 million exposed secrets“, also offen liegende API-Schlüssel und Tokens, die bei den Anbietern widerrufen werden sollen.<sup>[3]</sup> Die Details haben wir nicht geprüft. Die Idee ist richtig: Ein geleakter Schlüssel ist erst sicher, wenn er ungültig ist, nicht wenn er aus dem Repo gelöscht ist.</p>
+        <h3>FBI und CISA: Angriffe auf Kühlanlagen</h3>
+        <p>Die beiden Behörden warnen laut heise am 04.11. vor Cyberangriffen auf Kühlsysteme.<sup>[1]</sup><sup>[3]</sup> Ein weiterer Fall von Industrie-Steuerung im offenen Netz.</p>
+        <h3>iOS-Blockierungsmodus umgangen</h3>
+        <p>Laut heise hat Calif.io den Lockdown-Modus von iOS erstmals geknackt, und der Exploit „überlebt“ ein Update. Technische Details sind nicht öffentlich.<sup>[1]</sup></p>
+        <h3>Barracuda und SonicWall</h3>
+        <p>Für Barracuda ESG und weitere Geräte gibt es laut Bericht vom 03.11. Patches für eine Kette aus <strong>CVE-2026-116606</strong> und <strong>CVE-2026-111560</strong>; Ausnutzung meldet die Quelle nicht, und der Angreifer braucht Zugang zur Admin-Oberfläche.<sup>[4]</sup> SonicWall GMS ist verwundbar, bekommt aber keine Updates mehr; der Plan heißt Ablösung.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de/security (04./05.11.)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/zyxel-fixes-zero-day-exploited-to-hack-nearly-1-000-network-switches/">bleepingcomputer.com (04.11.)</a> · [3] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (05.11.)</a> · [4] <a href="https://www.bleepingcomputer.com/news/security/barracuda-warns-of-critical-flaws-allowing-root-access-to-devices/">bleepingcomputer.com (03.11.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Releases der Woche</h2>
+        <h3>Spring Cloud 2026.0.0-RC2</h3>
+        <p>Spring Cloud <strong>2026.0.0-RC2</strong> kam am 05.11. Seit 23.10. gibt es Spring Boot <strong>4.0.9</strong>, <strong>4.1.2</strong> und <strong>4.2.0-RC1</strong>. Eine CVE nennt der Spring-Blog dazu nicht.<sup>[1]</sup> Wer auf 4.2 zielt: Der Release Candidate ist der Moment, die eigene Test-Suite einmal dagegen laufen zu lassen.</p>
+        <h3>Tor Browser 16.0</h3>
+        <p>Laut LWN die erste stabile Version auf Basis von <strong>Firefox ESR 153</strong>; 32-Bit-x86 unter Linux fällt weg.<sup>[2]</sup></p>
+        <h3>openSUSE Leap 16.1</h3>
+        <p>Am 03.11. erschienen, am selben Tag wie Fedora 45.<sup>[2]</sup></p>
+        <h3>FreeRDP 3.33.0: RDP im Browser</h3>
+        <p>FreeRDP bringt laut heise Remote-Desktops per WebAssembly in den Browser.<sup>[3]</sup> Für Admin-Portale ohne eigenen Client ist das interessant.</p>
+        <div class="eli5">
+          <strong class="eli5-term">WebAssembly:</strong> Ein Format, mit dem kompilierter Code (C, Rust) im Browser fast so schnell läuft wie nativ. Wie ein Motor, den man aus dem Auto ausbaut und in ein anderes Fahrzeug einsetzt, ohne ihn neu zu bauen.
+        </div>
+        <h3>Wiki.js 3.0</h3>
+        <p>Die neue Hauptversion markiert veraltete Seiten.<sup>[3]</sup> Klingt klein, löst aber das größte Problem jedes Firmen-Wikis.</p>
+        <span class="src">[1] <a href="https://spring.io/blog">spring.io/blog (05.11.)</a> · [2] <a href="https://lwn.net/Articles/1105131/">lwn.net (02./03.11.)</a> · [3] <a href="https://www.heise.de/developer/">heise.de/developer (03./04.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Broadcom versteckt VDDK, die Community baut nach</h2>
+        <div class="eli5">
+          <strong class="eli5-term">VDDK:</strong> Das Virtual Disk Development Kit, eine Bibliothek, mit der Backup- und Migrations-Tools auf virtuelle VMware-Festplatten zugreifen. Wie der Schlüssel zum Lager: Ohne ihn kommt kein Spediteur an die Ware.
+        </div>
+        <p>Laut heise macht Broadcom das VDDK schwerer zugänglich, und mit <strong>OpenVDDK</strong> gibt es einen Nachbau.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Das passt in die Linie seit der Übernahme: Broadcom zieht die Schrauben an, und jedes Mal wächst eine offene Alternative. Für Migrationen weg von VMware ist ein offener Zugriff auf die Disks genau das Werkzeug, das Broadcom ungern sieht.</div>
+        <span class="src">[1] <a href="https://www.heise.de/developer/">heise.de/developer (03.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL 14: noch sechs Tage</h2>
+        <p>Am <strong>12.11.</strong> endet der Support für PostgreSQL 14.<sup>[1]</sup> Die letzte koordinierte Release-Runde war am 13.08. (18.6, 17.11, 16.15, 15.19, 14.24). Das nächste Minor-Release ist laut Roadmap für den 12.11. geplant.<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.postgresql.org/support/versioning/">postgresql.org/support/versioning</a> · [2] <a href="https://www.postgresql.org/developer/roadmap/">postgresql.org/developer/roadmap</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Branche und Community</h2>
+        <h3>Der Kernel und die CVE-Flut</h3>
+        <p>LWN berichtet, wie Amazon-Ingenieure auf der LPC die Last durch die Masse an Kernel-CVEs beschrieben haben. Das Merge-Window für 7.4 schloss am 01.11. mit 18.591 Changesets ohne Merges (LWN, 02.11.).<sup>[1]</sup> Seit der Kernel selbst CVE-Nummern vergibt, ist nicht jede CVE ein Notfall. Die Kunst ist das Filtern, nicht das Zählen.</p>
+        <h3>SAP, Iceberg und Databricks</h3>
+        <p>The Register berichtet am 05.11. über SAPs Schritt in Richtung Apache Iceberg und Databricks.<sup>[2]</sup> Die Details haben wir nicht geprüft.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Apache Iceberg:</strong> Ein offenes Tabellenformat für große Datenmengen in Objektspeichern. Wie ein Inhaltsverzeichnis für ein riesiges Lager: Verschiedene Werkzeuge finden dieselben Kisten, ohne dass ein einzelner Hersteller den Schlüssel hält.
+        </div>
+        <h3>Kurz notiert</h3>
+        <ul>
+          <li><strong>Debian</strong> debattiert über Reviews durch Sprachmodelle für Pakete in der NEW-Queue (DFSG-Team); die KI-Seite steht im ai-dev-Brief.<sup>[1]</sup></li>
+          <li><strong>CRA</strong>: Die Meldepflichten nach Art. 14 gelten ab 11.09.2026: 24 h Frühwarnung, 72 h Meldung über die Single Reporting Platform der ENISA (<a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">EU-Kommission</a>).</li>
+          <li><strong>Brasilien</strong>: Für November haben wir keine belastbare Dev-Meldung gefunden; tecnoblog war nicht erreichbar.</li>
+          <li><strong>Nicht geprüft</strong>: JDK, Angular, React, Python, Docker, Caddy, Tailscale und Chrome. Fehlende Meldungen dort heißen heute nicht „ruhig“.</li>
+        </ul>
+        <span class="src">[1] <a href="https://lwn.net/">lwn.net (02./03.11.)</a> · [2] <a href="https://www.theregister.com/">theregister.com (05.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Was der Freitag wert ist</h2>
+        <p>Drei Dinge für die eigenen Systeme: Auf Alpine- und OpenWrt-Hosts OpenSSH 10.6p2 einspielen oder Passwort-Login abschalten. WordPress auf 7.1.4 oder den Backport bringen. PostgreSQL 14 bis Donnerstag ablösen oder das Risiko bewusst tragen. Der rote Faden der Woche: Angreifer gehen über das, was man einmal einrichtet und dann vergisst. Switches, Admin-Panels, Archive, Default-Konten.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Freitag, der sechste November. Heute geht es um einen kleinen OpenSSH-Patch mit großer Wirkung, um eine Datenpanne bei der Zertifizierungsstelle DigiCert und um einen Webserver, der selbst die Hintertür war.</p>
+  <p>Zuerst OpenSSH. Version zehn Punkt sechs p zwei vom fünften November schließt eine Lücke auf Linux-Systemen, die die Bibliothek musl nutzen und PAM ausgeschaltet haben. Das ist der Standard bei Alpine. Dort war ein Login in Konten möglich, die eigentlich gesperrt sind. Eine CVE-Nummer gibt es bisher nicht, Angriffe sind nicht bekannt. Die Abhilfe: das Paket aktualisieren oder den Passwort-Login abschalten. Systeme mit glibc oder PAM sind nicht betroffen.</p>
+  <p>Bei WordPress konnten wir den Katalog der US-Behörde CISA heute selbst prüfen. Die Lücke CVE-2026-119977 steht dort seit dem dritten November, und die Frist für Bundesbehörden endet heute. Der Fix ist Version sieben Punkt eins Punkt vier.</p>
+  <p>DigiCert meldet einen Einbruch in ein internes System. Betroffen ist ein kleiner Teil archivierter Kundendaten, darunter Ausweis-Dokumente. Wie viele Kunden es trifft, sagt die Firma nicht. Von kompromittierten Zertifikaten ist keine Rede.</p>
+  <p>Bei Control Web Panel ersetzen Angreifer den eingebauten Webserver durch eine manipulierte Version. Laut den Forschern von XLab waren im letzten Monat mehr als dreihundertvierzigtausend solcher Panels im Netz sichtbar. Wer so ein Panel betreibt, prüft die Datei und nimmt die Oberfläche aus dem offenen Internet.</p>
+  <p>Bei den Releases gibt es Spring Cloud im zweiten Release Candidate, den Tor Browser sechzehn auf Basis von Firefox ESR, und FreeRDP, das Remote-Desktops per WebAssembly in den Browser bringt.</p>
+  <p>Zum Schluss der Blick nach vorn: Am Dienstag ist Microsoft Patch Tuesday, und am Donnerstag, dem zwölften November, endet der Support für PostgreSQL vierzehn. Wer noch darauf läuft, plant jetzt den Umstieg. In der nächsten Ausgabe schauen wir, ob die OpenSSH-Lücke eine CVE-Nummer bekommen hat.</p>
+</div>
+
+</body>
+</html>
