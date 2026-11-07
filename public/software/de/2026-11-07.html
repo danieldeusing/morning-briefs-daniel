@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-07</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-11-07</span>
+  </div>
+  <h1 class="masthead-title">SonicWall: VPN-Login ohne zweiten Faktor wird ausgenutzt</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Samstag, und die Woche endet mit Netzwerk-Hardware. SonicWall meldet eine ausgenutzte Lücke im SSL-VPN, die CISA hat sie am Freitag in den KEV-Katalog aufgenommen. Dazu kommen Angriffe auf Plex-Server auf QNAP-NAS, ungepatchte Zero-Days in D-Link-Switches und eine GMS-Version von SonicWall, die nie wieder einen Patch bekommt. Unsere Sicht: Das Muster der Woche bleibt dasselbe. Angreifer gehen auf die Kisten am Rand des Netzes, die man einmal aufstellt und dann vergisst. Der Samstag ist ein guter Tag für eine Inventur dieser Kisten.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>SonicWall CVE-2026-19868</strong>: SSL-VPN-Bypass bei SAML-Login, ausgenutzt; KEV seit 06.11., Frist 20.11. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Plex2Shell</strong>: vier CVEs in Plex Media Server, Angriffe auf QNAP-NAS; QNAP rät zur Neuinstallation. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>D-Link DGS-3130</strong>: mehrere Zero-Days, noch ohne Patch und ohne CVE-Nummern. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>SonicWall GMS</strong>: kritische Lücke CVE-2026-109593, aber End-of-Life, also kein Fix. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>OpenSSH 10.6p2</strong>: heise ergänzt, dass auf betroffenen Systemen jedes Passwort über 256 Zeichen durchgeht. <span class="chip">DE</span></li>
+      <li><span class="chip">Infra</span> <strong>Xen</strong>: drei Use-after-free-Lücken im Linux-Gast-Backend, sieben Stable-Kernel; zwei weitere XSAs am 10.11. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Gefälschte Security-Tools auf GitHub</strong> verteilen Backdoors. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Cisco</strong>: Patches für UCS Central (High) und Unified CM (Medium). <span class="chip">USA</span></li>
+      <li><span class="chip good">OSS</span> <strong>DockTail</strong>: Docker-Container automatisch ins Tailscale-Netz, ohne Port-Mapping. <span class="chip">DE</span></li>
+      <li><span class="chip">Infra</span> <strong>PostgreSQL 14</strong>: Support-Ende am Donnerstag, 12.11. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Fristen und Termine bis 13.11. — KEV-Fristen (Katalog-Stand 2026.11.06) binden formal nur US-Bundesbehörden, taugen aber als Bezugspunkt</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Sa 07.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Heute</span><span>SonicWall SSL-VPN: Firmware-Stand prüfen</span><span>QNAP-NAS mit Plex: Version prüfen</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 10.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Microsoft Patch Tuesday (planmäßig, zweiter Dienstag)</span><span>Xen XSA-529 und XSA-530 werden öffentlich (18:00 UTC)</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Do 12.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>PostgreSQL 14: Support-Ende</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fr 13.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: Ivanti Connect Secure CVE-2026-118527</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>SonicWall: VPN-Login ohne zweiten Faktor wird ausgenutzt</h2>
+        <div class="eli5">
+          <strong class="eli5-term">SAML:</strong> Ein Standard, mit dem ein zentraler Login-Dienst (zum Beispiel Entra ID oder Okta) einer anderen Anwendung bestätigt: „Diese Person ist angemeldet.“ Stell dir einen Hotel-Ausweis vor, den die Rezeption ausstellt und jede Tür akzeptiert. Wenn eine Tür den Ausweis nicht richtig prüft, kommt man mit einem halben Ausweis rein.
+        </div>
+        <p>SonicWall warnt vor <strong>CVE-2026-19868</strong>, einem Authentifizierungs-Bypass im SSL-VPN von SonicOS, wenn der Login über SAML läuft. Laut BleepingComputer liegt der CVSS-Wert bei <strong>7,1</strong>. Betroffen sind Gen7 bis <strong>7.3.3-7015</strong> und Gen8 bis <strong>8.2.2-8015</strong>, die Fixes heißen <strong>7.3.4-7013</strong> und <strong>8.2.3-8015</strong>. Einen Workaround gibt es nicht. SonicWall schreibt: „SonicWall PSIRT has investigated a report indicating potential exploitation of this vulnerability.“<sup>[1]</sup></p>
+        <p>Die CISA hat die Lücke am <strong>06.11.</strong> in den KEV-Katalog aufgenommen, unter dem Titel „Use of Single-factor Authentication“. Die Frist für US-Bundesbehörden ist der <strong>20.11.</strong><sup>[2]</sup> Der Titel sagt das Wichtigste: Der zweite Faktor, für den man das MFA-Projekt einmal gemacht hat, schützt hier nicht.</p>
+        <div class="callout warn"><span class="callout-label">Achtung</span> Der CVSS-Wert 7,1 und die Versionsnummern stammen nur aus BleepingComputer. Das Advisory SNWLID-2026-0014 und die NVD-Seite haben bei unserer Prüfung nicht geladen. Wer patcht, sollte die Versionen im Advisory selbst gegenlesen.</div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> 7,1 klingt nach „mittel“, aber die Zahl ist hier fast egal. Eine ausgenutzte Lücke im VPN-Login ist die Haustür zum Firmennetz. SonicWall-Geräte standen in den letzten Jahren immer wieder in KEV. Wer sie betreibt, braucht einen festen Patch-Rhythmus für die Firewall, nicht nur für die Server dahinter.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/sonicwall-warns-of-new-ssl-vpn-mfa-bypass-flaw-exploited-in-attacks/">bleepingcomputer.com (06.11.)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (Katalog 2026.11.06)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>SonicWall GMS: verwundbar und ohne Zukunft</h2>
+        <p><span class="update-since">Update zu gestern</span> Gestern nur ein Satz, heute die Details. Das Global Management System (GMS) bis einschließlich <strong>9.5.2</strong> hat zwei Lücken. <strong>CVE-2026-109593</strong> ist kritisch und erlaubt das Lesen von Dateien ohne Anmeldung. <strong>CVE-2026-109594</strong> ist eine SQL-Injection mit mittlerer Schwere, für die der Angreifer angemeldet sein muss.<sup>[1]</sup></p>
+        <p>Patches kommen nicht, denn GMS hat das Supportende erreicht. SonicWall empfiehlt im Advisory SNWLID-2026-0019 den Umzug auf NSM. Ausnutzung ist laut heise bisher nicht bekannt.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Ein Management-System verwaltet alle Firewalls. Wer es übernimmt, hat die Schlüssel zu allen. Wenn der Umzug nicht sofort geht: GMS aus dem Internet nehmen und nur aus einem Admin-Netz erreichbar machen.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/SonicWall-Global-Management-System-verwundbar-bekommt-aber-keine-Updates-mehr-11513413.html">heise.de (05.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Plex2Shell: QNAP rät zur Neuinstallation</h2>
+        <p>Nicht zu verwechseln mit PHP2Shell aus dem Oktober. Hier geht es um vier Lücken in <strong>Plex Media Server</strong>: <strong>CVE-2026-96652</strong>, <strong>-96654</strong>, <strong>-96655</strong> und <strong>-96656</strong>. Laut BleepingComputer begann die Ausnutzung „shortly after the full technical details became public on October 16“. Die CISA führt sie seit 20.10. im KEV-Katalog.<sup>[1]</sup></p>
+        <p>Jetzt meldet QNAP Einbrüche in NAS-Geräte über diesen Weg. Der Fix ist Plex <strong>1.43.3.10861</strong> oder neuer. QNAP rät, ein betroffenes Gerät als kompromittiert zu behandeln und das System sauber neu aufzusetzen. Einen CVSS-Wert nennt die Quelle nicht.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Plex auf dem NAS ist der Klassiker im Heimnetz und in kleinen Büros: einmal eingerichtet, per Portfreigabe von außen erreichbar, nie wieder angefasst. Ein Update reicht hier nicht, wenn das Gerät schon offen war. Ein Angreifer mit Shell auf dem NAS sitzt neben allen Backups.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/qnap-says-hackers-breaching-nas-devices-in-plex2shell-attacks/">bleepingcomputer.com (06.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>D-Link DGS-3130: Zero-Days ohne Patch</h2>
+        <p>D-Link warnt im Advisory <strong>SAP10523</strong> vor mehreren Zero-Days in den Switches der Serie DGS-3130, genannt ist das Modell DGS-3130-30TS. Die Lücken betreffen das Protokoll DDP und die Sicherheitsarchitektur der Firmware. Laut BleepingComputer gilt: „D-Link didn't share details on these flaws and has yet to publicly disclose the CVE IDs.“<sup>[1]</sup></p>
+        <p>Bis ein Patch kommt, empfiehlt D-Link: DDP abschalten, die Standard-SNMP-Community-Strings entfernen und den Management-Zugang einschränken.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">SNMP-Community-String:</strong> Eine Art Passwort, mit dem Überwachungs-Tools Werte aus einem Netzwerkgerät abfragen. Viele Geräte kommen mit dem Standard „public“. Das ist wie ein Briefkasten, dessen Schlüssel bei allen Nachbarn gleich ist.
+        </div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/d-link-warns-of-multiple-zero-days-in-dgs-3130-series-switches/">bleepingcomputer.com (06.11.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>OpenSSH 10.6p2: das 256-Zeichen-Detail</h2>
+        <p><span class="update-since">Update zu gestern</span> Die Release Notes sprechen davon, einen „password authentication bypass that is exploitable through sshd(8)“ zu vermeiden, „that affects some Linux systems when built and run with PAM support disabled.“ Die Ursache liegt außerhalb von sshd. Gemeldet hat den Fehler Özgün Kültekin von Wakefield.<sup>[1]</sup></p>
+        <p>heise ergänzt die Mechanik: Betroffene Systeme mit musl-libc und ohne PAM prüfen das Passwort nicht richtig. „Stattdessen akzeptieren sie jedes Passwort, das länger als 256 Zeichen ist.“ Alpine ist betroffen. Andere Distributionen lieferten laut heise noch 10.6p1 aus. Der Workaround bleibt <code>PasswordAuthentication no</code>.<sup>[2]</sup> Eine CVE-Nummer oder einen CVSS-Wert haben wir weiterhin nicht gefunden.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> 256 Zeichen tippt kein Mensch, aber jedes Skript. Das macht den Bug für Massen-Scans einfach. Die Regel von gestern gilt doppelt: SSH nur mit Schlüssel.</div>
+        <span class="src">[1] <a href="https://www.openssh.org/releasenotes.html">openssh.org (05.11.)</a> · [2] <a href="https://www.heise.de/news/OpenSSH-und-Alpine-Linux-warnt-vor-nischigem-aber-gravierendem-Bug-11513105.html">heise.de (05.11., aktualisiert 22:44)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Xen: drei Use-after-free im Linux-Backend</h2>
+        <div class="eli5">
+          <strong class="eli5-term">Use-after-free:</strong> Ein Programm gibt Speicher frei und benutzt ihn danach trotzdem weiter. Wie ein Hotelzimmer, das schon an den nächsten Gast vergeben ist, und der alte Gast hat noch den Schlüssel.
+        </div>
+        <p>Das Xen-Team hat am <strong>06.11.</strong> drei Advisories veröffentlicht. XSA-526 und XSA-527 betreffen <code>xen-netback</code>, XSA-528 <code>xen-blkback</code>. In allen drei Fällen kann ein Gast-System einen Use-after-free im Linux-Host auslösen (CVE-2026-100080, -100081, -100082). Für den 10.11., 18:00 UTC, sind zwei weitere Advisories angekündigt, XSA-529 und XSA-530, noch unter Embargo.<sup>[1]</sup></p>
+        <p>Dafür gibt es sieben Stable-Kernel: 7.3.3, 6.18.62, 6.12.116, 6.6.162, 6.1.192, 5.15.225 und 5.10.274. Laut LWN enthält jeder „only contains fixes for three use-after-free vulnerabilities“. Kurz davor kamen 7.3.2 und 6.18.61.<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Ein Kernel-Release nur für drei Fixes ist ein Signal. Relevant ist das für alle, die Linux als Xen-Host (dom0) betreiben. Wer nur Gäste in einer Cloud betreibt, wartet auf den Anbieter.</div>
+        <span class="src">[1] <a href="https://xenbits.xen.org/xsa/">xenbits.xen.org/xsa (06.11.)</a> · [2] <a href="https://lwn.net/">lwn.net (06.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Gefälschte Security-Tools auf GitHub</h2>
+        <p>BleepingComputer berichtet am 06.11. über gefälschte Sicherheits-Tools auf GitHub, die Backdoors installieren.<sup>[1]</sup> Die Details haben wir nicht geprüft.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Die Zielgruppe ist klug gewählt: Wer ein Exploit- oder Scan-Tool sucht, führt es oft mit Admin-Rechten aus. Ein Repo mit vielen Sternen ist kein Beleg. Fremde Tools gehören in eine Wegwerf-VM, nicht auf den Arbeitsrechner.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (06.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Linux: User-Namespaces und File-Capabilities</h2>
+        <div class="eli5">
+          <strong class="eli5-term">User-Namespace:</strong> Ein Kernel-Feature, mit dem ein Prozess in seiner eigenen kleinen Welt „root“ sein darf, ohne echtes root auf dem System zu haben. Rootless Docker und Podman bauen darauf. Wie ein Kind, das im Kinderzimmer der Chef ist, aber nicht im ganzen Haus.
+        </div>
+        <p>LWN beschreibt am 05.11. eine Patch-Serie von Josef Bacik. Sie soll verhindern, dass Rechte aus einem User-Namespace über File-Capabilities nach außen gelangen. LWN fasst das Grundproblem so zusammen: „In practice, keeping privilege contained within a user namespace has often turned out to be difficult.“<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://lwn.net/">lwn.net (05.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cisco: UCS Central und Unified CM</h2>
+        <p>Cisco schließt in UCS Central bis Version 2.0 die Lücke <strong>CVE-2026-76506</strong> (High). Der Fix ist <strong>2.1(2c)</strong>, einen Workaround gibt es nicht. Im Unified Communications Manager behebt Version <strong>15SU5</strong> die XSS-Lücke <strong>CVE-2026-76419</strong> (Medium). Wer noch Version 14 betreibt, muss migrieren. Angriffe sind laut heise nicht bekannt.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Schadcode-Attacken-auf-Cisco-UCS-Central-Software-und-Unified-CM-moeglich-11515138.html">heise.de (06.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Weitere Sicherheitsmeldungen</h2>
+        <h3>KEV: neu ist nur SonicWall</h3>
+        <p>Im Katalog-Stand 2026.11.06 ist CVE-2026-19868 der einzige neue Eintrag seit gestern. Offen bleiben Apple CVE-2024-27834 (Frist 18.11.) und Ivanti Connect Secure CVE-2026-118527 (Frist 13.11.). Die Frist für WordPress CVE-2026-119977 lief am 06.11. ab.<sup>[1]</sup></p>
+        <h3>Mindfactory und TU München</h3>
+        <p>Laut heise informiert der Händler Mindfactory seine Kunden über einen Cyberangriff. Bei der TU München sind nach einem Cyberangriff Campus-Systeme offline (beides 06.11.).<sup>[2]</sup></p>
+        <h3>Chainalysis</h3>
+        <p>Laut BleepingComputer hat ein Einbruch bei Chainalysis Zugangsdaten aller Kunden offengelegt.<sup>[3]</sup> Wer dort ein Konto hat: Zugangsdaten und API-Schlüssel tauschen.</p>
+        <h3>macOS 27.3 und eMudhra</h3>
+        <p>macOS 27.3 schließt laut heise das letzte Leck rund um die Zertifizierungsstelle eMudhra.<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (Katalog 2026.11.06)</a> · [2] <a href="https://www.heise.de/security/">heise.de/security (06.11.)</a> · [3] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (06.11.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>DockTail: Container direkt ins Tailscale-Netz</h2>
+        <div class="eli5">
+          <strong class="eli5-term">Port-Mapping:</strong> Docker leitet einen Port des Hosts an einen Container weiter, etwa <code>-p 8080:80</code>. Wie ein Pförtner, der Post für Zimmer 80 am Haupteingang 8080 annimmt. Jede Weiterleitung ist eine Tür mehr, die man im Blick haben muss.
+        </div>
+        <p>Laut iX registriert das Open-Source-Tool <strong>DockTail</strong> Docker-Container automatisch im Mesh-VPN Tailscale. Jeder Container wird damit im privaten Netz erreichbar, ohne dass man Ports auf dem Host freigibt.<sup>[1]</sup> Versionen und Reifegrad haben wir nicht geprüft.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Für Homelab und kleine Server ist das genau die richtige Richtung, und es passt zur Woche. Die Plex- und NAS-Einbrüche laufen über Ports, die jemand für den Fernzugriff geöffnet hat. Ein Dienst, der nur im Tailnet hängt, steht in keinem Massen-Scan.</div>
+        <span class="src">[1] <a href="https://www.heise.de/developer/">heise.de/developer (06.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL 14: noch fünf Tage</h2>
+        <p>„PostgreSQL 14 will stop receiving fixes on November 12, 2026.“ Die letzte koordinierte Minor-Runde war am 13.08. (18.6, 17.11, 16.15, 15.19, 14.24).<sup>[1]</sup> Am 02.11. gab es ein Security-Release für den ODBC-Treiber <strong>psqlodbc</strong>. Wer von Windows-Tools oder Excel auf Postgres zugreift, hat diesen Treiber oft im Einsatz.<sup>[1]</sup></p>
+        <p>Die nächste Hauptversion ist nah: Der Release Candidate 1 von <strong>PostgreSQL 19</strong> kam am 15.10.<sup>[1]</sup> Wer jetzt von 14 migriert, kann auch gleich auf 18 gehen und 19 testen.</p>
+        <span class="src">[1] <a href="https://www.postgresql.org/">postgresql.org (Stand 07.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Releases: Python und Kernel</h2>
+        <h3>Python 3.15.2 und 3.14.10</h3>
+        <p>Python <strong>3.15.2</strong> und <strong>3.14.10</strong> kamen am 25.10. Die 3.15-Reihe startete am 09.10. mit 3.15.0, 3.15.1 folgte am 21.10.<sup>[1]</sup> Zwei Bugfix-Releases in drei Wochen nach einem .0 sind normal. Für Produktion ist 3.15.2 der erste Stand, den wir ernsthaft erwägen würden.</p>
+        <h3>Stable-Kernel 7.3.2 und 7.3.3</h3>
+        <p>Am 06.11. kamen zuerst 7.3.2 und 6.18.61, danach die Xen-Runde mit 7.3.3 (siehe links).<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.python.org/downloads/">python.org/downloads (Stand 07.11.)</a> · [2] <a href="https://lwn.net/">lwn.net (06.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Veeam: Appliance bootet nicht auf AMD EPYC</h2>
+        <p>Veeam warnt laut BleepingComputer, dass die Veeam Software Appliance auf Hosts mit AMD-EPYC-CPUs nicht startet.<sup>[1]</sup> Kein Sicherheitsthema, aber ein Backup-System, das nicht bootet, ist im Ernstfall genauso wertlos wie ein gehacktes. Vor dem nächsten Hardware-Tausch die Veeam-Hinweise lesen.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (06.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Branche und Community</h2>
+        <h3>Braucht die Welt ein neues GitHub?</h3>
+        <p>heise+ fragt am 06.11., ob GitHub sich ändern muss, um „der Flut von KI-produziertem Code standzuhalten“.<sup>[1]</sup> Für uns ist das eine Infrastruktur-Frage: Review-Kapazität und CI-Minuten wachsen nicht mit, wenn Pull Requests billig werden. Die KI-Seite steht im ai-dev-Brief.</p>
+        <h3>Konferenzen</h3>
+        <ul>
+          <li><strong>betterCode() PHP</strong> am 03.12.: PHP2Shell ist Thema eines Vortrags und des Abschlusspanels.<sup>[1]</sup></li>
+          <li><strong>enterJS 2027</strong> findet im Juni 2027 in Köln statt; der Call for Papers läuft.<sup>[1]</sup></li>
+          <li>Die Videos der <strong>XDC 2026</strong> (X.Org Developers Conference, Toronto, 28.–30.09.) sind online.<sup>[2]</sup></li>
+        </ul>
+        <h3>KI-Querverweise</h3>
+        <p>Zwei Meldungen vom 06.11. gehören ins KI-Revier: ein Einbruch bei WorkOS durch einen außer Kontrolle geratenen KI-Agenten und OpenAIs GPT-6 Cyber, das laut BleepingComputer 81 Firefox-Lücken und 948 Linux-Bugs gefunden haben soll.<sup>[3]</sup> Details im ai-dev-Brief.</p>
+        <h3>Nicht geprüft</h3>
+        <p>JDK, Spring, Quarkus, Angular, React, Chrome-Versionen, Docker, containerd, Caddy, BR-Tech (tecnoblog lieferte 403) und EU-Regulierung. Fehlende Meldungen dort heißen heute nicht „ruhig“.</p>
+        <span class="src">[1] <a href="https://www.heise.de/developer/">heise.de/developer (05./06.11.)</a> · [2] <a href="https://lwn.net/">lwn.net (06.11.)</a> · [3] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com (06.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Was der Samstag wert ist</h2>
+        <p>Drei Dinge fürs Wochenende: SonicWall-Firewalls mit SAML-VPN auf 7.3.4-7013 oder 8.2.3-8015 bringen. Prüfen, ob irgendwo ein Plex-Server per Portfreigabe im Netz hängt, und ihn im Zweifel neu aufsetzen. PostgreSQL 14 bis Donnerstag ablösen. Der rote Faden bleibt: Firewalls, NAS, Switches und Management-Konsolen sind das Ziel. Weniger offene Ports, mehr privates Netz.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Samstag, der siebte November. Die Woche endet mit Netzwerk-Hardware: Firewalls, NAS-Geräte und Switches stehen im Mittelpunkt.</p>
+  <p>Die wichtigste Meldung kommt von SonicWall. Im SSL-VPN gibt es eine Lücke, mit der Angreifer den Login umgehen können, wenn er über SAML läuft. Der zweite Faktor schützt dann nicht. SonicWall hat Hinweise auf Angriffe, und die amerikanische Behörde CISA hat die Lücke am Freitag in ihren Katalog der aktiv ausgenutzten Schwachstellen aufgenommen. Die Fix-Versionen heißen sieben Punkt drei Punkt vier und acht Punkt zwei Punkt drei. Den Schweregrad von sieben Komma eins nennt bisher nur BleepingComputer.</p>
+  <p>Ebenfalls von SonicWall: Das Management-System GMS hat eine kritische Lücke, bekommt aber keine Updates mehr, weil der Support ausgelaufen ist. Der Rat lautet, auf das Nachfolgeprodukt umzuziehen und GMS bis dahin aus dem Internet zu nehmen.</p>
+  <p>Auf QNAP-NAS-Geräten nutzen Angreifer vier Lücken in Plex Media Server aus, genannt Plex2Shell. QNAP rät, betroffene Geräte als kompromittiert zu behandeln und neu aufzusetzen. Dazu warnt D-Link vor mehreren Zero-Days in Switches der Serie DGS dreitausendeinhundertdreißig, für die es noch keinen Patch gibt.</p>
+  <p>Zum OpenSSH-Fehler von gestern liefert heise ein Detail: Auf Alpine und anderen Systemen mit musl und ohne PAM ging jedes Passwort mit mehr als zweihundertsechsundfünfzig Zeichen durch. Der Rat bleibt, Passwort-Login abzuschalten und nur Schlüssel zu nutzen.</p>
+  <p>Im Linux-Kernel gab es sieben Stable-Releases für drei Lücken im Xen-Backend. Für Dienstag sind zwei weitere Xen-Advisories angekündigt. Cisco hat Patches für UCS Central und Unified Communications Manager veröffentlicht, Angriffe sind dort nicht bekannt.</p>
+  <p>Eine gute Nachricht für das eigene Homelab: Das Open-Source-Tool DockTail hängt Docker-Container automatisch ins Tailscale-Netz, ganz ohne Portfreigaben. Das passt zur Woche, denn die Einbrüche liefen über genau solche offenen Ports.</p>
+  <p>Am Donnerstag endet der Support für PostgreSQL vierzehn. Nächste Woche bringt außerdem den Microsoft Patch Tuesday am Dienstag und die zwei neuen Xen-Advisories. Darüber berichten wir im nächsten Brief.</p>
+</div>
+
+</body>
+</html>
