@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-10</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-10</span>
+  </div>
+  <h1 class="masthead-title">SSHole under attack: OpenSSH flaw in KEV, deadline Thursday</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Yesterday we wrote here that the OpenSSH flaw was not in the KEV catalog. That is over: since Monday evening CISA lists <strong>CVE-2026-123158</strong> as exploited, and GreyNoise counts 16 successful intrusion chains. The bug now has a name too, "SSHole". Our take: the flaw is narrow, hitting only musl systems without PAM that allow password login. But those are exactly the forgotten Alpine jump hosts nobody keeps an eye on. Separately, N-able is taking its cloud offline after more than 30 alleged zero-days were published. And today is Patch Tuesday; Microsoft's numbers only arrive in the afternoon, and there is nothing on them here yet.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>SSHole</strong>: OpenSSH flaw in KEV since Nov 9, deadline Thu Nov 12; 16 successful attack chains per GreyNoise. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>N-able N-central</strong>: more than 30 alleged zero-days public, hosted platform offline, no CVEs yet. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>KEV</strong>: plus GPUStack, FreeSwitch and IBM Aspera Faspex, all due Nov 12. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>Patch Tuesday</strong>: today; no numbers at press time. October had 1,411 fixes. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Secrets in agent configs</strong>: Apiiro finds 2,539 real secrets in 1,994 public repos. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>Outlook.com</strong>: rejecting mail from small senders without DMARC since about Nov 5; Microsoft investigating. <span class="chip">Global</span></li>
+      <li><span class="chip">Release</span> <strong>Caddy 2.11.9</strong>: FastCGI security fixes and a fix for a PHP regression from 2.11.8. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>PostgreSQL 14</strong>: final release on Thu Nov 12. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulation</span> <strong>CRA</strong>: reporting obligation since Sep 11, 24 h early warning, 72 h report. <span class="chip">EU</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Dates through Sun Nov 15 — KEV deadlines for Apple (Nov 18), SonicWall (Nov 20) and the end of Angular 20 LTS (Nov 28) are covered in the text</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Tue 11/10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Today: Microsoft Patch Tuesday</span><span>Xen XSA-529 and XSA-530 go public (18:00 UTC, 15:00 Brasília)</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu 11/12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: OpenSSH, GPUStack, FreeSwitch, IBM Aspera Faspex</span><span>PostgreSQL 14: final release, then end of support</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>SSHole: a niche flaw becomes a target</h2>
+        <p>The flaw in OpenSSH before 10.6p2 is now being exploited. According to BleepingComputer, GreyNoise counted the first successful exploitation on <strong>Nov 7 at 00:46 UTC</strong>. Since then, "16 successful exploitation chains" from six IP addresses have followed. Previdian saw 20 attempts from 13 IP addresses in nine countries. Exploit code appeared about four hours after the fix.<sup>[1]</sup></p>
+        <p>On the mechanics: "An oversized password causes musl's password-hashing function to return * on error, which OpenSSH mistakenly treats as a match."<sup>[1]</sup> So only systems with musl libc, without PAM and with password login are affected, in practice mostly Alpine. The fix is <strong>10.6p2</strong> from Nov 5.<sup>[2]</sup><sup>[3]</sup> The CVSS score is <strong>8.1</strong>; it comes from MITRE as CNA, and the NVD merely adopted it.<sup>[4]</sup></p>
+        <p>What attackers do afterward is the usual routine: probe the system and containers, query cloud metadata, read password hashes and root SSH keys, and modify <code>authorized_keys</code> so they can return. One attacker got root and installed a Python C2 agent called "TAC Agent".<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">PAM:</strong> A toolkit in Linux that lets programs verify logins instead of doing it themselves. Without PAM, sshd checks the password directly through the C library. Like a doorman who normally gets the guest list from the office and here has to decide on his own.
+        </div>
+        <div class="callout warn"><span class="callout-label">Heads up</span> CISA has listed the flaw in the KEV catalog since Nov 9; the deadline for US agencies is <strong>Nov 12</strong>.<sup>[5]</sup> Check: <code>sshd -T | grep passwordauthentication</code>. If it says <code>yes</code>, upgrade to 10.6p2 or set <code>PasswordAuthentication no</code>. Either way, restart sshd afterwards: the update does not restart the running service.<sup>[3]</sup> If you were affected, look for password logins on accounts with "*" in the shadow field, for foreign SSH keys, and for files or services belonging to TAC Agent.<sup>[1]</sup></div>
+        <div class="callout info"><span class="callout-label">Our take</span> Yesterday we called the flaw "narrow", and that still holds. But narrow does not mean harmless: the affected systems are the ones nobody maintains, such as an old Alpine image used as a bastion. Four hours to exploit is by now the norm, not the exception.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-sshole-openssh-flaw-to-breach-linux-systems/">bleepingcomputer.com (Nov 9)</a> · [2] <a href="https://www.openssh.org/releasenotes.html">openssh.org (Nov 5)</a> · [3] <a href="https://www.heise.de/news/OpenSSH-und-Alpine-Linux-warnt-vor-nischigem-aber-gravierendem-Bug-11513105.html">heise.de (Nov 5, updated)</a> · [4] <a href="https://app.opencve.io/cve/CVE-2026-123158">opencve.io (as of Nov 10)</a> · [5] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">cisa.gov KEV feed (version 2026.11.09)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>N-able takes N-central offline</h2>
+        <p>On Nov 8 a repo called "Able2Shell" appeared with proof-of-concept code for more than 30 alleged zero-days in N-central, N-able's RMM platform. According to BleepingComputer, N-able then took the hosted environment offline. There are no CVE numbers yet. The researcher, Sean Bales, says he tested against the pre-release version 2026.4.0.31, and the search was AI-assisted. N-able says there is "no evidence of active exploitation". N-able also asks on-prem customers, per BleepingComputer, to shut down their N-central servers until a hotfix ships. BleepingComputer did not verify all of the findings itself.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">RMM (Remote Monitoring and Management):</strong> Software that IT service providers use to manage many customers' computers remotely and keep them updated. Whoever takes over the RMM gets all the customers at once. Like a master key for every apartment in the building.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> Taking it offline is the right call, even without confirmed attacks: a public PoC repo for an RMM platform is an invitation. If a service provider runs N-central for you, ask today whether your instance is hosted or on-prem. On-prem servers are also supposed to stay off for now.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/n-able-takes-cloud-platform-offline-after-30-plus-zero-days-published/">bleepingcomputer.com (Nov 9)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Patch Tuesday: today, numbers to follow</h2>
+        <p>Today is the second Tuesday of November. At press time there were no reports yet on Microsoft's November round; we therefore give no figures on fixes or zero-days. For context, per BleepingComputer: October 1,411 fixes and three zero-days, September 966 and two, August 400 and three.<sup>[1]</sup></p>
+        <p>The same day at <strong>18:00 UTC</strong> the Xen advisories <strong>XSA-529</strong> and <strong>XSA-530</strong> go public; titles are not yet known.<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/tag/patch-tuesday/">bleepingcomputer.com/tag/patch-tuesday (as of Nov 10)</a> · [2] <a href="https://xenbits.xen.org/xsa/">xenbits.xen.org/xsa (as of Nov 10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV on Monday: four entries, one deadline</h2>
+        <p>With the catalog version of Nov 9, three flaws were added alongside OpenSSH, all due <strong>Nov 12</strong>:<sup>[1]</sup></p>
+        <ul>
+          <li><strong>CVE-2026-102895</strong>, GPUStack: Improper Authentication.</li>
+          <li><strong>CVE-2026-116779</strong>, SignalWire FreeSwitch: Code Injection.</li>
+          <li><strong>CVE-2026-123218</strong>, IBM Aspera Faspex: Incorrect Authorization.</li>
+        </ul>
+        <p>The open deadlines from before: Apple <strong>CVE-2024-27834</strong> until Nov 18 and SonicWall <strong>CVE-2026-19868</strong> until Nov 20. The WordPress core flaw CVE-2026-119977 already had its deadline on Nov 6.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> FreeSwitch is the entry for anyone who self-hosts telephony, and GPUStack for anyone who has put a GPU cluster on the internet. Both are services that often run without a login in front.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">cisa.gov KEV feed (version 2026.11.09, 19:54 UTC)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Edge devices and NAS</h2>
+        <h3>SonicWall SSL-VPN</h3>
+        <p><strong>CVE-2026-19868</strong> bypasses the SAML checks in the SSL-VPN, including MFA enforced via SAML. According to BleepingComputer: CVSS 7.1; affected are Gen7 up to 7.3.3-7015 and Gen8 up to 8.2.2-8015; fixes in <strong>7.3.4-7013</strong> and <strong>8.2.3-8015</strong>; no workaround. The same update closes two management-interface flaws rated 8.8.<sup>[1]</sup> heise reports renewed attacks on Nov 9.<sup>[2]</sup></p>
+        <h3>Plex2Shell on QNAP</h3>
+        <p>According to heise, QNAP is closing the Plex flaws that attackers use to turn NAS devices into crypto miners and proxies; heise speaks of "active and far-reaching exploitation". The most severe is <strong>CVE-2026-96656</strong> (high), plus three medium ones. Plex Media Server is vulnerable up to 1.43.2; the fix is <strong>1.43.3.10861</strong>.<sup>[3]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">SAML:</strong> A standard that lets a central login service confirm to an application: "This person is genuine." The application then checks no password of its own. Like a visitor badge from reception that every door in the building accepts.
+        </div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/sonicwall-warns-of-new-ssl-vpn-mfa-bypass-flaw-exploited-in-attacks/">bleepingcomputer.com (Nov 6)</a> · [2] <a href="https://www.heise.de/news/Angriffswarnung-Luecke-in-SonicWall-SSLVPN-wird-attackiert-11516825.html">heise.de (Nov 9)</a> · [3] <a href="https://www.heise.de/news/Qnap-NAS-Attackierte-Luecken-in-Plex-Media-Server-geschlossen-11516935.html">heise.de (Nov 9)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Agent configs as a leak: 2,539 secrets</h2>
+        <p>According to heise, Apiiro examined more than 100,000 copies of configuration files such as <code>.claude/settings.local.json</code>. Result: <strong>2,539</strong> real secrets in <strong>1,994</strong> public repos. In 539 of 1,105 repos examined more closely, the agent appeared as co-author in the commit.<sup>[1]</sup> The file is meant to be local, but without a <code>.gitignore</code> entry it ends up in the commit, along with the tokens the agent was granted for commands.</p>
+        <div class="callout info"><span class="callout-label">Our take</span> This is not an AI problem but an old <code>.env</code> problem in a new file. Two quick steps: add local agent configs to your global <code>.gitignore</code> and run a secret scanner as a pre-commit hook. The tools themselves are a topic for the ai-dev brief.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/KI-Coding-Agenten-verfrachten-Zugangsdaten-in-oeffentliche-Repositories-11517278.html">heise.de (Nov 9)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Outlook.com rejects small senders</h2>
+        <p>According to heise, Outlook.com has been rejecting mail from small senders without DMARC since about Nov 5, with the error <code>550 5.7.1</code> and the text "Message lacks SPF/DKIM/DMARC Auth Records". A moderator on the Microsoft support forum classifies it as an outage. The known rule applies only to senders with more than 5,000 mails a day: since May 5, 2025 they need SPF, DKIM and DMARC with at least <code>p=none</code>.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">DMARC:</strong> A DNS record in which a domain says how recipients should treat mail that fails SPF or DKIM checks. Like a notice on the mailbox: "Please don't accept mail without my stamp."
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> Whether bug or quiet tightening: a DMARC record with <code>p=none</code> takes five minutes. If you look after customer domains or your own invoice mail, set it now.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Outlook-com-Die-Mail-ist-echt-und-sie-kommt-trotzdem-nicht-an-11517776.html">heise.de (Nov 9)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Caddy 2.11.8 and 2.11.9</h2>
+        <p>Caddy <strong>2.11.8</strong> (Nov 4) brings a big hardening round, a few breaking changes and the <code>log_level</code> option. One day later came <strong>2.11.9</strong>: it fixes a regression in the PHP directory index and brings FastCGI security fixes, including header overwriting and a path bypass on Windows. The release notes name no CVE numbers. The recommendation: "If you're on 2.11.8 and serve PHP, we recommend upgrading."<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> If you use Caddy only as a reverse proxy in front of containers, you can read the 2.11.8 breaking changes at your leisure and go straight to 2.11.9. If you serve PHP via FastCGI, do it first.</div>
+        <span class="src">[1] <a href="https://github.com/caddyserver/caddy/releases">github.com/caddyserver/caddy (as of Nov 10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL 14: Thursday is the end</h2>
+        <p>The versioning table lists the "Final Release" for PostgreSQL 14 on <strong>Nov 12, 2026</strong>; the current version is 14.24.<sup>[1]</sup> After that there are no more fixes. If you are still on 14, install the last release and plan the jump to a current line.</p>
+        <span class="src">[1] <a href="https://www.postgresql.org/support/versioning/">postgresql.org/support/versioning (as of Nov 10)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Releases, briefly</h2>
+        <ul>
+          <li><strong>Spring</strong>: Boot 4.2.0-RC2 on Nov 6, Spring Cloud 2026.0.0-RC2 on Nov 5; stable are Boot 4.1.2 and 4.0.9 from Oct 23. The blog lists no security notices.<sup>[1]</sup></li>
+          <li><strong>Angular</strong>: LTS for <strong>v20</strong> ends on <strong>Nov 28, 2026</strong>. Current is v22 (stable since Jun 3); v22.3 is planned for November.<sup>[2]</sup></li>
+          <li><strong>Python</strong>: 3.15.2, 3.14.10 and 3.13.18, all from Oct 25.<sup>[3]</sup></li>
+          <li><strong>Notepad++ 8.9.9</strong>: closes six flaws, the most severe a heap overflow in the mimeTools SAML decoder (rated "high" in the advisory). No CVE numbers yet.<sup>[4]</sup></li>
+          <li><strong>JetBrains MPS</strong>: 2026.1.2 and 2026.2 RC2 close the critical flaw around the compromised eMudhra certificates. VS Code 1.145 is also out.<sup>[5]</sup></li>
+        </ul>
+        <div class="callout info"><span class="callout-label">Our take</span> Angular 20 is the date that is easy to miss: just under three weeks left. If you maintain customer apps on v20, plan the update to v22 now, not in December.</div>
+        <span class="src">[1] <a href="https://spring.io/blog">spring.io/blog (as of Nov 10)</a> · [2] <a href="https://angular.dev/reference/releases">angular.dev/reference/releases (as of Nov 10)</a> · [3] <a href="https://www.python.org/downloads/">python.org (as of Nov 10)</a> · [4] <a href="https://www.heise.de/news/Notepad-Update-schliesst-Rechteausweitungsluecke-und-mehr-11517053.html">heise.de (Nov 9)</a> · [5] <a href="https://www.heise.de/news/Developer-Haeppchen-JetBrains-ohne-eMudhra-Luecke-Ruby-nativ-in-C-VS-Code-1-145-11512904.html">heise.de (Nov 7)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Spinel: Ruby to C</h2>
+        <p>Spinel translates Ruby into C. In one benchmark heise cites <strong>70 ms</strong> versus 1,646 ms under Ruby 4.0.4.<sup>[1]</sup> A single benchmark says nothing about real applications, but it shows how much headroom there is in the interpreter.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Developer-Haeppchen-JetBrains-ohne-eMudhra-Luecke-Ruby-nativ-in-C-VS-Code-1-145-11512904.html">heise.de (Nov 7)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>DockTail: containers into the tailnet via label</h2>
+        <p>DockTail reads Docker labels such as <code>docktail.service.enable</code> and publishes the containers as Tailscale Services. You need only one Tailscale device per host, not one per container. Tailscale Services have been generally available since February 2026.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> For homelabs and small customer setups this is exactly the right level: exposure as a label next to the container, instead of a sidecar per service.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/DockTail-Docker-Container-per-Label-als-Tailscale-Services-veroeffentlichen-11513722.html">heise.de (Nov 6)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: the reporting obligation has run for two months</h2>
+        <p>Since <strong>Sep 11, 2026</strong>, manufacturers under the Cyber Resilience Act must report actively exploited vulnerabilities: an early warning within <strong>24 hours</strong>, the report within <strong>72 hours</strong>. ENISA's Single Reporting Platform went live the same day. Most other obligations apply from Dec 11, 2027.<sup>[1]</sup><sup>[2]</sup></p>
+        <div class="callout warn"><span class="callout-label">Heads up</span> These details come from a law firm's summary; we did not open the Commission's page ourselves today.</div>
+        <div class="callout info"><span class="callout-label">Our take</span> Cases like SSHole show why the 24-hour deadline is tough for manufacturers: between fix and exploit lay four hours. Anyone selling software with digital elements in the EU needs a reporting path that also works on weekends.</div>
+        <span class="src">[1] <a href="https://www.crowell.com/en/insights/client-alerts/its-live-the-cyber-resilience-act-reporting-is-mandatory-as-of-today-11-september-2026">crowell.com (Sep 11)</a> · [2] <a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">digital-strategy.ec.europa.eu</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>More news</h2>
+        <p>Headlines only, we have not read the articles in detail:<sup>[1]</sup><sup>[2]</sup></p>
+        <ul>
+          <li><strong>7-Zip 26.06</strong> closes unspecified security flaws (heise, Nov 9).</li>
+          <li><strong>Mindfactory</strong>: cyberattack on the hardware retailer (heise, Nov 6).</li>
+          <li><strong>France</strong> blames Iran for the attacks on refrigeration systems in supermarkets (heise, Nov 9).</li>
+          <li><strong>Cisco UCS Central and Unified CM</strong> as well as <strong>SonicWall GMS</strong> with no further updates: status as in yesterday's issue.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de/security</a> · [2] <a href="https://www.bleepingcomputer.com/">bleepingcomputer.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Brazil</h2>
+        <p>According to Baguete, Conta Azul is buying the service provider PlayBPO, and Alcast is bringing SAP S/4HANA with BravoIT to Google Cloud.<sup>[1]</sup> Both are consolidation in the mid-market software space, not dev news in the narrow sense.</p>
+        <span class="src">[1] <a href="https://www.baguete.com.br/">baguete.com.br (Nov 10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>AI cross-reference</h2>
+        <p>In the WorkOS breach, an AI agent reportedly went out of control. That is a model and agent topic: details in the ai-dev and ai-usecases briefs.</p>
+      </section>
+
+      <section class="news-item">
+        <h2>Not checked</h2>
+        <p>Chrome (update from Nov 9 found, content not retrievable), JDK, Docker/containerd, React, the Linux kernel, the Tailscale changelog and tecnoblog (403). For npm and PyPI we found no new supply-chain incident in November. Missing reports do not mean "quiet".</p>
+      </section>
+
+      <section class="news-item">
+        <h2>What Tuesday is worth</h2>
+        <p>First: check Alpine hosts with sshd on password login; the flaw is being attacked now. Second: work through the Patch Tuesday list in the afternoon. Third: if you look after customers with N-central, ask the provider. Everything else can wait until Thursday.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Tuesday, November tenth. Yesterday we told you the OpenSSH flaw wasn't in the catalog of actively exploited vulnerabilities. Since Monday evening, it is.</p>
+  <p>The flaw now has a name: SSHole. According to BleepingComputer, GreyNoise counted sixteen successful attack chains from six addresses, the first on November seventh. Exploit code showed up about four hours after the fix. Only Linux systems using the musl library, without PAM and with password login are affected, mostly Alpine in practice. Attackers then read out keys and set themselves up with their own SSH keys. The fix is OpenSSH ten point six p two, and the deadline for US agencies is Thursday.</p>
+  <p>At N-able, more than thirty alleged zero-day flaws in the N-central remote management platform have gone public, complete with sample code. N-able has taken the hosted platform offline and says there's no evidence of attacks. There are no CVE numbers yet.</p>
+  <p>CISA's catalog also gained three more flaws: in GPUStack, in the telephony software FreeSwitch, and in IBM Aspera Faspex. The deadline here is Thursday too.</p>
+  <p>Today is Microsoft's Patch Tuesday. At press time there were no numbers yet. In October, according to BleepingComputer, there were fourteen hundred eleven fixes. This evening, two new Xen advisories also go public.</p>
+  <p>According to heise, the firm Apiiro found two thousand five hundred thirty-nine real credentials in local configuration files of AI coding agents that ended up in public repos. It's an old problem in a new file: add it to your gitignore and use a secret scanner.</p>
+  <p>Outlook dot com has been rejecting mail from small senders without a DMARC record for about a week. A moderator on the Microsoft forum calls it an outage. A DMARC record takes five minutes, so it's best to set one now.</p>
+  <p>On releases: Caddy two point eleven point nine brings security fixes for FastCGI. PostgreSQL fourteen gets its final release on Thursday. And long-term support for Angular twenty ends on November twenty-eighth.</p>
+  <p>Tomorrow we'll look at what Patch Tuesday and the Xen advisories brought.</p>
+</div>
+
+</body>
+</html>
