@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-11</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-11</span>
+  </div>
+  <h1 class="masthead-title">Patch Tuesday: 1,235 Fixes and an Outlook Zero-Day</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Yesterday we were missing the Patch Tuesday numbers here; now they are in. According to BleepingComputer, Microsoft fixes <strong>1,235</strong> flaws in November (BleepingComputer count incl. 142 Edge flaws; Microsoft itself counts 1,093). One of them is already under attack, a spoofing flaw in Outlook that leaks NTLM hashes. On top of that come another Chrome zero-day, an attacked root chain in Barracuda gateways, and an attacked login bypass in Xen Orchestra. Our view: the number 1,235 is a headline, not a work list. What counts this week are CISA's three deadlines: Thursday, Friday and Nov 24.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Patch Tuesday</strong>: 1,235 fixes, 66 critical (BleepingComputer count incl. 142 Edge flaws; Microsoft itself: 1,093 CVEs, 63 critical); Outlook flaw CVE-2026-124194 under attack, KEV deadline Nov 24. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Browser</span> <strong>Chrome</strong>: eighth attacked zero-day of 2026, fix in 157.0.8103.50/.51 (Windows/macOS), .50 (Linux). <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Barracuda ESG</strong>: two flaws add up to root, under attack; KEV deadline Fri Nov 13. <span class="chip">USA</span></li>
+      <li><span class="chip hot">Infra</span> <strong>Xen Orchestra</strong>: login bypass is being exploited, fix in 6.9.1 and 6.10.0. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>SAP Patch Day</strong>: 35 flaws, four of them CVSS 10. <span class="chip">DE</span></li>
+      <li><span class="chip">Infra</span> <strong>Qubole/AWS</strong>: attackers used trusted IAM roles in dozens of customer accounts. <span class="chip">USA</span></li>
+      <li><span class="chip">OSS</span> <strong>npm</strong>: 10 hijacked packages fetch their server address from the Ethereum blockchain. <span class="chip">Global</span></li>
+      <li><span class="chip">Release</span> <strong>Spring Boot 4.2.0-RC2</strong>; Spring for Apache Pulsar moves to the ASF. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>PostgreSQL 14</strong>: tomorrow, Thu Nov 12, final release. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulation</span> <strong>Delos Cloud</strong>: the government cloud with a Microsoft core is due to launch in early 2027. <span class="chip">DE</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Dates through Tue Nov 17 — the KEV deadlines Nov 18 (Apple), Nov 20 (SonicWall) and Nov 24 (Outlook, Chrome, Cisco) are covered in the text</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Wed Nov 11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Today: apply the Patch Tuesday fixes</span><span>Xen advisories XSA-529 to XSA-532 have been public since last night</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu Nov 12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: OpenSSH (SSHole), GPUStack, FreeSwitch, IBM Aspera Faspex</span><span>PostgreSQL 14: final release, then end of support</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Fri Nov 13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Barracuda ESG, CVE-2026-116606 and CVE-2026-111560</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Patch Tuesday: 1,235 Fixes, a Zero-Day in Outlook</h2>
+        <p>On Nov 10, according to BleepingComputer, Microsoft fixed 1,235 flaws. That count includes 142 Edge/Chromium CVEs. Microsoft's own count is lower: 1,093 CVEs, 63 of them critical (<a href="https://www.tenable.com/blog/microsoft-november-2026-patch-tuesday-addresses-1093-cves-cve-2026-124194">Tenable</a>). Not counted are mostly Azure Linux/Mariner (82), plus 25 in Edge and 1 in Entra. BleepingComputer rates 66 flaws as critical: 48 remote code execution, 15 privilege escalation and 3 use-after-free bugs in Edge.<sup>[1]</sup></p>
+        <p><strong>CVE-2026-124194</strong>, a spoofing flaw in Outlook, is already under attack. It lets attackers capture NTLM hashes. "Exploitation requires network connectivity and user interaction," writes BleepingComputer, so the attacker needs a click or an opened email.<sup>[1]</sup> CISA added the flaw to the KEV catalog on Nov 10; the deadline for US agencies is <strong>Nov 24</strong>.<sup>[2]</sup> Tenable gives CVSS 6.5 (Microsoft rates the flaw "Moderate").</p>
+        <div class="eli5">
+          <strong class="eli5-term">NTLM hash:</strong> An encrypted form of the Windows password that is sent along when you sign in over the network. Whoever has the hash can often crack it or pass it on directly, without knowing the password. Like an impression of your front-door key: not the original, but often enough for a copy.
+        </div>
+        <div class="callout info"><span class="callout-label">Our view</span> Over 1,200 fixes sound like an emergency. For most teams, though, only one line counts: the Outlook flaw. Blocking outbound SMB (port 445) at the perimeter takes much of the sting out of NTLM theft like this. We did not check the Microsoft and Tenable numbers against Microsoft's own guide.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-november-2026-patch-tuesday-fixes-1-235-flaws-outlook-zero-day/">bleepingcomputer.com (Nov 10)</a> · [2] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">cisa.gov KEV feed (version 2026.11.10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Chrome: the Year's Eighth Zero-Day</h2>
+        <p>With Chrome <strong>157.0.8103.50/.51</strong> (Windows/macOS) and <strong>.50</strong> (Linux), Google closes <strong>CVE-2026-125350</strong>, a use-after-free bug in the XML component. Google "is aware that an exploit for CVE-2026-125350 exists in the wild". According to BleepingComputer, it is the eighth attacked Chrome zero-day this year.<sup>[1]</sup> CISA has listed the flaw in the KEV since Nov 10, deadline Nov 24.<sup>[2]</sup> Chromium derivatives such as Edge, Brave or Vivaldi need their own update.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Use-after-free:</strong> A program frees memory and then keeps using it anyway. In the meantime, an attacker puts their own data there. Like a hotel room where the old guest still has a key after the next one has moved in.
+        </div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/google-patches-eighth-chrome-zero-day-exploited-in-attacks-this-year/">bleepingcomputer.com (Nov 10)</a> · [2] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">cisa.gov KEV feed (version 2026.11.10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Barracuda: Two Flaws, One Root Access</h2>
+        <p>Two flaws in Barracuda devices are under attack: <strong>CVE-2026-116606</strong> bypasses authentication in the Email Security Gateway (ESG), and <strong>CVE-2026-111560</strong> is an OS command injection. "If exploited in combination, these vulnerabilities could allow an attacker to bypass authorization controls and obtain root access to the device." According to BleepingComputer, so far it affects "a small number of organizations". The patches are about a week old: BNSF-40425 for ESG from 9.4.017, BNSF-40430 for older versions.<sup>[1]</sup></p>
+        <div class="callout warn"><span class="callout-label">Heads up</span> CISA's deadline is short: both flaws have been in the KEV since Nov 10, and the deadline is already Friday, <strong>Nov 13</strong>.<sup>[2]</sup> According to BleepingComputer, besides ESG it also affects other products such as WAF and ADC. The report gives no CVSS score; we did not read the vendor document ourselves.<sup>[1]</sup></div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-barracuda-email-security-gateway-flaws-to-get-root-access/">bleepingcomputer.com (Nov 10)</a> · [2] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">cisa.gov KEV feed (version 2026.11.10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Xen Orchestra: An Empty Cookie Is Enough</h2>
+        <p>In Xen Orchestra, the web interface for XCP-ng and Xen servers, a login bypass is being exploited (advisory <strong>VSA-2026-062</strong>). According to BleepingComputer, the trick is a cookie with the value <code>authenticationToken=j:%7B%7D</code>, an empty JSON object. After that, an attacker can "perform actions with 'Admin' privilege", which includes taking over VMs. TDC NET Security found it. It is fixed in <strong>6.9.1</strong> (stable) and <strong>6.10.0</strong>, with xo-server 5.211.2 and 5.213.1 respectively. "A CVE identifier and CVSS score have not been assigned yet."<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our view</span> A hypervisor console does not belong on the open internet. If you make XO reachable only through VPN or Tailscale, you do not have this problem. To hunt for traces: grep the proxy logs for exactly this cookie value.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/critical-xen-orchestra-auth-bypass-flaw-exploited-to-hijack-vm-servers/">bleepingcomputer.com (Nov 10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Xen Advisories: The Four from Last Night</h2>
+        <p>Yesterday we announced the Xen advisories for the evening. There turned out to be four. <strong>XSA-529</strong> ("XAPI: data-dependent compare function used for Pool Secret", CVE-2026-102705) and <strong>XSA-530</strong> ("XAPI: Multiple RBAC issues", five CVEs) came out at 18:00 UTC. <strong>XSA-531</strong> and <strong>XSA-532</strong> followed at 18:45 UTC: in Linux xen-netback, a guest can trigger a use-after-free or a double unmap of memory (CVE-2026-99286, CVE-2026-99287).<sup>[1]</sup> We have not checked the severity. If you run Xen hosts, wait for your distribution's kernel and XAPI packages.</p>
+        <span class="src">[1] <a href="https://xenbits.xen.org/xsa/">xenbits.xen.org (as of Nov 11)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>N-able: N-central Stays Offline</h2>
+        <p><span class="update-since">Update since Tue</span> The hosted N-central environment has been offline since Nov 9. N-able writes: "At this time, we have not observed active exploitation of these vulnerabilities." There is no hotfix yet; status updates come every four hours. The researcher Sean Bales says he tested his more than 30 alleged zero-days against appliance version 2026.4.0.31. He says earlier reports to N-able were ignored. BleepingComputer did not verify all of the findings itself.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/n-able-takes-cloud-platform-offline-after-30-plus-zero-days-published/">bleepingcomputer.com (Nov 9/10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>SAP Patch Day: Four Times CVSS 10</h2>
+        <p>In November SAP closes 35 flaws, four of them with the top score <strong>CVSS 10</strong>. Two together form "ICM2SHELL" (CVE-2026-76964, CVE-2026-89126). "PROXYGATE" (CVE-2026-89103) is an unauthenticated remote code execution in the gateway, and CVE-2026-120017 is missing authentication in NetWeaver's SAML2 Service Provider. Onapsis says of PROXYGATE: "no SAP user, no password, and no user interaction, yet full control of the SAP system". There is no mention of attacks yet.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our view</span> SAP flaws often stay open for months because there is no maintenance window. That backfires: according to BleepingComputer, CISA has marked 14 SAP flaws as attacked since November 2021.<sup>[1]</sup> If you look after SAP customers, put the gateway fix in the next window, not the one after. The figures come from the press; we did not read SAP's own page.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/sap-patches-four-maximum-severity-security-vulnerabilities/">bleepingcomputer.com (Nov 10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Qubole: The Trusted Access as an Entry Point</h2>
+        <p>Between Oct 14 and 26, according to Wiz, attackers took over two IAM users of Qubole. Qubole is a data platform that reaches into its customers' AWS accounts through IAM roles. Through these roles (AssumeRole), the attackers got into the accounts of dozens of companies. Sentra confirms dozens of victims, and Mandiant took part in the investigation. BleepingComputer found no statement from Qubole. AWS says: "AWS services were not compromised by this issue and operated as designed."<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">AssumeRole:</strong> An AWS mechanism that lets a foreign account take on a role in your account for a while. Like a master key for the cleaning company: handy, until someone steals the key from the cleaning company.
+        </div>
+        <div class="callout info"><span class="callout-label">Our view</span> AWS is right, and that is the problem: everything ran "as designed". Secure trust policies for third parties with an External ID and narrow permissions, and watch CloudTrail for AssumeRole calls from foreign accounts. A third party you no longer use loses its role right away.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-trusted-aws-access-to-breach-multiple-cloud-environments/">bleepingcomputer.com (Nov 10, AWS statement updated Nov 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: Four Deadlines in Two Weeks</h2>
+        <p>CISA's KEV catalog now has <strong>1,779</strong> entries (version 2026.11.10). On Nov 10, besides Outlook, Chromium and Barracuda, CVE-2026-111793 in Openwave Webtop Media Transcoder and CVE-2026-20320, an XXE flaw in Cisco BroadWorks, were added; deadline Nov 24.<sup>[1]</sup> Tomorrow, Nov 12, the deadline runs out for SSHole (CVE-2026-123158), GPUStack, FreeSwitch and IBM Aspera Faspex. For FreeSwitch, 1.11.3 helps; for Faspex, 5.0.19 PL1.<sup>[1]</sup><sup>[2]</sup> Older and still open: Apple CVE-2024-27834 until Nov 18 and SonicWall SSLVPN CVE-2026-19868 until Nov 20.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">XXE:</strong> An XML file asks the parser to load an "external entity", for example a local file. A badly configured parser obediently does so. Like a letter that says: "Please also read out the note in the drawer."
+        </div>
+        <span class="src">[1] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">cisa.gov KEV feed (version 2026.11.10)</a> · [2] <a href="https://www.heise.de/news/Angriffswarnung-fuer-GPUStack-FreeSwitch-OpenSSH-und-IBM-Aspera-Faspex-11518710.html">heise.de (Nov 10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Apple: Out-of-Band Updates</h2>
+        <p>Apple ships iOS, iPadOS, macOS, watchOS and visionOS <strong>27.2.1</strong>. „iOS 27.2.1 und iPadOS 27.2.1 stopfen insgesamt neun Löcher“ (nine holes plugged in total), writes heise. Older devices get 26.7.3, 18.7.12 and macOS Sequoia 15.8.3. One of the flaws sits in Brotli and is under attack, though via Adobe Commerce or Magento, not directly through Apple devices. heise gives no CVE numbers; tvOS got no update.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Ausser-der-Reihe-Sicherheitsupdates-fuer-fast-alle-Apple-Geraete-11518098.html">heise.de (Nov 10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>npm: Command Server in the Blockchain</h2>
+        <p>On Nov 3, according to Sonatype, attackers published "runtime loaders in 12 releases across 10 hijacked npm packages". Sonatype calls the campaign PolinRider. The loader reads the last transaction of an Ethereum wallet and finds its server's address there. It runs when the module loads, not through an install script. Sonatype attributes the campaign to the Lazarus group. The page does not name the packages.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">C2 via the blockchain:</strong> Malware needs a command server (C2). Instead of hard-coding the address, it reads it from a public blockchain transaction. Nobody can delete that. Like a message on a bulletin board that no authority is allowed to take down.
+        </div>
+        <div class="callout info"><span class="callout-label">Our view</span> <code>npm install --ignore-scripts</code> does not protect you here, because the code only runs on <code>require</code>. What helps: lockfiles, a waiting period for new versions, and monitoring outbound connections to Ethereum RPC endpoints in the build.</div>
+        <span class="src">[1] <a href="https://www.sonatype.com/resources/videos/polinrider-campaign">sonatype.com (Nov 3)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Spring: 4.2 in Release Candidate</h2>
+        <p><strong>Spring Boot 4.2.0-RC2</strong> has been available since Nov 6; the blog gives no GA date. Also out are Spring Cloud 2026.0.0-RC2 (Nov 5) and Spring AI 2.1.0-RC2 (Nov 9).<sup>[1]</sup> And Spring for Apache Pulsar is moving to the Apache Software Foundation, announced on Nov 10.<sup>[2]</sup> If you want 4.2, test against RC2 now: after that, usually only bug fixes change.</p>
+        <span class="src">[1] <a href="https://spring.io/blog">spring.io/blog (as of Nov 10)</a> · [2] <a href="https://spring.io/blog/2026/11/10/spring-pulsar-new-home-asf">spring.io (Nov 10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL 14: The End Is Tomorrow</h2>
+        <p>"Final release is November 12, 2026," says the PostgreSQL versions page. After that, version 14 gets no more fixes. The current ones are 18.6, 17.11 and 16.15.<sup>[1]</sup> If you still run 14, apply the last minor release and plan the upgrade, ideally straight to 17 or 18 with <code>pg_upgrade</code>.</p>
+        <span class="src">[1] <a href="https://www.postgresql.org/support/versioning/">postgresql.org (as of Nov 10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Delos Cloud: Government Cloud with Microsoft at Its Core</h2>
+        <p>Delos Cloud, an SAP subsidiary with Microsoft software and operation by Arvato, wants to launch for German public administration in early 2027. heise puts it bluntly: „Bei der Delos-Cloud handelt es sich um eine Cloud, die im Kern Microsoft-Technologie beinhaltet.“ (Delos Cloud is a cloud that at its core contains Microsoft technology.) A working group of the Gesellschaft für Informatik speaks of „Souveränitäts-Washing“ (sovereignty washing). Delos is certified to ISO 27001; C5 Type 1 and 2 are planned.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our view</span> A German operator changes nothing about whose code runs and who writes the updates. What is sovereign is what you can keep running without the vendor. Delos still has to show that.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Umstrittene-Cloud-fuer-den-Staat-Delos-will-Anfang-2027-starten-11518696.html">heise.de (Nov 10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: Reporting Duty Runs, the Rest Comes in 2027</h2>
+        <p>Since 2026-09-11, the reporting duty of the Cyber Resilience Act (Art. 14) applies: manufacturers report attacked flaws through ENISA's central platform. Most other obligations apply from 2027-12-11. The EU Commission published guidance on this on 2026-07-27.<sup>[1]</sup> Cases like today's Barracuda or Xen Orchestra are therefore reportable for manufacturers who sell into the EU.</p>
+        <span class="src">[1] <a href="https://www.mccannfitzgerald.com/knowledge/data-privacy-and-cyber-risk/cyber-resilience-act-reporting-obligations-apply-from-11-september-2026">mccannfitzgerald.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>More News</h2>
+        <ul>
+          <li><strong>Nitori</strong>: The Japanese furniture chain reports 37.6 million stolen customer records.<sup>[1]</sup></li>
+          <li><strong>Turla</strong>: new malware "Cereal" targeting Exchange servers.<sup>[1]</sup></li>
+          <li><strong>Fireworks AI</strong>: breach through a cloud provider.<sup>[1]</sup></li>
+          <li><strong>Windows 10 ESU</strong>: new update KB5131096.<sup>[1]</sup></li>
+          <li><strong>Notepad++</strong>: update closes a privilege escalation flaw.<sup>[2]</sup></li>
+          <li><strong>Qnap</strong>: attacked flaws in Plex Media Server are fixed.<sup>[2]</sup></li>
+          <li><strong>MS Paint</strong>: remote code execution flaw.<sup>[2]</sup></li>
+          <li><strong>IBM App Connect Enterprise</strong>: several flaws.<sup>[2]</sup></li>
+          <li><strong>France</strong> blames Iran for attacks on cooling systems.<sup>[2]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/">bleepingcomputer.com (Nov 10)</a> · [2] <a href="https://www.heise.de/security/">heise.de/security (Nov 9/10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Brazil</h2>
+        <p>Nothing today. tecnoblog.net was unreachable.</p>
+      </section>
+
+      <section class="news-item">
+        <h2>AI Cross-Reference</h2>
+        <p>We covered the Apiiro study on secrets in configuration files of AI coding agents yesterday; the analysis is in the ai-dev brief.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/KI-Coding-Agenten-verfrachten-Zugangsdaten-in-oeffentliche-Repositories-11517278.html">heise.de (Nov 9)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Not Checked</h2>
+        <ul>
+          <li>Patch Tuesday: numbers and categories from BleepingComputer; Microsoft's count (1,093 CVEs, 63 critical) and CVSS 6.5 only from Tenable. Not checked against Microsoft's Security Update Guide.</li>
+          <li>Chrome, Barracuda, SAP and Xen Orchestra: press only, no vendor page and no NVD entry read.</li>
+          <li>Python, Node, Go, Rust, Angular, React, Caddy, Tailscale and Docker: release pages not fetched today.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>What Wednesday Is Worth</h2>
+        <p>Patch the Outlook flaw and Chrome today; the rest of Patch Tuesday follows at the normal pace. Check Barracuda and Xen Orchestra first if they are exposed to the internet. PostgreSQL 14 gets its last release tomorrow, and then the upgrade is no longer a question.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Wednesday, November eleventh. Yesterday we were missing the Patch Tuesday numbers. Now they're in, and they're big.</p>
+  <p>According to BleepingComputer, Microsoft is fixing one thousand two hundred thirty-five flaws this November, a count that includes 142 Edge flaws. Microsoft itself counts one thousand ninety-three. Sixty-six of them are rated critical. One flaw in Outlook is already under attack. It lets attackers capture encrypted Windows passwords, known as NTLM hashes. It does take a click from the victim, though. CISA has added the flaw to its catalog, and the deadline for US agencies is November twenty-fourth.</p>
+  <p>Chrome also has another attacked zero-day, the eighth this year. The bug sits in the XML component. Updating to version one fifty-seven closes it.</p>
+  <p>At Barracuda, two flaws together give an attacker root access to the email gateway. According to BleepingComputer, so far only a few organizations are affected. CISA's deadline is already Friday. And in Xen Orchestra, the web console for Xen servers, a cookie with an empty value is enough to get admin rights. That one is being exploited too. Versions six point nine point one and six point ten fix it.</p>
+  <p>SAP is closing thirty-five flaws in November, four of them with the top score of ten. There's no word of attacks yet. At N-able, the hosted N-central platform stays offline, and there's still no hotfix.</p>
+  <p>According to Wiz, attackers took over two accounts of the data platform Qubole in October and used its trusted roles to get into the AWS accounts of dozens of companies. AWS says everything worked as designed. That's exactly the problem.</p>
+  <p>In npm, Sonatype found ten hijacked packages. Their malicious code reads its server's address from the Ethereum blockchain and runs as soon as the module loads.</p>
+  <p>On releases: Spring Boot four point two is at its second release candidate. PostgreSQL fourteen gets its final release tomorrow. And in Germany, the controversial Delos Cloud, built on Microsoft technology, is due to launch in early twenty twenty-seven.</p>
+  <p>Tomorrow we'll see whether N-able delivers a hotfix and how the KEV deadlines play out on Thursday.</p>
+</div>
+
+</body>
+</html>
