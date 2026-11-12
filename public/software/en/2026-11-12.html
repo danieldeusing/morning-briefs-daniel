@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-12</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-12</span>
+  </div>
+  <h1 class="masthead-title">Node, Apache, Git: a patch day in the foundations</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">After Patch Tuesday came the quieter but, for us, more important part yesterday: Node.js closes 16 flaws, seven of them "High," almost all in HTTP/2 and TLS. Apache httpd 2.4.71 fixes a critical flaw in mod_http2 that can reach code execution. And Git ships seven maintenance releases against six flaws, one of which leads to code execution during a recursive clone. Our take: HTTP/2 is the attack surface of the week. If you expose Node or httpd directly to the internet, patch this week. If you sit behind Caddy or another proxy, you have some breathing room, but no excuse.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Node.js</strong>: 22.23.5, 24.22.3 and 26.13.1 close 16 flaws, 7 of them "High." <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Apache httpd 2.4.71</strong>: critical flaw in mod_http2 can lead to RCE. <span class="chip">Global</span></li>
+      <li><span class="chip hot">OSS</span> <strong>Git</strong>: six flaws, fixes from 2.50.2 to 2.56.1. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>ScreenConnect</strong>: 6 MSPs and 47 organizations hit, ConnectWise disables five extensions. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>N-able</strong>: hotfix N-central 2026.4 HF2 is out. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>KEV</strong>: deadline today for SSHole &amp; co., Friday for Barracuda. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>Adobe Connect</strong>: five flaws with CVSS 10, no known attacks. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>.NET 11</strong>: final since Nov 10, with C# 15 and 24 months of support. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>PostgreSQL 14</strong>: the last release is due today. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Dates through Wed 11/18 — the KEV deadlines 11/20 (SonicWall) and 11/24 (Outlook, Chromium, Cisco BroadWorks) are covered in the text</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Thu 11/12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: OpenSSH (SSHole), GPUStack, FreeSwitch, IBM Aspera Faspex</span><span>PostgreSQL 14: last release, then end of support</span><span>Node.js, httpd, Git: apply yesterday's updates</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Fri 11/13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Barracuda ESG, CVE-2026-116606 and CVE-2026-111560</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Node.js: 16 flaws, most of them in HTTP/2</h2>
+        <p>On Nov 11, <strong>Node.js 22.23.5, 24.22.3 and 26.13.1</strong> arrived. They close 16 flaws: 7 "High," 6 "Medium" and 3 "Low."<sup>[1]</sup> Four of the seven severe flaws are in HTTP/2, for example a use-after-free when a <code>respondWithFile()</code> stream is aborted during a write (CVE-2026-123874). Another sends freed response memory to the peer (CVE-2026-123866).<sup>[1]</sup></p>
+        <p>In TLS, one flaw is especially nasty: with a renegotiation under TLS 1.2, a client can switch the server name and so bypass the client-certificate check (CVE-2026-123872). Another makes the HTTPS server copy parts of its own heap into the response body (CVE-2026-123864).<sup>[1]</sup> The advance warning came the same day via oss-security.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">HTTP/2 stream:</strong> HTTP/2 sends many requests at once over a single connection, each as its own "stream." The server has to manage memory for every stream and clean it up properly when one is aborted. Like a waiter with ten tables at once: if a guest leaves mid-order, the food must not end up at the wrong table.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> Mainly affected is Node as a server that speaks HTTP/2 or TLS itself. An Angular or React build that only runs locally is not a target. A Node backend behind Caddy that only speaks HTTP/1.1 internally has less surface. Still: rebuilding the base images is cheap, and you do it this week.</div>
+        <span class="src">[1] <a href="https://nodejs.org/en/blog/vulnerability/november-2026-security-releases">nodejs.org (Nov 11)</a> · [2] <a href="https://www.openwall.com/lists/oss-security/2026/11/11/25">openwall.com oss-security (Nov 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Apache httpd 2.4.71: critical in mod_http2</h2>
+        <p>On Nov 11, Apache released <strong>httpd 2.4.71</strong>. It fixes three flaws, one of them "critical": <strong>CVE-2026-119618</strong>, a race condition in <code>assign_headers()</code> in mod_http2 that, according to Apache, "can lead to RCE." Versions 2.4.55 through 2.4.70 are affected.<sup>[1]</sup> Also fixed are a crash in mod_md ("important") and a one-byte overflow in mod_vhost_alias ("low").<sup>[1]</sup> The critical flaw was found by Anthropic's OSS scanner and two researchers from Google Cloud, reported on Oct 26.<sup>[2]</sup> No attacks are known; Apache gives no CVSS score.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Race condition:</strong> Two parts of a program access the same memory at the same time, and the result depends on who gets there first. Like two people filling out the same form at once: in the end it holds a mix nobody wanted.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> Two independent HTTP/2 stacks on one day is no coincidence: scanner tools are getting better, and HTTP/2, with its per-stream state, is a rewarding target. If you cannot move httpd to 2.4.71, turn HTTP/2 off until then with <code>Protocols http/1.1</code>.</div>
+        <span class="src">[1] <a href="https://httpd.apache.org/security/vulnerabilities_24.html">httpd.apache.org (as of Nov 12)</a> · [2] <a href="https://www.openwall.com/lists/oss-security/2026/11/11/13">openwall.com oss-security (Nov 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Git: six flaws, seven releases</h2>
+        <p>On Nov 10, the Git project released versions <strong>2.50.2, 2.51.3, 2.52.1, 2.53.1, 2.54.1, 2.55.1 and 2.56.1</strong> against six flaws. Versions older than 2.50 are also affected but no longer get an update.<sup>[1]</sup> The most important: a crafted repository can execute code during <code>git clone --recurse-submodules</code> (CVE-2026-111760). A heap overflow in the three-way merge (CVE-2026-105437) could lead to code execution, according to the GitLab advisory. Also included are a malicious server that can make a ref get written outside the target folder, and <code>fast-import</code> features that could read or write arbitrary files and are now off by default.<sup>[1]</sup> The advisory gives no CVSS scores. Its conclusion: "We highly recommend to upgrade."</p>
+        <div class="eli5">
+          <strong class="eli5-term">Submodule:</strong> A Git repository that pulls other repositories in as subfolders. With a recursive clone, Git fetches them all. Like a package with more packages inside: you open one and get ten, some from senders you don't know.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> Locally the risk is small as long as you only clone your own repos. CI runners that recursively clone other people's repos are dangerous, for example for forks in pull requests. Check the Git version there first, and on self-hosted GitHub Actions runners too.</div>
+        <span class="src">[1] <a href="https://www.openwall.com/lists/oss-security/2026/11/11/10">openwall.com oss-security (Nov 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>ScreenConnect: the remote-access tool as a weapon</h2>
+        <p>Since the evening of Nov 11, ConnectWise has been investigating a campaign via ScreenConnect. Huntress first counted "6 compromised MSPs and 286+ endpoints, and those numbers are climbing," while BleepingComputer reports 47 affected organizations.<sup>[1]</sup> There is no flaw in the classic sense: Huntress calls it "abuse of legitimate functionality" via third-party extensions. ConnectWise has disabled five of them (Labtech Plus, RMM Plus, RMM+ and two Password-Link variants) in about 400 partner environments. On-premises customers have to do it themselves.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">MSP / RMM:</strong> A managed service provider looks after the IT of many small companies. For that it uses remote-management software (RMM) that runs on all customer PCs. Like a janitor service with a master key to a hundred houses: whoever takes over the janitor gets in everywhere.
+        </div>
+        <div class="callout warn"><span class="callout-label">Heads up</span> Disabling the extensions does not remove malware that is already on the devices. ConnectWise advises checking login logs, the extensions' installation entries and the run-command history.<sup>[1]</sup></div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/active-screenconnect-attacks-breach-msps-impact-dozens-of-organizations/">bleepingcomputer.com (Nov 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>N-able: the hotfix is here</h2>
+        <p><span class="update-since">Update since Wed</span> N-able is shipping <strong>N-central 2026.4 HF2</strong>. According to BleepingComputer, the hotfix fixes "some of the leaked zero-days," including XXE, OGNL injection, privilege escalation to root and an RCE via path traversal in file upload. All hosted servers are "successfully upgraded," says N-able; on-premises customers should catch up quickly. N-able reports no attacks, but Defused saw probing. Shadowserver counted just over 148 openly reachable N-central servers, down from 1,338 the day before.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/n-able-releases-security-hotfixes-for-zero-day-vulnerabilities/">bleepingcomputer.com (Nov 11)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>KEV: the first deadline expires today</h2>
+        <p>Today, Nov 12, CISA's deadline ends for <strong>SSHole</strong> (CVE-2026-123158 in OpenSSH), GPUStack (CVE-2026-102895), FreeSwitch (CVE-2026-116779) and IBM Aspera Faspex (CVE-2026-123218). Tomorrow comes Barracuda ESG (CVE-2026-116606, CVE-2026-111560). SonicWall SSLVPN (CVE-2026-19868) is due on Nov 20, and Outlook, Chromium and Cisco BroadWorks on Nov 24.<sup>[1]</sup></p>
+        <p>Nothing new on SSHole since Tuesday: affected is OpenSSH with musl libc, without PAM and with password login, so mainly Alpine; the fix is 10.6p2. According to GreyNoise there were 16 successful attack chains.<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> The KEV deadlines apply to US agencies, not to us. But they make a good order of priority. If you check only one thing today: old Alpine images with password login on SSH.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of Nov 12)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-sshole-openssh-flaw-to-breach-linux-systems/">bleepingcomputer.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cisco BroadWorks: old flaw, new attacker style</h2>
+        <p><strong>CVE-2026-20320</strong> is an XXE flaw in the OCI-P interface of Cisco BroadWorks, a telephony platform for providers. "XML entries are improperly parsed due to external entity resolution being allowed by default," writes BleepingComputer. Cisco already patched it in August; since Nov 10 it has been in the KEV, deadline Nov 24.<sup>[1]</sup> New is the story behind it: according to Malbear Labs, a Chinese-speaking actor used an AI agent for the attacks, including against an EU telco and 13 other organizations.<sup>[1]</sup> That is a claim by a security vendor, not independent confirmation.</p>
+        <div class="callout info"><span class="callout-label">Our take</span> Whether a human or an agent sends the requests changes nothing about the fix: a three-month-old patch has not been applied. The report gives no CVSS score or fixed version; we did not read the Cisco page. The assessment of AI agents as an attacker tool is covered in the AI briefs.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/cisa-flags-cisco-broadworks-flaw-as-actively-exploited-in-attacks/">bleepingcomputer.com (Nov 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Patch Tuesday, addendum: Windows Search without a click</h2>
+        <p>heise counts "just under 1,100" flaws closed in November, BleepingComputer 1,235 yesterday; the difference lies in how they are counted (probably).<sup>[1]</sup> Only the Outlook flaw CVE-2026-124194 is still being attacked. More important is a flaw that was missing here yesterday: <strong>CVE-2026-116928</strong> in Windows Search, triggered via Exchange, "critical" and without authentication. "The search indexer processes the crafted attachment automatically; recipients do not even have to open the email."<sup>[1]</sup></p>
+        <div class="callout warn"><span class="callout-label">Heads up</span> A zero-click flaw in a service that touches every email is a candidate for the next worm. heise reports no attacks yet. If you run Exchange on-prem, pull this update forward. We did not check a CVSS score against Microsoft's Update Guide.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Microsoft-Patchday-Attacken-auf-Outlook-beobachtet-11520196.html">heise.de (Nov 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Adobe Connect: CVSS 10, five times</h2>
+        <p>In Connect (bulletin APSB26-191), Adobe closes five flaws with the top score <strong>CVSS 10.0</strong>, including CVE-2026-121356 and CVE-2026-121351. "Versions 12.12.a, 12.11.i, 12.10.f, 12.9.a and 12.8.a provide the fix," writes heise.<sup>[1]</sup> No attacks are known. The same patch day also includes four critical flaws in Adobe Experience Manager (APSB26-189).<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Patchday-Adobe-Kritische-Luecken-mit-Hoechstwertung-bedrohen-Connect-11520346.html">heise.de (Nov 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>glibc: two small flaws</h2>
+        <p>glibc reports two new advisories. GLIBC-SA-2026-0027 (CVE-2026-115819, CVSS 4.8) is a one-byte overflow in the wide scanf functions with <code>%s</code> and <code>%[</code>, affecting 2.2 through 2.44. GLIBC-SA-2026-0028 (CVE-2026-100290, CVSS 3.7) is a double free in <code>regcomp</code>/<code>regexec</code> after a memory error; the expected consequence is a crash.<sup>[1]</sup> No reason to rush; the fixes arrive with the normal distribution updates.</p>
+        <span class="src">[1] <a href="https://www.openwall.com/lists/oss-security/2026/11/11/8">openwall.com oss-security (Nov 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>eMudhra: eight more certificates revoked</h2>
+        <p>The Indian CA eMudhra has revoked eight more intermediate certificates. The private keys were mishandled during generation.<sup>[1]</sup> The first round was already covered here on Monday. For most teams this means: if you use eMudhra certificates, check whether your chain is still valid.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/emudhra-revokes-8-more-ca-certificates-after-private-key-mishap/">bleepingcomputer.com (Nov 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>oss-security, briefly</h2>
+        <ul>
+          <li><strong>Plone</strong>: security fix 20261110 against remote code execution.<sup>[1]</sup></li>
+          <li><strong>Emacs</strong>: <code>.dir-locals.el</code> can execute arbitrary code. If you open other people's repos in Emacs, wait for your distribution's update.<sup>[1]</sup></li>
+          <li><strong>Apache Roller</strong>: 15 CVEs fixed in 6.1.7.<sup>[1]</sup></li>
+          <li><strong>Apache Batik and FOP</strong>: eight advisories, including SSRF and unsafe deserialization when loading hyphenation data in FOP (CVE-2026-71395). Relevant for Java backends that generate PDFs with FOP.<sup>[1]</sup></li>
+          <li><strong>rsyslog</strong>: SQL injection in the omclickhouse module (CVE-2026-93404).<sup>[1]</sup></li>
+          <li><strong>Apache Storm</strong>: three flaws, including a bypass of the impersonation check (CVE-2026-124496).<sup>[1]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://www.openwall.com/lists/oss-security/2026/11/11/">openwall.com oss-security, daily archive Nov 11</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>More news</h2>
+        <ul>
+          <li><strong>Maersk</strong> confirms a data leak from a legacy system of an earlier acquisition; the ransomware group WhiteArmor demands $5 million.<sup>[1]</sup></li>
+          <li><strong>Baker Tilly</strong> reports a data breach at a service provider.<sup>[1]</sup></li>
+          <li><strong>Notion</strong>: chat histories from a few workspaces became visible through the breach at Fireworks AI.<sup>[1]</sup></li>
+          <li><strong>GrapheneOS</strong> is coming to the Pixel 11 after all, after Google brought back a component in Android 17 QPR2.<sup>[2]</sup></li>
+          <li><strong>Firefox</strong>: Mozilla lifts the data limit of the free VPN until the end of January 2027.<sup>[2]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/">bleepingcomputer.com (Nov 11)</a> · [2] <a href="https://www.heise.de/security/">heise.de/security (Nov 11)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>.NET 11: final, with C# 15</h2>
+        <p>"The release of .NET 11.0 took place on November 10, 2026," writes heise. The version has <strong>Standard Term Support (STS) of 24 months</strong> and brings C# 15.0.<sup>[1]</sup> Visual Studio 2026 on the stable channel is now enough; the Insiders version is no longer needed.<sup>[1]</sup> According to Microsoft's blog, .NET 11 brings "faster developer tools, runtime and library improvements"; in RC1 the big language news was union types and closed class hierarchies.<sup>[2]</sup> The November servicing updates for the older versions arrived the same day.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Union type:</strong> A type that has exactly one of several fixed forms, for example "success with a value" or "error with a reason." The compiler checks that you handle all cases. Like a parcel slip with exactly three boxes to tick: there is no fourth.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> Union types are what C# developers have been waiting for for years, and TypeScript and Java people already know the idea (sealed interfaces in Java). But STS means: if you want peace and quiet, stay on the LTS version and look at 11 in your next project. heise names no individual features; the details above come from the RC1 in September.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/NET-11-0-steht-bereit-11520160.html">heise.de (Nov 11)</a> · [2] <a href="https://devblogs.microsoft.com/dotnet/">devblogs.microsoft.com/dotnet (as of Nov 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL 14: it ends today</h2>
+        <p>The versions page lists <strong>11/12/2026</strong> as the "Final Release" for version 14; the current one there is still 14.24. The current minor releases of the other lines are 18.6, 17.11, 16.15 and 15.19.<sup>[1]</sup> We had not yet seen the announcement of today's release at press time. If you still run 14, apply this last release and plan the upgrade, with <code>pg_upgrade</code> straight to 17 or 18.</p>
+        <span class="src">[1] <a href="https://www.postgresql.org/support/versioning/">postgresql.org (as of Nov 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Releases, briefly</h2>
+        <ul>
+          <li><strong>Node.js</strong> 22.23.5, 24.22.3, 26.13.1 (security, see above).<sup>[1]</sup></li>
+          <li><strong>Apache httpd</strong> 2.4.71 (security, see above).<sup>[2]</sup></li>
+          <li><strong>Git</strong> 2.56.1 and six older lines (security, see above).<sup>[3]</sup></li>
+          <li><strong>Python</strong>: the current one is still 3.15.2 from Oct 25; 3.10 is at the end of its support.<sup>[4]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://nodejs.org/en/blog/vulnerability/november-2026-security-releases">nodejs.org</a> · [2] <a href="https://httpd.apache.org/security/vulnerabilities_24.html">httpd.apache.org</a> · [3] <a href="https://www.openwall.com/lists/oss-security/2026/11/11/10">openwall.com</a> · [4] <a href="https://www.python.org/downloads/">python.org (as of Nov 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>EU: Omnibus and data protection</h2>
+        <p>With its Omnibus laws, the EU wants to simplify rules, including on data protection. heise describes the concern that oversight and protection could be lost along the way.<sup>[1]</sup> We did not read the details today. We are staying on it because it also affects the obligations of software vendors in the EU.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Omnibus-Gesetze-der-EU-und-die-Folgen-fuer-den-Datenschutz-11519738.html">heise.de (Nov 11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Brazil</h2>
+        <p>Nothing today. We could not reach the BR sources.</p>
+      </section>
+
+      <section class="news-item">
+        <h2>AI cross-references</h2>
+        <ul>
+          <li><strong>CERT-EU</strong> warns of a rapid rise in attacks using agent frameworks such as Artex.<sup>[1]</sup></li>
+          <li><strong>AntiFox</strong>: attackers use the open-source pentest tool with AI agents against web services and AWS credentials.<sup>[2]</sup></li>
+          <li><strong>Grok Build</strong>: thousands of generated apps were openly reachable, with confidential data.<sup>[1]</sup></li>
+          <li><strong>Claude Fable 5.2</strong>: new prices.<sup>[3]</sup></li>
+        </ul>
+        <p>The assessment is in the ai-dev and ai-usecases briefs.</p>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de/security (Nov 11)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/hackers-use-antifox-ai-agents-in-aws-credential-theft-attacks/">bleepingcomputer.com (Nov 11)</a> · [3] <a href="https://www.heise.de/news/Anthropic-Claude-Fable-5-2-ist-guenstiger-aber-Tempo-kostet-extra-11518102.html">heise.de (Nov 10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Not checked</h2>
+        <ul>
+          <li>Node.js, httpd and Git: no CVSS scores in the sources; NVD not consulted.</li>
+          <li>Cisco BroadWorks: no CVSS and no fixed version in the report; the AI-agent story is a statement by Malbear Labs.</li>
+          <li>SSHole: we did not re-check the CVSS score today; 10.6p2 confirmed today only via BleepingComputer.</li>
+          <li>Patch Tuesday: figures from heise and BleepingComputer, not from Microsoft's Update Guide. Chromium CVE-2026-125350: only the KEV entry today.</li>
+          <li>Java/Spring, Angular, React, Caddy, Docker and BSI: not consulted today.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>What Thursday is worth</h2>
+        <p>Today, rebuild the base images with Node and check the Git version on the CI runners. If you run httpd with HTTP/2, move to 2.4.71. Old Alpine hosts with password login on SSH are today's first deadline. And PostgreSQL 14 gets its last release: after that, the upgrade is no longer a question.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Thursday, November twelfth. After the big Patch Tuesday, the quieter part came yesterday, and for developers it matters more: Node, Apache and Git all shipped security updates.</p>
+  <p>Node.js closes sixteen flaws, seven of them rated high. Most are in HTTP/2 and in TLS. One lets an attacker get around the client-certificate check. The new versions cover the twenty-two, twenty-four and twenty-six lines. Mainly affected is Node running as a server, not the local front-end build.</p>
+  <p>The Apache web server also has a critical flaw, in its HTTP/2 module. It can reach all the way to code execution. Version two point four point seventy-one fixes it. Two HTTP/2 stacks in one day: that's the attack surface of the week.</p>
+  <p>Git is shipping seven maintenance releases against six flaws. The most important one leads to code execution when you clone recursively with submodules. That hits CI runners in particular, the ones that clone other people's repositories.</p>
+  <p>With ScreenConnect, attackers are abusing third-party extensions. Huntress counts six affected IT service providers, BleepingComputer forty-seven organizations. ConnectWise has switched off five extensions. N-able, meanwhile, has a hotfix for its N-central platform.</p>
+  <p>Today the first deadline from the U.S. agency CISA runs out, among others for the OpenSSH flaw known as SSHole on Alpine systems. Barracuda follows tomorrow. In the Cisco BroadWorks case, a security vendor says an AI agent carried out the attacks. But the patch for it is already three months old.</p>
+  <p>On Patch Tuesday, a second look is worth it at a critical flaw in Windows Search. It's triggered through Exchange, and the recipient doesn't even have to open the email. Adobe closes five flaws in Connect with the top score of ten.</p>
+  <p>On releases: dot NET eleven is final, with C sharp fifteen and twenty-four months of support. And PostgreSQL fourteen gets its last release today.</p>
+  <p>Tomorrow we'll look at the Barracuda deadline, and at whether attacks on Node or Apache have been reported yet.</p>
+</div>
+
+</body>
+</html>

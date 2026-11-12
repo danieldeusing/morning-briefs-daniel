@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-11-12</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-12</span>
+  </div>
+
+  <h1 class="masthead-title">Quiet today: Carbon lands in Copilot, and <code>llm</code> plugs a key leak</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Quiet today. The big models of the week are out, and now they move into the tools. Gemini 4 Carbon has been selectable in GitHub Copilot since Nov 10, one day after Fable 5.2. The most important news for your machine is small, though: Simon Willison's <code>llm</code> could send your OpenAI key to other providers. Version 0.37.2 fixes it. Claude Code, OpenAI and Cursor are silent.</p>
+    <ul>
+      <li><span class="chip hot">Tool</span> <strong><code>llm</code> 0.37.2</strong> (Nov 11): security fix, the OpenAI key could go to other OpenAI-compatible providers. Update now.</li>
+      <li><span class="chip">Google</span> <strong>Gemini 4 Carbon in Copilot</strong> (Nov 10): for Pro+, Max, Business and Enterprise, rolling out gradually.</li>
+      <li><span class="chip">Google</span> <strong>Carbon pricing</strong>: $2/$10 per million tokens, double from Dec 1 (so far only Willison).</li>
+      <li><span class="chip">Claude</span> <strong>Fable 5.2 in Copilot</strong> since Nov 9. Copilot now has both new top models.</li>
+      <li><span class="chip">Claude</span> <strong>Claude Code</strong> stays at 2.1.322 from Nov 10.</li>
+      <li><span class="chip">Claude</span> <strong>Opus 4.8 Fast Mode</strong> goes away on Nov 30 (Claude Code release note).</li>
+      <li><span class="chip">OSS</span> <strong>OpenHands</strong> v1.39.0 (Nov 11), the second release in two days.</li>
+      <li><span class="chip">OpenAI</span> <strong>OpenAI</strong>: nothing new in the API changelog since Nov 5.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">The week from Nov 6 to Nov 12 and two deadlines at the end of November</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Fri 11/06</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.319</span>
+          <span>Cursor Voice Chat</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 11/07</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>quiet</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun 11/08</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>quiet</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 11/09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Fable 5.2</span>
+          <span>Fable 5.2 in Copilot</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue 11/10</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Gemini 4 Carbon for everyone</span>
+          <span>Carbon in Copilot</span>
+          <span>Claude Code 2.1.322</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 11/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>llm 0.37.2 (security)</span>
+          <span>OpenHands v1.39.0</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Thu 11/12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today · quiet so far</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 11/30</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>SWE-2 Flash no longer free</span>
+          <span>Opus 4.8 Fast Mode gone</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 12/01</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Gemini 4 Carbon: price × 2</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid cols-2">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2><code>llm</code> 0.37.2: your OpenAI key could wander off</h2>
+        <p>On Nov 11, Simon Willison released a security version of his command-line tool <code>llm</code>. His description: “Two bugs could send a configured OpenAI API key to other OpenAI-compatible providers.”<sup>[1]</sup> There are two security advisories for it, GHSA-v9h7-jj4g-f862 and GHSA-r639-rr7r-x72w.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">OpenAI-compatible provider:</strong> Many services and local servers speak the same “language” as the OpenAI API, so the same tools work with them. Examples are local model servers or cheap hosters. It is like a universal charging cable. The bug here: the tool also plugged your OpenAI key into foreign sockets.
+        </div>
+        <p>Why it matters to you: if you use <code>llm</code> alongside a local model or a third-party provider with an OpenAI interface, you have exactly the setup where the bug applies. The recipient does not have to be malicious. But a key in someone else's logs is a key you no longer control.</p>
+        <p>My take: this is the second hole of this kind in one week. Claude Code 2.1.321 from Nov 9 fixed a similar bug: MCP OAuth requests sent secrets such as refresh tokens to a different host when a server redirected them.<sup>[2]</sup> The pattern is the same. Tools that talk to many providers mix up who may receive which key. The more providers you bundle in one tool, the more these updates matter.</p>
+        <p><span class="chip good">Try it</span> Update <code>llm</code> to 0.37.2, then check your key's usage in the OpenAI dashboard for unknown calls. Why: the update closes the hole only going forward. Whether the key has already leaked, you can only see there.</p>
+        <span class="src">[1] <a href="https://simonwillison.net/">simonwillison.net</a> — “llm 0.37.2”, Nov 11, 2026, retrieved Nov 12, 2026 · [2] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code</a> — Release 2.1.321, the page shows no year, retrieved Nov 12, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Gemini 4 Carbon in Copilot: model choice becomes a price question</h2>
+        <p>GitHub reports on Nov 10: “Gemini 4 Carbon is available to Copilot Pro+, Max, Business, and Enterprise users.”<sup>[1]</sup> The rollout is gradual, so you may not see the model in the picker yet. Billing is “at provider list pricing under usage-based billing”.<sup>[1]</sup> One day earlier, Claude Fable 5.2 arrived in Copilot.<sup>[2]</sup> We did not read the content of that post, only the title.</p>
+        <ul>
+          <li><strong>Carbon today</strong>: <span class="stat">$2 / $10</span> per million input/output tokens.<sup>[3]</sup></li>
+          <li><strong>Carbon from Dec 1</strong>: <span class="stat">$4 / $20</span>.<sup>[3]</sup></li>
+          <li><strong>Fable 5.2</strong>: $8 / $40.<sup>[4]</sup></li>
+        </ul>
+        <div class="callout warn">
+          <strong>Sourcing:</strong> The Carbon prices still appear only with Simon Willison. We did not find a Google primary source today either. GitHub names no figure, only “provider list pricing”. Check the price before you plan around it.
+        </div>
+        <p>My take: the “list pricing” detail matters more than the new model. With usage-based billing at the provider's price, every model choice in Copilot becomes a cost question. Then the same math applies in Copilot as in Claude Code or Cursor. The upside for you: you can test Carbon and Fable 5.2 side by side in the same editor, without two accounts. The downside: from December you pay double for Carbon, and Copilot simply passes the price jump on to you.</p>
+        <p><span class="chip good">Try it</span> If you have a suitable Copilot plan: give the same task to Carbon once and to Fable 5.2 once, and compare the costs in the usage overview. Why: this tests without a new API key while the introductory price applies.</p>
+        <span class="src">[1] <a href="https://github.blog/changelog/2026-11-10-gemini-4-carbon-in-github-copilot">github.blog/changelog</a> — Nov 10, 2026, retrieved Nov 12, 2026 · [2] <a href="https://github.blog/changelog/">github.blog/changelog</a> — entry from Nov 9, 2026, title only, retrieved Nov 12, 2026 · [3] <a href="https://simonwillison.net/">simonwillison.net</a> — “llm-gemini 0.36”, Nov 10, 2026, secondary source, retrieved Nov 12, 2026 · [4] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code</a> — Release 2.1.321, retrieved Nov 12, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Benchmarks: no new standings</h2>
+        <p>The Artificial Analysis table has been unchanged since yesterday. Fable 5.2 (Max) leads with <span class="stat">65</span>, Gemini 4 Carbon (High) follows with 60, Opus 5.5 (Max) with 59.<sup>[1]</sup> This is a general index, not a coding test, and the page gives no date.</p>
+        <p>We did not retrieve SWE-bench Verified, Aider, LiveCodeBench and LMArena today. So there is no chart today. For Fable 5.2 and Carbon we still have no independent coding figure.</p>
+        <p>My take: this is the real gap of this week. Two new top models, and after three days nobody is publicly measuring how well they program. Until then, your own test with a real task from the backlog is the best number you have.</p>
+        <span class="src">[1] <a href="https://artificialanalysis.ai/leaderboards/models">artificialanalysis.ai</a> — independent measurement, retrieved Nov 12, 2026</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Claude Code: quiet, but a deadline in view</h2>
+        <p>No new version since yesterday. The current one is 2.1.322 from Nov 10, with Fast Mode on Vertex AI in the regions global, us and eu. If Vertex refuses, Claude Code falls back to normal speed.<sup>[1]</sup> The version before, 2.1.321, makes Fable 5.2 the default Fable model, with 1 million tokens of context.<sup>[1]</sup></p>
+        <div class="callout warn">
+          <strong>Deadline:</strong> According to the Claude Code release notes, Fast Mode for Opus 4.8 has been deprecated since Oct 30 and goes away on Nov 30, 2026. After that, Fast Mode requests return an error with no fallback to standard Opus 4.8. Anthropic recommends moving to Opus 5.5. Check it if you have hard-wired Opus 4.8 with Fast Mode in scripts.
+        </div>
+        <div class="eli5">
+          <strong class="eli5-term">Fast Mode:</strong> The model answers faster, and you pay more per token for it. It is like express shipping: the same package, there sooner, more expensive.
+        </div>
+        <p>My take: quiet from Claude Code after three releases between Nov 6 and Nov 10 is normal. If the Opus 4.8 deadline holds, it only matters for you where a model name is hard-coded in a configuration. That is exactly where such a removal only shows up once a nightly run fails.</p>
+        <p><span class="chip good">Try it</span> Search your repos and scripts for hard-coded model IDs, for example with <code>grep -rn "opus-4-8"</code>. Why: a minute of searching spares you a broken agent run on Dec 1.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code</a> — releases from Nov 9 and Nov 10, the page shows no year, retrieved Nov 12, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief</h2>
+        <ul>
+          <li><strong>Official AWS emulator</strong> — Willison reports on Nov 11 “An official AWS emulator for running tests against local clones of its services, written in Rust”. On macOS it needs Docker.<sup>[1]</sup> Interesting for agents: an agent can run tests against local AWS clones without real cloud access.</li>
+          <li><strong>Claude on AMD</strong> — In the IPO roadshow video, Anthropic says, according to Willison: “We train and serve Claude now across all four major chip families.” Plus the claim that Mythos ported Claude to AMD in three days.<sup>[1]</sup> This is a promotional statement without details. I take it as an anecdote, not as evidence.</li>
+          <li><strong>Mercor</strong> — Latent Space reports a Series D of $750 million at a $20 billion valuation.<sup>[2]</sup> Business, not coding.</li>
+        </ul>
+        <span class="src">[1] <a href="https://simonwillison.net/">simonwillison.net</a> — Nov 11, 2026, retrieved Nov 12, 2026 · [2] <a href="https://latent.space/news/">latent.space</a> — Nov 11, 2026, headline only, retrieved Nov 12, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>OpenAI quiet</h2>
+        <p>The last entry in the OpenAI API changelog remains GPT-6-Cyber from Nov 5. Nothing has come since, not even a Codex entry.<sup>[1]</sup></p>
+        <p>My take: a week of silence after two big releases from the competition stands out. I would expect an answer in the next few days, but that is a guess, not a report.</p>
+        <span class="src">[1] <a href="https://developers.openai.com/api/docs/changelog">developers.openai.com</a> — retrieved Nov 12, 2026</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Mandatory round: quiet in the shadows</h2>
+        <ul>
+          <li><strong>OpenHands</strong> — v1.39.0 from Nov 11, before that v1.38.0 on Nov 10. The most active open-source project of the week.<sup>[1]</sup></li>
+          <li><strong>GitHub Copilot</strong> — Fable 5.2 (Nov 9) and Gemini 4 Carbon (Nov 10) new, see above.<sup>[2]</sup></li>
+          <li><strong>Cursor</strong> — last entry Voice Chat with agents from Nov 6, quiet since.<sup>[3]</sup></li>
+          <li><strong>Cline</strong> — still v4.1.26 from Oct 26.<sup>[4]</sup></li>
+          <li><strong>Aider</strong> — still v0.86.1, the page gives no date.<sup>[5]</sup></li>
+          <li><strong>Devin</strong> — SWE-2 Flash free until Nov 30 in Devin Desktop and CLI (per aggregator, Nov 5).<sup>[6]</sup></li>
+          <li><strong>Continue, JetBrains AI, Bolt, Plandex</strong> — not checked today.</li>
+          <li><strong>Open Weights</strong> — Qwen, DeepSeek and Ollama not checked today. We covered Kimi K3.1 Pro (Nov 5) and Ripple-65B (Nov 4) in recent issues.</li>
+        </ul>
+        <span class="src">[1] <a href="https://github.com/All-Hands-AI/OpenHands/releases">github.com/All-Hands-AI/OpenHands</a> · [2] <a href="https://github.blog/changelog/">github.blog/changelog</a> · [3] <a href="https://cursor.com/changelog">cursor.com/changelog</a> · [4] <a href="https://github.com/cline/cline/releases">github.com/cline/cline</a> · [5] <a href="https://aider.chat/HISTORY.html">aider.chat</a> · [6] <a href="https://thursdai.news/releases/2026-11">thursdai.news</a> — aggregator · all retrieved Nov 12, 2026</span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Thursday, November twelfth. A quiet day. The big models of the week are out, and now they're moving into the tools. Claude Code, OpenAI and Cursor haven't shipped anything new since yesterday.</p>
+  <p>The most important story is a small one, but it affects you directly. Simon Willison's command-line tool llm had two bugs. They could send your OpenAI key to other providers that speak the same interface, such as local model servers. Version zero point three seven point two fixes it. Update, then check the OpenAI dashboard for unknown calls.</p>
+  <p>That fits a pattern from this week. Claude Code also fixed a similar bug on November ninth, where secrets could go to a foreign host. Tools that talk to many providers can easily mix up who should get which key.</p>
+  <p>Gemini four Carbon has been available in GitHub Copilot since November tenth, for the Pro plus, Max, Business and Enterprise plans. Fable five point two arrived a day earlier. GitHub bills at the provider's list price. According to Willison, Carbon costs two dollars per million input tokens and ten for output, and double that starting December first. We still have no Google source for that price.</p>
+  <p>On benchmarks, there are no new standings. For Fable five point two and Carbon, there's still no independent coding measurement. Until then, your own test on a real task is the best number you have.</p>
+  <p>One deadline to check: according to a search-engine summary, Fast Mode for Opus four point eight goes away on November thirtieth. We haven't confirmed that at the primary source. Search your scripts for hard-coded model names.</p>
+  <p>Quickly, too: there's now an official AWS emulator written in Rust, handy for agent tests without real cloud access. OpenHands shipped two releases in two days. Cline and Aider stay quiet.</p>
+  <p>Tomorrow we'll see whether OpenAI answers Fable and Carbon, and whether the first independent coding measurements show up.</p>
+</div>
+
+</body>
+</html>
