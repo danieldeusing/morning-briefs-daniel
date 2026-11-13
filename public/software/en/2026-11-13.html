@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-13</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-13</span>
+  </div>
+  <h1 class="masthead-title">PostgreSQL closes 52 holes, and 4,837 GitHub accounts become a break-in wave</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Yesterday brought the big PostgreSQL update: five minor releases, more than 140 bug fixes and 52 security vulnerabilities, plus the last release for PostgreSQL 14. Almost at the same time, it came out that an attacker used 4,837 stolen GitHub accounts to test write access on 61,764 repositories and siphoned off secrets through GitHub Actions workflows. Our take: the database is today's must-patch, the CI pipeline is today's must-check. Both hit our stack directly, unlike most of this week's reports.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>PostgreSQL</strong> 18.7, 17.12, 16.16, 15.20, 14.25: 52 vulnerabilities, some with CVSS 8.8. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>GitHub "wfx-loot"</strong>: 4,837 accounts, secrets stolen from at least 1,835 targets. <span class="chip">Global</span></li>
+      <li><span class="chip">Release</span> <strong>PostgreSQL 14</strong> is at its end, PostgreSQL 19 is due Nov 19. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>N-able</strong>: new chain "4EverAble2Shell", at least 21 servers running crypto miners. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Windows "SignDrop"</strong>: public exploit for SYSTEM privileges, no patch yet. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Apache TomEE</strong>: 38 advisories, 26 of them fixed in 10.3.0 and 11.0.0-M2. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Mittwald</strong>: attack through its own MCP server, second outage overnight into Nov 12. <span class="chip">DE</span></li>
+      <li><span class="chip">Sec</span> <strong>KEV</strong>: the deadline for Barracuda ESG ends today. <span class="chip">USA</span></li>
+      <li><span class="chip">Regulation</span> <strong>OSCAL Foundation</strong> is dissolving, the BSI uses the format for IT-Grundschutz++. <span class="chip">DE</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Dates through Thu Nov 19 — the KEV deadline Nov 24 (Outlook CVE-2026-124194, Chromium CVE-2026-125350) is covered in the text</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Fri Nov 13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Barracuda ESG, CVE-2026-116606 and CVE-2026-111560</span><span>Apply yesterday's PostgreSQL updates</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu Nov 19</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>PostgreSQL 19: planned general availability</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PostgreSQL: 52 vulnerabilities and the end of version 14</h2>
+        <p>On Nov 12 came <strong>PostgreSQL 18.7, 17.12, 16.16, 15.20 and 14.25</strong>, plus the second release candidate of PostgreSQL 19. According to the announcement, they fix "over 140 bugs" and <strong>52 security vulnerabilities</strong>.<sup>[1][2]</sup> Several of them have <strong>CVSS 8.8</strong> and, per the advisory list, lead to code execution: type confusion after <code>ALTER ... SET DATA TYPE</code> (CVE-2026-6460), a use-after-free with parallel RECORD types (CVE-2026-116304) and two bugs in PL/Perl (CVE-2026-116307, CVE-2026-116309).<sup>[2]</sup> The project reports no attacks.</p>
+        <p>The steps after the update matter. The announcement advises rebuilding, in some cases, GIN indexes, GiST indexes with <code>gist_trgm_ops</code> from <code>pg_trgm</code>, and B-tree indexes on <code>bpchar</code>. For TOAST errors such as "missing chunk number", <code>REINDEX TABLE</code> helps. If you use incremental backups, take a new full backup afterward.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Type confusion:</strong> The program treats data as a different type than it really is, and so reads it wrongly. Like a cashier who mistakes a coupon for a banknote: the math is right, but the thing in hand is wrong.
+        </div>
+        <div class="eli5">
+          <strong class="eli5-term">REINDEX:</strong> An index is a table of contents for a table, so queries are fast. If a bug scrambled entries in it, <code>REINDEX</code> rebuilds the directory from the real data. Like retyping a book's index after a printing error.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> This is the update of the month for our stack. We did not read the preconditions of each vulnerability in detail; most database vulnerabilities of this kind need a logged-in user who may run SQL. If you let tenants or third-party code into the same database, patch today. Everyone else swaps the minor release at the next image build and then checks the <code>pg_trgm</code> indexes specifically.</div>
+        <p><strong>PostgreSQL 14</strong> gets its last release with 14.25: "PostgreSQL 14 is now end-of-life." According to the project, PostgreSQL 19 is due for general availability on <strong>Nov 19, 2026</strong>.<sup>[1]</sup> If you are still on 14, apply 14.25 and plan the upgrade with <code>pg_upgrade</code> to 17 or 18. We would not jump to 19 right after launch.</p>
+        <span class="src">[1] <a href="https://www.postgresql.org/message-id/attachment/208544/20261112updaterelease.md">postgresql.org release announcement (Nov 12)</a> · [2] <a href="https://www.openwall.com/lists/oss-security/2026/11/12/4">openwall.com oss-security (Nov 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>GitHub "wfx-loot": 4,837 accounts against CI</h2>
+        <p>The company Aikido describes a campaign it calls "wfx-loot". From about 12:45 UTC on Nov 10, an attacker used stolen credentials from <strong>4,837 GitHub accounts</strong>. With them he opened pull requests titled "docs: dependency audit notes" against <strong>61,764 repositories</strong> to test write access.<sup>[1]</sup> Where it worked, he changed a workflow, created a new workflow on a short-lived branch or planted an npm install hook. A 1,500-line shell script collected Actions secrets, tokens and cloud credentials for AWS, Azure and Google Cloud. Afterward the attacker reverted the changes and deleted workflow runs and logs.<sup>[1]</sup></p>
+        <p>According to Aikido, he stole secrets from "at least 1,835 targets"; 92% of the test PRs are still open. About 50 of the accounts have publish rights on npm, PyPI, Go, crates or Packagist.<sup>[1]</sup> The report does not say how the credentials were stolen; a statement from GitHub is missing.</p>
+        <div class="eli5">
+          <strong class="eli5-term">OIDC token in GitHub Actions:</strong> A workflow can identify itself to AWS, Azure or Google Cloud without a stored password. GitHub issues a short-lived, signed ID for that. Like a day-visitor badge at the front desk: handy, but whoever steals it gets in everywhere the badge is valid that day.
+        </div>
+        <div class="callout warn"><span class="callout-label">Heads up</span> The traces get deleted, so you look for gaps: a branch named <code>wfx-docs</code>, a PR "docs: dependency audit notes" and jumps in the workflow run numbers.<sup>[1]</sup> If you get a hit, treat all secrets and cloud roles of that workflow as compromised and rotate them. According to the report, the script can turn OIDC tokens into long-lived cloud credentials; you have to hunt for those in the cloud itself.</div>
+        <div class="callout info"><span class="callout-label">Our take</span> The lesson is old, but now it is expensive: workflows with secrets must not run on foreign branches or PRs, and OIDC roles belong restricted to one branch and one repo. Checking this on your own repos today in ten minutes is the best value of the week.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-compromise-4-800-github-accounts-to-steal-cloud-credentials/">bleepingcomputer.com (Nov 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>npm "PolinRider": the loader without an install script</h2>
+        <p>Another supply-chain case from this week: according to Sonatype, attackers published loader code on Nov 3 in <strong>12 releases of 10 hijacked npm packages</strong>. The code reads the latest transaction of an Ethereum wallet and decrypts its server address from it. It needs no install script; it runs at runtime.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> <code>npm ci --ignore-scripts</code> does not help here, because the code only runs on import. What helps: lockfiles, a few days' delay for new versions and a look at outbound traffic from the build.</div>
+        <span class="src">[1] <a href="https://www.sonatype.com/resources/videos/polinrider-campaign">sonatype.com (as of Nov 13)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Apache TomEE: 38 advisories at once</h2>
+        <p>The TomEE project published <strong>38 security advisories</strong> on Nov 12. "Apache TomEE 10.3.0 and 11.0.0-M2 fix 26 of the vulnerabilities." The other 12 affect optional modules that were removed from both releases and will get no fix.<sup>[1]</sup> The most severe ("Important") are authorization bypasses: EJB method permissions are silently skipped under JDK 21+ (CVE-2026-86336), MicroProfile JWT roles are not checked correctly with JAX-RS (CVE-2026-111244), and known admin credentials are created at startup (CVE-2026-111257).<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.openwall.com/lists/oss-security/2026/11/12/3">openwall.com oss-security (Nov 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>N-able: the next chain, already exploited</h2>
+        <p><span class="update-since">Update since Thu</span> The Nov 10 hotfix was not enough. Researcher Sean Bales published "4EverAble2Shell": root on N-central servers without login, but only with the legacy API enabled. The entry point uses an Apache Axis flaw (CVE-2026-90436).<sup>[1]</sup> Huntback counted "at least 21 affected systems, including 19 running the company's latest security update", with the Monero miner XMRig, also in Germany. N-able is restricting features and switching off the Intune integration; a full fix is still missing.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/new-n-able-4everable2shell-zero-day-exploited-hours-after-poc-released/">bleepingcomputer.com (Nov 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>ScreenConnect: now with a worm</h2>
+        <p><span class="update-since">Update since Thu</span> BleepingComputer reports a tool called "SCKit" that spreads like a worm from infected customer devices to the technicians' machines at the IT service provider.<sup>[1]</sup> We read the article only as a headline; yesterday's situation (third-party extensions, five of them shut off) remains the background.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/new-worm-like-sckit-malware-targets-msps-in-screenconnect-attacks/">bleepingcomputer.com (Nov 12)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>KEV: the Barracuda deadline ends today</h2>
+        <p>Today, Nov 13, the CISA deadline ends for <strong>Barracuda ESG</strong> (CVE-2026-116606) and a command injection with root privileges (CVE-2026-111560), which also affects Load Balancer ADC, WAF and other Barracuda products.<sup>[1][2]</sup> Barracuda sees attacks against "a small number of organizations" and says the attackers need access to the admin interface. Mandiant, by contrast, sees the ESG flaw as exploitable without login, according to an advisory reported by SecurityWeek (per a search-result excerpt; the advisory itself was not opened).<sup>[4]</sup> BleepingComputer calls CVE-2026-116606 an authentication weakness and CVE-2026-111560 an unauthenticated OS command injection.<sup>[2]</sup> The patches are about a week old.</p>
+        <p>Yesterday the deadline for <strong>SSHole</strong> (CVE-2026-123158) ran out. OpenSSH 10.6p2 came out on Nov 5; according to GreyNoise, the first successful attack came on Nov 7 at 00:46 UTC.<sup>[3]</sup> Affected are certain Linux systems with musl, such as Alpine.</p>
+        <div class="callout info"><span class="callout-label">Our take</span> When vendor and Mandiant contradict each other, we believe the pessimist when in doubt. If you run an ESG, patch it and check whether the admin interface is reachable from the internet.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of Nov 13)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-barracuda-email-security-gateway-flaws-to-get-root-access/">bleepingcomputer.com (Nov 10)</a> · [3] <a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-sshole-openssh-flaw-to-breach-linux-systems/">bleepingcomputer.com (Nov 9)</a> · [4] <a href="https://www.securityweek.com/barracuda-email-security-gateway-authentication-bypass-opens-path-to-root/">securityweek.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Chrome: the year's eighth zero-day</h2>
+        <p>Google closed <strong>CVE-2026-125350</strong> on Nov 9, a use-after-free in the XML component, rated "high". According to BleepingComputer, "an exploit for CVE-2026-125350 exists in the wild"; it is the eighth exploited Chrome zero-day of 2026.<sup>[1]</sup> The fix is in 157.0.8103.50/.51 for Mac and .50 for Linux; the Windows build number was not in the article. Since Nov 10 the flaw is in the KEV, deadline Nov 24.<sup>[2]</sup> One report assigns it to V8, the majority of sources to the XML component.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Use-after-free:</strong> A program frees memory but then uses it once more. Meanwhile an attacker may have placed their own data there. Like a hotel room you enter after checkout with the old key, although a new guest is already inside.
+        </div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/google-patches-eighth-chrome-zero-day-exploited-in-attacks-this-year/">bleepingcomputer.com (Nov 10)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of Nov 13)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Windows "SignDrop": SYSTEM privileges, no patch</h2>
+        <p>Researcher Abdelhamid Naceri ("Nightmare Eclipse") published an exploit on Nov 12 for the Windows CLFS driver. It exploits how CLFS creates an authentication file when a privileged process such as Windows Defender opens a log file.<sup>[1]</sup> Result: SYSTEM privileges, and according to Naceri it can also switch off the self-protection of antivirus and EDR. He tested Windows 11 26H2 and Windows Server 2025 (experimental builds); there is no CVE and no patch yet.<sup>[1]</sup> The article reports no attacks.</p>
+        <div class="callout info"><span class="callout-label">Our take</span> Privilege escalation needs a foot in the door, so this is no reason to panic on the dev laptop. But a public exploit that switches off EDR quickly becomes part of ransomware toolkits. Microsoft's response is the real date to watch.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/new-windows-signdrop-zero-day-gives-hackers-system-privileges/">bleepingcomputer.com (Nov 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Patch Tuesday: a correction on Exchange</h2>
+        <p>Yesterday this brief listed, per heise, a critical flaw via Windows Search and Exchange (CVE-2026-116928), without login and without a click. According to Qualys/Rescana, these are two separate flaws: <strong>CVE-2026-118207</strong> is a remote code execution flaw in Exchange Server that requires the attacker to be logged in.<sup>[1]</sup> CVE-2026-116928 is an out-of-bounds write in Windows Search, exploitable without login and rated critical at 9.8 per Rescana. It ships with the Windows update, not the Exchange update; Microsoft marks it as not exploited. The total number of vulnerabilities also differs between sources by over a hundred; we therefore give none.</p>
+        <p>What is clear: according to Qualys, only the Outlook flaw <strong>CVE-2026-124194</strong> is exploited (KEV deadline Nov 24).<sup>[1][2]</sup> Also critical is a Windows LDAP flaw (CVE-2026-119958) that, per Qualys, "may allow an unauthenticated attacker to execute code over a network".<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> In practice the correction changes little: on-prem Exchange and domain controllers get the update first. But yesterday's warning was wrong as stated: Exchange itself needs a login (CVE-2026-118207); the critical no-login flaw is in Windows Search (CVE-2026-116928).</div>
+        <span class="src">[1] <a href="https://blog.qualys.com/vulnerabilities-threat-research/2026/11/10/microsoft-patch-tuesday-november-2026-security-update-review">blog.qualys.com (Nov 10)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of Nov 13)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Apache httpd: only with HTTP/2</h2>
+        <p><span class="update-since">Update since Thu</span> On the critical flaw in mod_http2 from yesterday's brief, heise clarifies: "Only servers with HTTP/2 enabled are affected." An exploit is possible but difficult.<sup>[1]</sup> That supports our advice from yesterday: upgrade to 2.4.71 or temporarily switch off HTTP/2.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Kritische-Sicherheitsluecke-in-Apache2-ermoeglicht-Codeeinschleusung-11523150.html">heise.de (Nov 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Mittwald: attack through the MCP server</h2>
+        <p>The web host Mittwald from Espelkamp has been struggling for a week, according to heise, with the aftermath of an attack "via the company's own MCP server". On Nov 5, the MCP server, mStudio, SSH, the extensions and the order system were restricted; by Nov 7 everything came back step by step. "In the night of Nov 12, then a setback": SSH, mStudio and the customer center were down again, and the website runs in emergency mode.<sup>[1]</sup> Hosted customer websites are not affected, according to Mittwald; there was no defacement. Mittwald speaks of "AI-assisted professional attackers".<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">MCP server:</strong> The Model Context Protocol is an interface through which AI assistants use the tools and data of a service. An MCP server is thus a new door into the system, built for machines. Like a delivery entrance: handy, but it needs the same lock as the front door.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> How the attack worked technically is not in the report. The lesson still applies: an MCP endpoint is a public API with all the duties of an API. If you are a Mittwald customer, check your accounts and access.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Angriff-ueber-MCP-Server-Webhoster-Mittwald-im-Krisenmodus-11522728.html">heise.de (Nov 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Patches, in brief</h2>
+        <ul>
+          <li><strong>Checkmk</strong>: updates close critical flaws through which attackers can inject code.<sup>[1]</sup></li>
+          <li><strong>Citrix NetScaler ADC and Gateway</strong>: several flaws through which attackers can knock the devices offline.<sup>[1]</sup></li>
+          <li><strong>Zoom for Windows</strong>: two flaws for privilege escalation over the network.<sup>[1]</sup></li>
+          <li><strong>Apple</strong>: Calif.io shows a jailbreak via a Brotli flaw on Mac, iPhone and iPad; heise advises a quick update.<sup>[1]</sup></li>
+        </ul>
+        <p>We know these reports only from the heise overview; we have not checked versions.</p>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de/security (Nov 12)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>oss-security, in brief</h2>
+        <ul>
+          <li><strong>Vim</strong>: command execution via CSS omni-completion in versions before 9.2.1342.<sup>[1]</sup></li>
+          <li><strong>ansible-pylibssh / ansible.netcommon</strong>: a changed SSH host key is accepted when <code>host_key_auto_add</code> is on (CVE-2026-126641).<sup>[1]</sup></li>
+          <li><strong>dbus</strong>: several denial-of-service flaws.<sup>[1]</sup></li>
+          <li><strong>Apache Axis2/C</strong>: out-of-bounds read in the XML reader (CVE-2026-124023).<sup>[1]</sup></li>
+          <li><strong>Perl Data::Dump::Streamer</strong> before 3.00: code injection via regex patterns (CVE-2026-126673).<sup>[1]</sup></li>
+          <li><strong>cabextract 1.12 and libmspack 0.12alpha</strong> have been released.<sup>[1]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://www.openwall.com/lists/oss-security/2026/11/12/">openwall.com oss-security, daily archive Nov 12</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Releases, in brief</h2>
+        <ul>
+          <li><strong>PostgreSQL</strong> 18.7, 17.12, 16.16, 15.20, 14.25 and 19 RC2 (see above).<sup>[1]</sup></li>
+          <li><strong>Spring Boot 4.2.0-RC2</strong> since Nov 6, Spring Cloud 2026.0.0-RC2 since Nov 5. We know of no GA date for Spring Framework 7.1.<sup>[2]</sup></li>
+          <li><strong>Apache TomEE</strong> 10.3.0 and 11.0.0-M2 (security, see above).<sup>[3]</sup></li>
+          <li><strong>Vim</strong> 9.2.1342 with the security fix.<sup>[3]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://www.postgresql.org/message-id/attachment/208544/20261112updaterelease.md">postgresql.org</a> · [2] <a href="https://spring.io/blog">spring.io/blog (as of Nov 13)</a> · [3] <a href="https://www.openwall.com/lists/oss-security/2026/11/12/">openwall.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Linux: GSocket as a backdoor</h2>
+        <p>Several attacker groups are installing the open-source tool GSocket on Linux servers, according to BleepingComputer. That way they keep access even after the original flaw has been patched.<sup>[1]</sup> We read only the short version.</p>
+        <div class="callout info"><span class="callout-label">Our take</span> This fits the SSHole week: patching closes the door, but not the window the burglar has already opened. If you had an Alpine host with password login, also look for foreign processes.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-plant-gsocket-on-linux-servers-for-persistent-access/">bleepingcomputer.com (Nov 12)</a></span>
+      </section>
+
+
+      <section class="news-item">
+        <h2>EU and BSI: OSCAL without a foundation</h2>
+        <p>The OSCAL Foundation, which stands behind the compliance format OSCAL, "is giving up after almost two years", heise reports. The BSI had switched IT-Grundschutz++ to this format in 2025.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">OSCAL:</strong> A machine-readable format for security catalogs and audit reports, so tools can check compliance automatically. Like a form that a computer fills out instead of a clerk.
+        </div>
+        <p>On the Cyber Resilience Act: the reporting duties for exploited vulnerabilities have applied since Sep 11, 2026, most other duties from Dec 11, 2027.<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> A format is not dead just because the foundation goes. But if you build Grundschutz tooling on OSCAL, you should know who will maintain it in future.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/OSCAL-Foundation-loest-sich-auf-11522880.html">heise.de (Nov 12)</a> · [2] <a href="https://www.mccannfitzgerald.com/knowledge/data-privacy-and-cyber-risk/cyber-resilience-act-reporting-obligations-apply-from-11-september-2026">mccannfitzgerald.com (09/2026)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>More reports</h2>
+        <ul>
+          <li><strong>Europol</strong> and partners from nine countries seized servers and domains of Gootloader, CastleRAT and StealC.<sup>[1]</sup></li>
+          <li><strong>Apify</strong> is rotating internal secrets and API tokens after a break-in and is demanding 2FA resets.<sup>[1]</sup></li>
+          <li><strong>Saxony</strong>: pager messages from rescue services and fire departments were apparently readable freely online, with patient data.<sup>[2]</sup></li>
+          <li><strong>Poland</strong>: the government portal ePUAP is offline after a cyberattack.<sup>[2]</sup></li>
+          <li><strong>SQL Server</strong>: Microsoft admits problems after the October update, according to The Register.<sup>[3]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/">bleepingcomputer.com (Nov 12)</a> · [2] <a href="https://www.heise.de/security/">heise.de/security (Nov 12)</a> · [3] <a href="https://www.theregister.com/software/">theregister.com (Nov 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Brazil</h2>
+        <p>Nothing new today from the Brazilian tech scene in our sources.</p>
+      </section>
+
+      <section class="news-item">
+        <h2>Not checked</h2>
+        <ul>
+          <li>Patch Tuesday: the total number of vulnerabilities differs between heise, Qualys and PDQ. The classification of CVE-2026-118207 (Exchange) and CVE-2026-116928 (Windows Search) comes from Qualys/Rescana; Microsoft's Update Guide not consulted.</li>
+          <li>CVSS scores for SSHole, Barracuda, Exchange and LDAP: not confirmed from NVD.</li>
+          <li>PostgreSQL: the preconditions of the individual 8.8 flaws not read in detail.</li>
+          <li>SCKit, GSocket and the heise short items: only headline or summary read.</li>
+          <li>Angular, React, TypeScript, Python, Caddy, Docker, Tailscale, Kubernetes: no releases found this week.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>What Friday is worth</h2>
+        <p>First PostgreSQL: apply the minor release and then look at the <code>pg_trgm</code> indexes. Then ten minutes on GitHub: search for a <code>wfx-docs</code> branch, secure workflows with secrets against foreign PRs, restrict OIDC roles. If you run Barracuda or N-able, you will not have a quiet Friday anyway. And if you still run PostgreSQL 14: from now on the upgrade is no longer an option but a must.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Friday, November thirteenth. Two stories hit our stack directly today: a big PostgreSQL update and an attack on GitHub pipelines.</p>
+  <p>PostgreSQL released five minor versions yesterday. They fix more than one hundred forty bugs and fifty-two security holes, some of them rated eight point eight. After updating, you should rebuild certain indexes, especially with the pg trgm extension. PostgreSQL fourteen gets its final release, and PostgreSQL nineteen is due on November nineteenth.</p>
+  <p>At GitHub, an attacker used nearly five thousand stolen accounts to test write access on more than sixty thousand repositories. Where it worked, he changed workflows and siphoned off secrets and cloud credentials, from at least eighteen hundred thirty-five targets. Then he wiped his tracks. A branch named wfx docs is a telltale sign.</p>
+  <p>N-able has another attack chain. At least twenty-one servers are now running crypto miners, most of them even with the latest hotfix. For Windows, a public exploit for SYSTEM privileges has surfaced, called SignDrop. There is no patch yet.</p>
+  <p>Apache TomEE reports thirty-eight security holes, mostly permission checks that silently fail. And at the web host Mittwald, an attack came in through its own MCP server; overnight into Thursday, services went down again.</p>
+  <p>On Patch Tuesday, we're issuing a correction: the Exchange flaw requires the attacker to be logged in. The critical flaw without login is, according to Qualys and Rescana, in Windows Search and ships with the Windows update. Today is also the deadline set by the U.S. agency CISA for Barracuda.</p>
+  <p>Our advice for Friday: update PostgreSQL first, then spend ten minutes checking your own GitHub workflows.</p>
+</div>
+
+</body>
+</html>
