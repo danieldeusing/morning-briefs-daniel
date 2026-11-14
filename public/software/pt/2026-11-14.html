@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-14</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Edição 2026-11-14</span>
+  </div>
+  <h1 class="masthead-title">Check Point: zero-day com wiper, e a onda de tokens do GitHub deixa backdoors na nuvem</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">A sexta-feira trouxe dois casos que mostram onde os atacantes estão mirando agora: o próprio firewall e o canal de atualização. A Check Point confirma uma falha explorada que dá root aos atacantes em gateways, e depois eles apagam hosts VMware ESXi. Na campanha "wfx-loot" do GitHub, fica claro que rotacionar secrets não basta, porque os atacantes se instalaram na AWS e no Azure. Nossa visão: para o nosso stack, o caso do GitHub é o mais importante. A Check Point só nos afeta se um gateway desses estiver na nossa própria rede.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Check Point</strong> CVE-2026-123039: root em gateways, explorada, prazo do KEV seg 16/11. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>GitHub "wfx-loot"</strong>: mais de 1.800 execuções de workflow com código malicioso, backdoors na AWS e no Azure. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Quantum Systems</strong>: atualização manipulada do software de drones QBase. <span class="chip">DE</span></li>
+      <li><span class="chip">Sec</span> <strong>Apache httpd 2.4.71</strong>: a Apache confirma "critical" para 2.4.55 a 2.4.70. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Citrix NetScaler</strong>: 28 falhas, 9 críticas, pico de CVSS 9,5, sem ataques conhecidos. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>.NET 11</strong>: STS com 24 meses, o suporte ao .NET 8 e 9 acabou. <span class="chip">Global</span></li>
+      <li><span class="chip">OSS</span> <strong>libghostty 1.0</strong>: o núcleo do terminal Ghostty com C ABI estável, licença MIT. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Operation Endgame</strong>: 235 servidores e 257 domínios derrubados, BKA envolvido. <span class="chip">UE</span></li>
+      <li><span class="chip">Sec</span> <strong>FaceStealer</strong>: segundo o FBI, a Coreia do Norte mira mantenedores de código aberto. <span class="chip">EUA</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Panorama da semana</div>
+      <div class="timeline-sub">Datas até qui 19/11 — o prazo do KEV em ter 24/11 (Outlook, Chromium, Cisco BroadWorks) está no texto</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Sáb 14/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Verificar contas do GitHub e roles na nuvem em busca de rastros "wfx"</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Seg 16/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Prazo do KEV: Check Point CVE-2026-123039</span><span>Prazo do KEV: UnrealIRCd CVE-2026-114713</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Qui 19/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>PostgreSQL 19: disponibilidade geral planejada</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Check Point: da falha no PHP ao root e ao wiper</h2>
+        <p>A Check Point publicou na quinta-feira hotfixes de emergência para a <strong>CVE-2026-123039</strong>. A falha está na interface IPC DynamicCLI e permite escalação local de privilégios no firewall, no Security Gateway, nas Scalable Platforms e nos servidores de gerenciamento. "Check Point observed an active exploit of this vulnerability against a couple of dozen customers", escreve o BleepingComputer; ela é explorada desde o fim de outubro.<sup>[1]</sup> O artigo não informa um valor de CVSS, apenas "high-severity".</p>
+        <p>A cadeia completa: via <strong>PHP2Shell</strong>, duas falhas críticas de PHP (CVE-2026-109618, CVE-2026-109619), os atacantes entram sem autenticação no portal Mobile Access do gateway. Com a CVE-2026-123039 eles viram root ali. Depois implantam em hosts VMware ESXi um wiper chamado "destroy_v6", que apaga dados de forma recursiva.<sup>[2]</sup> Os ataques começaram em 30/10 contra organizações israelenses; uma segunda onda em 02/11 atingiu empresas em vários países. Os patches do PHP existem desde 21/10; segundo a Amazon, as tentativas de ataque começaram quatro dias antes.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Escalação local de privilégios:</strong> O atacante já está no aparelho, mas só como usuário comum. A falha o transforma em administrador (root). Como um visitante que já está no saguão e então encontra uma chave-mestra.
+        </div>
+        <div class="eli5">
+          <strong class="eli5-term">Wiper:</strong> Malware que não criptografa dados nem quer resgate, só destrói. Aqui, com um bilhete que rejeita expressamente qualquer negociação.<sup>[2]</sup> Como um ladrão que não leva nada, mas ateia fogo em tudo.
+        </div>
+        <div class="callout warn"><span class="callout-label">Atenção</span> A Check Point descreve os hotfixes no SK1000362; o Jumbo Hotfix de novembro cobre o PHP2Shell e a CVE-2026-123039. Quem não puder aplicar o patch de imediato deve, segundo o fabricante, parar o processo <code>dynamic_server</code> e impedir que ele reinicie.<sup>[1][2]</sup> A CISA incluiu a falha no KEV em 13/11, prazo <strong>16/11</strong>.<sup>[3]</sup></div>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> O padrão é o mesmo da Barracuda e da Citrix: o equipamento de segurança na borda é a porta de entrada, e dali o caminho segue para a virtualização. Quem opera uma caixa Check Point também verifica o ESXi por trás dela e se há backups que o wiper não alcança.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/check-point-patches-zero-day-that-lets-hackers-get-root-access/">bleepingcomputer.com (13/11)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/check-point-gateways-hacked-via-php2shell-to-deploy-vmware-esxi-wiper/">bleepingcomputer.com (13/11)</a> · [3] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (posição de 13/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>GitHub "wfx-loot": trocar secrets não basta</h2>
+        <p><span class="update-since">Atualização desde sex</span> Os dados principais de ontem continuam valendo: segundo a Aikido, o atacante usou <strong>4.837 contas roubadas do GitHub</strong> para testar <strong>61.764 repositórios</strong> quanto a permissão de escrita, e roubou secrets de "at least 1,835 targets".<sup>[1]</sup> A heise acrescenta em 13/11: "Em mais de 1800 casos, workflows teriam executado o código malicioso." A empresa SafeDep encontrou commits com código malicioso "em mais de 8000 repositórios públicos".<sup>[2]</sup> O número da SafeDep só encontramos na heise.</p>
+        <p>O novo é sobretudo a chamada: "Por meio de contas do GitHub sequestradas, atacantes montam backdoors na AWS e no Azure."<sup>[2]</sup> Segundo a heise, isso não é uma falha no GitHub Actions, e sim abuso das permissões de escrita de tokens roubados. A Fly.io diz que tokens do seu app do GitHub vazaram por um <code>.git/config</code> acessível publicamente. Do GitHub continua não havendo posicionamento.<sup>[2]</sup></p>
+        <div class="callout warn"><span class="callout-label">Atenção</span> Rastros segundo a heise: branch <code>wfx-docs</code>, PR "docs: dependency audit notes", commit "ci: refresh build cache". "Os afetados devem revogar tokens, autorizações OAuth e chaves SSH da sua conta." Na nuvem, removem-se roles da AWS que confiam em todas as contas e Federated Credentials do Azure com o prefixo <code>wfx-ci-</code>.<sup>[2]</sup></div>
+        <div class="eli5">
+          <strong class="eli5-term">Federated Credential:</strong> Uma regra na nuvem que diz: "Quem se apresentar com este documento externo, por exemplo um workflow do GitHub, pode entrar." Se um atacante cria uma regra dessas, volta a entrar mesmo depois de trocar a senha. Como uma cópia da chave que o ladrão deixou com o zelador.
+        </div>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Este é o ponto mais importante da semana para nós: quem só rotaciona os secrets do GitHub deixa a porta aberta na AWS ou no Azure. Os dez minutos do fim de semana pertencem à lista de regras de confiança na nuvem, não só às configurações do repositório.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-compromise-4-800-github-accounts-to-steal-cloud-credentials/">bleepingcomputer.com (12/11)</a> · [2] <a href="https://www.heise.de/news/Gestohlene-Token-Secret-Stealer-in-Tausenden-GitHub-Repositories-11524706.html">heise.de (13/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Quantum Systems: a atualização foi a arma</h2>
+        <p>A fabricante alemã de drones <strong>Quantum Systems</strong> relata um ataque ao seu software de planejamento de solo e de missão, o <strong>QBase</strong>. Segundo a Spiegel e o Financial Times, citados pelo BleepingComputer, o ataque ocorreu "via a malicious QBase update file" pelo servidor de atualização.<sup>[1]</sup> Foi descoberto no fim de outubro. Segundo relatos, a Bundeswehr manteve os drones em solo por precaução e retirou os sistemas de um exercício. Quantos clientes instalaram a atualização é incerto; a empresa não aponta nenhum autor.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Ataque pelo canal de atualização:</strong> Os clientes confiam nas atualizações do seu fabricante e as instalam automaticamente. Quem toma o servidor de atualização entrega código malicioso com o remetente do fabricante. Como uma carta falsa dentro do envelope verdadeiro do banco.
+        </div>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Para fabricantes de software, essa é a verdadeira lição, mesmo sem o lado militar: assinar as atualizações, manter a chave de assinatura separada do servidor de atualização e verificar a assinatura no cliente. Assim, um servidor tomado sozinho não basta.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/german-military-drone-operations-disrupted-by-cyberattack/">bleepingcomputer.com (13/11)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Apache httpd 2.4.71: a Apache confirma o intervalo</h2>
+        <p><span class="update-since">Atualização desde sex</span> A página de segurança do projeto agora traz os fatos sobre a <strong>CVE-2026-119618</strong>: severidade "critical", uma sincronização defeituosa em <code>assign_headers()</code> do mod_http2 que pode levar à execução de código. "This issue affects Apache HTTP Server: from 2.4.55 through 2.4.70", além do mod_h2 do GitHub nas versões 2.0.8 a 2.0.42.<sup>[1]</sup> A falha foi reportada pela Anthropic (26/10) e pelo Google (03/11); a 2.4.71 saiu em 11/11. Não há valor de CVSS.</p>
+        <p>A 2.4.71 corrige mais duas falhas: uma queda no mod_md (CVE-2026-106023, "important", a partir da 2.4.30) e um overflow de um byte no mod_vhost_alias (CVE-2026-109163, "low").<sup>[1]</sup> A heise avalia um exploit como "possível, mas difícil". Só são afetados servidores com HTTP/2 ativado; como solução provisória ajuda <code>Protocols http/1.1</code>.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Race condition:</strong> Duas partes de um programa acessam os mesmos dados ao mesmo tempo, e o resultado depende de quem chega primeiro. Como duas pessoas preenchendo o mesmo formulário ao mesmo tempo: no fim, há partes de ambas nele.
+        </div>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Atrás do Caddy, isso não nos afeta. Mas quem tem o Apache como proxy reverso ou numa imagem Docker verifica a versão na imagem, não no host. Pacotes de distribuição costumam atrasar alguns dias.</div>
+        <span class="src">[1] <a href="https://httpd.apache.org/security/vulnerabilities_24.html">httpd.apache.org página de segurança (posição de 14/11)</a> · [2] <a href="https://www.heise.de/news/Kritische-Sicherheitsluecke-in-Apache2-ermoeglicht-Codeeinschleusung-11523150.html">heise.de (12/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Citrix NetScaler: 28 falhas, nenhum ataque</h2>
+        <p><span class="update-since">Atualização desde sex</span> Ontem só uma nota curta, agora com números: a Citrix corrige no NetScaler ADC e Gateway <strong>28 falhas, 9 delas críticas</strong>. A mais grave, a <strong>CVE-2026-107412</strong>, tem CVSS 9,5 e afeta aparelhos configurados como gateway ou servidor AAA.<sup>[1]</sup> Corrigido em 14.1-73.57, 13.1-64.39, 14.1-FIPS 14.1-73.58 e 13.1-FIPS/NDcPP 13.1-37.293. "Até agora, a Citrix não tem relatos de que atacantes já estejam explorando as falhas."<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Falhas do NetScaler da classe 9+ foram muitas vezes exploradas em poucos dias nos últimos anos. "Nenhum ataque conhecido" é, neste produto, uma janela de tempo, não um estado.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Angreifer-koennen-Citrix-NetScaler-ADC-und-NetScaler-Gateway-lahmlegen-11522940.html">heise.de (12/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: o que entrou esta semana</h2>
+        <p>Em 13/11 a CISA incluiu duas falhas, ambas com prazo <strong>16/11</strong>: Check Point CVE-2026-123039 (veja acima) e <strong>UnrealIRCd CVE-2026-114713</strong>, um tratamento incorreto de delimitadores.<sup>[1]</sup> As entradas de 10/11 têm prazo <strong>24/11</strong>: a falha do Outlook CVE-2026-124194, Chromium CVE-2026-125350 (use-after-free), Cisco BroadWorks CVE-2026-20320 (XXE) e Openwave Webtop CVE-2026-111793. O prazo para o Barracuda ESG terminou ontem.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">XXE (XML External Entity):</strong> Um parser XML segue referências no documento a arquivos ou endereços externos. Um atacante envia XML apontando para <code>/etc/passwd</code> e recebe o arquivo de volta. Como um formulário com o campo "anexe o documento do arquivo", que alguém preenche obedientemente.
+        </div>
+        <p>Outras entradas do KEV de 09/11 (prazo de 12/11 para todas, ou seja, já vencido), segundo o catálogo da CISA: GPUStack CVE-2026-102895 (autenticação inadequada), OpenBSD OpenSSH CVE-2026-123158 (código de status ou valor de retorno inesperado), SignalWire FreeSwitch CVE-2026-116779 (injeção de código) e IBM Aspera Faspex CVE-2026-123218 (autorização incorreta). Quem usa OpenSSH deve verificar essa entrada primeiro.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV, catálogo de 13/11</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Patch Tuesday: o que sobra</h2>
+        <p>Após a correção de ontem, resta uma falha explorada: <strong>Outlook CVE-2026-124194</strong>. A CSO a resume assim: "an Outlook zero day that allows theft of hashed credentials"; além disso, a CSO cita 63 correções críticas.<sup>[1]</sup> Segundo resultados de busca, a falha do Outlook tem CVSS 6,5 e chega pela atualização do Office (Click-to-Run), não pelo Windows Update; não verificamos isso na fonte da Microsoft. Seguimos sem informar o total de correções: as fontes citam 1.093 ou 1.094, e não lemos a lista da própria Microsoft.</p>
+        <span class="src">[1] <a href="https://www.csoonline.com/article/4247015/november-2026-patch-tuesday-63-critical-microsoft-fixes-plus-an-outlook-zero-day-that-allows-theft-of-hashed-credentials.html">csoonline.com (11/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>FaceStealer: a Coreia do Norte quer os repositórios</h2>
+        <p>O Departamento de Justiça dos EUA apresentou e interrompeu uma técnica de ataque que chama de "FaceStealer" e atribui à Coreia do Norte. Segundo a heise, os autores teriam roubado mais de US$ 400 milhões em cripto; foram apreendidos mais de 900 registros de vítimas. O novo é o alvo: desenvolvedores de código aberto. "O objetivo seria, por meio deles, obter acesso aos seus repositórios."<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Junto com o "wfx-loot", isso forma um quadro claro: a conta de um mantenedor vale hoje mais do que um servidor. Chave de hardware em vez de SMS, e nada de tokens de longa duração no diretório home.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/FaceStealer-Nordkorea-zielt-laut-FBI-zunehmend-auf-Open-Source-Entwickler-11523668.html">heise.de (13/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Trezor: implante entre a placa e o display</h2>
+        <p>A Trezor confirma em três hardware wallets <strong>Safe-5</strong> "malicious hardware implants designed to steal wallet recovery phrases". Uma placa adicional lê as palavras de recuperação no display e as envia criptografadas por rede celular a um servidor.<sup>[1]</sup> Os aparelhos vieram do revendedor CryptoBilis, no Sudeste Asiático, comprados entre 20/08 e 23/09/2026. O firmware 2.13.1 de 11/11 bloqueia os implantes encontrados, mas não protege palavras que já foram capturadas.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/cryptocurrency/trezor-confirms-crypto-stealing-implants-in-three-wallets-releases-fix/">bleepingcomputer.com (13/11)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>.NET 11: suporte curto, e o .NET 8 saiu</h2>
+        <p>A Microsoft lançou o <strong>.NET 11.0</strong> em 10/11, com C# 15. É uma versão STS com 24 meses de suporte até novembro de 2028.<sup>[1]</sup> Importante para a operação: "O suporte ao .NET 9.0 e 8.0 terminou junto com o lançamento do .NET 11.0." O .NET 10 também vai até novembro de 2028.<sup>[1]</sup> Tecnicamente, apps .NET MAUI para Android, iOS e Mac Catalyst agora rodam no CoreCLR em vez do Mono, e várias ferramentas do SDK iniciam mais rápido graças ao Native AOT. O SDK traz ainda um template de projeto para servidores MCP; os detalhes ficam no brief ai-dev.</p>
+        <div class="eli5">
+          <strong class="eli5-term">LTS e STS:</strong> O LTS (Long-Term Support) recebe atualizações de segurança longas, o STS (Standard-Term Support) mais curtas. Desde a mudança para 24 meses de STS, o .NET 10 (LTS) e o .NET 11 (STS) terminam no mesmo mês. Como dois contratos de aluguel com datas de início diferentes que vencem no mesmo dia.
+        </div>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Quem ainda tem serviços no .NET 8 não recebe mais correções de segurança a partir de agora. O salto vai para o .NET 10, não para o 11: mesmo fim de suporte, mas um ano a mais de maturidade.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/NET-11-0-steht-bereit-11520160.html">heise.de (11/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>libghostty 1.0: um núcleo de terminal para todos</h2>
+        <p>O núcleo de emulação do terminal Ghostty foi lançado como <strong>libghostty-vt 1.0</strong> com C ABI estável, sob licença MIT. Ele processa sequências de controle, cursor e scrollback; o desenho fica a cargo do aplicativo que o incorpora.<sup>[1]</sup> As IDEs da JetBrains o usam como terminal padrão a partir da 2026.3, o novo terminal do KDE, Kwi, é construído sobre ele, e o Neovim aceitou um PR para abandonar o libvterm. Há bindings para Rust, Go, Python e JavaScript.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">C ABI estável:</strong> Uma interface binária que não muda entre versões. Os programas podem trocar a biblioteca sem ser recompilados, e as distribuições podem entregá-la como pacote próprio. Como um padrão de tomada: todo aparelho encaixa, seja qual for o fabricante.
+        </div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Fuer-JetBrains-Neovim-und-KDE-libghostty-1-0-ist-da-11521170.html">heise.de (12/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL 19 na quinta-feira</h2>
+        <p>Lembrete do brief de ontem: "The planned date for the general availability of PostgreSQL 19 is November 19, 2026." O PostgreSQL 14 chega ao fim com a 14.25.<sup>[1]</sup> Quem migra para a 19 via <code>pg_upgrade</code> e tem índices de texto completo, <code>pg_trgm</code> ou <code>fuzzystrmatch</code> lê antes a seção "Migration to Version 19".<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.postgresql.org/message-id/attachment/208544/20261112updaterelease.md">postgresql.org anúncio de release (12/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Operation Endgame: 235 servidores a menos</h2>
+        <p>A Europol coordenou, com participação do BKA, uma nova rodada da Operation Endgame: "235 servidores e 257 domínios" foram desligados.<sup>[1]</sup> No Gootloader foram 14 servidores e 218 domínios, além de 681 sites infectados limpos. No CastleRAT caíram 120 servidores e 39 domínios, no StealC 102 servidores. Os investigadores garantiram "mais de 6 milhões de credenciais de vítimas".<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> O StealC é um infostealer, justamente o tipo de malware de onde saem tokens roubados do GitHub. Derrubadas ajudam por semanas, não para sempre.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Operation-Endgame-Weltweiter-Schlag-gegen-Cybercrime-11524460.html">heise.de (13/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Mittwald: situação inalterada</h2>
+        <p>Sobre o ataque pelo servidor MCP da hospedagem Mittwald, não há novidades desde ontem. Segundo a heise, sites hospedados "não são afetados pelo desligamento".<sup>[1]</sup> A avaliação como superfície de ataque para ferramentas de IA está no brief ai-dev.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Angriff-ueber-MCP-Server-Webhoster-Mittwald-im-Krisenmodus-11522728.html">heise.de (12/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Outras notícias</h2>
+        <ul>
+          <li><strong>Humble Bundle</strong>: Após o redesign, não é mais possível configurar a autenticação em dois fatores; o motivo é incerto.<sup>[1]</sup></li>
+          <li><strong>Pangolin</strong>: A plataforma de acesso remoto auto-hospedada agora tem um cliente desktop para Linux com menu na bandeja.<sup>[1]</sup></li>
+        </ul>
+        <p>Conhecemos as duas notícias apenas pela visão geral da heise.</p>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de/security (13/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>UE: o CRA e a semana</h2>
+        <p>Desde 11/09/2026 valem as obrigações de notificação do Cyber Resilience Act: os fabricantes notificam falhas exploradas pela plataforma da ENISA, com alerta antecipado após 24 horas e notificação após 72 horas. A maioria das demais obrigações vale a partir de 11/12/2027.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Check Point e Quantum Systems são exatamente os casos para os quais esses prazos foram escritos. Quem vende para a UE software com canal de atualização deveria saber quem escreve a notificação de 24 horas numa emergência.</div>
+        <span class="src">[1] <a href="https://www.mccannfitzgerald.com/knowledge/data-privacy-and-cyber-risk/cyber-resilience-act-reporting-obligations-apply-from-11-september-2026">mccannfitzgerald.com (09/2026)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Brasil</h2>
+        <p>Hoje nada de novo da cena de tecnologia do BR nas nossas fontes.</p>
+      </section>
+
+      <section class="news-item">
+        <h2>Não verificado</h2>
+        <ul>
+          <li>GitHub: o número da SafeDep (mais de 8.000 repos), as 1.800 execuções de workflow e a informação da Fly.io lidos só na heise.</li>
+          <li>Check Point CVE-2026-123039: sem valor de CVSS, versões afetadas não informadas.</li>
+          <li>Quantum Systems: os detalhes da Bundeswehr vêm de relatos com fontes internas.</li>
+          <li>Patch Tuesday: total, CVSS 6,5 e via Click-to-Run da falha do Outlook não verificados na fonte da Microsoft.</li>
+          <li>Java, Spring, Angular, React, TypeScript, Python, Docker, Caddy, Tailscale: nenhum release novo encontrado.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>O que vale o sábado</h2>
+        <p>Dez minutos de nuvem em vez de GitHub: na AWS, procurar roles que confiam em todas as contas, e no Azure, Federated Credentials com <code>wfx-ci-</code>. Quem tem Apache numa imagem a reconstrói com a 2.4.71. E quem ainda opera .NET 8 planeja o salto para o 10.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Hoje é sábado, catorze de novembro. Duas notícias mostram onde os atacantes estão mirando: o próprio firewall e o canal de atualização.</p>
+  <p>A Check Point confirma uma falha explorada nos seus gateways. Segundo o BleepingComputer, os atacantes entram no portal por duas falhas de PHP, viram root com a nova falha e depois apagam servidores VMware com um wiper. Algumas dezenas de clientes foram afetados. A agência americana CISA fixou um prazo até segunda-feira.</p>
+  <p>Na campanha do GitHub, com quase cinco mil contas roubadas, a heise relata mais de mil e oitocentas execuções de workflow com código malicioso. Mais importante é uma segunda constatação: os atacantes montam backdoors na AWS e no Azure. Quem só troca os secrets deixa essa porta aberta.</p>
+  <p>Na fabricante alemã de drones Quantum Systems, um ataque veio por uma atualização manipulada do software de planejamento. Segundo relatos, drones da Bundeswehr ficaram em solo por precaução.</p>
+  <p>A Apache confirma a falha crítica no módulo HTTP/2 para as versões dois ponto quatro ponto cinquenta e cinco até setenta. A Citrix corrige vinte e oito falhas no NetScaler, nove delas críticas, e ainda não há ataques conhecidos.</p>
+  <p>Entre os lançamentos, chegou o ponto NET onze, com vinte e quatro meses de suporte. Ao mesmo tempo, acabou o suporte ao ponto NET oito e nove. O núcleo do terminal Ghostty foi lançado na versão um e logo estará no JetBrains, no KDE e no Neovim.</p>
+  <p>A Europol e o BKA derrubaram duzentos e trinta e cinco servidores de redes de malware. E, segundo o FBI, uma técnica norte-coreana agora mira desenvolvedores de código aberto, para chegar aos seus repositórios.</p>
+  <p>Nosso conselho para o fim de semana: dedique dez minutos a revisar as regras de confiança na nuvem. Na semana que vem, vamos olhar o prazo da Check Point na segunda-feira e o PostgreSQL dezenove na quinta.</p>
+</div>
+
+</body>
+</html>
