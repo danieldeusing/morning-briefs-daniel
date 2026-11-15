@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 15/11/2026</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Edición 15/11/2026</span>
+  </div>
+  <h1 class="masthead-title">Domingo tranquilo: el lunes vencen dos plazos del KEV y los controles de refrigeración de Danfoss siguen expuestos pese a la actualización</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Desde el viernes por la tarde casi no ha pasado nada nuevo en nuestras fuentes. heise no publicó ninguna nota de seguridad el sábado, y el catálogo KEV de la CISA sigue como el 13/11. Por eso este boletín es corto y tiene otro propósito: ordena la semana según lo que sigue pendiente. La única historia fresca viene del entorno del BSI: los controles de refrigeración de Danfoss en supermercados tienen vulnerabilidades críticas incluso después de la actualización. Nuestra opinión: el domingo es para la lista de plazos, no para titulares nuevos.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Plazo KEV lun 16/11</strong>: Check Point CVE-2026-123039 y UnrealIRCd CVE-2026-114713. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>UnrealIRCd</strong>: corrección en 6.2.7.1, hot-patch para 6.0.0 a 6.2.7; la versión 5 también está afectada. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Danfoss AK-SM 800A</strong>: seis vulnerabilidades desconocidas en 5.3.2; el BSI no descarta la 5.4.0. <span class="chip">DE</span> <span class="chip">EU</span></li>
+      <li><span class="chip">Sec</span> <strong>Plazo KEV mar 24/11</strong>: Outlook, Chromium, Cisco BroadWorks, Openwave Webtop. <span class="chip">Global</span></li>
+      <li><span class="chip">Navegador</span> <strong>Chrome 157.0.8103.50/.51</strong>: octavo zero-day explotado del año. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Barracuda ESG</strong>: el plazo KEV venció el 13/11; parches BNSF-40425 y BNSF-40430. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>PostgreSQL 19</strong>: lanzamiento jue 19/11; antes hay que completar la lista de REINDEX del 12/11. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>Revisión del stack</strong>: sin nuevos releases de Java, Spring, Angular, React, Docker ni Tailscale. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Panorama semanal</div>
+      <div class="timeline-sub">Fechas hasta el jue 19/11 — el plazo KEV del mar 24/11 (Outlook, Chromium, Cisco BroadWorks, Openwave) está en el texto</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Dom 15/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Desconectar de internet los controles Danfoss, si se tienen</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Lun 16/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Plazo KEV: Check Point CVE-2026-123039</span><span>Plazo KEV: UnrealIRCd CVE-2026-114713</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Jue 19/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>PostgreSQL 19: disponibilidad general prevista</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Vencen el lunes: Check Point y UnrealIRCd</h2>
+        <p>El 13/11 la CISA añadió dos vulnerabilidades al catálogo KEV, ambas con plazo el <strong>lunes 16/11</strong>: Check Point «Multiple Products» <strong>CVE-2026-123039</strong> y <strong>UnrealIRCd CVE-2026-114713</strong>.<sup>[1]</sup> El caso de Check Point, con PHP2Shell, privilegios de root y el wiper para ESXi, lo cubrimos ayer con detalle. Lo nuevo hoy son los detalles de UnrealIRCd.</p>
+        <p>Según el aviso de seguridad en oss-security, la falla «allows normal users to execute commands with server/IRCOp authority». Es decir, un usuario normal del chat obtiene los permisos de un operador del servidor.<sup>[2]</sup> La solución: «upgrade to 6.2.7.1», publicada el 07/11. Para las versiones 6.0.0 a 6.2.7 hay un hot-patch, y UnrealIRCd 5 también está afectado.<sup>[2]</sup> La CISA clasifica la falla como «Improper Neutralization of Delimiters».<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Falla de delimitadores:</strong> Un protocolo separa comandos y datos con ciertos caracteres, por ejemplo un salto de línea. Si el servidor no filtra esos caracteres en lo que escribe el usuario, este cuela un comando propio. Es como una carta en la que alguien escribe a media página «Fin de la carta. Nueva instrucción del jefe:».
+        </div>
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> IRC suena a 1999, pero sigue funcionando en muchas comunidades OSS y en puentes de chat internos. Quien opere su propio servidor IRC instala hoy la 6.2.7.1 o el hot-patch.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (al 15/11)</a> · [2] <a href="https://seclists.org/oss-sec/2026/q4/576">seclists.org oss-security (08/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Danfoss: la actualización no es la solución</h2>
+        <p>El control de refrigeración <strong>Danfoss AK-SM 800A</strong> está instalado en muchos supermercados y se considera vulnerable desde agosto. Según heise, la empresa neerlandesa Midnight Blue encontró más vulnerabilidades en el firmware 5.3.2, es decir, ya con la actualización: «Entre ellas había seis vulnerabilidades hasta ahora desconocidas». Todas permiten ejecutar código desde la red sin autenticación.<sup>[1]</sup> Según el reporte, a los equipos les faltan stack canaries, PIE y Secure Boot. Los atacantes podrían instalar su propio firmware, y el BSI advierte que después los equipos pueden quedar inservibles.<sup>[1]</sup></p>
+        <p>Respecto al firmware 5.4.0 del 12/11, el BSI todavía no puede descartar el 13/11 que también sea vulnerable. El CCB belga emitió una advertencia urgente el 12/11. El artículo no menciona números CVE ni valores CVSS.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Stack canaries, PIE, Secure Boot:</strong> Tres capas de protección estándar. Un canary es un valor de control en memoria que da la alarma si un desbordamiento lo sobrescribe. PIE carga el programa en direcciones aleatorias para que el atacante no sepa adónde saltar. Secure Boot solo arranca firmware firmado. Sin las tres, es como una casa sin detector de humo, sin cambio de número de calle y sin cerradura en la puerta.
+        </div>
+        <div class="callout warn"><span class="callout-label">Atención</span> Midnight Blue recomienda «desconectar por completo los equipos de internet». El BSI permite el acceso remoto, como máximo, desde redes de confianza o por VPN, y dice claramente que los parches no garantizan protección contra otras vulnerabilidades.<sup>[1]</sup></div>
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> Esta es la lección para quien desarrolle software embebido o IoT: un parche para fallas individuales sirve de poco si falta el endurecimiento básico. Según heise, los investigadores encontraron los problemas en aproximadamente una hora de revisión de código. Eso dice más sobre el proceso de build que sobre cada bug.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Supermarkt-Angriffe-Danfoss-Kuehlsteuerungen-blieben-trotz-Updates-angreifbar-11524376.html">heise.de (13/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>La semana en el retrovisor</h2>
+        <p>Lo que contó esta semana para nuestro stack, una línea por caso. Los detalles están en los boletines de miércoles a sábado.</p>
+        <ul>
+          <li><strong>GitHub «wfx-loot»</strong>: tokens robados, puertas traseras en AWS y Azure. Cambiar los secretos no basta.<sup>[1]</sup></li>
+          <li><strong>Check Point</strong>: de la falla PHP en el portal al root y al wiper para ESXi.<sup>[2]</sup></li>
+          <li><strong>Apache httpd 2.4.71</strong>: vulnerabilidad crítica en mod_http2 para 2.4.55 a 2.4.70.<sup>[3]</sup></li>
+          <li><strong>.NET 11</strong>: publicado, y el soporte de .NET 8 y 9 terminó.<sup>[4]</sup></li>
+        </ul>
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> El hilo conductor de la semana: los atacantes entran por cosas en las que confiamos. Son los tokens, los canales de actualización y los dispositivos de seguridad en el perímetro. Ningún CVE por sí solo fue la historia; lo fue el patrón.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Gestohlene-Token-Secret-Stealer-in-Tausenden-GitHub-Repositories-11524706.html">heise.de (13/11)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/check-point-gateways-hacked-via-php2shell-to-deploy-vmware-esxi-wiper/">bleepingcomputer.com (13/11)</a> · [3] <a href="https://httpd.apache.org/security/vulnerabilities_24.html">httpd.apache.org</a> · [4] <a href="https://www.heise.de/news/NET-11-0-steht-bereit-11520160.html">heise.de (11/11)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Hasta el martes 24/11: Outlook, Chrome y dos más</h2>
+        <p>Cuatro entradas KEV del 10/11 tienen plazo el <strong>24/11</strong>: Microsoft Office CVE-2026-124194 (la vulnerabilidad de Outlook), Chromium CVE-2026-125350, Cisco BroadWorks CVE-2026-20320 y Openwave Webtop Media Transcoder CVE-2026-111793.<sup>[1]</sup> El catálogo ya tiene 1.781 entradas.<sup>[1]</sup></p>
+        <p><strong>Chrome</strong>: Google escribe «an exploit for CVE-2026-125350 exists in the wild». La falla es un use-after-free en el componente XML. Está corregida en Chrome <strong>157.0.8103.50 o .51</strong>, según la plataforma. Según BleepingComputer, es la «eighth such flaw since the start of the year».<sup>[2]</sup></p>
+        <p><strong>Patch Tuesday</strong>: según Qualys, Microsoft corrigió «only one vulnerability that has been exploited in the wild», la de Outlook. Qualys cuenta 63 correcciones críticas.<sup>[3]</sup> En el total nos quedamos con «más de 1.000». Qualys menciona 1.235 en el texto, su propia tabla suma 1.094 y otras fuentes escriben 1.093.<sup>[3]</sup> Los valores CVSS de Outlook y Chrome los tenemos solo de resultados de búsqueda y por eso no los citamos.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Use-after-free:</strong> Un programa libera memoria, pero luego la vuelve a usar. Si entretanto un atacante llenó ese espacio con sus propios datos, el programa ejecuta los datos del atacante. Es como una habitación de hotel ya asignada al siguiente huésped, pero el huésped anterior todavía conserva una llave.
+        </div>
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> Chrome suele actualizarse solo, pero necesita reiniciarse. Quien lleve días con el navegador abierto debe revisar en «Acerca de Google Chrome».</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (al 15/11)</a> · [2] <a href="https://bleepingcomputer.com/news/security/google-patches-eighth-chrome-zero-day-exploited-in-attacks-this-year">bleepingcomputer.com (10/11)</a> · [3] <a href="https://blog.qualys.com/vulnerabilities-threat-research/2026/11/10/microsoft-patch-tuesday-november-2026-security-update-review">blog.qualys.com (11/2026)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Barracuda ESG: plazo vencido, números de parche claros</h2>
+        <p>El plazo KEV para <strong>CVE-2026-116606</strong> (evasión de autenticación, solo ESG) y <strong>CVE-2026-111560</strong> (inyección de comandos, varios productos) venció el 13/11.<sup>[1]</sup> Barracuda dice: «We have identified exploitation activity affecting a small number of organizations.»<sup>[2]</sup></p>
+        <p>Los parches para ESG: «BNSF-40425 for 9.4.017 and later; BNSF-40430 for versions before 9.4.017». Para los demás productos hay números propios, por ejemplo BNADC-16586 para ADC/WAF.<sup>[2]</sup> Los valores CVSS y una «versión corregida» circulan solo en agregadores y no coinciden con estos números de parche. Por eso no los citamos.</p>
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> En Barracuda se revisa el número de parche instalado, no el número de versión. Quien no administre el ESG por su cuenta debe preguntarle a su proveedor exactamente por ese número.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (al 15/11)</a> · [2] <a href="https://bleepingcomputer.com/news/security/hackers-exploit-barracuda-email-security-gateway-flaws-to-get-root-access">bleepingcomputer.com (10/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Aún pendiente de antes: Zyxel GS1900</h2>
+        <p>No hay nota nueva, pero sí un punto para la lista: en la vulnerabilidad de los switches Zyxel <strong>CVE-2026-107441</strong>, los atacantes tomaron control de «996 devices», según GreyNoise.<sup>[1]</sup> El parche de junio se podía eludir. El nuevo firmware del 22/10 y el aviso del 03/11 cubren diez modelos.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> Los switches administrados pequeños suelen estar en el homelab o en la oficina y nunca reciben una actualización. Si la interfaz web es accesible desde internet, ese es el verdadero error.</div>
+        <span class="src">[1] <a href="https://bleepingcomputer.com/news/security/zyxel-fixes-zero-day-exploited-to-hack-nearly-1-000-network-switches">bleepingcomputer.com (04/11)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PostgreSQL: trabajo dominical antes del jueves</h2>
+        <p>El 12/11 salieron 18.7, 17.12, 16.16, 15.20 y 14.25 con más de 140 correcciones de bugs. «This is the final release of PostgreSQL 14.» Y: «PostgreSQL 19 should be made generally available on November 19, 2026.»<sup>[1]</sup></p>
+        <p>El anuncio menciona tareas posteriores que suelen olvidarse:<sup>[1]</sup></p>
+        <ul>
+          <li>Varias correcciones contra <strong>índices GIN</strong> dañados: reconstruir los índices afectados.</li>
+          <li>«If you use <code>pg_trgm</code>, you should reindex any GiST indexes that use the <code>gist_trgm_ops</code> operator class.»</li>
+          <li>Reconstruir también los índices B-Tree sobre columnas <code>bpchar</code>.</li>
+          <li>Quien use respaldos incrementales hace después un nuevo respaldo completo.</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">REINDEX:</strong> Un índice es el directorio de palabras clave de una tabla. Si la versión anterior tuvo un error al crearlo, el directorio es incorrecto, incluso después de actualizar. <code>REINDEX</code> lo reconstruye. Es como un libro cuya editorial corrigió la errata del índice, pero el índice de tu propio ejemplar sigue siendo el viejo.
+        </div>
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> Quien siga en la 14 no salta a la 19 el primer día, sino a la 18. La 19 solo gana nuestra confianza con el primer minor release. Y <code>REINDEX ... CONCURRENTLY</code> evita el bloqueo en tablas grandes.</div>
+        <span class="src">[1] <a href="https://www.postgresql.org/message-id/attachment/208544/20261112updaterelease.md">postgresql.org anuncio de release (12/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Revisión del stack: silencio</h2>
+        <p>Para Java, Spring, Angular, React, Docker, Caddy y Tailscale no encontramos nuevos releases entre el 10 y el 14/11. Python sigue en <strong>3.15.2</strong> y <strong>3.14.10</strong>, ambos del 25/10.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.python.org/downloads/">python.org/downloads (al 15/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>UE: Danfoss y el CRA</h2>
+        <p>Desde el 11/09/2026 rigen las obligaciones de notificación del Cyber Resilience Act para vulnerabilidades explotadas; la mayoría de las demás obligaciones, a partir del 11/12/2027. La Comisión Europea publicó en julio una guía no vinculante al respecto.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nuestra opinión</span> Danfoss muestra por qué el CRA exigirá desde 2027 también un endurecimiento básico y no solo notificaciones. Un equipo sin Secure Boot vendido en la UE se convertirá entonces en un problema de cumplimiento y no solo de seguridad.</div>
+        <span class="src">[1] <a href="https://digital-strategy.ec.europa.eu/en/library/commission-publishes-new-guidance-support-timely-cyber-resilience-act-implementation">digital-strategy.ec.europa.eu</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Brasil</h2>
+        <p>Hoy no hay nada nuevo de la escena tech brasileña en nuestras fuentes.</p>
+      </section>
+
+      <section class="news-item">
+        <h2>Sin verificar</h2>
+        <ul>
+          <li>Patch Tuesday: el total de correcciones (1.093, 1.094 o 1.235) y el CVSS 6,5 de Outlook no se verificaron con la lista propia de Microsoft.</li>
+          <li>Chrome: CVSS 8,8 solo de un resultado de búsqueda; no se leyeron las release notes de Google.</li>
+          <li>Barracuda: los valores CVSS y la «versión corregida» se contradicen entre las fuentes.</li>
+          <li>Check Point CVE-2026-123039: sigue sin valor CVSS ni lista de versiones.</li>
+          <li>Danfoss: sin números CVE; datos solo de heise.</li>
+          <li>Sábado y domingo: salvo heise y el catálogo KEV, no se revisaron fuentes nuevas.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>Lo que vale el domingo</h2>
+        <p>Tres tareas cortas: quien opere un servidor IRC instala el hot-patch de UnrealIRCd. Quien tenga PostgreSQL con <code>pg_trgm</code> o índices GIN planea el REINDEX. Y quien lleve días con Chrome abierto lo reinicia.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Hoy es domingo quince de noviembre. Desde el viernes por la tarde casi no ha pasado nada nuevo en nuestras fuentes. Por eso este boletín ordena la semana según lo que sigue pendiente.</p>
+  <p>El lunes vencen dos plazos de la agencia estadounidense CISA. Uno es la vulnerabilidad de Check Point, de la que ayer informamos con detalle. El otro es el servidor de chat UnrealIRCd, donde un usuario normal obtiene los permisos de un operador del servidor. La solución es la versión seis punto dos punto siete punto uno, y para versiones anteriores hay un hot-patch.</p>
+  <p>La única historia fresca viene de heise. Los controles de refrigeración de Danfoss, instalados en muchos supermercados, tienen vulnerabilidades críticas incluso después de la actualización. Investigadores de Midnight Blue encontraron seis fallas nuevas. La oficina alemana de seguridad informática, el BSI, no puede descartar que incluso el firmware más reciente sea vulnerable, y recomienda no dejar los equipos expuestos directamente a internet.</p>
+  <p>Hasta el veinticuatro de noviembre vencen otros cuatro plazos, entre ellos la vulnerabilidad de Outlook del Patch Tuesday y un zero-day de Chrome. Según BleepingComputer, es el octavo zero-day de Chrome explotado este año. Quien tenga mucho tiempo sin reiniciar el navegador debería hacerlo.</p>
+  <p>En Barracuda el plazo ya venció. Lo importante ahí es el número de parche instalado, no el número de versión.</p>
+  <p>El jueves debe salir PostgreSQL diecinueve. Antes vale la pena revisar la actualización del doce de noviembre: hay que reconstruir varios tipos de índices, y PostgreSQL catorce llegó al final de su vida.</p>
+  <p>En Java, Spring, Angular, React y Docker la semana fue tranquila. Mañana veremos si los plazos del lunes traen nuevas noticias, y repasaremos la semana rumbo a PostgreSQL diecinueve.</p>
+</div>
+
+</body>
+</html>
