@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-16</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-16</span>
+  </div>
+  <h1 class="masthead-title">Start of the week: the update is the attack surface — from a drone maker to an editor extension</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">The weekend was quieter than the week before, but not empty. Two cases from Friday and Saturday show the same pattern: attackers don't break into the product, they break into the route the product takes to the customer. At the German drone maker Quantum Systems it was the update server; at Cursor it was the cache of the extension marketplace. On top of that, two KEV deadlines end today, and heise reports ongoing attacks on UnrealIRCd. Our view: if you check only one thing this week, check where your updates come from and who signs them.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>KEV deadline today, Mon 11/16</strong>: Check Point CVE-2026-123039 and UnrealIRCd CVE-2026-114713. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>UnrealIRCd</strong>: attacks are under way; the hot patch does not work on FreeBSD, where 6.2.8-rc1 helps. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Quantum Systems</strong>: tampered update for the QBase ground-control software; the Bundeswehr kept its drones on the ground. <span class="chip">DE</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Cursor</strong>: fake Claude Code extension in the marketplace cache, online for about 11 hours, up to 5,000 users. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>N-central</strong>: 19 of 21 compromised servers already had Hotfix 2; HF3 postponed. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>Microsoft cloud outage</strong>: Exchange Online and Teams disrupted, followed by phishing with fake status messages. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>KEV deadline Tue 11/24</strong>: Outlook, Chromium, Cisco BroadWorks, Openwave Webtop. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>PostgreSQL 19</strong>: release planned for Thu 11/19; work through the 11/12 REINDEX list first. <span class="chip">Global</span></li>
+      <li><span class="chip">Release</span> <strong>JVM</strong>: Open Liberty 26.0.0.11, Gradle 9.9.0, Quarkus 4.0.0.Beta3, JDK 28 EA build 23. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Dates through Tue 11/24 — N-central HF3 has no date, see the text</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Mon 11/16</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Check Point CVE-2026-123039</span><span>KEV deadline: UnrealIRCd CVE-2026-114713</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu 11/19</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>PostgreSQL 19: planned general availability</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 11/24</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Outlook CVE-2026-124194, Chromium CVE-2026-125350</span><span>KEV deadline: Cisco BroadWorks CVE-2026-20320, Openwave CVE-2026-111793</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Due today: UnrealIRCd and Check Point</h2>
+        <p>The two KEV entries from 11/13 have their deadline <strong>today, Monday 11/16</strong>: Check Point "Multiple Products" <strong>CVE-2026-123039</strong> and <strong>UnrealIRCd CVE-2026-114713</strong>. According to the catalog, no new entries have been added since 11/13.<sup>[1]</sup></p>
+        <p><span class="update-since">Update since Sun</span> heise reports on Sunday: "Attackers are currently targeting a vulnerability in UnrealIRCd and attacking IRC servers." The developer calls it the "most critical bug in UnrealIRCd in 15 years."<sup>[2]</sup> An ordinary user account is enough, but at least two linked IRC servers are needed. The attacker can then run commands with server or IRCOp rights, such as disconnecting users or banning them network-wide. "Code execution on the underlying system is not mentioned, however."<sup>[2]</sup></p>
+        <ul>
+          <li><strong>Fix:</strong> 6.2.7.1. The hot patch <code>bundle-20261107</code> applies without a restart, but did not work on FreeBSD. 6.2.8-rc1 helps there.<sup>[2]</sup></li>
+          <li><strong>Version 5:</strong> also affected, no updates. Disable the <code>labeled-response</code> module on all servers, with a full restart; a rehash is not enough.<sup>[2]</sup></li>
+          <li><strong>On the side:</strong> The developer fixed nine security issues in total, found in an AI-assisted internal audit.<sup>[2]</sup></li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">IRCOp:</strong> The operator of an IRC network, in other words the admin with house rules. They can kick out and ban users. The flaw hands an ordinary guest this key ring.
+        </div>
+        <div class="callout info"><span class="callout-label">Our view</span> We covered the Check Point case in detail on Saturday. For UnrealIRCd, the FreeBSD note is the important one: if you applied the hot patch and run FreeBSD, you may not be protected at all. Check the version number, not the good feeling.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of 11/16)</a> · [2] <a href="https://www.heise.de/news/Angriffe-auf-UnrealIRCd-Sicherheitsluecke-ermoeglicht-Befehle-mit-Serverrechten-11525565.html">heise.de (11/15)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Supply chain: two updates that were not updates</h2>
+
+        <h3>Quantum Systems: poisoned QBase update</h3>
+        <p>The German drone maker <strong>Quantum Systems</strong> has confirmed an attack. According to Spiegel and the Financial Times, attackers took over the update server and distributed a tampered update: "the compromise occurred via a malicious QBase update file".<sup>[1]</sup> QBase is the software for ground control and mission planning. The attack was discovered at the end of October. According to the reports, the Bundeswehr kept its drones on the ground as a precaution and pulled them from an exercise. How many customers installed the update is unclear.<sup>[1]</sup> MAD, the domestic intelligence service and the BSI are involved, according to the report; the company does not name a perpetrator.<sup>[1]</sup></p>
+
+        <h3>Cursor: marketplace cache as an entry point</h3>
+        <p>Cursor has confirmed a breach that began at a service provider. Attackers obtained an access key from Fireworks AI, copied data from a shared storage and found unredacted API credentials there.<sup>[2]</sup> With them, on 10/29 they placed fake versions <strong>2.1.312 and 2.1.313</strong> of the Claude Code extension in the cache of Cursor's VS Code marketplace. The extension "installed an attacker-controlled SSH key" and set itself up permanently.<sup>[2]</sup> The versions were online for "approximately 11 hours"; according to Cursor, "up to 5,000 users" are affected. Anthropic's genuine extension and Open VSX were not affected.<sup>[2]</sup></p>
+
+        <div class="eli5">
+          <strong class="eli5-term">Update-channel attack:</strong> Instead of breaking into a thousand houses, the attacker swaps the master key at the caretaker service. After all, every customer lets that service in voluntarily. That is exactly why the update server is so valuable.
+        </div>
+        <div class="callout warn"><span class="callout-label">Heads up</span> If you installed or updated the Claude Code extension in Cursor during that window, follow Cursor's instructions and check <code>~/.ssh/authorized_keys</code> for unknown keys.<sup>[2]</sup> The tooling side of the story is in the ai-dev brief.</div>
+        <div class="callout info"><span class="callout-label">Our view</span> Both cases teach the same lesson. Signed updates alone are not enough if the attacker sits at the distribution point or holds a key from a poorly protected bucket. Credentials do not belong unencrypted in shared storage, not even in "read-only" buckets. And a cache in front of a marketplace is a product of its own, with its own attack surface.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/german-military-drone-operations-disrupted-by-cyberattack/">bleepingcomputer.com (11/13)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/cursor-confirms-security-breach-led-to-malicious-claude-code-extension/">bleepingcomputer.com (11/14)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>N-central: Hotfix 2 is not enough</h2>
+        <p><span class="update-since">Update since Fri</span> Attacks with crypto miners are hitting <strong>N-central</strong>, the remote-management software from N-able. Researchers at Huntback counted "21 compromised N-central servers, 19 of them already on HF2".<sup>[1]</sup> The attack path "4EverAble2Shell" keeps working while the Legacy API is active. The next hotfix, HF3, is not out: N-able "has postponed the release because of additional testing".<sup>[1]</sup> The two main flaws, CVE-2026-125883 and CVE-2026-125881, are rated critical.<sup>[1]</sup></p>
+        <ul>
+          <li>Disable the Legacy API, apply HF2, update agents and probes.</li>
+          <li>N-able has switched off the Intune integration as a precaution and published IoCs.</li>
+          <li>If there are traces of an attack, assume full compromise: turning off the API does not undo a breach.<sup>[1]</sup></li>
+        </ul>
+        <div class="callout info"><span class="callout-label">Our view</span> Remote management is the master key to all of an IT provider's customers. A miner is the harmless variant here. If you have a provider that runs N-central, ask today about the state of the Legacy API.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Warten-auf-Sicherheitspatch-Krypto-Miner-Attacken-auf-N-central-beobachtet-11525491.html">heise.de (11/15)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Microsoft cloud: first the outage, then the phishing</h2>
+        <p>From Thursday evening, Microsoft cloud services were disrupted, including Exchange Online and Teams, some until Saturday. Microsoft names as the cause an error during a network capacity expansion that only took effect after recent network changes. Microsoft rules out an attack.<sup>[1]</sup></p>
+        <p>Criminals are now exploiting the outage. Fake status emails cite the real incident number <strong>EX1550543</strong>. They claim that held-back messages will be deleted within 24 hours unless you click. The subject follows the pattern "Outage – [six-character code]", and the links are forwarded via SendGrid.<sup>[1]</sup> Microsoft has so far been unable to "confirm either credential harvesting or delivery of malware", but the pattern matches classic password phishing.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our view</span> A real incident number makes a fake email believable. The rule is simple: check status only in the Microsoft 365 Admin Center, never through a link in an email. It is a good chance to tell the team exactly that once more.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Phishing-Kampagne-nutzt-Microsoft-Cloud-Ausfall-11525471.html">heise.de (11/15)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Through Tuesday, 11/24: Outlook, Chrome and two more</h2>
+        <p>Four KEV entries from 11/10 have a deadline of <strong>11/24</strong>: Microsoft Office CVE-2026-124194 (the Outlook flaw), Chromium CVE-2026-125350, Cisco BroadWorks CVE-2026-20320 and Openwave Webtop Media Transcoder CVE-2026-111793.<sup>[1]</sup> The catalog now has 1,781 entries.<sup>[1]</sup></p>
+        <p><strong>Chrome</strong>: The use-after-free in the XML component is fixed in Chrome <strong>157.0.8103.50 or .51</strong>, depending on the platform. According to BleepingComputer, it is the eighth exploited Chrome zero-day of the year.<sup>[2]</sup></p>
+        <p><strong>Patch Tuesday</strong>: According to Qualys, the Outlook spoofing flaw was the only one already exploited. CSO counts 63 critical fixes.<sup>[3]</sup> The sources contradict each other on the total number of fixes: 1,093, 1,094 or 1,235. We stick with "over 1,000".<sup>[3]</sup></p>
+        <div class="callout info"><span class="callout-label">Our view</span> The number doesn't matter, the Outlook flaw does: according to CSO, it lets hashed credentials leak. Together with the phishing wave above, that is this week's email topic.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of 11/16)</a> · [2] <a href="https://bleepingcomputer.com/news/security/google-patches-eighth-chrome-zero-day-exploited-in-attacks-this-year">bleepingcomputer.com (11/10)</a> · [3] <a href="https://blog.qualys.com/vulnerabilities-threat-research/2026/11/10/microsoft-patch-tuesday-november-2026-security-update-review">blog.qualys.com (11/10)</a> · <a href="https://www.csoonline.com/article/4247015/november-2026-patch-tuesday-63-critical-microsoft-fixes-plus-an-outlook-zero-day-that-allows-theft-of-hashed-credentials.html">csoonline.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Barracuda ESG: deadline passed on Friday</h2>
+        <p>The KEV deadline for <strong>CVE-2026-116606</strong> and <strong>CVE-2026-111560</strong> expired on 11/13.<sup>[1]</sup> The ESG patches are called BNSF-40425 (from 9.4.017) and BNSF-40430 (before 9.4.017).<sup>[2]</sup> CVSS scores and "fixed versions" exist only at aggregators, and they contradict each other. That is why we don't cite them.</p>
+        <div class="callout info"><span class="callout-label">Our view</span> With Barracuda, the installed patch number counts, not the version number.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of 11/16)</a> · [2] <a href="https://bleepingcomputer.com/news/security/hackers-exploit-barracuda-email-security-gateway-flaws-to-get-root-access">bleepingcomputer.com (11/10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Still open: Zyxel GS1900</h2>
+        <p>For the switch flaw <strong>CVE-2026-107441</strong>, attackers have taken over 996 devices, according to GreyNoise. The firmware from 10/22 and the advisory from 11/03 cover the affected models.<sup>[1]</sup> Small managed switches often never get an update. A web interface on an open network is the real mistake.</p>
+        <span class="src">[1] <a href="https://bleepingcomputer.com/news/security/zyxel-fixes-zero-day-exploited-to-hack-nearly-1-000-network-switches">bleepingcomputer.com (11/04)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PostgreSQL 19 on Thursday</h2>
+        <p>"PostgreSQL 19 should be made generally available on November 19, 2026." Before that comes the 11/12 update: 18.7, 17.12, 16.16, 15.20 and 14.25. "This is the final release of PostgreSQL 14."<sup>[1]</sup></p>
+        <ul>
+          <li>Rebuild damaged <strong>GIN indexes</strong>.</li>
+          <li>With <code>pg_trgm</code>: rebuild GiST indexes using <code>gist_trgm_ops</code>.</li>
+          <li>Rebuild B-tree indexes on <code>bpchar</code> columns.</li>
+          <li>After incremental backups, take a new full backup.<sup>[1]</sup></li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">REINDEX:</strong> An index is the keyword directory of a table. If the old version built it incorrectly, the directory stays wrong, even after the update. <code>REINDEX</code> rebuilds it.
+        </div>
+        <div class="callout info"><span class="callout-label">Our view</span> If you are still on 14, go to 18, not to 19 on day one. 19 earns our trust with its first minor release. <code>REINDEX ... CONCURRENTLY</code> spares you the lock on large tables.</div>
+        <span class="src">[1] <a href="https://www.postgresql.org/message-id/attachment/208544/20261112updaterelease.md">postgresql.org release announcement (11/12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>JVM corner</h2>
+        <p>From the InfoQ Java roundup of 11/09: <strong>Open Liberty 26.0.0.11</strong> has been generally available since 11/03, with CVE fixes. Also released were <strong>Gradle 9.9.0</strong>, <strong>Quarkus 4.0.0.Beta3</strong>, <strong>JDK 28</strong> early-access build 23 and Micrometer Metrics 1.18.0-RC2.<sup>[1]</sup> We have not yet found the next roundup.</p>
+        <div class="callout info"><span class="callout-label">Our view</span> Quarkus 4 in beta is the one to watch. For production you wait for GA, but a test branch costs little now.</div>
+        <span class="src">[1] <a href="https://www.infoq.com/news/2026/11/java-news-roundup-nov02-2026/">infoq.com (11/09)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Stack check</h2>
+        <p>Python is still at <strong>3.15.2</strong> and <strong>3.14.10</strong>, both from 10/25.<sup>[1]</sup> For Spring, Angular, React, Docker, Caddy and Tailscale, we have confirmed no new releases.</p>
+        <span class="src">[1] <a href="https://www.python.org/downloads/">python.org/downloads (as of 11/16)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>EU: CRA and poisoned updates</h2>
+        <p>Since 2026-09-11, the Cyber Resilience Act's reporting obligations for exploited vulnerabilities have applied; most other obligations apply from 2027-12-11.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our view</span> The QBase case shows why the CRA requires secure update mechanisms. From 2027, a poorly protected update server for products on the EU market is not just a risk but a compliance problem.</div>
+        <span class="src">[1] <a href="https://digital-strategy.ec.europa.eu/en/library/commission-publishes-new-guidance-support-timely-cyber-resilience-act-implementation">digital-strategy.ec.europa.eu</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief</h2>
+        <ul>
+          <li><strong>TSMC</strong>: "TSMC employee data breach linked to cloud provider", once again a service provider as the way in (11/15).<sup>[1]</sup></li>
+          <li><strong>Berlin</strong>: iX has a forensic analyst dissect the Rhysida leak (11/15).<sup>[2]</sup></li>
+          <li><strong>Brazil</strong>: nothing new from the Brazilian tech scene in our sources today.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/tsmc-employee-data-breach-linked-to-cloud-provider/">bleepingcomputer.com (11/15)</a> · [2] <a href="https://www.heise.de/news/Berliner-Daten-GAU-Wie-man-einen-Leak-seziert-11524771.html">heise.de (11/15)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Not verified</h2>
+        <ul>
+          <li>Patch Tuesday: total number of fixes (1,093, 1,094 or 1,235) not checked against Microsoft's own list.</li>
+          <li>Barracuda: CVSS scores and "fixed version" contradict each other between aggregators.</li>
+          <li>Check Point CVE-2026-123039: still no CVSS score and no version list.</li>
+          <li>N-central: no CVSS scores, no date for HF3.</li>
+          <li>Quantum Systems and Cursor: read only via BleepingComputer, primary sources not opened.</li>
+          <li>Monday 11/16: no new reports in heise and BleepingComputer at press time.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>What Monday is worth</h2>
+        <p>Three short tasks: On FreeBSD, check the UnrealIRCd version, not just the hot patch. In Cursor, check the version of the Claude Code extension and the SSH keys. And plan the REINDEX for PostgreSQL before Thursday.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Monday, November sixteenth. The weekend was quieter than the week before, but two cases point to the same pattern: attackers aren't breaking into the product, they're breaking into the route it takes to the customer.</p>
+  <p>At the German drone maker Quantum Systems, attackers took over the update server and pushed out a tampered update for the ground-control software, according to Der Spiegel and the Financial Times. The German military kept its drones grounded as a precaution.</p>
+  <p>At Cursor, the breach began at a service provider. Using stolen credentials, attackers planted a fake Claude Code extension in the marketplace cache. It was online for about eleven hours and could install an attacker's SSH key. As many as five thousand users may have received it.</p>
+  <p>Today two deadlines from the U.S. agency CISA run out, for Check Point and for the chat server UnrealIRCd. According to heise, UnrealIRCd is under active attack. The key point: the hot patch doesn't work on FreeBSD, where only the release candidate six point two point eight helps.</p>
+  <p>On the remote-management software N-central, nineteen of twenty-one compromised servers already had the hotfix installed. The next hotfix has been postponed, so until then the only remedy is to switch off the legacy interface.</p>
+  <p>After the Microsoft cloud outage that began Thursday, fake status emails are circulating with the real incident number. Check the status only in the admin center, never through a link in an email.</p>
+  <p>PostgreSQL 19 is due on Thursday. Before that, the November twelfth update is worth applying, with several index rebuilds. And through November twenty-fourth, four more CISA deadlines are running, including Outlook and Chrome.</p>
+</div>
+
+</body>
+</html>
