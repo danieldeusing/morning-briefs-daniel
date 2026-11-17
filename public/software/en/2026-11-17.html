@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-17</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-17</span>
+  </div>
+  <h1 class="masthead-title">Optimizely: A Test Script Delivers Malware to CNN, BBC and GitLab</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Monday carried the supply-chain week straight on. At Optimizely, a flaw in the login flow was enough to write malicious code into the A/B-test scripts of 178 organizations, including news sites and GitLab. Uber reports nearly 150,000 affected drivers, and TechCrunch again names the vendor Fireworks as the entry point, the same one we already had in yesterday's Cursor case. There is good news on the dev side: after ten years, Rust 1.100 stabilizes the never type and gets a built-in cooldown against freshly poisoned packages. Our view: every third-party script on your own site and every vendor holding one of your keys is part of your own code, even if you never wrote it.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Optimizely</strong>: 188 scripts from 178 organizations tampered with; skimmer, wallet swap, iOS exploits. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>NoisyTCP</strong>: Linux kernel flaw CVE-2026-99288, reachable from the network without login, ends in a kernel panic. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>BundID</strong>: mass login attempts, accounts locked, password login switched off. <span class="chip">DE</span></li>
+      <li><span class="chip">Sec</span> <strong>Uber</strong>: 149,346 drivers affected, entry through a vendor. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>ScreenConnect RMM+</strong>: still no update for the extension; on-prem, switch it off yourself. <span class="chip">Global</span></li>
+      <li><span class="chip">OSS</span> <strong>Project Zero</strong>: disclosure deadline shrinks step by step to 30 days from 2028. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>Rust 1.100</strong>: never type stable, Allocator trait stable, Cargo cooldown for new versions. <span class="chip">Global</span></li>
+      <li><span class="chip">Release</span> <strong>C++26</strong>: ISO ballot failed; WG21 meets in Búzios through Sat Nov 21. <span class="chip">BR</span></li>
+      <li><span class="chip">Infra</span> <strong>Microsoft outage</strong>: 15 injured at Phantasialand because an alert email never arrived. <span class="chip">DE</span></li>
+      <li><span class="chip good">Release</span> <strong>PostgreSQL 19</strong>: release still planned for Thu Nov 19. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">Dates through Tue Nov 24 — N-central HF3 still without a date</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Tue 11/17</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Today</span><span>WG21 meeting in Búzios under way (Nov 16–21), topic: C++26 and contracts</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu 11/19</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>PostgreSQL 19: planned general availability</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat 11/21</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Last day of the WG21 meeting</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 11/24</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Office/Outlook CVE-2026-124194, Chromium CVE-2026-125350, Cisco BroadWorks CVE-2026-20320, Openwave CVE-2026-111793</span><span>Firefox 161</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Optimizely: Malicious Code in the A/B-Test Script</h2>
+        <p>Attackers exploited a flaw in the login flow of <strong>Optimizely Experimentation</strong> to write malicious JavaScript into customer projects. Because the Optimizely scripts run directly on customer sites, the malicious code ran there too. Security researcher Scott Helme checked 1,611 scripts and found "188 infected Optimizely JavaScript files belonging to 178 organizations".<sup>[1]</sup> According to BleepingComputer, those affected included Zoom, CNN, Fox News, BBC, Salesforce and GitLab, among others. The first observed injection came in the early morning of Nov 16.<sup>[1]</sup></p>
+        <p>The <code>track.js</code> that was loaded in swapped crypto wallet addresses, read card numbers along with their security codes, collected cookies and screenshots, and delivered iOS exploit kits. The attacker's wallets received roughly 7,000 US dollars by Nov 16; how much of that was really stolen remains unclear.<sup>[1]</sup> Optimizely blocked the path, removed the code, revoked tokens and ended sessions. At 21:52 UTC on Nov 16, only one of the 188 files still contained malicious code. Salesforce switched off Optimizely scripts as a precaution.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Third-party script:</strong> A <code>&lt;script src=…&gt;</code> from a foreign domain is like a subtenant with their own key. They have the same rights in the house as you do: they see every form, every cookie, every click. If the subtenant is hijacked, the whole house is open.
+        </div>
+        <div class="callout info"><span class="callout-label">Our View</span> For scripts that change on every page load, Subresource Integrity does not help, because the hash would have to be new all the time. What does help: a strict Content Security Policy with a <code>connect-src</code> list, no test scripts on checkout and login pages, and a list of which third-party scripts run where. If you cannot answer that in five minutes, you have just found today's most important task.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/optimizely-supply-chain-attack-delivers-malware-to-cnn-fox-news-bbc-salesforce-sites/">bleepingcomputer.com (Nov 16)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Vendors as the Way In</h2>
+
+        <h3>Uber: 149,346 drivers affected</h3>
+        <p>Uber is notifying drivers of a data leak. According to a filing with the Maine Attorney General, "149,346 drivers" are affected: names, driver's license numbers, dates of birth and addresses.<sup>[1]</sup> An unknown party took over internal credentials of a vendor and used them to open Uber's account there. Uber does not name the vendor; according to BleepingComputer, TechCrunch names the AI-training provider Fireworks.<sup>[1]</sup> Fireworks was already the starting point in yesterday's Cursor case.</p>
+
+        <h3>ScreenConnect: Extension still without an update</h3>
+        <p><span class="update-since">Update since Fri</span> On Nov 16, heise summarizes the state of play at ConnectWise: the SCKit malware ran in a first wave on "at least 288 managed endpoints in about 48 organizations", and in the second on a further 205 hosts in 41 organizations.<sup>[2]</sup> According to Huntress, the RMM+ modules 1.0.31 and 1.0.32 accept an empty key if none was ever set. There is no update for the extension yet.<sup>[2]</sup> In the cloud, ConnectWise has switched off the extensions server-side, plus ITBoost Integration, RepairShopr Integration and Guest Session Starter. On-prem, admins have to do it themselves.<sup>[2]</sup></p>
+
+        <h3>N-central: Status unchanged</h3>
+        <p>For N-able N-central, hotfix 3 is still postponed; 19 of 21 compromised servers already had HF2. Switching off the legacy API remains the recommendation.<sup>[3]</sup></p>
+
+        <div class="callout info"><span class="callout-label">Our View</span> Fireworks, Optimizely, ConnectWise, N-able: this week every big case comes through a partner. The question for every vendor is not "are you secure?" but "which of our keys do you hold, and how fast can you revoke them?"</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/uber-notifies-drivers-of-data-breach-affecting-nearly-150-000-people/">bleepingcomputer.com (Nov 17)</a> · [2] <a href="https://www.heise.de/news/ConnectWise-ScreenConnect-Angreifer-installieren-Malware-ueber-RMM-Erweiterung-11526055.html">heise.de (Nov 16)</a> · [3] <a href="https://www.heise.de/news/Warten-auf-Sicherheitspatch-Krypto-Miner-Attacken-auf-N-central-beobachtet-11525491.html">heise.de (Nov 14)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: Nothing New Since Friday</h2>
+        <p>The CISA catalog still has 1,781 entries; the last two were added on Nov 13, Check Point CVE-2026-123039 and UnrealIRCd CVE-2026-114713. Their deadline expired yesterday.<sup>[1]</sup> On Check Point: the research report of Nov 12 describes the chain of PHP2Shell (CVE-2026-109618/-109619) and a root flaw in the DynamicCLI interface; advisory SK1000362.<sup>[2]</sup> Check Point gives no CVSS score there, so we give none either.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (as of Nov 17)</a> · [2] <a href="https://research.checkpoint.com/2026/php2shell-exploitation-on-check-point-gateway/">research.checkpoint.com (Nov 12)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>NoisyTCP: Crashing Linux Servers from the Network</h2>
+        <p>Hyunwoo Kim has published an eleven-year-old flaw in the TCP code of the Linux kernel, <strong>CVE-2026-99288</strong>. According to BleepingComputer it is a "pre-authenticated remote corruption flaw", and nearly all distributions are affected.<sup>[1]</sup> The result is a kernel panic, so denial of service, not code execution. Conditions: the host receives TCP packets directly, runs for example Nginx, Apache or SSH, and spreads packets across several CPUs (multiple RX queues or RPS). The timing window is narrow; on a quiet bare-metal server, triggering it can take a long time.<sup>[1]</sup></p>
+        <ul>
+          <li><strong>Fix:</strong> "a fix was already merged into the mainline Linux kernel two weeks ago". The report names no specific versions, so wait for your distribution's kernel updates and apply them.<sup>[1]</sup></li>
+          <li><strong>Workaround:</strong> turn off SYN cookies (weakens protection against SYN floods) and move to a single RX queue.<sup>[1]</sup></li>
+          <li><strong>Status:</strong> no exploitation in the wild reported, no CVSS score in the report.</li>
+        </ul>
+        <div class="callout info"><span class="callout-label">Our View</span> The workaround is worse than the disease. If you sit behind Cloudflare or a load balancer, you do not receive the packets directly and can calmly wait for the regular kernel update. Debian, Oracle and SUSE shipped kernel updates on Monday; we did not check whether NoisyTCP is in them.<sup>[2]</sup> By the way: Linux 7.4-rc3 arrived on Sunday, "fairly normal" according to Torvalds.<sup>[2]</sup></div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/linux/new-noisytcp-linux-kernel-flaw-lets-attackers-crash-servers/">bleepingcomputer.com (Nov 16)</a> · [2] <a href="https://lwn.net/">lwn.net (Nov 16)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Project Zero Cuts the Deadline to 30 Days</h2>
+        <p>Google's Project Zero will give vendors less time from now on. Until now the policy was "90+30", that is 90 days plus a 30-day extension. The extension was dropped on Nov 13. From 2027-02-02 a fixed 60 days applies, from 2028-01-03 only 30 days.<sup>[1]</sup> "Once the deadline expires, Project Zero will publish vulnerability details even if a fix is not available." Google cites AI as the reason: flaws and patches can be analyzed faster and turned into exploits.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Disclosure deadline:</strong> The finder tells the vendor: "You have X days, then I tell everyone." Shorter deadlines put the vendor under pressure. But they also hit small OSS projects with a maintainer working in their spare time.
+        </div>
+        <div class="callout info"><span class="callout-label">Our View</span> Right direction, difficult effect. A large company patches in 30 days; a volunteer with a library in millions of builds often cannot. For us that means being able to update dependencies faster, that is, tests and CI that can wave an update through in an afternoon. The AI side (Google's warning about automated attacks, ARTEX) is in the ai-dev brief.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/google-project-zero-cuts-bug-disclosure-deadline-to-30-days-amid-ai-threats/">bleepingcomputer.com (Nov 16)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>BundID: Login Wave Knocks Out Accounts</h2>
+        <p>Many BundID users received emails saying their account was locked after too many failed attempts. The BSI confirms an attack: "Automated, mass login attempts took place against BundID accounts" (translated from German).<sup>[1]</sup> According to the BSI, there are no indications of taken-over accounts. Login with username and password is switched off; eID still works. Locked accounts can only be unlocked by resetting the password.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our View</span> A hard lockout after X failed attempts turns credential stuffing into a denial of service against real users. For your own logins, better: rate limits per IP and device, increasing wait times, passkeys. That the state offers eID in parallel is what saves BundID here.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/BundID-Massenhafte-Angriffe-fuehren-zu-Kontosperrungen-11526376.html">heise.de (Nov 16)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Microsoft: Outage with Consequences, a Patch for the Patch</h2>
+
+        <h3>Phantasialand: Alert email never arrived</h3>
+        <p>The Microsoft cloud outage from Thursday to at least Friday noon had real consequences. At Phantasialand's Hotel Ling Bao, a safety system reported a fault, but the alert email did not arrive. A defective dosing unit kept feeding chlorine into the pool. "At first 13 guests complained of respiratory problems, then the number rose to 15." Four guests went to the hospital.<sup>[1]</sup></p>
+
+        <h3>Windows: Licensing bug fixed</h3>
+        <p>An out-of-band update from Nov 16 fixes activation errors after Patch Tuesday; certain <code>slmgr</code> commands failed with 0x80041008. Mainly affected were company machines with KMS activation. The updates are named KB5136489 (Server 2025) and KB5136483 (Windows 11 23H2), for example, and contain the November security fixes.<sup>[2]</sup> The number of Patch Tuesday fixes remains disputed between sources; we stay with "over 1,000"; only the Outlook flaw CVE-2026-124194 was exploited.<sup>[3]</sup></p>
+
+        <div class="callout warn"><span class="callout-label">Heads up</span> An alarm that only goes out by email through a single cloud provider is not an alarm. For anything that endangers people, you need a second path: SMS, siren, a watchdog that reports when messages stop arriving.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Microsoft-Cloud-Ausfall-fuehrte-zu-15-Verletzten-im-Phantasialand-11525711.html">heise.de (Nov 16)</a> · [2] <a href="https://www.heise.de/news/Windows-Ausserplanmaessiges-Update-korrigiert-Lizenzierungsfehler-11525787.html">heise.de (Nov 16)</a> · [3] <a href="https://blog.qualys.com/vulnerabilities-threat-research/2026/11/10/microsoft-patch-tuesday-november-2026-security-update-review">blog.qualys.com (Nov 10)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Rust 1.100: Ten Years of Waiting for <code>!</code></h2>
+        <p>Rust 1.100.0 came out on Nov 12, and heise picked it up on Nov 16. The announcement says it itself: "the never type is finally stable". The type <code>!</code> can now be written anywhere, for example <code>Result&lt;T, !&gt;</code>; <code>Infallible</code> is now just an alias.<sup>[1]</sup> The <code>Allocator</code> trait is also stable, so libraries can offer their own allocators for <code>Vec</code> and <code>Box</code>.<sup>[1]</sup></p>
+        <ul>
+          <li><strong>Cargo reports unused dependencies</strong>, but only if all targets are built. <code>dev-dependencies</code> are never reported.<sup>[1]</sup></li>
+          <li><strong>Cooldown:</strong> <code>global-min-publish-age = "3 days"</code> in <code>.cargo/config.toml</code> makes Cargo skip versions that are too new. Opt-in; <code>cargo install</code> ignores it.<sup>[1]</sup></li>
+          <li><strong>Heads up for old code:</strong> in editions before 2024, the never-type fallback changes from <code>()</code> to <code>!</code>. Rarely visible, but it can hit code with ignored generic return values.<sup>[1]</sup></li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">Never type:</strong> The type for "nothing ever comes back from here", such as with <code>panic!()</code> or an endless loop. The compiler then knows: this branch never ends, so I do not need to check it. <code>Result&lt;T, !&gt;</code> means: errors are impossible.
+        </div>
+        <div class="callout info"><span class="callout-label">Our View</span> The cooldown is the more important feature. Poisoned packages are usually spotted in the first days after upload and removed. If you wait three days, you let others find the mine. Good that Cargo now has it built in; npm and pip should follow.</div>
+        <span class="src">[1] <a href="https://blog.rust-lang.org/2026/11/12/Rust-1.100.0/">blog.rust-lang.org (Nov 12)</a> · <a href="https://www.heise.de/news/Rust-1-100-Never-Type-nach-zehn-Jahren-stabil-Cargo-haelt-neue-Versionen-zurueck-11525017.html">heise.de (Nov 16)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>C++26 Hangs on Contracts — Decision in Brazil</h2>
+        <p>The Draft International Standard for C++26 failed the ISO ballot in October. "The ballot saw 13 votes cast in favor, 9 against, and 12 abstentions"; ISO allows at most 25% votes against.<sup>[1]</sup> The point of dispute is <strong>contracts</strong>, that is, preconditions and postconditions in code. Bjarne Stroustrup and colleagues call the P2900 version "an existential threat to C++".<sup>[1]</sup></p>
+        <p>WG21 meets from Nov 16 to 21 in Búzios near Rio de Janeiro.<sup>[2]</sup> The options according to The Register: drop contracts, move them into their own Technical Specification, or change them slightly and vote again. The standard could then officially be called ISO/IEC 14882:2027.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our View</span> Moving contracts out is the pragmatic path. Only, library hardening already depends on contracts and would have to go back with them. For teams that means: do not write C++26 features into your coding standard before 2027.</div>
+        <span class="src">[1] <a href="https://theregister.com/devops/2026/11/13/c26-stumbles-at-finish-line-over-contracts-dispute/5309526">theregister.com (Nov 13)</a> · [2] <a href="https://isocpp.org/std/meetings-and-participation/upcoming-meetings">isocpp.org</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL 19 on Thursday</h2>
+        <p>"PostgreSQL 19 should be made generally available on November 19, 2026", unless another release candidate becomes necessary.<sup>[1]</sup> If you tested RC 2: <code>JSON_ARRAY()</code>/<code>JSON_OBJECT()</code> in expression indexes, generated columns and partition keys was rolled back. Delete or redefine such objects before the upgrade, otherwise <code>pg_upgrade</code> and <code>pg_restore</code> fail.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our View</span> As yesterday: production goes to 18.7, not to 19.0. The REINDEX list from Nov 12 remains the real task of the week.</div>
+        <span class="src">[1] <a href="https://www.postgresql.org/message-id/attachment/208544/20261112updaterelease.md">postgresql.org release announcement (Nov 12)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Brazil: Data Leak at the Tesouro Nacional</h2>
+        <p>The Tesouro Nacional confirms access to two databases: the e-Serviços portal with "cerca de 30 mil cadastros" and an internal analytics database with "aproximadamente 4 mil chaves Pix" of recipients of government payments.<sup>[1]</sup> Names, CPF, emails and Pix keys were leaked. Discovered on Nov 4, public on Nov 13. The attack path is not named; ANPD and CTIR Gov have been informed.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our View</span> CPF plus Pix key plus "government payment" is the perfect bait for golpe scam messages via WhatsApp. A short warning to family and customers is worthwhile.</div>
+        <span class="src">[1] <a href="https://timesbrasil.com.br/brasil/tesouro-nacional-confirma-vazamento-de-dados-de-30-mil-cadastros-e-4-mil-chaves-pix/">timesbrasil.com.br (Nov 13)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>EU: The CRA and the Partner Key</h2>
+        <p>Since 2026-09-11, the reporting obligations of the Cyber Resilience Act apply: exploited flaws go to ENISA or the national CSIRTs within 24 hours, through the Single Reporting Platform. Fines of up to €15 million or 2.5% of turnover; the product obligations follow from 2027-12-11.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our View</span> Cases like Optimizely show the open question: who reports when the code is compromised at the supplier and runs on the customer's product? Manufacturers should write that into their contracts before ENISA asks.</div>
+        <span class="src">[1] <a href="https://www.traverssmith.com/knowledge/knowledge-container/the-eu-cyber-resilience-acts-vulnerability-and-incident-reporting-requirements-are-now-live/">traverssmith.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>In Brief</h2>
+        <ul>
+          <li><strong>Manjaro</strong>: a new non-profit association, Manjaro Project e.V., is separating from the GmbH; the transfer of assets is still pending (Nov 16).<sup>[1]</sup></li>
+          <li><strong>XFS</strong>: Christoph Hellwig presents XRAID, parity RAID directly in XFS, also for SMR drives (Nov 13).<sup>[1]</sup></li>
+          <li><strong>curl</strong>: 30 years old; libcurl runs in an estimated "about 30 billion installations" (Nov 12).<sup>[1]</sup></li>
+          <li><strong>Firefox 161</strong> is due on Nov 24 according to the release calendar.<sup>[2]</sup></li>
+          <li><strong>Git</strong> is considering a vote on a policy for LLM contributions (Nov 9).<sup>[1]</sup> Details in the ai-dev brief.</li>
+        </ul>
+        <span class="src">[1] <a href="https://lwn.net/">lwn.net (Nov 9–16)</a> · [2] <a href="https://whattrainisitnow.com/calendar/">whattrainisitnow.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Not Verified</h2>
+        <ul>
+          <li>Check Point CVE-2026-123039: CVSS 7.8 and fix date Nov 12 only from secondary sources, so not stated.</li>
+          <li>Patch Tuesday: total count (sources say 1,092 to 1,095) not checked against Microsoft's own list.</li>
+          <li>NoisyTCP: no CVSS, no pinned kernel versions in the report.</li>
+          <li>Uber: Fireworks as the vendor only via TechCrunch, not confirmed by Uber.</li>
+          <li>Spring, Angular, React, Docker, Caddy, Tailscale, JDK: no new releases checked today.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>What Tuesday Is Worth</h2>
+        <p>Three tasks: count third-party scripts on login and checkout pages and remove them where possible. Check on-prem ScreenConnect for RMM+ extensions. And set <code>global-min-publish-age</code> in Rust projects; it costs one line.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Tuesday, November seventeenth. The supply-chain week rolls on, and the biggest case this time comes from a tool for A-B testing.</p>
+  <p>At Optimizely, attackers exploited a flaw in the login flow and wrote malicious code into the scripts of one hundred seventy-eight organizations, including CNN, BBC and GitLab. The code read card data, swapped crypto addresses and delivered attacks on iPhones. Optimizely removed the code almost everywhere by Monday evening.</p>
+  <p>Uber reports nearly one hundred fifty thousand affected drivers. The way in was a vendor, according to TechCrunch Fireworks, the same provider as in yesterday's Cursor case. At ConnectWise ScreenConnect, there's still no update for the abused extension, and admins running their own installation have to switch it off themselves.</p>
+  <p>There's a new flaw for Linux servers called NoisyTCP. An attacker can crash a server without logging in if it receives packets directly. The fix is in the kernel, and distributions are rolling it out. No exploitation is known so far.</p>
+  <p>In Germany, mass login attempts have locked many BundID accounts. The BSI sees no taken-over accounts, but password login is switched off for now. And last week's Microsoft outage had a sad consequence: at Phantasialand an alert email never arrived, and fifteen guests were hurt by chlorine.</p>
+  <p>Google's Project Zero is shortening its deadline for vendors step by step, down to thirty days starting in January twenty twenty-eight. The reason: AI makes attackers faster.</p>
+  <p>Good news for developers: Rust one point one hundred makes the never type stable after ten years and gets a cooldown that lets Cargo leave brand-new package versions alone for a while. C plus plus twenty-six, on the other hand, failed the ISO ballot. This week the committee is working on a solution in Búzios, Brazil.</p>
+  <p>PostgreSQL nineteen is due on Thursday. Tomorrow we'll see what comes out of Búzios and whether Optimizely explains the attack path in more detail.</p>
+</div>
+
+</body>
+</html>
