@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-18</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-11-18</span>
+  </div>
+  <h1 class="masthead-title">Java4Shell: Ein Base64-String kann die JVM übernehmen</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Nach einer Woche voller Lieferketten-Fälle trifft es heute die Laufzeit selbst. CISA nennt die Lücke CVE-2026-114938 „Java4Shell“: Ein präparierter Base64-String kann die HotSpot-JVM zum Absturz bringen und fremden Code ausführen, ohne Login. Betroffen ist Java ab 17.0.6 auf x86-64-CPUs mit AVX-512 VBMI. Ausnutzung ist noch nicht bekannt. Dazu kommt Puppet Enterprise neu in den KEV-Katalog, und am Donnerstag sollen PostgreSQL 19 und Spring Boot 4.2 erscheinen. Unsere Sicht: Die eigentliche Arbeit bei Java4Shell ist nicht das Patchen, sondern das Finden. Die meisten JVMs stecken in Containern und Appliances, die niemand als „Java“ auf der Liste hat.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Java4Shell</strong>: CVE-2026-114938, Speicherfehler im Base64-Decoder der JVM, RCE ohne Login möglich, CVSS 9,2 (v4.0, Calif.io). <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Oracle-Patch-Update November</strong>: 652 neue Sicherheits-Patches über alle Produkte (laut Oracle-Vorabankündigung). <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>KEV</strong>: Puppet Enterprise CVE-2026-115731 seit 17.11. im Katalog, laut Sekundärquellen öffentlicher PoC, Frist 01.12. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>KEV-Fristen Di 24.11.</strong>: Outlook CVE-2026-124194, Chromium CVE-2026-125350, Cisco BroadWorks CVE-2026-20320. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Optimizely</strong>: Code fast überall entfernt; das Muster bleibt, viertes Drittanbieter-Skript des Jahres. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>Spring Boot 4.2</strong>: RC2 seit 06.11.; GA laut Sekundärquelle Do 19.11. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>PostgreSQL</strong>: Minor-Releases mit 52 Sicherheits-Fixes seit 12.11.; 19 laut Sekundärquelle am Do. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulierung</span> <strong>CRA</strong>: Meldepflicht seit 11.09. aktiv; wird Java4Shell ausgenutzt, laufen für Hersteller 24 Stunden. <span class="chip">EU</span></li>
+      <li><span class="chip">Sec</span> <strong>Windows</strong>: Microsoft testet FIDO2-Schlüssel-Verwaltung und Fern-Sperre im Insider-Kanal. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Termine bis Di 24.11. — Puppet-KEV-Frist (Di 01.12.) im Text</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Mi 18.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Heute</span><span>Java4Shell: JDK-Inventur, Patches aus dem Oracle-Update vom 17.11.</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Do 19.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>PostgreSQL 19: geplante Freigabe (Sekundärquelle)</span><span>Spring Boot 4.2 / Framework 7.1 / Cloud 2026.0.0: GA laut Sekundärquelle</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 24.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: Office/Outlook CVE-2026-124194, Chromium CVE-2026-125350, Cisco BroadWorks CVE-2026-20320</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Java4Shell: Lücke im Base64-Decoder der JVM</h2>
+        <p>CISA hat am 17.11. eine Warnung zu <strong>CVE-2026-114938</strong> veröffentlicht und nennt die Lücke „Java4Shell“. Es ist ein Speicherfehler im Base64-Decoder der x86-64-HotSpot-JVM: „Specially crafted Base64 input could crash the JVM and allow for unauthenticated remote code execution.“<sup>[1]</sup> Gefunden hat sie die Firma Calif.io. Laut The Register steckt der Fehler in OpenJDK „17.0.6 and later running on x86-64 CPUs with AVX-512 VBMI“.<sup>[2]</sup></p>
+        <p>Calif bewertet die Lücke mit <span class="stat">9,2</span> nach CVSS 4.0.<sup>[2]</sup> Eine andere Bewertung (watchtowr, nach CVSS 3.1) liegt laut Suchergebnis bei 8,1; diese Zahl haben wir nicht am Original geprüft. Calif.io nennt als betroffene Anwendungen unter anderem Keycloak, Jira, Confluence, Jenkins, den Kafka-Broker und Elasticsearch.<sup>[2]</sup> Talos „has not observed in-the-wild exploitation of this vulnerability yet“, rechnet aber mit Scans.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Intrinsic:</strong> Für manche Standard-Methoden wie <code>Base64.getDecoder()</code> nimmt die JVM nicht den Java-Code, sondern eine handoptimierte Maschinen-Routine für die konkrete CPU. Das ist wie ein Koch, der für ein Gericht ein Spezialgerät nimmt statt des Messers. Hier hat das Spezialgerät für AVX-512-VBMI-Prozessoren einen Fehler. Auf CPUs ohne diese Befehle läuft der normale Weg, und der ist nicht betroffen.
+        </div>
+        <h3>Patch und Übergangslösung</h3>
+        <p>Oracle hat die Korrekturen im Patch-Update vom Dienstag ausgeliefert; Talos rät, diese Versionen einzuspielen.<sup>[2]</sup> Die genauen Build-Nummern konnten wir nicht an der Primärquelle prüfen: Oracles Seite und die OpenJDK-Advisories antworten uns mit 403. Eine Sekundärquelle nennt 17.0.21.1, 21.0.13.1, 25.0.5.1 und 27.0.1.1. Bitte vor dem Ausrollen bei Oracle oder dem eigenen JDK-Anbieter abgleichen.</p>
+        <p>Ohne Patch hilft laut The Register, die JVM ohne AVX-512 zu starten.<sup>[2]</sup> Upwind nennt dafür <code>-XX:UseAVX=2</code> oder <code>-XX:-UseBASE64Intrinsics</code> und warnt: <code>-XX:DisableIntrinsic=_base64_decodeBlock</code> allein verhindert den Start der JVM.<sup>[3]</sup> Diese Flags stammen nur aus einer Suchzusammenfassung, nicht aus einem geprüften Artikel. CISA rät zusätzlich, Base64-Eingaben am Rand der Anwendung zu begrenzen und unauthentifizierten Zugriff einzuschränken.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Die Bedingung „AVX-512 VBMI“ klingt nach Entwarnung, ist es aber nicht. Auf welcher CPU ein Cloud-Container läuft, entscheidet oft der Anbieter. Ob die eigene Maschine betroffen ist, zeigt unter Linux <code>grep -o avx512vbmi /proc/cpuinfo</code>. Die echte Arbeit ist die Inventur, so wie CISA sie beschreibt: JDKs in Container-Images, in Jenkins, in Keycloak, in Appliances. Ein <code>eclipse-temurin</code>-Image von letzter Woche wird nicht von allein neu gebaut.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/news-events/alerts/2026/11/17/critical-java-vulnerability-requires-immediate-patching">cisa.gov (17.11.)</a> · [2] <a href="https://www.theregister.com/security/2026/11/18/oracle-reveals-fix-this-asap-grade-java4shell-bug-that-allows-attacks-on-many-third-party-apps/5310661">theregister.com (18.11.)</a> · [3] <a href="https://www.upwind.io/blog/java4shell-what-we-know-now-and-what-comes-next">upwind.io (Suchzusammenfassung)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Oracle: 652 Patches im November-Update</h2>
+        <p>Das Critical Security Patch Update vom 17.11. enthält laut Oracle-Vorabankündigung 652 neue Sicherheits-Patches über alle Produktfamilien.<sup>[1]</sup> The Register merkt an, dass Oracle die Java4Shell-Lücke im Update nicht besonders hervorhebt. Zum Vergleich: Das reguläre Update vom 20.10. brachte 55 Java-SE-Fixes, davon 49 ohne Login aus dem Netz ausnutzbar, mit den Versionen 27.0.1, 25.0.5, 21.0.13, 17.0.21, 11.0.33 und 8u511 (laut SecurityWeek).<sup>[2]</sup> Wer im Oktober nicht gepatcht hat, springt jetzt also zwei Stufen.</p>
+        <span class="src">[1] <a href="https://www.oracle.com/security-alerts/cspunov2026.html">oracle.com (17.11., nur Such-Snippet)</a> · [2] <a href="https://www.securityweek.com/oracle-patches-over-1200-vulnerabilities-with-october-2026-cpu">securityweek.com (Okt.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: Puppet neu, drei Fristen nächste Woche</h2>
+        <h3>Puppet Enterprise: RCE über Autosign</h3>
+        <p>CISA hat am 17.11. <strong>CVE-2026-115731</strong> (Perforce/Puppet Enterprise) in den KEV-Katalog aufgenommen, Frist für US-Bundesbehörden ist der 01.12.<sup>[1]</sup> Laut OpenCVE ist es eine Lücke zur Codeausführung in Puppet Server und OpenVox, offengelegt am 03.11., mit laut Sekundärquellen öffentlichem PoC und CVSS 9,4 (Sekundärquelle).<sup>[2]</sup> Fixe Versionen: Puppet Enterprise 2023.8.13, 2025.12.1 und 2026.0.1.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Autosign:</strong> Jeder neue Server, den Puppet verwalten soll, schickt eine Zertifikats-Anfrage. Mit Autosign unterschreibt der Puppet-Server diese Anfragen ohne Rückfrage. Das ist bequem beim Hochfahren vieler VMs, aber wie ein Türsteher, der jedem einen Ausweis gibt, der danach fragt.
+        </div>
+        <h3>Fristen am Di 24.11.</h3>
+        <p>Drei KEV-Einträge vom 10.11. laufen nächste Woche ab: Outlook-Spoofing <strong>CVE-2026-124194</strong>, der Chrome-Zero-Day <strong>CVE-2026-125350</strong> und Cisco BroadWorks <strong>CVE-2026-20320</strong>.<sup>[1]</sup> Die Outlook-Lücke hat nur CVSS 6,5, verrät aber NTLMv2-Hashes; laut The Register war sie der einzige ausgenutzte Zero-Day am Patch Tuesday.<sup>[3]</sup> Der Chrome-Fehler ist ein Use-after-free in der XML-Komponente, behoben in 157.0.8103.50/.51 und laut BleepingComputer der achte ausgenutzte Chrome-Zero-Day 2026.<sup>[4]</sup></p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (abgerufen 18.11.)</a> · [2] <a href="https://app.opencve.io/cve/CVE-2026-115731">opencve.io</a> · [3] <a href="https://www.theregister.com/a/5308946">theregister.com (10.11.)</a> · [4] <a href="https://www.bleepingcomputer.com/news/security/google-patches-eighth-chrome-zero-day-exploited-in-attacks-this-year">bleepingcomputer.com (09.11.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Optimizely: der Tag danach</h2>
+        <p><span class="update-since">Update seit Di</span> Optimizely sagt: „We've fixed the vulnerability and removed the injected code from affected projects.“<sup>[1]</sup> Laut The Register war am 16.11. um 21:52 UTC nur noch das Skript von TalkTalk verseucht.<sup>[1]</sup> Die Zahlen bleiben bei 188 von 1.611 geprüften Skripten und mindestens 178 Organisationen; crypto.news schreibt von 186 Seiten.<sup>[1]</sup> Laut The Register versuchte die Schadsoftware, auf iPhones und iPads mit älteren iOS-Versionen die Exploit-Kits Coruna und DarkSword einzuspielen.<sup>[1]</sup></p>
+        <p>Das Muster ist nicht neu. Laut Suchzusammenfassungen lieferte im September ein Brevo-Skript rund fünf Stunden lang Malware an über 100.000 Seiten, im Juni traf es das CDN von OptinMonster und TrustPulse, im Mai das Okendo-Widget. Diese drei Fälle stützen sich nur auf Suchzusammenfassungen.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Vier Fälle seit Mai heißt: Das ist kein Pech mehr, das ist das Risiko-Profil von Marketing-Skripten. Wer Checkout- oder Login-Seiten baut, sollte dort genau null fremde Skripte laden. Das ist ein Gespräch mit dem Marketing, kein Ticket für die Security.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/cyber-crime/2026/11/17/optimizely-hack-turns-worlds-biggest-websites-into-malware-dispensers/5310448">theregister.com (17.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>ScreenConnect: kein neuer Stand</h2>
+        <p>Zur SCKit-Kampagne über die RMM+-Erweiterung haben wir seit gestern nichts Neues gefunden. Der Stand laut Suchzusammenfassung von The Hacker News: mindestens 288 Rechner in 48 Organisationen, ConnectWise hat fünf Erweiterungen in rund 400 Umgebungen abgeschaltet.<sup>[1]</sup> ConnectWise sieht „no evidence of a compromise of ConnectWise infrastructure or a vulnerability in ScreenConnect itself“. Ob die ältere Lücke CVE-2026-84869 (gefixt in 26.6.5) mit der Kampagne zusammenhängt, ist offen.</p>
+        <span class="src">[1] <a href="https://thehackernews.com/2026/11/sckit-malware-targets-screenconnect.html">thehackernews.com (Suchzusammenfassung, Seite 403)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Patch Tuesday, eine Woche danach</h2>
+        <p>Der November-Patch-Tuesday vom 10.11. war mit 1.094 Fehlern (The Register; Dark Reading zählt 1.093) kleiner als der Oktober mit 1.474.<sup>[1]</sup> Drei Lücken haben CVSS 9,8: Windows Search/Exchange-RCE <strong>CVE-2026-116928</strong>, LDAP-RCE <strong>CVE-2026-119958</strong> und ein Heap-Overflow in Xbox Live Networking, <strong>CVE-2026-112967</strong>.<sup>[1]</sup> Dustin Childs zählt 30 „wormable“ CVEs. Dazu passt eine Register-Schlagzeile vom 12.11.: Exchange 2016 und 2019 gehen in die Phase, in der sie dauerhaft verwundbar bleiben.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Wormable:</strong> Eine Lücke, die sich ohne menschliches Zutun von Rechner zu Rechner weiterverbreiten kann. Ein infizierter Server sucht selbst den nächsten. Darum sind solche Lücken im internen Netz so gefährlich.
+        </div>
+        <span class="src">[1] <a href="https://www.theregister.com/a/5308946">theregister.com (10.11.)</a> · [2] <a href="https://www.theregister.com/security/">theregister.com (12.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Windows und macOS: kleinere Sicherheits-Schritte <span class="h2-refs">[1]</span></h2>
+        <p>Laut heise vom 17.11. testet Microsoft im Windows-Insider-Kanal eine Verwaltung für FIDO2-Schlüssel und eine Fern-Sperre. Apple verschärft in macOS Zugriffskontrollen und Warnungen für KI-Apps; das ist hier ein Betriebssystem-Thema, die Apps selbst sind Sache des ai-usecases-Briefs. Und der Passwort-Teiler BugMeNot ist abgeschaltet.</p>
+        <span class="src">[1] <a href="https://www.heise.de/security/">heise.de (17.11.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Spring Boot 4.2: GA wohl am Donnerstag</h2>
+        <p>Spring Boot 4.2.0-RC2 ist seit 06.11. draußen: „Spring Boot 4.2.0-RC2 has been released.“<sup>[1]</sup> Dazu kamen Spring Cloud 2026.0.0-RC2 (05.11.) und Spring AI 2.1.0-RC2 (09.11.). Ein GA-Datum nennt spring.io nicht. Nur eine Sekundärquelle (ecorpit.com, Stand 07.11.) nennt den 19.11. für Boot 4.2, Framework 7.1 und Cloud 2026.0.0. Dieselbe Quelle schreibt, Framework 7.1 markiere <code>RestTemplate</code> als veraltet; auch das ist nicht primär bestätigt.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Falls das mit <code>RestTemplate</code> stimmt, ist es keine Überraschung, sondern das Ende einer langen Ansage. Wer noch viele <code>RestTemplate</code>-Aufrufe hat, plant den Umstieg auf <code>RestClient</code> besser jetzt als beim nächsten Major. Und ein Boot-Upgrade ist diese Woche ohnehin fällig: Das neue JDK-Basis-Image für Java4Shell kommt gleich mit.</div>
+        <span class="src">[1] <a href="https://spring.io/blog">spring.io/blog (abgerufen 18.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL: 52 Fixes und Version 19</h2>
+        <p>Am 12.11. kamen PostgreSQL 18.7, 17.12, 16.16, 15.20 und 14.25 sowie 19 RC 2. Laut postgresql.org beheben sie 52 Sicherheitslücken, darunter <strong>CVE-2026-6460</strong>; 14.25 ist das letzte Release der 14er-Reihe (End of Life). Laut Phoronix gibt es dazu über 140 Fehlerkorrekturen, und ein angemeldeter Nutzer kann über eine Typ-Verwechslung Code ausführen.<sup>[1][2]</sup> PostgreSQL 19 soll laut postgresql.org am 19.11. allgemein verfügbar sein, sofern kein weiterer Release Candidate nötig wird.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.postgresql.org/about/news/postgresql-1871712161615201425-19-rc-2-3442/">postgresql.org (12.11.)</a> · [2] <a href="https://phoronix.com/news/PostgreSQL-52-CVEs">phoronix.com (Schlagzeile)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>EU: CRA-Meldepflicht und das Omnibus-Paket</h2>
+        <p>Seit 11.09. gilt die Meldepflicht aus Art. 14 des Cyber Resilience Act: Hersteller melden aktiv ausgenutzte Lücken in ihren Produkten innerhalb von 24 Stunden als Frühwarnung und nach 72 Stunden ausführlicher, über die Meldeplattform der ENISA.<sup>[1]</sup> Die Hauptpflichten folgen am 11.12.2027. Für Java4Shell heißt das: Sobald jemand die Lücke ausnutzt, läuft für jeden Hersteller, der ein betroffenes JDK in seinem Produkt ausliefert, die Uhr.</p>
+        <p>Beim Digital Omnibus hat das EU-Parlament den KI-Teil am 16.06. angenommen (423 zu 57 bei 174 Enthaltungen), der Rat hat seine Position zum DSGVO-/Daten-Teil am 21.10. beschlossen; die Parlaments-Position wird für Anfang 2027 erwartet.<sup>[2]</sup> Beides aus Kanzlei-Quellen, nicht aus dem Amtsblatt.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Für Hersteller in Deutschland ist Java4Shell der erste große Test, ob die eigene Stückliste (SBOM) die JVM überhaupt enthält. Wer heute nicht sagen kann, welche Java-Version in welchem Produkt steckt, kann im Ernstfall auch nicht in 24 Stunden melden.</div>
+        <span class="src">[1] <a href="https://www.freshfields.com/en/our-thinking/blogs/technology-quotient/cyber-resilience-act-reporting-obligations-take-effect-on-11-september-2026-102nzmk">freshfields.com</a> · [2] <a href="https://www.addleshawgoddard.com/en/insights/insights-briefings/2026/technology/eu-digital-omnibus-ai-update-council-parliament-agreed-positions/">addleshawgoddard.com</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert</h2>
+        <ul>
+          <li><span class="chip">Sec</span> The Register meldet am 13.11., dass die Zahl der 2026 vergebenen Bug-Nummern die Marke von 100.000 überschritten hat.<sup>[1]</sup></li>
+          <li><span class="chip">Sec</span> Eine Tochter der französischen Post hat laut The Register vom 16.11. rund 22 Millionen Kontakte offengelegt.<sup>[1]</sup></li>
+          <li><span class="chip good">Release</span> Rust 1.100 (12.11.) hatten wir gestern ausführlich: Never-Type stabil, Cargo-Einstellung <code>global-min-publish-age</code> gegen frisch vergiftete Pakete.<sup>[2]</sup></li>
+          <li><span class="chip">OSS</span> npm: Seit dem ChainDrop-Wurm im August haben wir keine neue Welle gefunden.<sup>[3]</sup></li>
+          <li><span class="chip">BR</span> Brasilien: Zum Tesouro-Nacional-Vorfall gibt es keinen neuen, datierten Stand. Sonst heute ruhig.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.theregister.com/security/">theregister.com (13.–16.11.)</a> · [2] <a href="https://blog.rust-lang.org/2026/11/12/Rust-1.100.0/">blog.rust-lang.org (12.11.)</a> · [3] <a href="https://microsoft.com/en-us/security/blog/2026/08/04/chaindrop-supply-chain-compromise-anatomy-self-propagating-worm">microsoft.com (04.08.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Nicht geprüft</h2>
+        <ul>
+          <li>Java4Shell: fixe Build-Nummern und Mitigation-Flags nur aus Sekundärquellen; Oracle und OpenJDK antworten mit 403. Ob Java 8 und 11 betroffen sind, ist offen.</li>
+          <li>Java4Shell-CVSS: 9,2 (v4.0, Calif.io) geprüft, 8,1 (v3.1, watchtowr) nur per Suche.</li>
+          <li>SCKit-Zahlen: nur aus einer Suchzusammenfassung, Originalseite 403.</li>
+          <li>Spring Boot 4.2 GA am 19.11., <code>RestTemplate</code>-Deprecation, nur Sekundärquellen; PostgreSQL 19 am 19.11. und das Ende von PostgreSQL 14 stehen auf postgresql.org.</li>
+          <li>Angular, React, Python, Docker, Caddy, Tailscale, BSI: heute nicht geprüft.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>Was der Mittwoch wert ist</h2>
+        <p>Drei Aufgaben: Alle JDKs zählen, auch die in Container-Images und fremden Produkten. Auf den Hosts nach <code>avx512vbmi</code> suchen und bis zum Patch die AVX-512-Bremse prüfen. Und falls Puppet mit Autosign läuft: Version prüfen, Autosign abschalten.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Mittwoch, der achtzehnte November. Nach einer Woche voller Lieferketten-Fälle trifft es heute die Java-Laufzeit selbst.</p>
+  <p>Die amerikanische Behörde CISA warnt vor einer Lücke, die sie Java4Shell nennt. Ein präparierter Base64-Text kann die Java Virtual Machine zum Absturz bringen und fremden Code ausführen, ohne dass der Angreifer sich anmelden muss. Betroffen ist Java ab Version siebzehn Punkt null Punkt sechs, aber nur auf Intel- und AMD-Prozessoren mit einem bestimmten Befehlssatz namens AVX fünfhundertzwölf VBMI. Die Finder von Calif bewerten die Lücke mit neun Komma zwei von zehn. Ausnutzung ist laut Cisco Talos noch nicht bekannt.</p>
+  <p>Oracle hat die Korrekturen am Dienstag mit seinem großen November-Update ausgeliefert, sechshundertzweiundfünfzig Patches über alle Produkte. Die genauen Java-Versionen konnten wir an Oracles Seite nicht prüfen. Unsere Sicht: Die eigentliche Arbeit ist die Inventur. Java steckt in Containern, in Jenkins, in Keycloak und in Geräten, die niemand als Java-System auf der Liste hat.</p>
+  <p>Neu im Katalog der aktiv ausgenutzten Lücken ist Puppet Enterprise. Der Fehler erlaubt Codeausführung auf Puppet-Servern, und laut Sekundärquellen gibt es schon öffentlichen Angriffscode. Nächsten Dienstag laufen außerdem die Fristen für die Outlook-Lücke, den Chrome-Zero-Day und Cisco BroadWorks ab.</p>
+  <p>Bei Optimizely ist der Schadcode fast überall entfernt. Es ist aber schon der vierte Fall in diesem Jahr, in dem ein Marketing-Skript Malware an große Webseiten geliefert hat. Auf Login- und Bezahlseiten haben fremde Skripte nichts verloren.</p>
+  <p>Für Java- und Datenbank-Entwickler wird der Donnerstag spannend. Laut Sekundärquellen sollen dann Spring Boot vier Punkt zwei und PostgreSQL neunzehn erscheinen. Die PostgreSQL-Updates von letzter Woche schließen zweiundfünfzig Sicherheitslücken.</p>
+  <p>Und in der EU gilt seit September die Meldepflicht aus dem Cyber Resilience Act. Wird Java4Shell ausgenutzt, haben Hersteller mit Java in ihren Produkten vierundzwanzig Stunden für die erste Meldung.</p>
+  <p>Morgen schauen wir, ob Spring Boot und PostgreSQL wirklich erscheinen und ob es erste Angriffe auf Java4Shell gibt.</p>
+</div>
+
+</body>
+</html>
