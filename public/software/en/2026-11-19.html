@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-19</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-19</span>
+  </div>
+  <h1 class="masthead-title">Codeberg offline: A US registrar locks the domain</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">On Wednesday morning, Codeberg, the Berlin-based nonprofit GitHub alternative, was unreachable for several hours. The domain had neither expired nor been transferred. The US registrar NameSilo had locked it, and as of yesterday midday there was no official explanation. There is also an important detail on Java4Shell: the Oracle update closes eleven flaws, not one, so it applies to machines with a "safe" CPU too. CISA added four new entries to the KEV catalog, and PostgreSQL 19 is due today. Our take: Codeberg shows that a domain is a single point of failure, and almost nobody has it in their risk register.</p>
+    <ul>
+      <li><span class="chip hot">OSS</span> <strong>Codeberg</strong>: domain set to "clientHold" at registrar NameSilo, site and repos gone from 09:13, slowly back from 12:23. <span class="chip">DE</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Java4Shell</strong>: the Oracle update of Nov 17 closes eleven flaws; heise advises applying it even on unaffected CPUs. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>New KEV entries (Nov 18)</strong>: Apache Axis, REDCap, Synology DSM (due Sat Nov 21) and LiteLLM (due Dec 2). <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>Apache Axis 1</strong>: NVD has no score yet (Mend lists CVSS 9.2) and there is no fix, because Axis 1 is end of life. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>PostgreSQL 19</strong>: GA planned for today; the minor releases of Nov 12 close 52 security flaws. <span class="chip">Global</span></li>
+      <li><span class="chip">Release</span> <strong>Spring Boot 4.2</strong>: only RC2 on spring.io as of this morning, the GA date comes from a secondary source. <span class="chip">Global</span></li>
+      <li><span class="chip">Web</span> <strong>Android/Play</strong>: from Jan 27, 2027, apps need a justification for precise location. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>KEV deadlines</strong>: SonicWall Fri Nov 20, Outlook and Chromium Tue Nov 24. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulation</span> <strong>EU</strong>: no new reports on CRA, NIS2 or the AI Act found today. <span class="chip">EU</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week ahead</div>
+      <div class="timeline-sub">Dates through Tue Nov 24 — Puppet (Dec 1) and LiteLLM (Dec 2) deadlines in the text</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Thu Nov 19</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Today</span><span>PostgreSQL 19: planned GA per postgresql.org</span><span>Spring Boot 4.2 GA: per secondary source only</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Fri Nov 20</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: SonicWall SonicOS SSLVPN CVE-2026-19868</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat Nov 21</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Apache Axis, REDCap, Synology DSM</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue Nov 24</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Office/Outlook CVE-2026-124194, Chromium CVE-2026-125350, Cisco BroadWorks CVE-2026-20320</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Codeberg: domain gone, platform gone</h2>
+        <p>On Wednesday at 09:13, Codeberg reported on Mastodon that its website and repositories were unreachable. The cause was not its own servers but the domain <code>codeberg.org</code>. According to Codeberg, it was "neither expired nor transferred" but had vanished from the account at the US registrar NameSilo and been set to the status <code>clientHold</code>.<sup>[1]</sup> NameSilo later said it had locked the domain and that "the case is now with the abuse team".<sup>[1]</sup> At 12:23, Codeberg reported that the domain was slowly reachable again.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">clientHold:</strong> A status that the registrar (the vendor you rent a domain from) can set. The domain still belongs to the customer but disappears from DNS, the phone book of the internet. It is like a house whose number was unscrewed overnight: the house is still there, but no delivery driver can find it.
+        </div>
+        <p>According to heise, there is no official reason. Two theories are circulating: a complaint by a company about a repository on Codeberg, or a political motive, because Codeberg had classified DDoS attacks and spam in 2025 as a campaign by far-right actors.<sup>[1]</sup> At the same time, Reddit banned the subreddit /r/codeberg. Codeberg has given up a fallback domain <code>codeberg.eu</code>; a second domain cannot be activated within a few hours.<sup>[1]</sup> According to users, the servers remained reachable by IP address. One side effect: a Forgejo security update planned for Wednesday was delayed.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> This is the lesson of the day, and it applies beyond Codeberg. A German nonprofit, founded as an alternative to US platforms, depends on a US registrar that pulls the plug without warning. For your own setup, that means: if you have critical domains, know which registrar holds them, whether the registrar lock and contact details are current, and how long a move would take. And anyone who clones straight from <code>codeberg.org</code> in CI had red builds yesterday. A mirror costs little.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/GitHub-Alternative-Codeberg-verliert-Domain-und-ist-nicht-erreichbar-11529143.html">heise.de (Nov 18, 11:48, updated 12:23)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Java4Shell: eleven flaws, not one</h2>
+        <p><span class="update-since">Update since Wed</span> Yesterday the CPU condition was in the foreground. heise classifies the Oracle update of Nov 17 differently: "There are eleven updates at once against remote code execution in Java."<sup>[1]</sup> Besides Java4Shell (<strong>CVE-2026-114938</strong>), Oracle closes nine more OpenJDK flaws (CVE-2026-114939 through -114947) and one in OpenJFX (CVE-2026-86144).<sup>[1]</sup> Affected are Java 17, 21, 25 and 27 "up to and including 17.0.21.0.3, 21.0.13.0.3, 25.0.5.0.3 and 27.0.1.0.3 respectively".<sup>[1]</sup> According to heise, no attacks are known so far.</p>
+        <p>According to heise, Java4Shell itself affects only certain CPUs: Intel Xeon from Ice Lake on and AMD EPYC and Ryzen from Zen 4 on.<sup>[2]</sup> Calif clarifies that Java clients are "also affected only if they run on one of the processors mentioned above".<sup>[2]</sup> Calif also describes a second exploit in which a malicious server takes over a Java program that connects to it via TLS. According to Calif, code execution without login works in Keycloak, Jira, Confluence, JFrog Artifactory and Jenkins; there is no public PoC.<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> That ends the discussion "our CPUs have no AVX-512 VBMI, so we wait". heise says it plainly: the updates should be "applied immediately, even on systems with unaffected CPUs".<sup>[2]</sup> Yesterday's CPU check remains useful for setting the order, but not for skipping systems.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Java4Shell-Gefaehrlicher-Bug-in-Java-11528499.html">heise.de (Nov 17, updated Nov 18)</a> · [2] <a href="https://www.heise.de/news/Java-RCE-mit-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-11528561.html">heise.de (Nov 18)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>KEV: four new entries, three deadlines on Saturday</h2>
+        <p>On Nov 18, CISA added four flaws to the Known Exploited Vulnerabilities (KEV) catalog.<sup>[1]</sup> For three of them, US federal agencies already face a deadline of Saturday, Nov 21. That is an unusually short window of three days.</p>
+        <h3>Apache Axis 1: no patch in sight</h3>
+        <p><strong>CVE-2026-90436</strong> affects Apache Axis.<sup>[1]</sup> According to Mend, OpenCVE and Debian, the flaw allows unauthenticated class instantiation (CWE-470) in all Axis 1 versions up to 1.4. NVD has no score yet; Mend lists CVSS 4.0 at 9.2. Published on Nov 6. Axis 1 is end of life and no fix is planned. We could not load the NVD page itself; score and details are therefore not checked against the primary source.</p>
+        <h3>REDCap, Synology, LiteLLM</h3>
+        <p><strong>CVE-2026-90817</strong> affects REDCap, the Vanderbilt University platform for research data that many clinics and universities run; deadline also Nov 21.<sup>[1]</sup> <strong>CVE-2024-10441</strong> in Synology DiskStation Manager (DSM) is a flaw from 2024 that is only now considered exploited; we found no details on the exploitation.<sup>[1]</sup> And <strong>CVE-2026-40217</strong> affects the AI proxy LiteLLM, deadline Dec 2.<sup>[1]</sup> Some secondary sources give a different CVE number; we follow the catalog. More on LiteLLM belongs in the ai-dev brief.</p>
+        <div class="callout info"><span class="callout-label">Our take</span> Axis 1 is the interesting case for Java people. Nobody builds with Axis 1 today, but in old enterprise applications it often sits as a transitive dependency for a single SOAP partner. A <code>mvn dependency:tree | grep axis</code> across the old repos takes five minutes. Since there is no patch, the fix is: isolate the endpoint or rebuild on Axis2/CXF. And if you run a Synology NAS: check the DSM version and keep the web interface off the internet.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (retrieved Nov 19)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV deadlines for the coming days</h2>
+        <p>On Friday, Nov 20, the deadline for SonicWall SonicOS SSLVPN <strong>CVE-2026-19868</strong> expires (in the catalog since Nov 6).<sup>[1]</sup> On Tuesday, Nov 24, the three entries from Nov 10 follow: Outlook spoofing <strong>CVE-2026-124194</strong>, the Chrome zero-day <strong>CVE-2026-125350</strong> and Cisco BroadWorks <strong>CVE-2026-20320</strong>.<sup>[1]</sup> According to Qualys, the Outlook flaw was the only exploited zero-day on Patch Tuesday.<sup>[2]</sup> Only secondary sources name the Chrome fix (157.0.8103.50/.51). Puppet Enterprise <strong>CVE-2026-115731</strong> has a deadline of Dec 1.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (retrieved Nov 19)</a> · [2] <a href="https://blog.qualys.com/vulnerabilities-threat-research/2026/11/10/microsoft-patch-tuesday-november-2026-security-update-review">blog.qualys.com (Nov 10)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Android: Play demands justifications <span class="h2-refs">[1]</span></h2>
+        <p>Google is tightening the rules in the Play Console in four stages. "The start is January 27, 2027": apps targeting Android 17 (API 37+) are to use the new location button for one-time location requests. Anyone who wants precise location (<code>ACCESS_FINE_LOCATION</code>) must explain in the Play Console why approximate location is not enough. From the same date, apps without a real need are to use the protected contact picker; from Android 18, intents replace the <code>WRITE_CONTACTS</code> permission. On Apr 14, 2027, rules for the AppFunctions API (functions for AI agents) arrive, and on Aug 25, 2027, a duty to explain <code>ACCESS_LOCAL_NETWORK</code>.</p>
+        <div class="callout info"><span class="callout-label">Our take</span> For web people with a Capacitor or React Native app, this is the most important item of the day. The explanation in the Play Console is quickly written. The rework to the location button and the contact picker is real work and belongs in the Q1 backlog, not in the last week of January.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Google-zwingt-Android-Apps-ab-Januar-zur-Begruendung-fuer-Standortzugriff-11529001.html">heise.de (Nov 18)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PostgreSQL 19: due today</h2>
+        <p>According to postgresql.org: "The planned date for the general availability of PostgreSQL 19 is November 19, 2026."<sup>[1]</sup> That holds only if no further release candidate is needed. This morning the news archive still showed no GA announcement, only RC 2 from Nov 12.<sup>[2]</sup></p>
+        <p>The minor releases of Nov 12 (18.7, 17.12, 16.16, 15.20, 14.25) "fix 52 security vulnerabilities and over 140 bugs".<sup>[1]</sup> The most severe is <strong>CVE-2026-6460</strong>: a type confusion after <code>ALTER ... SET DATA TYPE</code> executes arbitrary code, <span class="stat">CVSS 8.8</span>.<sup>[1]</sup> Anyone using <code>pg_trgm</code> should rebuild GiST indexes with <code>gist_trgm_ops</code>. And 14.25 is the last release of PostgreSQL 14, which gets no more fixes from now on.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> Minor update first, then think about 19. A major release on GA day is not a good idea for production data; waiting for 19.1 is the usual, boring and right choice. If you are still on 14, you now have a real problem: the jump to 18 goes via <code>pg_upgrade</code>, and the note in the release notes about indexes with full-text search, <code>pg_trgm</code> and <code>fuzzystrmatch</code> belongs in the plan.</div>
+        <span class="src">[1] <a href="https://www.postgresql.org/about/news/postgresql-1871712161615201425-19-rc-2-3442/">postgresql.org (Nov 12)</a> · [2] <a href="https://www.postgresql.org/about/newsarchive/">postgresql.org news archive (retrieved Nov 19)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Spring Boot 4.2: no GA yet <span class="h2-refs">[1]</span></h2>
+        <p>On spring.io, the newest Boot entry as of this morning is "Spring Boot 4.2.0-RC2 available now" from Nov 6. The latest post is "This Week in Spring" from Nov 18. The GA date of Nov 19 still comes only from a secondary source. On Nov 10 the team announced "a New Home for Spring for Apache Pulsar"; we did not look up where the project is moving. We will check again tomorrow.</p>
+        <span class="src">[1] <a href="https://spring.io/blog">spring.io/blog (retrieved Nov 19)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief</h2>
+        <ul>
+          <li><span class="chip">Infra</span> Microsoft Ignite 26 (Nov 18): according to the heise headline, "Azure becomes agentic and Windows moves into the cloud". The AI side belongs in the ai-dev and ai-usecases briefs; on the Windows part we only have the headline.<sup>[1]</sup></li>
+          <li><span class="chip">DE</span> iX presents the file format RUML, meant to translate "laws into machine-readable logic" (Nov 18). Headline only.<sup>[1]</sup></li>
+          <li><span class="chip good">Release</span> Azure App Service: .NET 11 and Python 3.15 are generally available there, Node.js 26 LTS is also there (Nov 11).<sup>[2]</sup></li>
+          <li><span class="chip good">Release</span> PostgreSQL ecosystem: WAL-G 3.0.10 was released on Nov 18.<sup>[3]</sup></li>
+          <li><span class="chip">Regulation</span> EU: we found no new reports on CRA, NIS2 and the AI Act this week. Yesterday's status stands.</li>
+          <li><span class="chip">BR</span> Brazil: not checked separately today.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.heise.de/developer/">heise.de/developer (Nov 18)</a> · [2] <a href="https://azure.github.io/AppService/2026/11/11/dotnet11-python315-node26-ga.html">azure.github.io (Nov 11)</a> · [3] <a href="https://www.postgresql.org/about/newsarchive/">postgresql.org (Nov 18)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Not verified</h2>
+        <ul>
+          <li>Apache Axis CVE-2026-90436: CVSS 9.2 (Mend only, CVSS 4.0; NVD unscored), affected versions and "no fix" only from search summaries; the NVD page stayed empty.</li>
+          <li>Synology CVE-2024-10441: KEV catalog entry confirmed, exploitation details not found.</li>
+          <li>LiteLLM: the catalog names CVE-2026-40217, some secondary sources a different number.</li>
+          <li>Java4Shell: we did not load the OpenJDK advisories or Oracle's patch page; the versions come from heise. heise itself calls the technical cause (Base64 decoder) unconfirmed.</li>
+          <li>Chrome fix versions and the CVSS value for Outlook (6.5) only from secondary sources. We do not know the content of the Chrome update of Nov 17.</li>
+          <li>Codeberg: status of yesterday's midday heise article; we did not check whether the lock has been lifted for good.</li>
+          <li>Angular, React, Docker, Caddy, Tailscale, BSI: not checked today.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>What Thursday is worth</h2>
+        <p>Three tasks: schedule the Java update on all machines, regardless of CPU. Search the old Java repos for Axis 1. And half an hour for your own domains: which registrar holds them, is the lock active, and which builds depend on third-party Git hosts without a mirror?</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Thursday, November nineteenth. Today's lead isn't a code bug, it's a domain.</p>
+  <p>Codeberg, the Berlin-based nonprofit GitHub alternative, was down for several hours on Wednesday morning. According to heise, the American registrar NameSilo had locked the domain. It hadn't expired and hadn't been transferred, it simply disappeared from DNS. There's no official reason. Around midday the domain slowly came back. Our take: a domain is a single point of failure. If you have critical domains, know who holds them, and if your builds clone straight from Codeberg, you need a mirror.</p>
+  <p>There's an important detail on Java4Shell. According to heise, Oracle's update from Tuesday closes eleven flaws that allow code execution, not just the one. So it belongs on machines whose processors aren't affected by Java4Shell itself, too. No attacks are known yet.</p>
+  <p>The U.S. agency CISA added four new entries to its catalog of actively exploited vulnerabilities. One is Apache Axis, an old SOAP library for Java. According to search results, there's no patch for it anymore because the project has been discontinued. The others are the research platform REDCap, Synology's NAS software DSM, and the AI proxy LiteLLM. For the first three, the deadline for U.S. agencies runs out on Saturday.</p>
+  <p>For Android developers, Google is announcing new Play rules. Starting January twenty-seventh, twenty twenty-seven, apps have to justify why they need precise location. Rules for contacts and for access to the local network follow later.</p>
+  <p>PostgreSQL nineteen is due today, as long as no further release candidate is needed. More important for operations are last week's updates: they close fifty-two security flaws, the worst scoring eight point eight out of ten. PostgreSQL fourteen gets no more fixes from now on. Spring Boot four point two, by contrast, hadn't been announced as a final release as of this morning.</p>
+  <p>There's nothing new from the EU today on the CRA or the AI Act.</p>
+  <p>Tomorrow we'll check whether PostgreSQL nineteen and Spring Boot actually shipped, and whether Codeberg got an explanation for the lock.</p>
+</div>
+
+</body>
+</html>

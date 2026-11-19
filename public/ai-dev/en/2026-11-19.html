@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-11-19</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-19</span>
+  </div>
+
+  <h1 class="masthead-title">Claude Code now starts in auto mode, including on Bedrock and Foundry</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">A quiet day after OpenAI's big Tuesday. The most important news is small, but it changes daily work: Claude Code 2.1.328 brings auto mode to Bedrock, Google Cloud, Microsoft Foundry and the Claude apps gateway. Interactive sessions with no permission mode set now start in it. On GPT-6.2 there are first impressions from second hand, but still no independent measurement. And Simon Willison's cost table shows that a cheaper token price does not automatically mean a cheaper task.</p>
+    <ul>
+      <li><span class="chip hot">Claude</span> <strong>Claude Code 2.1.328</strong> (11/18–11/19): auto mode for Opus 4.6 and Sonnet 4.6 on Bedrock, Google Cloud, Foundry and gateway. New start mode for interactive sessions.</li>
+      <li><span class="chip good">Claude</span> <strong>MCP hooks can now block</strong>: <code>"onFailure": "block"</code> also applies to <code>mcp_tool</code> hooks.</li>
+      <li><span class="chip good">MCP</span> <strong><code>claude mcp add-json &lt;name&gt; -</code></strong> (2.1.327) reads the server config from stdin. Tokens stay out of the shell history.</li>
+      <li><span class="chip">OpenAI</span> <strong>GPT-6.2, day 2</strong>: Latent Space speaks of "mixed reviews." In Willison's own test, none of the models beats Fable 5.2 or Gemini 4 Carbon.</li>
+      <li><span class="chip hot">OpenAI</span> <strong>Astra 6.2 at max effort</strong>: 88.71 cents per test image, GPT-6 Astra 63.21 cents. Cheaper tokens, pricier task.</li>
+      <li><span class="chip">Google</span> <strong>Gemini 4 Carbon</strong> open to paying API developers (since 11/10). Google lists no price and no benchmarks on the page.</li>
+      <li><span class="chip">OSS</span> <strong>OpenHands v1.42.0</strong> (11/18) and v1.41.0 (11/16): git provider selection and reasoning effort via ACP.</li>
+      <li><span class="chip">Bench</span> <strong>Still no independent number</strong> for GPT-6.2, Fable 5.2 or Gemini 4 Carbon. So no chart today.</li>
+      <li><span class="chip">Tool</span> <strong>Mandatory round</strong>: Cursor quiet since 11/06, Cline since 10/26, Continue since June.</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">The last seven days: Claude Code almost daily, OpenAI once, big</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Fri 11/13</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.325 (zstd fix, Bash permissions)</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon 11/16</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.326 (Code Mode + Agent Teams)</span>
+          <span>OpenHands v1.41.0</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue 11/17</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>GPT-6.2 Astra + Sol</span>
+          <span>Claude Code 2.1.327 (mcp add-json)</span>
+          <span>Willison: external sandboxes</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 11/18</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Codex CLI 0.170.0</span>
+          <span>OpenHands v1.42.0</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Thu 11/19</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Claude Code 2.1.328 (date 11/18 or 11/19)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid cols-2">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Claude Code 2.1.328: auto mode becomes the default</h2>
+        <p>The new version came out on November 18 or 19. The release tracker havoptic gives the 18th, the GitHub release page says "19 Nov". The core is in the release note: "Added auto mode for Claude Opus 4.6 and Sonnet 4.6 on Amazon Bedrock, Google Cloud's Agent Platform, Microsoft Foundry and Claude apps gateway; interactive sessions with no permission mode start in it".<sup>[1]</sup></p>
+        <p>That means two things. First, auto mode is now also available to companies that do not get Claude directly from Anthropic but through their cloud. Second, start-up behavior changes: if you set no permission mode, you land in auto mode and no longer in the mode that asks before every action. Whether this applies only to the named cloud setups or to all is not clear from the sentence.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Auto mode:</strong> Normally Claude Code asks before many actions, for example before running a shell command. In auto mode it does not ask every time. An automatic check decides what may run without asking. Imagine an intern who may handle routine tasks without a signature, but still comes to you for anything bigger.
+        </div>
+        <p>The second change fits with this: <code>"onFailure": "block"</code> now also exists for <code>mcp_tool</code> hooks, as it already did for command and HTTP hooks. The note says: "a hook whose call fails blocks the action".<sup>[1]</sup> A security hook that crashes itself no longer lets the action through silently.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Fail-closed instead of fail-open:</strong> A doorman who is sick can lead to two outcomes. Either the door is open and everyone gets in. Or the door stays shut until he is back. "onFailure: block" picks the closed door.
+        </div>
+        <p>My take: this week shows a clear pattern for Claude Code. On 11/13 came a fix for a gap through which some chained Bash commands ran without asking.<sup>[1]</sup> Now auto mode becomes the default more broadly, and at the same time a hook switch arrives that blocks on failure. Anthropic gives the agent more freedom and builds the safeguard in the same move. For you as a solo developer with direct Anthropic access, probably little changes. For teams on Bedrock or Foundry, a lot changes: if you have deliberately worked with confirmations so far, you should now set the permission mode explicitly instead of relying on the default.</p>
+        <p><span class="chip good">Try it</span> If you use security hooks via MCP tools: set <code>"onFailure": "block"</code> and make the hook fail on purpose once. Why: only then do you know whether your safeguard really holds in an error.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code/releases</a> — v2.1.328, "19 Nov" (no year), retrieved 2026-11-19; havoptic dates it 2026-11-18 · [2] <a href="https://www.havoptic.com/releases/claude-code/2026/11">havoptic.com/releases/claude-code</a> — release tracker, secondary source, retrieved 2026-11-19</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Claude Code 2.1.327, now read in full</h2>
+        <p><span class="update-since">Update since yesterday</span> Yesterday the summary of the stdin option was cut off. Now it is clear which command is meant: "Added <code>claude mcp add-json &lt;name&gt; -</code> to read the server's JSON from stdin, so tokens can stay off the command line".<sup>[1]</sup></p>
+        <p>The same release contains a fix that is easy to miss. <code>claude mcp add</code> and <code>claude mcp remove</code> with project scope deleted other top-level keys from <code>.mcp.json</code>.<sup>[1]</sup> If you keep your own entries there, check the file against Git once.</p>
+        <p>To complete the week: 2.1.321 (11/09) made Fable 5.2 the default model, 2.1.323 (11/12) brought the experimental Code Mode, in which Claude writes JavaScript to call its tools. 2.1.326 (11/16) allows Code Mode together with Agent Teams.<sup>[1][2]</sup> Eight versions in ten days.</p>
+        <p><span class="chip good">Try it</span> Pipe MCP configs with tokens in, for example from 1Password: <code>op read … | claude mcp add-json name -</code>. Why: the token then never appears in the shell history.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code/releases</a> — v2.1.326 (2026-11-16), v2.1.327 (2026-11-17), retrieved 2026-11-19 · [2] <a href="https://www.havoptic.com/releases/claude-code/2026/11">havoptic.com/releases/claude-code</a> — v2.1.321 (2026-11-09), v2.1.323 (2026-11-12), retrieved 2026-11-19</span>
+      </section>
+
+      <section class="news-item">
+        <h2>OpenHands: two releases in three days</h2>
+        <p>The open-source harness OpenHands delivered twice this week.<sup>[1]</sup></p>
+        <ul>
+          <li><strong>v1.42.0</strong> (11/18): "pick the exact connected git provider for repositories". Important if you have GitHub and GitLab connected in parallel.</li>
+          <li><strong>v1.41.0</strong> (11/16): "choose the reasoning effort from what the agent reports" via ACP.</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">Reasoning effort:</strong> How long a model thinks before it answers. More effort means better answers on hard tasks, but more tokens and more cost. OpenHands now shows the levels that the connected agent itself reports, instead of a fixed list.
+        </div>
+        <p>My take: small releases, but they show where OpenHands is heading. It is becoming a neutral interface to which you attach different agents. That fits a market in which the best model changes every week.</p>
+        <span class="src">[1] <a href="https://github.com/All-Hands-AI/OpenHands/releases">github.com/All-Hands-AI/OpenHands/releases</a> — retrieved 2026-11-19</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>GPT-6.2, day two: cheaper tokens, not always cheaper tasks</h2>
+        <p><span class="update-since">Update since yesterday</span> The prices are known: Astra 6.2 costs $8 / $40 per million tokens, Sol 6.2 stays at $2 / $10.<sup>[1]</sup> New is the look at the real cost per task. Simon Willison has each model draw the same test image at several effort levels, his well-known pelican. His cost per image:<sup>[1]</sup></p>
+        <table>
+          <thead><tr><th>Model</th><th>High</th><th>Xhigh</th><th>Max</th></tr></thead>
+          <tbody>
+            <tr><td>GPT-6.2 Astra</td><td>11.55 ¢</td><td>17.70 ¢</td><td>88.71 ¢</td></tr>
+            <tr><td>GPT-6 Astra</td><td>18.37 ¢</td><td>33.85 ¢</td><td>63.21 ¢</td></tr>
+            <tr><td>GPT-6.2 Sol</td><td>2.41 ¢</td><td>6.74 ¢</td><td>13.69 ¢</td></tr>
+            <tr><td>GPT-6.1 Sol</td><td>3.66 ¢</td><td>5.39 ¢</td><td>13.48 ¢</td></tr>
+          </tbody>
+        </table>
+        <p>On High and Xhigh, Astra 6.2 is clearly cheaper than its predecessor. On Max it costs more, though the token price fell by 20%. So the model uses far more tokens there. This is a single test with a single task, not statistics.</p>
+        <p>On quality: Willison's own, non-standard test asks the models to turn Yonkers into a giant mech. His verdict: "Neither of them did a good enough job", "at least in comparison to Claude Fable 5.2 and Gemini 4 Carbon".<sup>[1]</sup> Latent Space sums up the mood this way: Astra 6.2 is "better and 20%-600% cheaper, but has mixed reviews", and Sol 6.2 is "likely main workhorse".<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Benchmark status</span> For GPT-6.2, Fable 5.2 and Gemini 4 Carbon there is still no independent number. In the SWE-bench experiments repo, the last Verified submission is from 2026-09-01.<sup>[3]</sup> The Aider board gives no date. Anthropic's figures for Fable 5.2 (FrontierCode 2.0: 49.1%, FrontierSWE v2: 69.9%) are vendor-reported.<sup>[4]</sup> So no bar chart today.</div>
+        <p>My take: the table is the most important lesson of the day, more important than the ranking. For agents, what counts is not the price per token but the price per completed task. And that depends heavily on how much the model thinks. If you set Astra 6.2 to Max because "it got cheaper", you may well pay more. For everyday work, little argues against Sol 6.2 on High. For the hard cases, I would stay with the model that has proven itself in your own repo.</p>
+        <p><span class="chip good">Try it</span> On your next agent run, measure the cost per task at two effort levels. Why: only this number tells you which level pays off for your repo.</p>
+        <span class="src">[1] <a href="https://simonwillison.net/2026/Nov/17/">simonwillison.net</a> — post 2026-11-17, own test, retrieved 2026-11-19 · [2] <a href="https://latent.space/news/">latent.space/news</a> — AINews 2026-11-18, headline only read · [3] <a href="https://github.com/SWE-bench/experiments/commits/main">github.com/SWE-bench/experiments</a> — retrieved 2026-11-18 · [4] <a href="https://www.anthropic.com/news/claude-fable-and-mythos-5-2">anthropic.com</a> — 2026-11-09, vendor-reported, retrieved 2026-11-18</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Gemini 4 Carbon: open to paying developers</h2>
+        <p>Google opened Gemini 4 Carbon to developers on 11/10: "Starting today, developers can build with Gemini 4 Carbon." Access runs through the paid API tier in Google AI Studio and Android Studio, plus in Antigravity.<sup>[1]</sup> The page lists neither prices nor benchmark numbers. So we do not name a price from secondary sources.</p>
+        <p>According to a secondary source, Antigravity got a preview of <code>/swarm</code> with multiple agents and an orchestrator with Gemini 4 Carbon. We have not checked this in the primary source. Google is also moving users from Gemini CLI to Antigravity CLI.<sup>[2]</sup></p>
+        <p>My take: Carbon stands out positively in Willison's test and even ranked ahead of Fable 5.2 on AutomationBench in Anthropic's own table. Without an official price, though, it is impossible to say whether it is the cheap alternative. If you still use Gemini CLI, you should plan the move to Antigravity CLI.</p>
+        <span class="src">[1] <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemini-4-carbon-developers/">blog.google</a> — 2026-11-10, retrieved 2026-11-19 · [2] <a href="https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/">developers.googleblog.com</a> — not retrieved, search result only</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Mandatory round: quiet in the shadows</h2>
+        <ul>
+          <li><strong>Cursor</strong> — last entry "Voice Chat with Agents" from 11/06.<sup>[1]</sup> Thirteen days with nothing new.</li>
+          <li><strong>Codex CLI</strong> — still 0.170.0 from 11/18 (voice calls in the terminal, see yesterday).<sup>[2]</sup></li>
+          <li><strong>Cline</strong> — still v4.1.26, all packages from 10/26 (as of yesterday).<sup>[3]</sup></li>
+          <li><strong>Continue</strong> — newest release v2.1.0-vscode from 06/19. Quiet for five months.<sup>[4]</sup></li>
+          <li><strong>Aider</strong> — still v0.86.1, undated.<sup>[5]</sup></li>
+          <li><strong>MCP specification</strong> — still the stable version from 07/28/2026.<sup>[6]</sup></li>
+          <li><strong>Local</strong> — yesterday's new Ollama coding models (qwen3.8 27B, ripple-preview 65B, inkling-2-small) are still the newest.<sup>[7]</sup></li>
+          <li><strong>GitHub Copilot, JetBrains AI, Devin, Bolt, Plandex</strong> — not checked today, no confirmed movement.</li>
+        </ul>
+        <span class="src">[1] <a href="https://cursor.com/changelog">cursor.com/changelog</a> — retrieved 2026-11-19 · [2] <a href="https://learn.chatgpt.com/docs/changelog?date=2026-11-02">learn.chatgpt.com/docs/changelog</a> — retrieved 2026-11-19 · [3] <a href="https://github.com/cline/cline/releases">github.com/cline/cline/releases</a> — retrieved 2026-11-18 · [4] <a href="https://github.com/continuedev/continue/releases">github.com/continuedev/continue/releases</a> — retrieved 2026-11-19 · [5] <a href="https://aider.chat/HISTORY.html">aider.chat/HISTORY.html</a> — retrieved 2026-11-19 · [6] <a href="https://github.com/modelcontextprotocol/modelcontextprotocol/releases">github.com/modelcontextprotocol</a> — retrieved 2026-11-18 · [7] <a href="https://ollama.com/library?sort=newest">ollama.com/library</a> — retrieved 2026-11-19</span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Thursday, November nineteenth. After OpenAI's big Tuesday, today is quiet. The top story comes from Claude Code.</p>
+  <p>Claude Code two point one point three two eight brings auto mode to Amazon Bedrock, Google Cloud, Microsoft Foundry and the Claude apps gateway, for Opus four point six and Sonnet four point six. Interactive sessions with no permission mode set now start in it. In auto mode, Claude Code doesn't ask before every action; an automatic check decides. If you deliberately work with confirmations, you should now set the mode explicitly.</p>
+  <p>There's also a new safety switch. Hooks that run through MCP tools can now block the action if they fail themselves. So a broken guard no longer lets anything slip through silently. The version before already lets you read MCP configurations with tokens from standard input, so they don't end up in your shell history.</p>
+  <p>On GPT six point two, there are first impressions. Latent Space talks about mixed reviews. In Simon Willison's own test, none of the new OpenAI models beats Claude Fable five point two or Gemini four Carbon. His cost table is more interesting. At the highest effort level, Astra six point two costs about eighty-nine cents per test image, while its predecessor costs about sixty-three cents. The token price fell, but the task still costs more, because the model thinks harder.</p>
+  <p>There are no independent benchmark numbers for any of the new top models. The SWE-bench submissions have been frozen since early September. My advice stays the same: measure in your own repo, and measure cost per task, not per token.</p>
+  <p>Google has opened Gemini four Carbon to paying API developers, but lists no price on the page. The open-source harness OpenHands shipped two small releases. Cursor has been quiet since November sixth, and Continue since June.</p>
+  <p>Tomorrow we'll see whether the first independent measurement for GPT six point two shows up, and how teams react to the new auto mode.</p>
+</div>
+
+</body>
+</html>
