@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-20</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Edição 20/11/2026</span>
+  </div>
+  <h1 class="masthead-title">PostgreSQL 19 chegou, e um pacote da Microsoft rouba tokens</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">A quinta-feira teve duas caras. No lado bom: PostgreSQL 19 e PHP 8.6 foram lançados, ambos em 19/11. No lado ruim: veio à tona que, pela conta oficial da Microsoft no PyPI, já na noite de terça-feira, 17/11, saíram duas versões contaminadas do Agent Framework, que sugam credenciais do Azure, GitHub Actions e Docker. Somam-se um dia denso de patches com PHP, Ruby, nginx e WordPress, e o BSI classifica a situação como "tensa a crítica" pela primeira vez desde 2023. Nossa visão: a cadeia de suprimentos importa hoje mais do que qualquer nota CVSS isolada. Se você tinha <code>pip install</code> rodando no CI desde terça, 17/11, confira primeiro builds, lockfiles e caches.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>PyPI</strong>: Microsoft Agent Framework 1.26.1 e 1.26.2 contêm malware que rouba tokens de nuvem e de CI; cerca de 200.000 downloads por mês. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>PostgreSQL 19</strong>: GA em 19/11; <code>REPACK (CONCURRENTLY)</code>, <code>ON CONFLICT DO SELECT</code>, JIT agora desligado por padrão, RADIUS removido. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>PHP 8.6.0</strong> mais releases de segurança para 8.2 a 8.5; segundo o heise, 17 falhas, sete com CVSS 9,2. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Ruby</strong>: 4.0.10, 3.4.13 e 3.3.14 fecham sete falhas; "ruby2ßhell" atinge apps com codificação ISO-8859 ou Windows-125x, PoC em cerca de uma semana. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>nginx 1.30.7 / 1.31.9</strong>: dez CVEs, entre eles quatro use-after-free; segundo o heise, cinco com CVSS 9,2. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>BSI</strong>: situação "tensa a crítica"; segundo o heise, cerca de 160 novas falhas por dia. <span class="chip">DE</span></li>
+      <li><span class="chip">Sec</span> <strong>Apache Roller</strong> sofre ataques ativos, segundo os desenvolvedores (CVSS 9,8; alvo 6.1.7, porque a 6.1.6 deixa uma segunda falha aberta); prazos KEV para Axis, REDCap e Synology no sábado. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>PowerShell 5.1</strong> descontinuado: Windows 11 26H2 e Server 2025 são os últimos com a 5.1 embutida. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulação</span> <strong>Comissão Europeia</strong>: ciberataque com suspeita da ferramenta de pentest com IA Artex, dias de quedas nos sistemas de pessoal. <span class="chip">EU</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Perspectiva da semana</div>
+      <div class="timeline-sub">Datas até qui 26/11 — prazos do Puppet (01/12) e do LiteLLM (02/12) no texto</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Sex 20/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Hoje</span><span>Microsoft Agent Framework: rotacionar tokens se 1.26.1/1.26.2 estiver instalada</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sáb 21/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Prazo KEV: Apache Axis, REDCap, Synology DSM</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Ter 24/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Prazo KEV: Chromium CVE-2026-125350, Cisco BroadWorks, Openwave Webtop</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Qui 26/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>ruby2ßhell: PoC anunciada "em uma semana" (data aproximada)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Conta da Microsoft no PyPI distribui malware</h2>
+        <p>Pela conta oficial da Microsoft no PyPI saíram as versões 1.26.1 e 1.26.2 do Agent Framework, uma biblioteca para construir agentes de IA. Segundo o heise, "o malware está nas versões 1.26.1 e 1.26.2".<sup>[1]</sup> A Microsoft reverteu a 1.26.1 para a 1.26.0 limpa, e então os atacantes subiram a 1.26.2.<sup>[1]</sup> Segundo a Wiz, a 1.26.1 entrou no ar na terça-feira, 17/11, às 20h35 UTC, e a 1.26.2 por volta das 21h08 UTC; até cerca de 21h30 UTC o PyPI havia removido ambas.<sup>[3]</sup> O pacote tem "em média cerca de 200.000" downloads por mês.<sup>[1]</sup> Quem o descobriu foram OX Security e OpenSourceMalware.<sup>[2]</sup></p>
+        <p>O truque: a versão 1.26.1 deposita os arquivos <code>agent_framework_meta.pth</code> e <code>agent_framework_meta/_telemetry.py</code>, a 1.26.2 deposita <code>af_runtime_diag.pth</code> e <code>af_runtime_diag.py</code>. O arquivo .pth roda a cada início do Python, mesmo sem <code>import</code>.<sup>[1]</sup><sup>[3]</sup> Para conferir, procure as duas variantes na pasta <code>site-packages</code>. Depois o malware procura credenciais do Azure, Git, Docker e Hugging Face, segundo o Baguete solicita novos tokens de identidade no GitHub Actions, Azure DevOps e Azure, e envia tudo criptografado para fora.<sup>[2]</sup> O roubo de tokens OIDC do GitHub Actions a Wiz atribui só à 1.26.2.<sup>[3]</sup> Como os atacantes chegaram à conta não está confirmado; a OX Security suspeita de logins roubados da Microsoft.<sup>[1]</sup> A Microsoft investiga o caso e tornou privados alguns repositórios do GitHub.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Arquivo .pth:</strong> Um pequeno arquivo de texto na pasta <code>site-packages</code>. O Python o lê a cada início para definir caminhos de busca. Se houver nele uma linha começando com <code>import</code>, o Python a executa. É como um bilhete na geladeira que todo colega de casa cumpre automaticamente de manhã, mesmo que nunca tenha pretendido entrar na cozinha.
+        </div>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Este é o ponto mais importante do dia, mesmo para quem não tem projeto de IA. Um pacote com a Microsoft como remetente é exatamente o que ninguém verifica. O dano acontece no CI: é lá que ficam os tokens que a coisa procura. Quem usa lockfiles Python com hashes (<code>pip install --require-hashes</code> ou <code>uv lock</code>) estava protegido. Quem monta builds com <code>&gt;=</code> sem lock deve vasculhar builds, lockfiles e caches a partir de terça, 17/11, atrás dessas duas versões e depois rotacionar todos os segredos que o runner podia ver. O lado de IA do framework pertence ao brief ai-dev.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Microsofts-KI-Framework-verteilt-Malware-So-bekamen-Angreifer-Zugang-11530977.html">heise.de (19/11, 12:55)</a> · [2] <a href="https://www.baguete.com.br/noticias/microsoft-tem-conta-invadida-no-pypi">baguete.com.br (19/11)</a> · [3] <a href="https://www.wiz.io/blog/malicious-version-of-microsofts-agent-framework-published-to-pypi">wiz.io</a> · [4] <a href="https://www.ox.security/blog/breaking-hijacked-releases-of-microsofts-official-agent-framework-steals-azure-and-ci-credentials/">ox.security</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL 19 foi lançado</h2>
+        <p><span class="update-since">Atualização desde quinta</span> Ontem, aqui estava "deve sair hoje". Agora saiu: o PostgreSQL Global Development Group anunciou em 19/11 o lançamento do PostgreSQL 19.<sup>[1]</sup> Os destaques segundo o anúncio:</p>
+        <ul>
+          <li><strong>Verificações de chave estrangeira mais rápidas</strong>: no teste, inserts em massa ficaram "nearly 2x faster".<sup>[1]</sup></li>
+          <li><strong><code>REPACK (CONCURRENTLY)</code></strong>: reorganizar tabelas sem atrapalhar a operação em andamento.<sup>[1]</sup></li>
+          <li><strong><code>INSERT ... ON CONFLICT DO SELECT</code></strong>: <code>RETURNING</code> devolve também a linha que já existe, ou seja, "get or create" em um único comando.<sup>[1]</sup></li>
+          <li><strong><code>WAIT FOR LSN</code></strong>: "read-your-writes" em standbys; além disso a extensão <code>pg_stash_advice</code>, que guarda dicas de plano por query.<sup>[1]</sup></li>
+          <li><strong>Replicação e TLS</strong>: o primeiro slot lógico eleva o nível do WAL automaticamente; o servidor pode apresentar um certificado próprio por hostname via SNI.<sup>[1]</sup></li>
+        </ul>
+        <p>Atenção às mudanças: a autenticação RADIUS foi removida, o JIT agora vem desligado por padrão e, após um login <code>md5</code> bem-sucedido, aparece um aviso porque o <code>md5</code> vai sumir em uma versão futura.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">REPACK:</strong> Com o tempo, uma tabela acumula buracos de linhas apagadas, como uma estante com espaços vazios. O <code>VACUUM FULL</code> arruma, mas trava a estante inteira. O <code>REPACK (CONCURRENTLY)</code> reorganiza enquanto os outros continuam tirando livros.
+        </div>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> <code>ON CONFLICT DO SELECT</code> é o recurso que o pessoal de backend espera há anos; o desvio habitual com CTE e um segundo <code>SELECT</code> deixa de ser necessário. Mesmo assim: não coloque a 19.0 em produção no primeiro dia. Antes, verifique o <code>pg_hba.conf</code> por <code>md5</code> e RADIUS e teste as consultas que se beneficiavam do JIT. A atualização minor de 12/11 com 52 CVEs vem primeiro.</div>
+        <span class="src">[1] <a href="https://www.postgresql.org/about/news/postgresql-19-released-3449/">postgresql.org (19/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PHP 8.6.0 e um dia pesado de segurança</h2>
+        <p>Em 19/11 saíram cinco releases do PHP de uma vez: o novo major 8.6.0 e as atualizações de segurança 8.5.13, 8.4.28, 8.3.37 e 8.2.36.<sup>[1]</sup> Na véspera, o php.net havia anunciado um "Upcoming Critical PHP Security Release".<sup>[1]</sup> Segundo o heise, as atualizações fecham 17 falhas, sete delas com CVSS 9,2; as críticas, porém, exigem configurações especiais.<sup>[2]</sup> A contagem não é uniforme: o changelog do php.net lista 18 IDs de CVE, a manchete do heise fala em cinco falhas com execução de código, a URL em quatro.<sup>[2][3]</sup></p>
+        <p>O próprio PHP 8.6 traz aplicação parcial de funções com marcadores <code>?</code>, uma classe <code>\Time\Duration</code>, a API <code>Io\Poll</code> como base para event loops como ReactPHP e AMPHP, uma função <code>clamp()</code>, um enum <code>SortDirection</code> e valores padrão para propriedades readonly.<sup>[4]</sup></p>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> A atualização de segurança é obrigatória, a 8.6 é opcional. O heise escreve: "Admins devem atualizar rapidamente suas instalações PHP."<sup>[2]</sup> Quem está na 8.2 ainda recebe os patches. <code>Io\Poll</code> é a peça mais interessante, porque substitui o <code>stream_select()</code> com seus limites.</div>
+        <span class="src">[1] <a href="https://www.php.net/">php.net (19/11)</a> · [2] <a href="https://www.heise.de/news/PHP-behebt-17-Sicherheitsluecken-vier-erlauben-Ausfuehrung-von-Schadcode-11531249.html">heise.de (19/11, 15:42)</a> · [3] <a href="https://www.php.net/ChangeLog-8.php">php.net Changelog (acessado em 20/11)</a> · [4] <a href="https://www.php.net/releases/8.6/en.php">php.net/releases/8.6</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>ruby2ßhell: 21 ß e uma codificação</h2>
+        <p>O Ruby lançou em 18/11 as versões 4.0.10, 3.4.13 e 3.3.14. Segundo o ruby-lang.org há "seven vulnerabilities" no motor de regex e na capitalização de strings; a recomendação é "We strongly recommend upgrading."<sup>[1]</sup> O nome "ruby2ßhell" foi dado a uma delas pela Veria Labs. Segundo o heise, são afetados apps que processam strings em codificação ISO-8859 ou Windows-125x com <code>upcase</code>, <code>swapcase</code>, <code>downcase(:fold)</code> ou <code>casecmp?</code>; Rails e Sinatra no padrão clássico seriam afetados.<sup>[2]</sup></p>
+        <p>"Ainda não foi atribuído um número CVE", há apenas o advisory do GitHub GHSA-34m4-m9fh-gqp5.<sup>[2]</sup> Não há ataques conhecidos, e o heise cita: "Isto não é um ataque pronto". A Veria Labs pretende mostrar uma PoC em cerca de uma semana.<sup>[2]</sup> Segundo o advisory do Ruby, os mantenedores conhecem PoCs que comprovam execução remota de código para algumas das falhas.<sup>[3]</sup> Os detalhes técnicos do ruby2ßhell só lemos no heise, não no próprio advisory.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Por que justo o ß?</strong> Em maiúsculas, "ß" vira "SS", ou seja, de um caractere saem dois. Uma string fica mais longa na conversão do que era antes. Nossa suposição (não da fonte): saltos de tamanho assim são o lugar clássico em que o código escreve além do fim de um buffer. Os 21 ß vêm do título da descoberta.
+        </div>
+        <span class="src">[1] <a href="https://www.ruby-lang.org/en/news/">ruby-lang.org News (18/11)</a> · [2] <a href="https://www.heise.de/news/ruby2sshell-Remote-Code-Execution-durch-21-ss-11531365.html">heise.de (19/11, 15:50)</a> · [3] <a href="https://www.ruby-lang.org/en/news/2026/11/18/multiple-vulnerabilities-in-regexp-and-string/">ruby-lang.org Advisory (18/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>nginx: dez CVEs em um release</h2>
+        <p>O nginx.org informa para 18/11 as versões 1.30.7 (stable) e 1.31.9 (mainline) com correções para dez falhas, entre elas use-after-free no resolver, em HTTP/2, HTTP/3 e no proxy de e-mail, uma corrupção de memória no controle de fluxo do HTTP/2 e um estouro de buffer com <code>alias</code> e <code>try_files</code>.<sup>[1]</sup> Segundo o heise, "cinco delas de uma vez" têm CVSS 4.0 com 9,2, e dois erros estão no código desde 2007.<sup>[2]</sup> Os valores CVSS vêm só do heise; o nginx.org não informa notas. Não há relato de ataques.</p>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> É o segundo grande release de segurança do nginx em cinco semanas: em 14/10 já tinham saído cinco correções.<sup>[1]</sup> Quem usa o nginx da distribuição espera o backport; quem usa o repositório upstream atualiza normalmente. Para usuários do Caddy: lá a 2.11.9 de 05/11 é a atual, com correções de segurança "mostly in FastCGI".<sup>[3]</sup></div>
+        <span class="src">[1] <a href="https://nginx.org/">nginx.org (18/11)</a> · [2] <a href="https://www.heise.de/news/Webserver-nginx-Update-schliesst-schwere-Luecken-11530216.html">heise.de (18/11, 21:36)</a> · [3] <a href="https://github.com/caddyserver/caddy/releases">github.com/caddyserver (05/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>BSI: "tensa a crítica" <span class="h2-refs">[1]</span></h2>
+        <p>O BSI elevou em 19/11 sua avaliação da situação para "tensa a crítica", segundo o heise pela primeira vez desde 2023. O heise cita cerca de 160 novas vulnerabilidades por dia (mais 35%). O tempo entre a publicação de uma falha e o primeiro exploit seria em média de cerca de 25 dias, no segundo trimestre de 2026 de cerca de oito dias; um ano antes eram uns 53. 88% dos dispositivos infectados seriam Android; o BadBox contaria cerca de 30.000 dispositivos na Alemanha, o Vo1d mais de 10.000. Não carregamos o comunicado original do BSI.</p>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Oito dias até o exploit, esse é o número que conta. Um ciclo mensal de patches é, portanto, lento demais para qualquer coisa com acesso à internet. Não é motivo de pânico, mas é um bom argumento para atualizações minor automáticas e Renovate ou Dependabot com auto-merge para patches.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/BSI-aendert-Lagebewertung-auf-angespannt-bis-kritisch-11530831.html">heise.de (19/11, 12:41)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Sob ataque ativo: Roller e a lista KEV</h2>
+        <h3>Apache Roller</h3>
+        <p>Para o software de blog Apache Roller há dois registros de CVE para o mesmo erro: CVE-2026-129448 (versões 4.0.0 a 6.1.4) e CVE-2026-82384 (6.1.5), ambos CVSS 9,8.<sup>[1]</sup> Segundo a descrição dos desenvolvedores, a falha "já está sendo ativamente atacada". A 6.1.6 corrige a falha ativamente atacada; a atualização descarta requisições XML-RPC quando o XML-RPC está desligado.<sup>[1]</sup> Segundo o Apache Security, porém, há ainda o CVE-2026-123374, uma desserialização XML-RPC da 4.0 até a 6.1.6, que só a 6.1.7 corrige. A versão-alvo é, portanto, a 6.1.7.<sup>[3]</sup> Até ontem, o Roller não constava do catálogo KEV.<sup>[2]</sup></p>
+        <h3>Prazos KEV</h3>
+        <p>As quatro entradas KEV de 18/11 cobrimos em detalhe ontem. Lembrete: Apache Axis, REDCap e Synology DSM têm prazo no sábado, 21/11; o LiteLLM tem prazo em 02/12.<sup>[2]</sup> Desde 17/11 o Puppet Enterprise <strong>CVE-2026-115731</strong> consta do catálogo, prazo 01/12.<sup>[2]</sup> Na terça, 24/11, vencem os prazos do Chromium <strong>CVE-2026-125350</strong>, do Cisco BroadWorks <strong>CVE-2026-20320</strong> e do Openwave Webtop <strong>CVE-2026-111793</strong>.<sup>[2]</sup> Para a Synology, o heise cita CVSS 9,8 e correções que estão disponíveis "desde dezembro de 2024".<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Angriffe-auf-Luecken-in-Apache-Axis-und-Roller-LiteLLM-Synology-und-mehr-11530429.html">heise.de (19/11, 10:47)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (acessado em 20/11)</a> · [3] <a href="https://security.apache.org/projects/roller/">security.apache.org</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Java4Shell: continuam sem ataques</h2>
+        <p><span class="update-since">Atualização desde quinta</span> O Cloudflare Radar resume a situação: para a <strong>CVE-2026-114938</strong> não foram vistos exploits, e o próprio registro CVE ainda não estava publicado em 17/11.<sup>[1]</sup> A Cloudflare cita CVSS 4.0 com 9,2; a Oracle indica na atualização de novembro do Java SE como valor mais alto 8,1 pelo CVSS 3.1, possivelmente para outra falha.<sup>[1]</sup> Também os números de build corrigidos divergem entre as fontes (por exemplo 8u511 ou 8u513). Não conseguimos carregar a página da própria Oracle. A recomendação de ontem continua: planejar a atualização em todas as máquinas.</p>
+        <span class="src">[1] <a href="https://radar.cloudflare.com/zero-wire/java4shell">radar.cloudflare.com (18/11)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Windows: PowerShell 5.1 está descontinuado <span class="h2-refs">[1]</span></h2>
+        <p>A Microsoft quer embutir o PowerShell 7 de forma fixa em futuras versões do Windows. "Windows Server 2025 e Windows 11 26H2 devem ser as últimas versões com o PowerShell 5.1 integrado de forma fixa." Depois disso, a 5.1 estará disponível como Feature on Demand. A Microsoft não informa data para o fim, e as atualizações de segurança continuam. A partir do PowerShell 7.7 não há mais pacote MSI.</p>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Isso atinge sobretudo scripts antigos de build e deploy que chamam <code>powershell.exe</code> em silêncio em vez de <code>pwsh</code>, e módulos que só rodam na 5.1. Uma busca por <code>powershell.exe</code> em pipelines e workflows do GitHub Actions não custa nada. O fim do MSI atinge todos que distribuem o PowerShell via Intune ou GPO.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Microsoft-bringt-PowerShell-7-fest-in-kuenftige-Windows-Versionen-11530777.html">heise.de (19/11, 14:01)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Comissão Europeia: ataque com ferramenta de pentest? <span class="h2-refs">[1]</span></h2>
+        <p>A Comissão Europeia descobriu o ataque em 22/10 e o confirmou em 26/10. Os sistemas de pessoal Sysper e MyPMO foram tirados do ar por precaução e voltaram no início desta semana; segundo o heise, citando o Politico, o Sysper caiu de novo por pouco tempo na quarta-feira. A Comissão fala em "campanha cibernética gerada por IA". A suspeita recai sobre o Artex, uma plataforma open source de pentest em Go controlada por um modelo de linguagem; isso não está confirmado. Segundo o FBI, o Artex é usado de forma abusiva desde pelo menos agosto, e no início de novembro mais de 1.600 instâncias estavam acessíveis. Segundo um porta-voz, até agora não houve vazamento de dados pessoais.</p>
+        <div class="callout info"><span class="callout-label">Nossa visão</span> Para nós conta o aspecto operacional: uma ferramenta de ataque aberta, solta na rede, com mais de 1.600 instâncias acessíveis. O lado de IA (quanto o modelo faz por conta própria) pertence ao brief ai-usecases.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Cyberangriff-auf-EU-Kommission-Verdacht-auf-KI-Tool-Artex-tagelange-Ausfaelle-11531596.html">heise.de (19/11, 17:27)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Outros patches</h2>
+        <h3>WordPress 7.1.5</h3>
+        <p>A atualização de 18/11 "lista nada menos que 20 problemas", entre eles oito falhas XSS, três escaladas de privilégio e duas injeções SQL.<sup>[1]</sup> O heise não relata ataques a essas falhas, mas lembra que no fim de setembro ataques começaram poucas horas após um patch do WordPress.<sup>[1]</sup></p>
+        <h3>SharePoint Server Subscription Edition</h3>
+        <p>A <strong>CVE-2026-124223</strong> permite a atacantes autenticados executar código por desserialização, CVSS 8,8; soma-se uma escalada de privilégio com CVSS 6,5. A versão 16.0.20326.20278 corrige ambas.<sup>[2]</sup></p>
+        <h3>Ubiquiti UniFi Access</h3>
+        <p>Sete falhas na UniFi Access Application até a 4.3.22, quatro delas com CVSS 9,9, entre elas execução de código como root. Correção a partir da 4.3.24; sobre ataques o heise não diz nada.<sup>[3]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/WordPress-Update-schliesst-zig-Luecken-11530196.html">heise.de (18/11, 20:38)</a> · [2] <a href="https://www.heise.de/news/Microsoft-SharePoint-Angreifer-koennen-Code-einschleusen-und-ausfuehren-11529556.html">heise.de (18/11, 14:05)</a> · [3] <a href="https://www.heise.de/news/Ubiquiti-UniFi-Access-Application-Luecken-erlauben-Codeschmuggel-11531080.html">heise.de (19/11, 14:03)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Releases do stack</h2>
+        <ul>
+          <li><span class="chip good">Release</span> <strong>Spring</strong>: Em 19/11 saíram Spring Batch 6.1 GA, Spring Integration 7.2.0, Spring AMQP 4.2.0, Spring Vault 4.0.5/4.1.2 e Spring Shell 4.0.4.<sup>[1]</sup> O Spring Boot 4.2 GA continua fora do blog até hoje cedo.<sup>[1]</sup></li>
+          <li><span class="chip good">Release</span> <strong>Angular 22.3.0</strong> é desde 18/11 o release stable mais recente, junto com o patch 22.2.7.<sup>[2]</sup></li>
+          <li><span class="chip">Infra</span> <strong>Tailscale</strong>: a v1.104.7 (12/11) atualiza para o Go 1.27.4 por causa de um problema no TLS ClientHello; desde 19/11 é possível enviar logs de fluxo e de auditoria para o CrowdStrike Falcon Next-Gen SIEM.<sup>[3]</sup></li>
+          <li><span class="chip">Release</span> <strong>Python</strong>: calmo. Atuais são 3.15.2 e 3.14.10, ambas de 25/10.<sup>[4]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://spring.io/blog">spring.io/blog (acessado em 20/11)</a> · [2] <a href="https://github.com/angular/angular/releases">github.com/angular (18/11)</a> · [3] <a href="https://tailscale.com/changelog">tailscale.com/changelog</a> · [4] <a href="https://www.python.org/downloads/">python.org/downloads (acessado em 20/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Em resumo</h2>
+        <ul>
+          <li><span class="chip">Web</span> Android: o Google endurece a partir de abril os requisitos de qualidade para apps dobráveis (heise, 19/11). Lemos só a manchete.<sup>[1]</sup></li>
+          <li><span class="chip">DE</span> A TeleTrusT publica um guia sobre agilidade criptográfica e a migração para criptografia pós-quântica (19/11). Lemos só a manchete.<sup>[1]</sup></li>
+          <li><span class="chip">Regulação</span> Reino Unido: segundo o heise, o governo britânico precisa admitir no tribunal que ordenou uma porta dos fundos à Apple (19/11). Lemos só a manchete.<sup>[1]</sup></li>
+          <li><span class="chip">BR</span> Brasil: o Baguete também cobre a história do PyPI com a Microsoft; notícias próprias de dev do BR não encontramos hoje. O Tecnoblog continuou bloqueado.<sup>[2]</sup></li>
+          <li><span class="chip">Regulação</span> UE: sobre CRA, NIS2 e AI Act não encontramos hoje nenhuma notícia nova.</li>
+          <li><span class="chip">OSS</span> Codeberg: após o bloqueio de domínio de 18/11, hoje não verificamos de novo se há uma explicação da NameSilo.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.heise.de/newsticker/">heise.de Newsticker (19/11)</a> · [2] <a href="https://www.baguete.com.br/">baguete.com.br (acessado em 20/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Não verificado</h2>
+        <ul>
+          <li>ruby2ßhell: detalhes (codificações, Rails/Sinatra, data da PoC) só do heise; o advisory do Ruby lemos apenas como resumo.</li>
+          <li>nginx: CVSS 9,2 para cinco falhas só do heise, o nginx.org não informa notas.</li>
+          <li>PHP: número de falhas divergente (heise 17, changelog 18 IDs de CVE).</li>
+          <li>Java4Shell: sem texto primário da Oracle ou do NVD; números de build se contradizem entre fontes.</li>
+          <li>Microsoft Agent Framework: horários (17/11, 20h35 e por volta das 21h08 UTC, ambas removidas até cerca de 21h30 UTC) segundo a <a href="https://www.wiz.io/blog/malicious-version-of-microsofts-agent-framework-published-to-pypi">Wiz</a>, sequência confirmada pela <a href="https://www.ox.security/blog/breaking-hijacked-releases-of-microsofts-official-agent-framework-steals-azure-and-ci-credentials/">OX Security</a>; caminho da invasão não confirmado.</li>
+          <li>UniFi Access: correção na 4.3.24 e valores CVSS só do heise; não carregamos um boletim da Ubiquiti.</li>
+          <li>Números do BSI só via heise; atualizações do Chrome desktop, Docker e React não verificados hoje.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>O que vale a sexta-feira</h2>
+        <p>Três tarefas antes do fim de semana: procurar nos logs de CI por <code>agent-framework</code> 1.26.1 ou 1.26.2 e, em caso de achado, rotacionar os segredos. Colocar as atualizações de PHP, Ruby e nginx no ciclo normal. E planejar um teste para o PostgreSQL 19, não a migração para produção.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Hoje é sexta-feira, vinte de novembro. Ontem tivemos dois grandes lançamentos, e veio à tona um incidente sério na cadeia de suprimentos.</p>
+  <p>Primeiro o incidente. Pela conta oficial da Microsoft no PyPI saíram, já na noite de terça-feira, duas versões contaminadas do Agent Framework, a um ponto vinte e seis ponto um e a um ponto vinte e seis ponto dois. Segundo o heise, o pacote é baixado cerca de duzentas mil vezes por mês. O malware dispara a cada processo Python e procura credenciais do Azure, Git, Docker e Hugging Face, além de tokens do GitHub Actions. Nossa visão: quem fez build desde terça sem lockfile deve conferir os logs de build e rotacionar os segredos.</p>
+  <p>A boa notícia: o PostgreSQL dezenove foi lançado. As verificações de chave estrangeira ficaram mais rápidas, e no teste os inserts em massa quase dobraram de velocidade. Entram o REPACK com o banco em operação e o ON CONFLICT DO SELECT para o clássico buscar-ou-criar. O JIT agora vem desligado por padrão, e o RADIUS foi removido. Nosso conselho: testar primeiro, não colocar em produção no primeiro dia.</p>
+  <p>O PHP oito ponto seis também chegou, junto com atualizações de segurança para as versões oito ponto dois a oito ponto cinco. Segundo o heise, elas fecham dezessete falhas, sete delas com nota nove vírgula dois em dez, mas apenas em configurações especiais.</p>
+  <p>O Ruby fechou sete falhas. Uma delas se chama ruby2ßhell, porque, ao pôr em maiúscula o eszett alemão (ß), saem dois caracteres. São afetados apps com codificações antigas, como ISO-8859. Uma prova de conceito deve sair em cerca de uma semana. Somam-se o nginx com dez falhas e o WordPress com vinte.</p>
+  <p>O BSI elevou sua avaliação para tensa a crítica, pela primeira vez desde dois mil e vinte e três. Segundo o heise, em média só passam cerca de oito dias até uma nova falha ser explorada. E o software de blog Apache Roller já está sob ataque ativo, segundo seus desenvolvedores.</p>
+  <p>Para o pessoal do Windows: o PowerShell cinco ponto um foi descontinuado. Windows onze vinte e seis H dois e Server dois mil e vinte e cinco são as últimas versões com o cinco ponto um embutido. Na Comissão Europeia continua a apuração de um ciberataque em que a suspeita recai sobre uma ferramenta de pentest com IA de livre acesso.</p>
+  <p>Na próxima semana vamos ver se o Spring Boot quatro ponto dois finalmente sai, e se a prova de conceito anunciada para o Ruby aparece. No sábado vencem os prazos de Apache Axis, REDCap e Synology no catálogo de falhas ativamente exploradas.</p>
+</div>
+
+</body>
+</html>
