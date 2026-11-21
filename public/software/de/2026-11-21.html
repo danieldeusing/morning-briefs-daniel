@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-21</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-11-21</span>
+  </div>
+  <h1 class="masthead-title">vCenter wird angegriffen, die KEV-Frist endet Montag</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Der Samstag ist ruhig, aber der Freitag hat eine wichtige Meldung hinterlassen. Broadcom hat eine kritische Lücke in VMware vCenter geschlossen, und laut heise unter Berufung auf Mandiant wird sie schon seit Anfang September ausgenutzt. Am Abend setzte CISA die Lücke zusammen mit Cisco Expressway, SAP NetWeaver und Apache Roller auf die KEV-Liste; die Frist für US-Bundesbehörden endet am Montag, 23.11. Dazu kommen ein Nachtrag zu den Ruby-Lücken, die auch Rails-Apps treffen, ein GitLab-Release mit veraltetem NGINX und PHP 8.6 mit strengeren Session-Defaults. Unsere Sicht: Wer vCenter betreibt, hat am Wochenende genau eine Aufgabe. Alles andere passt in den normalen Zyklus.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>VMware vCenter</strong>: CVE-2026-123890 (CVSS 9,8), Umgehung der Anmeldung; Fix in 9.1.1.0200, 9.0.2.0200 und 8.0 U3m, kein Workaround. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>CISA KEV 20.11.</strong>: vCenter, Cisco Expressway, SAP NetWeaver und Apache Roller, alle mit Frist Mo 23.11. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>Cisco Expressway</strong>: Cisco sagt „keine bekannte Ausnutzung“, CISA listet die Lücke als ausgenutzt. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Ruby</strong>: Rails und klassisches Sinatra sind laut Veria Labs in der Standard-Konfiguration ohne Anmeldung angreifbar; CVE-2026-132825 mit CVSS 7,4. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>GitLab 19.6</strong> bringt NGINX 1.31.7 mit, also ohne die nginx2root-Fixes; Workaround HTTP/2 aus. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>PHP 8.6</strong>: <code>use_strict_mode</code>, <code>cookie_httponly</code> und <code>SameSite=Lax</code> sind jetzt Standard, aber nur ohne eigene php.ini-Werte. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>Windows-Hotpatches</strong> vom November lassen Apps mit 32-Bit-<code>msi.dll</code> nicht mehr starten; Workaround per Registry. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>SonicWall</strong> rät, Gen6-Firewalls auszumustern; seit spätestens 01.10. gibt es keine Patches mehr. <span class="chip">Global</span></li>
+      <li><span class="chip">M&amp;A</span> <strong>MongoDB kauft Firebolt</strong>, dessen Engine in München entwickelt wurde. <span class="chip">DE</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Wochenausblick</div>
+      <div class="timeline-sub">Termine bis Sa 28.11. — Puppet- (01.12.), LiteLLM-Frist (02.12.) und PHP-8.2-Ende (31.12.) im Text</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Sa 21.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Heute</span><span>vCenter auf 9.1.1.0200 / 9.0.2.0200 / 8.0 U3m bringen</span><span>KEV-Frist: Apache Axis, REDCap, Synology DSM</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mo 23.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: vCenter, Cisco Expressway, SAP NetWeaver, Apache Roller</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 24.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: Chromium CVE-2026-125350, Cisco BroadWorks, Openwave Webtop</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 25.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>ruby2ßhell: PoC „etwa eine Woche“ nach dem 18.11. angekündigt (ungefähres Datum)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>vCenter: Lücke wird seit September ausgenutzt</h2>
+        <p>Broadcom hat am 19.11. das Advisory VMSA-2026-0009 veröffentlicht und am 20.11. aktualisiert.<sup>[1]</sup> Der Kern ist <strong>CVE-2026-123890</strong>, eine „authentication bypass vulnerability in the VMware Directory Service“ mit CVSS 9,8.<sup>[1]</sup> Wer Netzwerk-Zugang zum vCenter hat, kommt laut CISA ohne Anmeldung hinein.<sup>[3]</sup> Betroffen sind laut heise vCenter, Cloud Foundation, vSphere Foundation sowie Telco Cloud Platform und Telco Cloud Infrastructure.<sup>[2]</sup> Die Fixes: vCenter <strong>9.1.1.0200</strong>, <strong>9.0.2.0200</strong> und <strong>8.0 U3m</strong>. Einen Workaround gibt es nicht.<sup>[1]</sup></p>
+        <p>Zum Angriff: Laut heise berichtet Mandiant, dass eine Gruppe namens „Armory Castle“ die Lücke schon Anfang September mit dem Toolkit „Bonesaw“ ausgenutzt hat.<sup>[2]</sup> Die Angreifer kopierten demnach die LMDB-Datenbank, übernahmen den SAML Security Token Service und legten ein SSO-Admin-Konto an. Den ersten Zugang verschafften sie sich über eine Zero-Day-Lücke in BeyondTrust Remote Support, CVE-2026-102764. Mandiant ordnet die Gruppe China zu.<sup>[2]</sup> Google Threat Intelligence (GTIG/Mandiant) bestätigt das im eigenen Bericht vom 19.11.: Ausnutzung seit Anfang September, kopierte LMDB-Datenbank, übernommener STS und ein neues SSO-Admin-Konto, Einstieg über die BeyondTrust-Lücke CVE-2026-102764. GTIG nennt die Gruppe „PRC-nexus“.<sup>[5]</sup> Im selben Advisory stecken laut heise vier weitere Lücken, darunter eine SQL-Injection in SDDC Manager (CVE-2026-123891, CVSS 8,1).<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Security Token Service (STS):</strong> Der Dienst im vCenter, der nach dem Login die digitalen Ausweise (SAML-Tokens) ausstellt. Jede andere Komponente glaubt diesen Ausweisen. Wer das STS übernimmt, hat die Druckmaschine für Firmenausweise in der Hand: Er muss kein Passwort mehr knacken, er druckt sich einfach einen Admin-Ausweis.
+        </div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Das ist die Meldung des Tages. Ein vCenter ist der Schlüsselbund für alle VMs darunter, und Angreifer waren offenbar zweieinhalb Monate vor dem Patch drin. Patchen reicht deshalb nicht: Wer betroffen sein könnte, prüft auch die SSO-Konten auf unbekannte Admins. Auffällig ist, dass schon VMSA-2026-0006 im Juli eine Anmelde-Umgehung im selben Directory Service schloss (CVE-2026-59309, CVSS 9,8).<sup>[4]</sup> Laut GTIG lief der BONESAW-Angriff gegen ein vCenter, auf dem der Patch für CVE-2026-59309 schon installiert war. CVE-2026-123890 ist also eine eigene Lücke, die der Juli-Fix nicht schließt.<sup>[5]</sup></div>
+        <span class="src">[1] <a href="https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39495">Broadcom VMSA-2026-0009.1 (20.11.)</a> · [2] <a href="https://www.heise.de/news/VMware-stopft-attackierte-Sicherheitsluecken-11532009.html">heise.de (20.11., 09:06)</a> · [3] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">CISA KEV-Feed (20.11.)</a> · [4] <a href="https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/38017">Broadcom VMSA-2026-0006.2</a> · [5] <a href="https://cloud.google.com/blog/topics/threat-intelligence/armory-castle-exploits-vsphere">Google Threat Intelligence (19.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV-Liste: vier neue Einträge, Frist Montag</h2>
+        <p>CISA hat den Katalog am 20.11. um 17:48 UTC aktualisiert (Version 2026.11.20).<sup>[1]</sup> Alle vier neuen Einträge haben die Frist 23.11. Den vCenter-Eintrag beschreibt der Abschnitt oben.</p>
+        <h3>Cisco Expressway</h3>
+        <p><strong>CVE-2026-76466</strong> erlaubt laut CISA, auf einem geclusterten Gerät über den Datenbank-Dienst Befehle als root auszuführen, wegen fest eingebauter Zugangsdaten.<sup>[1]</sup> Cisco gibt CVSS 9,8 an. Betroffen sind Expressway-C und -E im Cluster; der Fix ist X15.5.20, für X14 und älter heißt es „Migrate to a fixed release“.<sup>[2]</sup> Der Widerspruch: Ciscos Advisory steht seit dem 21.10. unverändert auf Version 1.0, und dort ist PSIRT „not aware of any public announcements or malicious use“.<sup>[2]</sup> CISA nimmt nur Lücken mit Belegen für Ausnutzung in den Katalog auf. Wer recht hat, können wir nicht klären; wir gehen vom KEV-Eintrag aus.</p>
+        <h3>SAP NetWeaver</h3>
+        <p><strong>CVE-2025-42884</strong>: Ein nicht angemeldeter Angreifer kann im Enterprise Portal Server-Informationen lesen oder ändern, indem er JNDI-Umgebungsvariablen einschleust.<sup>[1]</sup> Laut NVD hat sie CVSS 3.1 6,5 (Medium); betroffen sind EP-BASIS und EP-RUNTIME 7.50, der Fix steht in SAP-Hinweis 3660969. Diese Angaben kennen wir nur aus Sekundär-Snippets zum NVD-Eintrag.<sup>[4]</sup> Die ID stammt aus 2025, die Lücke ist also nicht neu.</p>
+        <div class="eli5">
+          <strong class="eli5-term">JNDI:</strong> Das Telefonbuch von Java. Eine App fragt „Wo ist die Datenbank?“, und JNDI schlägt die Adresse nach. Darf ein Angreifer die Einträge im Telefonbuch selbst schreiben, landet die App bei seiner Nummer. Genau so funktionierte 2021 auch Log4Shell.
+        </div>
+        <h3>Apache Roller</h3>
+        <p><span class="update-since">Update seit Fr</span> Gestern stand hier: Roller fehlt noch im Katalog. Jetzt steht <strong>CVE-2026-129448</strong> drin. CISA schreibt, dass sich über den XML-RPC-Endpunkt ohne Anmeldung Code ausführen lässt, und dass der Eintrag CVE-2026-82384 doppelt, aber „covers a wider range of versions“.<sup>[1]</sup> Zielversion bleibt 6.1.7, weil 6.1.6 eine zweite XML-RPC-Lücke offen lässt (siehe Brief vom Freitag).</p>
+        <h3>Erinnerung: die Fristen vom 18.11.</h3>
+        <p>Heute enden die Fristen für Apache Axis (CVE-2026-90436), REDCap (CVE-2026-90817) und Synology DSM (CVE-2024-10441); für LiteLLM (CVE-2026-40217) gilt der 02.12.<sup>[3]</sup></p>
+        <span class="src">[1] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">CISA KEV-Feed, Version 2026.11.20</a> · [2] <a href="https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-vcs-static-cred-hr7EWZ8t">Cisco Advisory (21.10., v1.0)</a> · [3] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV (abgerufen 21.11.)</a> · [4] <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-42884">NVD CVE-2025-42884 (über Sekundär-Snippets)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>GitLab 19.6: das mitgelieferte NGINX ist alt <span class="h2-refs">[1]</span></h2>
+        <p>GitLab 19.6 erschien am 19.11., der Patch 19.6.1 am 20.11. Beide bringen NGINX 1.31.7 mit. Damit fehlen die Fixes für die fünf „nginx2root“-Lücken vom 18.11., die erst in NGINX 1.30.7 und 1.31.9 stecken. „Am mitgelieferten NGINX ändern die Patches nichts.“ Die gefährlichste, <strong>CVE-2026-123007</strong>, steckt im HTTP/2-Code und lässt sich ohne Anmeldung ausnutzen. Weil das NGINX unter <code>/opt/gitlab/embedded</code> liegt, hilft auch ein Update der Distribution nicht. Bis GitLab nachliefert, empfiehlt heise <code>nginx['http2_enabled'] = false</code> in <code>gitlab.rb</code> und danach <code>gitlab-ctl reconfigure</code>. Das entschärft zwei der fünf Lücken.</p>
+        <p>Sonst neu in 19.6: Rapid Diffs ist die einzige Diff-Ansicht, Self-Managed-Admins können nicht mehr zurückschalten. Git-Zugriffe mit CI/CD-Job-Tokens zählen jetzt gegen das Rate-Limit des Users, der den Job startet. Ultimate bekommt eine Malware-Regel für Approval-Policies und als Beta „Rotate and fix“ für geleakte Personal Access Tokens. Das neue Audit-Log für KI-Agenten gehört in den ai-dev-Brief.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Das ist das klassische Problem von Omnibus-Paketen: Man sieht die eingebauten Abhängigkeiten nicht, und <code>apt upgrade</code> fühlt sich sicher an. Die Rate-Limit-Änderung ist der stille Brecher: Pipelines, die viele Repos klonen, können ab 19.6 plötzlich 429-Fehler bekommen.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/GitLab-19-6-fuehrt-Audit-Log-fuer-KI-Agenten-ein-NGINX-bleibt-verwundbar-11532950.html">heise.de (20.11., 15:39)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Ruby-Lücken treffen auch Rails <span class="h2-refs">[1]</span></h2>
+        <p><span class="update-since">Update seit Fr</span> heise hat die Advisories vom 18.11. ausgewertet. Sechs der sieben Lücken können Codeausführung im Ruby-Prozess erlauben; für fünf gibt es laut heise schon Proof-of-Concept-Exploits. Ob diese öffentlich sind, geht aus dem Artikel nicht klar hervor. Eine CVE-ID hat bisher nur die ß-Lücke: <strong>CVE-2026-132825</strong>, CVSS 7,4 mit lokalem Angriffsvektor. Das GitHub-Advisory stuft dieselbe Lücke als kritisch ein. Die anderen laufen nur unter GHSA-IDs.</p>
+        <p>Neu ist der Bezug auf Frameworks: Laut Veria Labs sind Rails und klassisches Sinatra in der Standard-Konfiguration ohne Anmeldung angreifbar, reines Rack nicht. Als betroffen nennt die Analyse GitLab 19.6.0, GitHub Enterprise Server 3.22.5 und Chatwoot 4.20.0. Betroffen sind Ruby 4.0.0 bis 4.0.9, 3.4.0 bis 3.4.12 und 3.3 bis 3.3.13; die Fixes heißen 4.0.10, 3.4.13 und 3.3.14. Ruby 3.2 und älter bekommen nichts mehr. Ein Gem-Update hilft nicht. Offizielle Docker-Images für die gepatchten Versionen stehen bereit. Angriffe meldet bisher niemand.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Der CVSS-Wert 7,4 mit „lokal“ führt in die Irre, wenn Rails ohne Login angreifbar ist. Wir halten die GitHub-Einstufung für die realistischere. Praktisch heißt das: Base-Image auf <code>ruby:3.4.13</code> oder <code>ruby:4.0.10</code> heben und neu bauen. Das ist der ganze Aufwand, also lieber diese Woche als nach dem angekündigten PoC.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Kritisch-eingestufte-Luecken-in-Ruby-auch-Rails-GitHub-und-GitLab-betroffen-11532469.html">heise.de (20.11., 13:45)</a> · <a href="https://www.ruby-lang.org/en/news/2026/">ruby-lang.org (18.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PHP 8.6 härtet die Session-Defaults <span class="h2-refs">[1]</span></h2>
+        <p>Über die Sicherheits-Releases vom 19.11. haben wir am Freitag berichtet. heise hat sich jetzt 8.6 selbst angesehen. Drei Session-Defaults ändern sich: <code>session.use_strict_mode</code> ist an, <code>session.cookie_httponly</code> ist an, und <code>session.cookie_samesite</code> steht auf <code>Lax</code>. Der Haken: „Diese Default-Werte greifen nur, wenn weder Anwendung noch Framework oder php.ini andere Werte festlegen.“ Wer seine alte php.ini übernimmt, behält das alte Verhalten. Das neue Feld <code>builtin_default_value</code> in <code>ini_get_all()</code> zeigt den eingebauten Wert.</p>
+        <p>Sonst: Partial Function Application (<code>str_replace(' ', '-', ?)</code> liefert eine Closure), <code>Time\Duration</code>, <code>Io\Poll</code>, <code>clamp()</code> und Defaults für readonly-Properties. Sodium bekommt ML-KEM-768 und X-Wing. <code>fclose()</code>, <code>file_put_contents()</code> und <code>copy()</code> geben jetzt <code>false</code> zurück, wenn das Schreiben scheitert. 31 Dinge sind deprecated, darunter die <code>mb_ereg</code>-Familie und <code>return</code> in <code>finally</code>.</p>
+        <div class="eli5">
+          <strong class="eli5-term">SameSite=Lax:</strong> Eine Regel für Cookies. Der Browser schickt das Session-Cookie bei einem POST von einer fremden Seite nicht mit. Das ist wie ein Hausausweis, der nur gilt, wenn du durch die eigene Haustür kommst, nicht durch die Tür des Nachbarn.
+        </div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Gute Defaults, aber mit einer Falle: Laut heise kann <code>Lax</code> Cross-Site-POSTs brechen, etwa SAML-SSO-Callbacks und Rückleitungen von Zahlungsanbietern, vor allem in Safari und Firefox. Wer SSO oder einen Payment-Provider hat, testet genau diesen Flow vor dem Upgrade. Für PHP 8.2 enden die Sicherheits-Updates am 31.12.<sup>[2]</sup></div>
+        <span class="src">[1] <a href="https://www.heise.de/news/PHP-8-6-ist-fertig-und-haertet-die-Session-Voreinstellungen-11532601.html">heise.de (20.11., 13:02)</a> · [2] <a href="https://www.php.net/">php.net (abgerufen 21.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Windows-Hotpatches legen Apps lahm <span class="h2-refs">[1]</span></h2>
+        <p>Auf Windows 11 ab 24H2, das die November-Updates als Hotpatch über Windows Autopatch bekommt, starten manche Apps nicht mehr. Betroffen sind vor allem Programme, die die 32-Bit-<code>msi.dll</code> laden; der Fehler lautet <code>ERROR_ALLOTTED_SPACE_EXCEEDED (0xC0000099)</code>. „Auf Systemen mit den Standardupdates treten demnach diese Fehler nicht auf.“ Microsoft führt das Problem als WI1559710. Der Workaround: im Registry-Pfad <code>…\Session Manager\Memory Management</code> den DWORD <code>HotPatchTableSize</code> auf <code>2000</code> (hex) setzen und neu starten. Auf den heise-Testgeräten stand der Wert schon so, er hilft also nicht überall. Den Patch zu deinstallieren rät niemand, weil er schon ausgenutzte Lücken schließt.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Microsoft-Patchday-Hotpatches-erzeugen-Startprobleme-mit-Apps-11532241.html">heise.de (20.11., 10:41)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>SonicWall: Gen6 gehört auf den Schrott <span class="h2-refs">[1]</span></h2>
+        <p>Die Gen6- und Gen6.5-Firewalls (TZ, NSA, NSa, SOHO, NSv, SuperMassive) sind seit spätestens 01.10. ohne Support. „Daher veröffentlicht SonicWall keine weiteren Firmware-Updates oder Sicherheitspatches mehr für Gen6-Geräte.“ Verlängern lässt sich der Support nicht. Anfang November meldete SonicWall mehrere SonicOS-Lücken, eine davon schon ausgenutzt; Updates gab es nur für Gen7 und Gen8. Der Weg führt zu Gen8 mit SonicOS 8.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Eine Firewall ohne Patches ist ein offenes Fenster mit Warnschild. Wer bei Kunden oder im eigenen Büro noch eine TZ der alten Serie stehen hat, plant den Tausch jetzt und nicht nach dem nächsten Exploit.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/SonicWall-raet-Kunden-zum-Entsorgen-von-Gen6-Firewalls-11532307.html">heise.de (20.11., 12:10)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>MongoDB kauft Firebolt <span class="h2-refs">[1]</span></h2>
+        <p>MongoDB hat am 17.11. die Übernahme der Analyse-Datenbank Firebolt bekanntgegeben. Firebolt wurde 2019 in Israel gegründet; die Engine entwickelte ein Team in München unter Benjamin Wagner. Einen Preis nennt MongoDB nicht. 2022 war Firebolt mit 1,4 Mrd. US-Dollar bewertet; Calcalist schätzt den Kaufpreis deutlich niedriger. Die Engine soll neben MongoDB laufen und beide automatisch synchron halten, „in the coming months“. „Bestehende Firebolt-Kunden behalten Produkt, Support und Service.“</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Das ist MongoDBs Antwort auf die Frage „Und wo mache ich meine Auswertungen?“, die bisher zu PostgreSQL oder einem Data Warehouse führte. Offen ist, ob am Ende doch wieder zwei Kopien der Daten entstehen. Schön für die Münchner Datenbank-Szene, die damit erneut in einem großen US-Produkt landet.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/MongoDB-kauft-Firebolt-und-holt-sich-Echtzeitanalyse-Engine-ins-Haus-11531590.html">heise.de (20.11., 07:03)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>FFmpeg 9.1 „Gauss“ <span class="h2-refs">[1]</span></h2>
+        <p>Das neue FFmpeg bringt einen Vulkan-Encoder für APV, xHE-AAC über <code>libfdk-xhe-aac</code>, ASTC-Support und einen überarbeiteten AAC-Encoder. Der Filter <code>fruc_vulkan</code> berechnet Zwischenbilder für eine höhere Bildrate, braucht dafür aber Nvidias <code>VK_NV_optical_flow</code>. NVDEC kann CUDA-Arrays ohne Zwischenkopie an NVENC geben (ab Video Codec SDK 13.1). Optional gibt es einen HTTP-Client auf libcurl-Basis mit HTTP/2, HTTP/3 und SOCKS5. Der Demuxer <code>asf_o</code> ist entfernt. Ein Datum für das Release nennt heise nicht.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/FFmpeg-9-1-erfindet-Bilder-dazu-wenn-eine-Nvidia-GPU-hilft-11532359.html">heise.de (20.11., 12:40)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>USA: Cyber-Chef muss gehen <span class="h2-refs">[1]</span></h2>
+        <p>Laut Reuters hat Präsident Trump den National Cyber Director Sean Cairncross entlassen; Axios sprach zuvor von einem einvernehmlichen Abgang. Die Regierung selbst sagt nur, dass Cairncross seinen Posten verlässt. Kommissarisch übernimmt Pentagon-CIO Kirsten Davies. Vorher gab es mehrere große Ausfälle: einen langen Microsoft-Ausfall, einen stundenlangen Flugstopp nach einem neuen Router, Probleme bei großen Banken und einen Ausfall des internen NSA-Netzes. Einen Zusammenhang zwischen den Vorfällen gibt es laut heise nicht; teils sollen hastige Patches schuld gewesen sein.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Nach-einer-Reihe-von-IT-Ausfaellen-Cyberchef-der-US-Regierung-gefeuert-11531967.html">heise.de (20.11., 07:34)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert</h2>
+        <ul>
+          <li><span class="chip">Sec</span> Java4Shell (<strong>CVE-2026-114938</strong>): Die CVSS-Werte widersprechen sich nicht. 8,1 ist Oracles Wert nach CVSS 3.1, 9,2 der Wert des Finders Calif nach CVSS 4.0.<sup>[5]</sup> CISA hat am 17.11. eine Warnung mit dem Rat zum sofortigen Patchen veröffentlicht; in der KEV-Liste steht die CVE nicht.<sup>[5]</sup> Oracles Seite konnten wir nicht laden. Das Java-Update bleibt im Plan.</li>
+          <li><span class="chip">OSS</span> GIMP führt automatisierte GUI-Tests ein; OmniDiff zeigt Unterschiede in Binärdateien (iX, 20.11.). Nur die Schlagzeilen gelesen.<sup>[1]</sup></li>
+          <li><span class="chip">Sec</span> iX: ein Beitrag zu Lieferketten-Risiken in CI/CD-Pipelines (20.11.). Nur die Schlagzeile gelesen.<sup>[1]</sup></li>
+          <li><span class="chip">Browser</span> Mozilla erklärt, warum es noch kein echtes Firefox für iOS gibt (Mac &amp; i, 20.11.). Nur die Schlagzeile gelesen.<sup>[1]</sup></li>
+          <li><span class="chip">Browser</span> The Register: Ein Passkey-Fehler in Windows 11 wird mit einem optionalen Update behoben. Nur die Schlagzeile gelesen.<sup>[2]</sup></li>
+          <li><span class="chip">Release</span> Stack: Angular 22.3.0 (18.11.) und Python 3.15.2 / 3.14.10 (25.10.) sind weiter aktuell; Spring und Docker heute nicht geprüft.<sup>[3]</sup><sup>[4]</sup></li>
+          <li><span class="chip">Sec</span> Für KI-Themen siehe die anderen Briefs: das gekaperte Microsoft Agent Framework (Freitag hier), von KI gefundene NGINX-Bugs und Googles künstliches Internet für KI-Agenten stehen im ai-dev-Brief.</li>
+          <li><span class="chip">BR</span> <span class="chip">EU</span> Zu BR-Tech, CRA, NIS2 und AI Act haben wir heute keine neue Meldung geprüft.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.heise.de/newsticker/">heise.de Newsticker (20.11.)</a> · [2] <a href="https://www.theregister.com/security/">theregister.com/security</a> · [3] <a href="https://github.com/angular/angular/releases">github.com/angular</a> · [4] <a href="https://www.python.org/downloads/">python.org/downloads (abgerufen 21.11.)</a> · [5] <a href="https://www.sonatype.com/blog/critical-openjdk-rce-cve-2026-114938-what-to-know">sonatype.com (CVE-2026-114938)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Nicht geprüft</h2>
+        <ul>
+          <li>Cisco Expressway: Cisco (keine Ausnutzung bekannt, Stand 21.10.) und CISA (ausgenutzt, 20.11.) widersprechen sich.</li>
+          <li>Java4Shell: Oracles Advisory konnten wir nicht laden; die Zuordnung der beiden CVSS-Werte stammt von Sonatype.</li>
+          <li>Microsoft-Patchday vom 10.11. (Outlook-Zero-Day CVE-2026-124194) und Xen Orchestra: nur Suchergebnisse, keine gelesene Quelle.</li>
+          <li>Ruby: ob die fünf PoCs öffentlich sind, steht nicht klar im heise-Artikel.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>Was der Samstag wert ist</h2>
+        <p>Eine Aufgabe ist dringend: vCenter auf 9.1.1.0200, 9.0.2.0200 oder 8.0 U3m bringen und die SSO-Konten auf fremde Admins prüfen. Für GitLab Self-Managed: HTTP/2 im mitgelieferten NGINX ausschalten, bis ein Fix kommt. Ruby-Images neu bauen und vor dem PHP-8.6-Upgrade den SSO-Login testen kann bis Montag warten.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Samstag, der einundzwanzigste November. Der Tag ist ruhig, aber vom Freitag bleibt eine Meldung, die wichtig ist: Eine kritische Lücke in VMware vCenter wird schon angegriffen.</p>
+  <p>Broadcom hat die Lücke am Donnerstag geschlossen. Sie erlaubt es, die Anmeldung am vCenter zu umgehen, und hat neun Komma acht von zehn Punkten. Laut heise berichtet Mandiant, dass eine Gruppe die Lücke schon seit Anfang September ausnutzt. Die Angreifer übernahmen den Dienst, der die Login-Tokens ausstellt, und legten sich ein eigenes Admin-Konto an. Einen Workaround gibt es nicht. Unser Rat: vCenter aktualisieren und danach die SSO-Konten auf unbekannte Admins prüfen.</p>
+  <p>Die US-Behörde CISA hat die vCenter-Lücke am Freitagabend in ihren Katalog der ausgenutzten Lücken aufgenommen, zusammen mit Cisco Expressway, SAP NetWeaver und der Blog-Software Apache Roller. Die Frist für US-Behörden endet am Montag. Bei Cisco gibt es einen Widerspruch: Cisco selbst schreibt, dass keine Ausnutzung bekannt ist, CISA sieht das anders.</p>
+  <p>Zu den Ruby-Lücken gibt es neue Details. Laut heise sind Rails und Sinatra in der Standard-Konfiguration ohne Login angreifbar. Für fünf der sieben Lücken gibt es schon Proof-of-Concept-Code. Der Fix ist ein neues Ruby, kein Gem-Update, und die Docker-Images stehen bereit.</p>
+  <p>GitLab neunzehn Punkt sechs bringt ein altes NGINX mit, in dem die Lücken von dieser Woche noch offen sind. Bis GitLab nachliefert, hilft es, HTTP zwei im mitgelieferten NGINX auszuschalten. Außerdem zählen Git-Zugriffe aus CI-Jobs jetzt gegen das Rate-Limit.</p>
+  <p>PHP acht Punkt sechs macht Session-Cookies standardmäßig sicherer. Das greift aber nur, wenn die alte php.ini nichts anderes sagt. Und die neue SameSite-Regel kann SSO-Logins und Rückleitungen von Zahlungsanbietern brechen, also vorher testen.</p>
+  <p>Kurz dazu: Microsofts November-Hotpatches lassen auf Windows elf manche Apps nicht mehr starten, SonicWall rät, alte Gen6-Firewalls auszumustern, und MongoDB kauft die Analyse-Datenbank Firebolt, deren Engine in München entstand.</p>
+  <p>In der nächsten Woche schauen wir, ob GitLab ein neues NGINX ausliefert und ob der angekündigte Ruby-Exploit erscheint. Am Montag enden die KEV-Fristen für vCenter und Co.</p>
+</div>
+
+</body>
+</html>
