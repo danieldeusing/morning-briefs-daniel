@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-22</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-11-22</span>
+  </div>
+  <h1 class="masthead-title">Montag endet die vCenter-Frist, und ein NGINX-Reload ist kein Patch</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Sonntag, und die Quellen schweigen: Seit Freitag hat CISA nichts Neues in den KEV-Katalog aufgenommen. Deshalb ist dieser Brief ein Wochen-Abschluss. Was zählt, ist die Liste für Montag früh. Ganz oben steht vCenter, denn morgen endet die KEV-Frist, und die Lücke wird laut Mandiant seit September ausgenutzt. Danach kommt NGINX, weil viele Admins glauben, sie hätten gepatcht, aber nur neu geladen haben. Dazu gehören F5 BIG-IP ohne fertiges Release, Ruby-Images, PostgreSQL 19 und zwei Cloud-Vorfälle, bei denen der Kunde nichts tun konnte. Unsere Sicht: Diese Woche war schwer für Infrastruktur, nicht für Frameworks. Wer vCenter, NGINX und Ruby erledigt hat, hat den großen Teil geschafft.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>VMware vCenter</strong> CVE-2026-123890 (CVSS 9,8): KEV-Frist Mo 23.11.; Fix 9.1.1.0200 / 9.0.2.0200 / 8.0 U3m. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>nginx2root</strong>: Fix in 1.30.7 / 1.31.9, aber <code>nginx -s reload</code> lädt das neue Binary nicht. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>F5 BIG-IP</strong>: laut H-ISAC sechs kritische Overflows (CVSS 9,8), bisher nur Engineering-Hotfixes. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Ruby</strong> 4.0.10 / 3.4.13 / 3.3.14: Rails und GitLab betroffen, Base-Image neu bauen. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>PostgreSQL 19</strong> ist da: REPACK, JIT standardmäßig aus, RADIUS entfernt. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>Spring Boot 4.1.3 / 4.0.10</strong> und Spring Cloud 2026.0.0 „Paddington“. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>Rackspace Spot</strong>: Angreifer lasen Kubernetes-Secrets von Kunden. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>Entra Connect Health</strong>: Tenant-Metadaten abgeflossen, Microsoft hat serverseitig gefixt. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulierung</span> <strong>CRA</strong>: Meldepflicht läuft seit 11.09., ENISA-Plattform jetzt v1.2.1. <span class="chip">EU</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Fristen-Horizont</div>
+      <div class="timeline-sub">KEV-Fristen der nächsten zehn Tage — PHP-8.2-Ende (31.12.) und CRA-Hauptpflichten (11.12.2027) im Text</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">So 22.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Heute</span><span>Keine neuen KEV-Einträge seit 20.11.</span><span>Wartungsfenster für vCenter und NGINX-Restart</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mo 23.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: VMware vCenter, Cisco Expressway, SAP NetWeaver, Apache Roller</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 24.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: Chromium CVE-2026-125350</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 01.12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: Puppet Enterprise CVE-2026-115731</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 02.12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: LiteLLM CVE-2026-40217</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>vCenter: morgen endet die Frist</h2>
+        <p><span class="update-since">Update seit Sa</span> Neu ist nur die Uhr. Broadcom hat <strong>CVE-2026-123890</strong> am 19.11. im Advisory VMSA-2026-0009 geschlossen und es am 20.11. als Version 0009.1 nachgebessert. Die Änderung betrifft die Angaben zu den VMware Tools.<sup>[1]</sup> Es geht um eine „authentication bypass vulnerability in the VMware Directory Service“ mit CVSS 9,8. Einen Workaround gibt es nicht.<sup>[1]</sup> Die Fixes sind vCenter <strong>9.1.1.0200</strong>, <strong>9.0.2.0200</strong>, <strong>8.0 U3m</strong>, dazu SDDC Manager 5.2.5 für die Begleit-CVEs. Für 7.0 gibt es den Fix nur mit Extended-Support-Vertrag über den Broadcom-Support.<sup>[1]</sup></p>
+        <p>CISA hat die Lücke am 20.11. in den KEV-Katalog aufgenommen, mit Frist Montag, 23.11.<sup>[2]</sup> Laut BleepingComputer schreiben Mandiant und Google Threat Intelligence die Angriffe einer Gruppe namens „Armory Castle“ zu, früher als UNC5221 geführt. Die Angriffe laufen demnach seit Anfang September.<sup>[3]</sup> Broadcom selbst bestätigt keine Ausnutzung. Das Advisory sagt dazu gar nichts.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Dass Broadcom zur Ausnutzung schweigt, ist kein Entwarnungs-Signal. CISA nimmt nur Lücken mit Belegen in den Katalog auf, und Google hat einen Angriffsbericht vorgelegt. Wer vCenter 7.0 ohne Extended Support betreibt, hat keinen Patch. Für diese Umgebungen ist die ehrliche Antwort: vCenter aus dem allgemeinen Netz nehmen und die Migration planen.</div>
+        <span class="src">[1] <a href="https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39495">Broadcom VMSA-2026-0009.1 (20.11., abgerufen 22.11.)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV (abgerufen 22.11.)</a> · [3] <a href="https://www.bleepingcomputer.com/news/security/vmware-patches-vcenter-zero-day-exploited-in-attacks-since-september/">bleepingcomputer.com (19.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV-Katalog: Wochenende ohne neue Einträge</h2>
+        <p>Seit den vier Einträgen vom 20.11. hat CISA nichts nachgelegt.<sup>[1]</sup> Morgen enden die Fristen für vCenter, Cisco Expressway (<strong>CVE-2026-76466</strong>), SAP NetWeaver (<strong>CVE-2025-42884</strong>) und Apache Roller (<strong>CVE-2026-129448</strong>). Die Fristen für Apache Axis, REDCap und Synology DSM vom 18.11. sind gestern abgelaufen. Danach folgen Perforce Puppet Enterprise (<strong>CVE-2026-115731</strong>, aufgenommen 17.11., Frist 01.12.) und BerriAI LiteLLM (<strong>CVE-2026-40217</strong>, Frist 02.12.).<sup>[1]</sup> LiteLLM ist ein Proxy vor KI-APIs. Hier zählt die Lücke als Infrastruktur, nicht als KI-Thema.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">cisa.gov KEV-Katalog (abgerufen 22.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>nginx2root: der Reload-Fehler</h2>
+        <p>Am 18.11. kamen nginx <strong>1.31.9</strong> und <strong>1.30.7</strong>. Das Changelog von 1.31.9 listet zehn CVEs.<sup>[1]</sup> Darunter sind ein Überlauf bei <code>try_files</code> mit <code>alias</code> (CVE-2026-125283) und ein Überlauf in der HTTP/2-Flusskontrolle (CVE-2026-123007). Dazu kommen Use-after-free-Fehler in HTTP/2, HTTP/3, im Resolver und im Mail-Proxy.<sup>[1]</sup> Xint fasst fünf dieser Fehler als „nginx2root“ zusammen (laut how2shout); BleepingComputer zählt nur die zwei HTTP/2-Lücken CVE-2026-123007 und CVE-2026-123633 dazu, gefunden von mehreren Teams unabhängig voneinander.<sup>[2]</sup></p>
+        <p>Der Name klingt schlimmer als die Lage. Laut F5, zitiert von <a href="https://linux.how2shout.com/nginx2root-nginx-1-30-7-1-31-9-rce-fixes/">how2shout</a>, ist Code-Ausführung nur möglich, wenn ASLR aus ist oder umgangen wird. Für root brauchte Xint eine zweite, separate Kernel-Lücke in der Kette. Florian Roth hält Angriffe für die meisten Betreiber nicht für unmittelbar.<sup>[2]</sup> NGINX Plus 37.0.8.1 und 37.3.0.1 sind gefixt (BleepingComputer); für R34–R36 nennt F5 bisher keinen Fix (<a href="https://blog.qualys.com/misc/2026/11/18/nginx2root-five-nginx-flaws-led-by-cve-2026-123007-how-to-find-mitigate-and-patch-now">Qualys</a>).<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">ASLR:</strong> Das Betriebssystem legt Programm-Teile bei jedem Start an zufällige Stellen im Speicher. Ein Angreifer mit Speicherfehler weiß dann nicht, wohin er springen soll. Das ist wie ein Einbrecher, der den Tresor findet, aber jede Nacht steht er in einem anderen Zimmer.
+        </div>
+        <div class="callout warn"><span class="callout-label">Achtung</span> <code>nginx -s reload</code> lädt nur die Konfiguration neu. Die laufenden Prozesse bleiben auf dem alten Binary.<sup>[2]</sup> Nach dem Paket-Update braucht es einen echten Neustart des Dienstes. Prüfen lässt sich das mit <code>nginx -v</code> und dem Startzeitpunkt des Master-Prozesses. In Docker heißt das: neues Image ziehen, Container neu erzeugen.</div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Kein Grund für einen Notfall am Sonntag, aber ein guter Grund für den Montag. Der Reload-Fehler ist die Falle der Woche. Viele Dashboards melden „Paket aktuell“, während der Prozess seit Monaten läuft. Genau deshalb gehört die Prozess-Version ins Monitoring, nicht nur die Paket-Version.</div>
+        <span class="src">[1] <a href="https://nginx.org/en/CHANGES">nginx.org CHANGES (1.31.9, 18.11.)</a> · [2] <a href="https://bleepingcomputer.com/news/security/critical-nginx-nginx2root-bugs-let-attackers-hijack-servers">bleepingcomputer.com</a> · <a href="https://cycode.com/?p=21594">cycode.com</a> · <a href="https://linux.how2shout.com/nginx2root-nginx-1-30-7-1-31-9-rce-fixes/">how2shout.com</a> (Sekundärquellen, nur Zusammenfassung gelesen)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>GitLab: Ruby gefixt, NGINX nicht</h2>
+        <p>GitLab 19.6.1 behebt laut heise die Ruby-Lücken, aber das mitgelieferte NGINX ist weiter verwundbar für nginx2root.<sup>[1]</sup> Das NGINX liegt im Omnibus-Paket, also hilft ein Update der Distribution nicht. Der Workaround aus dem Brief vom Samstag gilt weiter: HTTP/2 im mitgelieferten NGINX ausschalten, bis GitLab ein Paket mit 1.31.9 liefert. Das neue Audit-Log für KI-Agenten in 19.6 steht im ai-dev-Brief.</p>
+        <span class="src">[1] <a href="https://www.heise.de/developer">heise.de/developer (20.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>F5 BIG-IP: kritisch, aber ohne fertiges Release</h2>
+        <p>F5 hat am 18.11. mehrere kritische Stack-Overflows in BIG-IP veröffentlicht. Laut dem H-ISAC-Bulletin sind es sechs, mit CVSS 9,8 (v3.1) bzw. 9,3 (v4.0).<sup>[1]</sup> BleepingComputer spricht in der Schlagzeile von fünf. Wir konnten die Zahl nicht in den F5-Artikeln selbst prüfen. Ohne Anmeldung kann ein Angreifer den Traffic Management Microkernel (TMM) abstürzen lassen oder womöglich Code ausführen. Betroffen sind nur virtuelle Server, die bestimmte iRule-Befehle oder eine APM-Per-Request-Policy nutzen.<sup>[1]</sup> Laut H-ISAC gibt es bisher nur Engineering-Hotfixes, „with no workarounds or scheduled release fixes yet“.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Engineering-Hotfix:</strong> Ein Einzel-Patch, den der Hersteller auf Anfrage für eine bestimmte Version baut. Es ist kein reguläres Release, das alle bekommen. Wie ein Flicken vom Schneider statt einer neuen Hose aus dem Laden.
+        </div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Bei BIG-IP zählt zuerst die Inventur: Welche virtuellen Server nutzen iRules oder APM-Policies? Nur dort lohnt der Hotfix-Weg über den F5-Support. Alle anderen warten auf das reguläre Release.</div>
+        <span class="src">[1] <a href="https://www.aha.org/h-isac-green-reports/2026-11-19-h-isac-vulnerability-bulletin-tlp-white-six-critical-f5-big-ip-flaws-could-lead-rce">aha.org / H-ISAC (18.11., abgerufen 22.11.)</a> · <a href="https://thehackernews.com/2026/11/f5-warns-6-critical-big-ip-flaws-can.html">thehackernews.com</a> (403, nicht gelesen)</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Ruby: die Liste für Montag</h2>
+        <p>Das Ruby-Advisory vom 18.11. betrifft „multiple vulnerabilities in Regexp and String case conversion“. Die Fixes sind <strong>4.0.10</strong>, <strong>3.4.13</strong> und <strong>3.3.14</strong>.<sup>[1]</sup> heise stuft die Lücken als kritisch ein und nennt Rails, GitHub und GitLab als betroffen. Für fünf Lücken gibt es Exploits, und die Variante „ruby2ßhell“ führt über das Zeichen ß zu Codeausführung.<sup>[1]</sup> Mehr Details stehen im Brief vom Samstag.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Ein Gem-Update reicht nicht, es braucht ein neues Ruby. Im Container heißt das: Base-Image heben und neu bauen. Das ist wenig Arbeit, also nicht bis nach dem nächsten PoC warten.</div>
+        <span class="src">[1] <a href="https://www.heise.de/security">heise.de/security (19./20.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL 19 ist fertig</h2>
+        <p>Die PostgreSQL Global Development Group hat Version 19 am 19.11. veröffentlicht.<sup>[1]</sup> Die wichtigsten Neuerungen für den Betrieb:</p>
+        <ul>
+          <li><code>REPACK</code> (auch <code>CONCURRENTLY</code>) ordnet aufgeblähte Tabellen neu, ohne sie lange zu sperren.</li>
+          <li><code>pg_plan_advice</code> gibt Hinweise an den Query-Planer.</li>
+          <li>Logische Replikation setzt das WAL-Level automatisch und repliziert jetzt auch Sequenzen.</li>
+          <li>Neu sind <code>WAIT FOR LSN</code>, <code>ON CONFLICT DO SELECT</code>, <code>COPY</code> mit JSON und SNI auf dem Server.</li>
+        </ul>
+        <p>Zwei Änderungen können brechen: JIT ist jetzt standardmäßig aus, und die RADIUS-Anmeldung ist entfernt. Für md5-Logins gibt es eine Warnung.<sup>[1]</sup> Laut einer Zusammenfassung der Release Notes lassen sich Dumps aus älteren <code>pg_dump</code>-Versionen mit <code>standard_conforming_strings=off</code> nicht in 19 laden.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">REPACK:</strong> Gelöschte Zeilen hinterlassen in Postgres Lücken in der Datei, wie leere Fächer im Regal. REPACK räumt das Regal neu ein, damit es wieder kleiner wird. Mit CONCURRENTLY dürfen andere dabei weiter Dinge herausnehmen.
+        </div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Ein .0-Release kommt nicht in die Produktion. Wir warten auf 19.1 oder 19.2. Was sich aber jetzt lohnt: im Staging testen, ob Abfragen ohne JIT langsamer werden, und RADIUS- oder md5-Logins finden. Beides ist ein guter Anlass, endlich auf SCRAM umzustellen.</div>
+        <span class="src">[1] <a href="https://postgresql.org/about/news/postgresql-19-released-3449">postgresql.org (19.11.)</a> · [2] <a href="https://www.postgresql.org/docs/19/release-19.html">Release Notes 19</a> (nur über Such-Zusammenfassung)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>PHP: 18 CVE-IDs in einer Runde</h2>
+        <p>Am 19.11. erschienen PHP 8.6.0 und die Sicherheits-Releases 8.5.13, 8.4.28, 8.3.37 und 8.2.36.<sup>[1]</sup> Laut Changelog sind es 17 GHSA-Advisories plus eine reine CVE, zusammen 18 CVE-IDs. heise schreibt, dass fünf davon Codeausführung erlauben, aber Vorbedingungen brauchen. Für PHP 8.2 enden die Sicherheits-Updates am 31.12.2026.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Das Patch-Release ist Pflicht, der Sprung auf 8.6 nicht. Wer noch auf 8.2 ist, sollte diese Woche das Ziel 8.4 oder 8.5 festlegen. Sechs Wochen sind wenig, wenn Weihnachten dazwischen liegt.</div>
+        <span class="src">[1] <a href="https://www.php.net/ChangeLog-8.php">php.net ChangeLog 8 (abgerufen 21.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Spring: Boot-Patches und ein neuer Cloud-Train</h2>
+        <p>Am 20.11. kamen Spring Boot <strong>4.1.3</strong> und <strong>4.0.10</strong>, dazu Spring Cloud <strong>2026.0.0</strong> („Paddington“) und 2025.1.5. Spring Batch 6.1 ist seit dem 19.11. GA.<sup>[1]</sup> Auf der Blog-Übersicht stehen keine CVE-IDs.<sup>[1]</sup> Die Releases von Spring AI am selben Tag gehören in den ai-dev-Brief.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Ein ruhiges Patch-Update, das man im nächsten Dependabot-Lauf mitnimmt. Paddington ist der Cloud-Train für Boot 4.1. Wer auf 4.1 geht, nimmt ihn gleich mit, statt die Versionen später gegeneinander abzugleichen.</div>
+        <span class="src">[1] <a href="https://spring.io/blog">spring.io/blog (abgerufen 22.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Chrome 157: 83 Fixes und ein Zero-Day</h2>
+        <p>Laut Borncity hat Google am 11.11. Chrome 157.0.8103.78/.79 als Stable ausgeliefert, mit 83 Sicherheits-Fixes, fünf davon kritisch.<sup>[1]</sup> Schon am 09.11. kam ein Notfall-Update für die ausgenutzte Lücke <strong>CVE-2026-125350</strong>.<sup>[1]</sup> Die CVE-Nummern der kritischen Lücken unterscheiden sich zwischen den Quellen. Deshalb nennen wir sie hier nicht.</p>
+        <span class="src">[1] <a href="https://borncity.com/news/chrome-notfallupdate-google-schliesst-83-schwachstellen-fuenf-davon-kritisch/">borncity.com</a> · <a href="https://chromereleases.googleblog.com/2026/?hl=en">Chrome Releases</a> (nur über Suche, nicht gelesen)</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Rackspace Spot: Kubernetes-Secrets gelesen</h2>
+        <p>Laut BleepingComputer nutzten Angreifer am 17.11. etwa von 00:20 bis 22:00 UTC geleakte Zugangsdaten bei Rackspace Spot. Damit konnten sie Pods anlegen und Kubernetes-Secrets von Kunden lesen.<sup>[1]</sup> Rackspace erfuhr am 18.11. davon, durch die Meldung eines Kunden. Seit 21.11. läuft der Dienst wieder. Wie viele Kunden betroffen sind, sagt Rackspace nicht. Als Indikatoren nennt der Bericht den Adressbereich 23.224.0.0/15, die IP 23.224.79.106 und Pods mit den Präfixen <code>i1</code>, <code>glm-</code> und <code>probe</code>.<sup>[1]</sup> Die Story stützt sich auf eine einzige Quelle (BleepingComputer).</p>
+        <div class="eli5">
+          <strong class="eli5-term">Kubernetes-Secret:</strong> Ein Fach im Cluster für Passwörter, API-Schlüssel und Zertifikate, die die Apps brauchen. Standardmäßig ist es nur Base64, also nicht verschlüsselt. Wer das Fach lesen darf, hat alle Schlüssel.
+        </div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Wer Spot nutzt, rotiert alle Secrets aus dem Zeitfenster. Das heißt Datenbank-Passwörter, Cloud-Keys und Tokens, nicht nur die Kubernetes-eigenen. Und ein Kunde hat den Vorfall gemeldet, nicht Rackspace selbst. Das sagt viel über das Monitoring.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/rackspace-spot-breach-let-hackers-access-customer-kubernetes-secrets/">bleepingcomputer.com (21.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Entra Connect Health: Metadaten abgeflossen</h2>
+        <p>Laut BleepingComputer steckte seit dem 23.07. ein Fehler in Microsoft Entra Connect Health. Angreifer konnten darüber lesend auf Tenant-Metadaten zugreifen: Admin-E-Mails, Tenant-IDs und Lizenzstufen.<sup>[1]</sup> Gefunden wurde der Fehler am 09.11. Microsoft hat ihn am 19.11. serverseitig behoben, Kunden müssen nichts tun. Microsoft schreibt: „We did not identify any unauthorized configuration changes.“<sup>[1]</sup> Eine CVE gibt es nicht. Wer angegriffen hat und wie viele Tenants betroffen sind, ist offen. Die Story stützt sich auf eine einzige Quelle.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> „Nur Metadaten“ klingt harmlos. Aber eine Liste echter Admin-Adressen mit Lizenzstufe ist die perfekte Vorlage für gezieltes Phishing. Admins sollten in den nächsten Wochen besonders auf MFA-Anfragen und „Microsoft-Support“-Mails achten.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/microsoft-entra-connect-health-flaw-exploited-to-steal-tenant-data/">bleepingcomputer.com (21.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: die Meldepflicht läuft schon</h2>
+        <p>Seit dem 11.09.2026 müssen Hersteller unter dem Cyber Resilience Act ausgenutzte Lücken und schwere Vorfälle melden. Am selben Tag startete die Single Reporting Platform der ENISA, seit 20.10. läuft sie als v1.2.1. Die Hauptpflichten gelten ab dem 11.12.2027.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Eine Woche wie diese ist der Praxistest. Wer ein Produkt mit eingebautem NGINX oder Ruby in der EU verkauft, sollte wissen, wer intern entscheidet, ob eine Meldung fällig ist. Die Frage kommt nicht erst 2027.</div>
+        <span class="src">[1] <a href="https://www.enisa.europa.eu/news/the-cra-single-reporting-platform-is-launched">enisa.europa.eu</a> (über Such-Zusammenfassung)</span>
+      </section>
+
+      <section class="news-item">
+        <h2>EU-Kommission: tagelange Ausfälle</h2>
+        <p>Laut heise legte ein Cyberangriff die Personalsysteme der EU-Kommission für Tage lahm. Der Verdacht fällt auf ein KI-Tool namens „Artex“.<sup>[1]</sup> Mehr als die Schlagzeile haben wir nicht gelesen. Wir berichten weiter, sobald es Details gibt.</p>
+        <span class="src">[1] <a href="https://www.heise.de/security">heise.de/security (19.11., 17:27)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert</h2>
+        <ul>
+          <li><span class="chip">Infra</span> <strong>Caddy v2.11.9</strong> (05.11.), falls noch nicht eingespielt: Ein Client konnte die <code>HTTP_*</code>-Variablen der FastCGI-<code>env</code>-Direktive mit eigenen Headern überschreiben. Ein zweiter Fix schließt einen Weg um Pfad-Sperren unter Windows (NTFS-8.3-Namen, ADS). Apps, die sich auf das alte Verhalten verlassen, können brechen.<sup>[1]</sup></li>
+          <li><span class="chip">Sec</span> <strong>SonicWall</strong> rät, Gen6-Firewalls auszumustern, weil es keinen Support mehr gibt (siehe Samstag).<sup>[2]</sup></li>
+          <li><span class="chip">Infra</span> <strong>Microsoft-Hotpatches</strong> vom November legen manche Apps lahm (siehe Samstag).<sup>[2]</sup></li>
+          <li><span class="chip">Sec</span> <strong>ASUS Control Center Express</strong> v1.7.29 schließt drei kritische Lücken, darunter einen fest eingebauten Schlüssel.<sup>[3]</sup></li>
+          <li><span class="chip">Sec</span> N-able Mail Assure und SpamExperts fielen nach einem Einbruch aus (20.11.). Das BADBOX-Botnetz erzeugt 40 Mrd. Werbe-Anfragen pro Tag (21.11.). Bei SBC Medical sind 1,6 Mio. Menschen betroffen (19.11.). Nur Schlagzeilen gelesen.<sup>[3]</sup></li>
+          <li><span class="chip">Sec</span> Ubiquiti UniFi Access hat Lücken (heise nennt keine CVE). Eine Bluetooth-Lücke bei VW ist seit 16 Monaten offen. Nur Schlagzeilen gelesen.<sup>[2]</sup></li>
+          <li><span class="chip">OSS</span> FFmpeg 9.1 bringt GPU-Zwischenbilder und einen Vulkan-APV-Encoder (Details im Brief vom Samstag).<sup>[4]</sup></li>
+          <li><span class="chip">BR</span> Caixa Seguridade meldet ein Datenleck mit 7,6 Mio. Kunden. Die Meldung ist vom 12.11., also nicht neu, aber die größte BR-Meldung der Woche. Eine BR-Dev-Meldung haben wir nicht gefunden.<sup>[5]</sup></li>
+          <li><span class="chip">Sec</span> KI-Themen stehen in den anderen Briefs: das KI-Pentest-Tool Cairn, der „agentische“ Angriff auf Bell Canada und GitLabs Audit-Log für Agenten.</li>
+        </ul>
+        <span class="src">[1] <a href="https://github.com/caddyserver/caddy/releases">github.com/caddyserver (abgerufen 22.11.)</a> · [2] <a href="https://www.heise.de/security">heise.de/security (20.11.)</a> · [3] <a href="https://www.bleepingcomputer.com/news/security/">bleepingcomputer.com/security</a> · [4] <a href="https://www.heise.de/developer">heise.de/developer (20.11.)</a> · [5] <a href="https://www.agazeta.com.br/brasil/caixa-seguridade-informa-vazamento-de-dados-de-7-6-milhoes-de-clientes-1126">agazeta.com.br (12.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Nicht geprüft</h2>
+        <ul>
+          <li>F5: sechs (H-ISAC, The Hacker News, DailySecurityReview) oder fünf (BleepingComputer) kritische Lücken. Die F5-Artikel und die fixierten Versionen konnten wir nicht lesen.</li>
+          <li>vCenter: Die Ausnutzung belegen Mandiant und Google, nicht Broadcom.</li>
+          <li>Entra Connect Health: nur eine Quelle (BleepingComputer).</li>
+          <li>Rackspace Spot: nur eine Quelle (BleepingComputer).</li>
+          <li>Java4Shell (CVE-2026-114938): Oracles Advisory ist weiter nicht gelesen.</li>
+          <li>Chrome-CVE-Nummern: nur aus zweiter Hand.</li>
+          <li>Heute nicht neu geprüft: Angular, Python, Docker/containerd, Tailscale, Firefox/WebKit, Quarkus, BSI und BR-Tech-Medien (tecnoblog: 403). Zuletzt bekannt waren Angular 22.3.0 (18.11.) und Python 3.15.2 (25.10.).</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>Die Liste für Montag</h2>
+        <ol>
+          <li>vCenter patchen und die SSO-Konten auf fremde Admins prüfen.</li>
+          <li>NGINX aktualisieren und neu starten, nicht nur neu laden. Für GitLab: HTTP/2 aus.</li>
+          <li>Ruby-Base-Images neu bauen.</li>
+          <li>BIG-IP: virtuelle Server mit iRules und APM finden.</li>
+          <li>PHP-Patch-Releases einspielen und einen Plan für das Ende von PHP 8.2 machen.</li>
+        </ol>
+        <p>PostgreSQL 19 und Spring können warten. Sie sind gute Nachrichten, keine Aufgaben.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Sonntag, der zweiundzwanzigste November. Am Wochenende kam wenig Neues, deshalb schauen wir auf das, was am Montag zählt.</p>
+  <p>Ganz oben steht VMware vCenter. Die Lücke erlaubt es, die Anmeldung zu umgehen, und hat neun Komma acht von zehn Punkten. Morgen endet die Frist der US-Behörde CISA. Laut Mandiant und Google wird die Lücke seit Anfang September ausgenutzt, Broadcom selbst sagt dazu nichts. Wer vCenter sieben ohne erweiterten Support betreibt, bekommt keinen Patch.</p>
+  <p>Bei NGINX gibt es eine Falle. Die Versionen eins Punkt dreißig Punkt sieben und eins Punkt einunddreißig Punkt neun schließen die sogenannten nginx2root-Lücken. Aber ein einfacher Reload lädt nur die Konfiguration, nicht das neue Programm. Erst ein echter Neustart bringt den Fix. Laut BleepingComputer ist die Gefahr für die meisten Betreiber aber nicht unmittelbar.</p>
+  <p>F5 meldet bei BIG-IP mehrere kritische Lücken. Das Branchen-Netzwerk H-ISAC zählt sechs, BleepingComputer fünf. Es gibt bisher nur Einzel-Patches auf Anfrage. Betroffen sind nur Server mit bestimmten iRules oder Zugriffs-Policies.</p>
+  <p>Ruby braucht neue Versionen, ein Gem-Update reicht nicht. Laut heise sind Rails und GitLab betroffen. PHP hat achtzehn Lücken in einer Runde geschlossen, und für PHP acht Punkt zwei ist am Jahresende Schluss.</p>
+  <p>Die gute Nachricht der Woche ist PostgreSQL neunzehn. Es bringt REPACK zum Aufräumen von Tabellen und schaltet JIT standardmäßig aus. Für die Produktion warten wir aber auf das erste Patch-Release. Spring hat Boot und einen neuen Cloud-Train veröffentlicht.</p>
+  <p>Zwei Cloud-Vorfälle zeigen, wie wenig Kunden manchmal tun können. Bei Rackspace Spot lasen Angreifer Kubernetes-Secrets von Kunden. Wer dort Cluster hat, sollte alle Schlüssel rotieren. Bei Microsoft Entra Connect Health flossen Admin-Adressen und Tenant-Daten ab. Microsoft hat das auf dem Server behoben, aber gezieltes Phishing bleibt ein Risiko.</p>
+  <p>In der EU läuft die Meldepflicht des Cyber Resilience Act schon seit September. Eine Woche wie diese ist der Praxistest dafür.</p>
+  <p>Morgen schauen wir, ob CISA neue Lücken in den Katalog aufnimmt, ob GitLab ein neues NGINX liefert und ob F5 reguläre Releases ankündigt.</p>
+</div>
+
+</body>
+</html>
