@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-23</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-11-23</span>
+  </div>
+  <h1 class="masthead-title">Heute endet die vCenter-Frist, und PostgreSQL 14 bekommt keine Patches mehr</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Montag, und die Liste vom Wochenende wird fällig. Heute endet die KEV-Frist für vCenter. Google legt dazu nach: Die Angreifer kannten die Lücke laut The Register schon im Juli. Google selbst nennt für Juli nur einen Build-Zeitstempel und sieht Ausnutzung ab Anfang September. Morgen folgen Chromium, Outlook und Cisco BroadWorks. Die eigentliche Datenbank-Nachricht der Woche ist aber nicht PostgreSQL 19, sondern das Ende von PostgreSQL 14. Das letzte Update 14.25 repariert Index-Fehler, die ein <code>REINDEX</code> brauchen. Am Wochenende kam wenig Neues: GL.iNet meldet einen Einbruch über die eigene Cloud, und Microsofts Hotpatches stören weiter manche Apps. Unsere Sicht: Diese Woche gewinnt, wer seine Inventur kennt. Wer weiß, wo vCenter, PG 14 und alte Firewalls laufen, ist mit der Liste schnell fertig.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>vCenter</strong> CVE-2026-123890: KEV-Frist heute; Google sieht Ausnutzung seit September. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Chromium</strong> CVE-2026-125350, <strong>Outlook</strong> CVE-2026-124194 und <strong>Cisco BroadWorks</strong> CVE-2026-20320: KEV-Frist Di 24.11. <span class="chip">Global</span></li>
+      <li><span class="chip">Release</span> <strong>PostgreSQL 14</strong> ist EOL; 14.25 bis 18.7 fixen GIN- und pg_trgm-Index-Korruption. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>PostgreSQL 19</strong>: vor dem Upgrade <code>io_workers</code> aus der Konfiguration nehmen. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>GL.iNet</strong>: Router und KVMs über die Cloud-Verwaltung mit Malware infiziert. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>Windows-Hotpatch</strong> November: Apps starten nicht, Registry-Workaround. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Patchday</strong> 10.11.: Outlook-Zero-Day, SharePoint mit CVSS 9,9; nächster Termin 08.12. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulierung</span> <strong>TeleTrusT</strong>-Handreichung zur Krypto-Agilität für den Weg zu Post-Quanten-Verfahren. <span class="chip">DE</span></li>
+      <li><span class="chip">Infra</span> <strong>AWS us-east-1</strong> fiel am 15.11. aus, kaum jemand merkte es. <span class="chip">USA</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Fristen-Horizont</div>
+      <div class="timeline-sub">KEV-Fristen und Patchday der nächsten gut zwei Wochen — Quelle: CISA-KEV-Katalog, abgerufen 23.11.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Mo 23.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Heute</span><span>KEV-Frist: VMware vCenter, Cisco Expressway, SAP NetWeaver, Apache Roller</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 24.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: Chromium CVE-2026-125350, Microsoft Outlook CVE-2026-124194, Cisco BroadWorks CVE-2026-20320, Openwave Webtop Media Transcoder CVE-2026-111793</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 01.12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: Puppet Enterprise CVE-2026-115731</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 02.12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: LiteLLM CVE-2026-40217</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 08.12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Microsoft Patchday Dezember</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>vCenter: Frist heute, und Google legt nach</h2>
+        <p><span class="update-since">Update seit So</span> Der KEV-Katalog nennt für <strong>CVE-2026-123890</strong> (VMware vCenter, „Authentication Bypass Using an Alternate Path or Channel") die Frist 23.11., also heute.<sup>[1]</sup> Neu ist ein Bericht von The Register vom 23.11. Laut The Register kannte die China zugeordnete Gruppe ARMORY CASTLE die Lücke schon im Juli und nutzte sie ab September aus.<sup>[2]</sup> Google Threat Intelligence nennt für Juli nur einen Build-Zeitstempel; die Ausnutzung begann laut Google Anfang September. Die Angreifer kamen zuerst über BeyondTrust-Fernwartungsgeräte ins Netz. Danach gingen sie auf andere Linux-Appliances und tiefer in die Netze der Opfer.</p>
+        <p>Google nennt fünf Werkzeuge der Gruppe: zwei Webshells (SLIMSAVAGE, CAGEMATCH), ein Exploit-Werkzeug in Go (BONESAW), eine Backdoor (BEARBONES) und ein SAML-Werkzeug (SAWSNAKE). Das Exploit-Werkzeug BONESAW kann laut Google „forge authentication tokens, bypass MFA, and impersonate any user".<sup>[2]</sup> Es lief Anfang September auch auf einem Server, der gegen die ältere vCenter-Lücke CVE-2026-59309 gepatcht war. Insgesamt nutzte die Operation laut Google zwei Zero-Days. Wie viele Opfer es gibt, sagt Google nicht. VMware beantwortete die Frage nicht, ob es von den Angriffen im September wusste.<sup>[2]</sup></p>
+        <div class="callout warn"><span class="callout-label">Achtung</span> Broadcom sagt laut The Register, seine kostenlose Zero-Day-Patch-Regel gelte weiter, aber „This policy covers vSphere 8 patches only".<sup>[2]</sup> Wer auf vCenter 7.0 ohne Extended Support sitzt, bekommt also keinen Fix (siehe Brief vom Sonntag). Ein Patch allein reicht auch nicht: Wer seit September angreifbar war, prüft SSO-Konten und SAML-Konfiguration auf fremde Einträge.</div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Der Bericht ändert die Frage. Es geht nicht mehr um „Patch bis heute", sondern um „Was ist seit Juli passiert?". Die Webshells überstehen einen Patch. Wer vCenter im Netz hat, sollte die Logs ab Juli ansehen, nicht ab dem Advisory.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV-Katalog (abgerufen 23.11.)</a> · [2] <a href="https://www.theregister.com/virtualization/2026/11/23/google-claims-last-weeks-critical-vmware-bug-was-under-attack-in-september/5311547">theregister.com (23.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: kein neuer Eintrag seit Freitag</h2>
+        <p>Der neueste Eintrag im KEV-Katalog ist weiter vom 20.11.<sup>[1]</sup> Heute laufen vier Fristen ab: vCenter, Cisco Expressway (<strong>CVE-2026-76466</strong>, fest eingebaute Zugangsdaten), SAP NetWeaver (<strong>CVE-2025-42884</strong>) und Apache Roller (<strong>CVE-2026-129448</strong>, Deserialisierung).<sup>[1]</sup> Morgen folgen Chromium, Microsoft Outlook (<strong>CVE-2026-124194</strong>), Cisco BroadWorks (<strong>CVE-2026-20320</strong>, XXE) und Openwave Webtop Media Transcoder (<strong>CVE-2026-111793</strong>).<sup>[1]</sup> Apache Axis, REDCap und Synology DSM kamen am 18.11. in den Katalog; ihre Frist war Samstag, der 21.11. Die CVSS-Werte 9,8 für diese drei stammen von The Hacker News, nicht von CISA.<sup>[2]</sup></p>
+        <p>Danach kommen Puppet Enterprise (<strong>CVE-2026-115731</strong>, Frist 01.12.) und LiteLLM (<strong>CVE-2026-40217</strong>, Frist 02.12.).<sup>[1]</sup> LiteLLM ist ein Proxy vor KI-APIs. Details dazu stehen im ai-dev-Brief.</p>
+        <div class="eli5">
+          <strong class="eli5-term">XXE:</strong> Ein XML-Dokument darf auf externe Dateien verweisen. Wenn der Parser das ungeprüft auflöst, liest er auf Befehl des Angreifers Dateien vom Server. Wie ein Brief, der sagt: „Lege bitte den Inhalt deines Safes bei."
+        </div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV-Katalog (abgerufen 23.11.)</a> · [2] <a href="https://letsdatascience.com/news/cisa-adds-four-exploited-flaws-including-litellm-to-kev-cata-4eb52bab">letsdatascience.com (19.11., zitiert The Hacker News)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Chrome: der Zero-Day hat morgen Frist</h2>
+        <p>Google hat am 09.11. die Lücke <strong>CVE-2026-125350</strong> geschlossen, einen Use-after-free in der XML-Verarbeitung. Laut Google existiert ein Exploit „in the wild".<sup>[1]</sup> Der Fix steckt in 157.0.8103.50/.51 für Windows und macOS und in 157.0.8103.50 für Linux. Es ist laut BleepingComputer der achte ausgenutzte Chrome-Zero-Day 2026. CISA hat die Lücke am 10.11. aufgenommen, die Frist ist der 24.11.<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Für Desktops ist das längst erledigt, weil Chrome sich selbst aktualisiert. Die Lücke liegt aber in Chromium, und Chromium steckt in Electron-Apps, Headless-Browsern in CI und in Kiosk-Images. Dort aktualisiert sich nichts von allein. Das ist der eigentliche Prüfpunkt.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/google-patches-eighth-chrome-zero-day-exploited-in-attacks-this-year">bleepingcomputer.com (10.11.)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV-Katalog (abgerufen 23.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>GL.iNet: Einbruch über die eigene Cloud</h2>
+        <p>Laut heise vom 22.11. hatte die Cloud-Fernverwaltung von GL.iNet eine Schwachstelle. „Ein unbefugter Dritter hat diese Schwachstelle vorher aber bereits ausgenutzt", und zwar um auf einige Router und KVM-Geräte zuzugreifen und Malware zu installieren.<sup>[1]</sup> GL.iNet hat den Fehler in der Cloud behoben und den Zugang gesperrt. Neue Infektionen auf diesem Weg sind damit nicht mehr möglich. Aber: „Diese Maßnahmen entfernen jedoch keine Schadsoftware von Geräten, die bereits infiziert waren."<sup>[1]</sup></p>
+        <p>Firmware-Patches sollen ab Sonntag, 22.11., kommen. Eine CVE oder Versionsnummern nennt heise nicht. Wer ein infiziertes Gerät hat, braucht die neue Firmware oder einen Werksreset und muss danach alles neu einrichten.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Das ist der unangenehme Teil von „bequemer Fernzugriff". Die Lücke war nicht im Gerät, sondern beim Hersteller, und der Kunde konnte nichts dagegen tun. Wer GL.iNet-KVMs im Homelab hat, braucht die Cloud-Verwaltung meist nicht. Fernzugriff über ein eigenes VPN wie Tailscale oder WireGuard ist der robustere Weg.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/GL-iNet-Schwachstelle-entdeckt-Patch-verfuegbar-11533722.html">heise.de (22.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Windows-Hotpatch: Apps starten nicht</h2>
+        <p>Die Sicherheits-Updates vom November-Patchday machen laut heise Probleme, wenn sie als Hotpatch über Windows Autopatch kommen. Betroffen sind Systeme mit Windows 11 24H2 und neuer. Manche Apps lassen sich nicht installieren, starten oder ausführen.<sup>[1]</sup> Vor allem trifft es 32-Bit-Apps, die die <code>msi.dll</code> laden. Die Fehlermeldung lautet „ERROR_ALLOTTED_SPACE_EXCEEDED (0xC0000099)". Systeme mit Standard-Updates sind laut heise nicht betroffen.<sup>[1]</sup></p>
+        <p>Microsoft führt das Problem als WI1559710. Der Workaround: in der Registry unter <code>…\Session Manager\Memory Management</code> den DWORD <code>HotPatchTableSize</code> auf <code>2000</code> (hex) setzen und neu starten. Die Patches zu deinstallieren ist keine gute Idee, denn sie schließen ausgenutzte Lücken.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Hotpatch:</strong> Ein Update, das den Code im laufenden Speicher austauscht, ohne Neustart. Wie ein Reifenwechsel während der Fahrt: praktisch, solange alles passt.
+        </div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Microsoft-Patchday-Hotpatches-erzeugen-Startprobleme-mit-Apps-11532241.html">heise.de (20.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Patchday November: was noch offen ist</h2>
+        <p>Der Patchday vom 10.11. war groß. PCWelt zählt 1093 Schwachstellen, davon 63 kritisch.<sup>[1]</sup> Ausgenutzt wurde eine Spoofing-Lücke in Outlook, <strong>CVE-2026-124194</strong>, mit CVSS 6,5. Sie steht im KEV-Katalog der CISA, die Frist ist der 24.11. Eine der höchsten Wertungen hat eine Rechteausweitung in SharePoint, <strong>CVE-2026-120002</strong>, mit CVSS 9,9.<sup>[1]</sup> Mehrere RCEs haben CVSS 9,8: Windows Search (<strong>CVE-2026-116928</strong>), LDAP (<strong>CVE-2026-119958</strong>) und Kerberos-Rechteausweitung (<strong>CVE-2026-85844</strong>); keine davon ist laut PCWelt ausgenutzt.<sup>[1]</sup></p>
+        <p>Bei <strong>CVE-2026-122194</strong> (RCE, CVSS 8,8) ist die Quelle uneinheitlich. Die PCWelt-Tabelle nennt Exchange Server, der Text nennt Defender. Die MSRC-Seite konnten wir nicht lesen. Wer Exchange on-prem betreibt, spielt das Update ohnehin ein. Der nächste Patchday ist am 08.12.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.pcwelt.de/3281873">pcwelt.de (11.11.)</a> · CVSS-Werte aus zweiter Hand, nicht gegen NVD/MSRC geprüft</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Windows-11-Passkey: der falsche Fehler</h2>
+        <p>Laut The Register zeigt das Android-Handy unter Windows 11 25H2 und 26H2 manchmal einen Fehler, wenn man sich per QR-Code und Passkey am PC anmeldet. Die Anmeldung am PC hat aber geklappt.<sup>[1]</sup> Microsoft sagt, die Meldung kann man „safely ignored". Betroffen sind Microsoft Authenticator und der Google Password Manager, keine iPhone-Passkeys. Den Fix enthält das optionale Vorschau-Update KB5132057 vom 19.11.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/11/20/windows-11-passkey-bug-cries-failure-after-successful-sign-in/5311263">theregister.com (20.11.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>PostgreSQL 14 ist am Ende</h2>
+        <p>Am 12.11. kamen PostgreSQL 18.7, 17.12, 16.16, 15.20 und <strong>14.25</strong>. Die Runde behebt laut Ankündigung „over 140 bugs".<sup>[1]</sup> Für eine Version ist es die letzte: „This is the final release of PostgreSQL 14. PostgreSQL 14 is now end-of-life."<sup>[1]</sup> Ab jetzt gibt es für 14 keine Sicherheits-Fixes mehr.</p>
+        <p>Die Fixes selbst sind kein Routine-Update. Die Ankündigung nennt mehrere GIN-Fehler, die zu Index-Korruption führen konnten. Bei <code>pg_trgm</code>-GiST-Indizes heißt es klar: „You need to reindex after updating".<sup>[1]</sup> Dazu kommen Fixes für inkrementelle Backups, die „could produce corrupt backups".<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">GIN- und GiST-Index:</strong> Spezial-Indizes für Volltext-Suche, JSONB oder Ähnlichkeitssuche (<code>pg_trgm</code>, etwa für <code>LIKE '%foo%'</code>). Ist der Index kaputt, findet die Abfrage Zeilen nicht, die da sind. Es gibt keine Fehlermeldung, nur falsche Ergebnisse. Wie ein Register im Buch, das auf die falsche Seite zeigt.
+        </div>
+        <div class="callout warn"><span class="callout-label">Achtung</span> Das Paket-Update allein repariert keinen schon beschädigten Index. Nach dem Update auf die neue Minor-Version die <code>pg_trgm</code>-GiST-Indizes neu bauen, am besten mit <code>REINDEX INDEX CONCURRENTLY</code>. Wer inkrementelle Backups nutzt, macht danach ein neues Voll-Backup und testet die Wiederherstellung.</div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Hier steckt die Arbeit der Woche, nicht bei PostgreSQL 19. Viele Docker-Setups laufen noch mit <code>postgres:14</code>, weil „es läuft ja". Jetzt ist der Moment, die Migration auf 17 oder 18 zu planen. Wer bis 19.1 wartet, springt sonst über fünf Versionen.</div>
+        <span class="src">[1] <a href="https://www.postgresql.org/message-id/attachment/208544/20261112updaterelease.md">postgresql.org Update-Ankündigung (12.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL 19: zwei Upgrade-Fallen</h2>
+        <p><span class="update-since">Update seit So</span> PostgreSQL 19 ist seit dem 19.11. GA, mit <code>REPACK … CONCURRENTLY</code>, <code>pg_plan_advice</code>, <code>WAIT FOR LSN</code> und JIT standardmäßig aus (Details im Brief vom Sonntag).<sup>[1]</sup> heise ergänzt eine harte Falle: „Der Server startet nicht mehr, wenn die Konfiguration noch io_workers enthält".<sup>[2]</sup> Wie jedes Major-Release braucht 19 eine Major-Upgrade-Strategie, also <code>pg_upgrade</code> oder <code>pg_dump</code>/<code>pg_restore</code>.<sup>[3]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Vor dem Test-Upgrade die <code>postgresql.conf</code> nach <code>io_workers</code> durchsuchen. Ein Server, der nicht startet, ist im Staging ein Lacher und in der Produktion ein langer Abend.</div>
+        <span class="src">[1] <a href="https://postgresql.org/about/news/postgresql-19-released-3449">postgresql.org (19.11.)</a> · [2] <a href="https://www.heise.de/news/PostgreSQL-19-0-Das-bringt-das-neue-Datenbank-Release-fuer-Entwickler-und-Admins-11532451.html">heise.de (20.11.)</a> · [3] <a href="https://www.postgresql.org/message-id/attachment/208544/20261112updaterelease.md">postgresql.org (12.11., RC2-Abschnitt)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>SonicWall: Gen6 gehört nicht mehr ans Netz</h2>
+        <p><span class="update-since">Update seit Sa</span> SonicWall rät in einem Support-Hinweis, Gen6- und Gen6.5-Firewalls zu ersetzen und nicht mehr an der Internet-Grenze zu betreiben.<sup>[1]</sup> Laut heise ist der Support seit 01.10. vorbei. Es gibt keine Firmware und keine Patches mehr, auch nicht für kritische Lücken. Betroffen sind unter anderem TZ300 bis TZ600, NSA 2600 bis 6600 und die NSa-x650-Reihe.<sup>[1]</sup> SonicWall zitiert den Verizon-DBIR 2025: Bei 22 % der Einbrüche über eine ausgenutzte Lücke waren Edge-Geräte und VPNs das Ziel, nach 3 % im Jahr davor.<sup>[1]</sup></p>
+        <p>Bis zum Austausch empfiehlt SonicWall: WAN-Verwaltung per HTTPS, SSH und SNMP aus, SSL-VPN einschränken, MFA für Admin- und Remote-Konten.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/SonicWall-raet-Kunden-zum-Entsorgen-von-Gen6-Firewalls-11532307.html">heise.de (20.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CI/CD: „Ein grüner Build" ist kein Beweis</h2>
+        <p>Im iX-Interview vom 20.11. sagt Fabian Deitelhoff, Pipeline-Sicherheit muss den ganzen Weg vom Quellcode bis zur Veröffentlichung abdecken: „Ein grüner Build allein liefert dafür keinen ausreichenden Nachweis."<sup>[1]</sup> Er nennt die Angriffe auf GitHub Actions, darunter den Einbruch bei <code>tj-actions/changed-files</code> 2025. Seine Empfehlungen: Token-Rechte eng setzen, Actions auf volle Commit-SHAs pinnen, Build- und Publish-Jobs trennen und Änderungen an Workflows reviewen.<sup>[1]</sup> Trusted Publishing sieht er als echten Gewinn, weil langlebige Tokens wegfallen.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Nichts davon ist neu, aber das SHA-Pinning fehlt in erstaunlich vielen Repos. Ein Tag wie <code>@v4</code> kann der Besitzer jederzeit umhängen. Ein Commit-SHA nicht. Ein Dependabot-Setup hält gepinnte SHAs aktuell, also ist der Aufwand klein.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Lieferkettensicherheit-Risiken-in-CI-CD-Pipelines-minimieren-11533016.html">heise.de / iX (20.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>TeleTrusT: Krypto-Agilität vor Post-Quanten</h2>
+        <p>Der deutsche IT-Sicherheitsverband TeleTrusT hat eine 30-seitige Handreichung zur Krypto-Agilität veröffentlicht (heise, 19.11.).<sup>[1]</sup> Die Kernidee: Standards und Systeme nicht an ein bestimmtes Verfahren binden, weil Post-Quanten-Verfahren RSA und Diffie-Hellman ablösen. Der erste Schritt ist ein Krypto-Inventar, etwa eine Cryptography Bill of Materials (CBOM). Danach folgt die Migration nach Risiko.<sup>[1]</sup> Konkrete Termine nennt die Handreichung laut heise nicht, nur die gesetzlichen Rahmen wie IT-SiG und den EU Cybersecurity Act.</p>
+        <div class="eli5">
+          <strong class="eli5-term">Krypto-Agilität:</strong> Software so bauen, dass man das Verschlüsselungs-Verfahren tauschen kann wie eine Glühbirne. Ohne Umbau der Lampe.
+        </div>
+        <span class="src">[1] <a href="https://www.heise.de/news/TeleTrusT-veroeffentlicht-Handreichung-zu-Kryptoagilitaet-11531656.html">heise.de (19.11.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>AWS: der Ausfall, den keiner bemerkte</h2>
+        <p>Corey Quinn beschreibt in The Register einen Ausfall in us-east-1 am 15.11. Ab etwa 3:05 Uhr PST gab es Fehler bei Anmeldung und Verbindungen. Am stärksten traf es IAM Identity Center, über das Engineers sich bei AWS anmelden.<sup>[1]</sup> Die Statusseite meldete sich laut Quinn erst 93 Minuten später, Entwarnung kam um 6:53 Uhr. Seine These: Ob jemand einen Ausfall bemerkt, „depends upon what layer broke, and when". Sonntag früh, ein Dienst nur für Engineers, Downdetector ohne Ausschlag.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Für Betreiber ist das die wichtigere Lehre als bei jedem großen Ausfall. Wenn IAM Identity Center weg ist, kommt man im Notfall nicht in die eigene Konsole. Ein Break-Glass-Zugang außerhalb von SSO gehört in jedes AWS-Konto.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/columnists/2026/11/21/aws-got-hit-by-an-outage-too-heres-why-you-didnt-hear-about-it/5311511">theregister.com (21.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>GTA VI: wie GeoDNS das Netz rettete</h2>
+        <p>Rockstar verteilte die Downloads für GTA VI ab 10.11., gespielt wurde ab 19.11. Forscher des RIPE NCC haben das mit RIPE Atlas vermessen.<sup>[1]</sup> Das Werkzeug war GeoDNS: Eine Domain liefert je nach Standort andere IP-Adressen. Fastly trug laut der Messung mehr als die Hälfte des Xbox-Verkehrs. Emile Aben fasst zusammen: „DNS helps steer each player towards a download server, while multiple CDNs share the work".<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">GeoDNS:</strong> Das Telefonbuch des Internets gibt je nach Anrufer eine andere Nummer heraus. Wer in São Paulo fragt, bekommt den Server in São Paulo.
+        </div>
+        <span class="src">[1] <a href="https://www.theregister.com/networks/2026/11/19/gta-vi-didnt-break-the-internet-thanks-to-stupid-dns-tricks/5310950">theregister.com (19.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>UK: Gericht bestätigt Apple-Anordnung</h2>
+        <p>Das Investigatory Powers Tribunal hat laut The Register entschieden: Die britische Regierung muss zugeben, dass sie Apple eine geheime Technical Capability Notice geschickt hat. Das Argument des Innenministeriums, schon das Eingeständnis schade der nationalen Sicherheit, wies das Gericht zurück.<sup>[1]</sup> Den genauen Inhalt kennt man nicht: „there has been no publication of its precise content". Apple hatte Advanced Data Protection für UK-Nutzer im Februar 2025 abgeschaltet.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Für Entwickler ist das ein Lehrstück. Eine Hintertür für einen Staat ist eine Hintertür für alle. Ende-zu-Ende-Verschlüsselung ist nur so stark wie die Regel, die sie schützt.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/11/20/spy-court-blasts-uk-secrecy-forces-government-to-admit-apple-backdoor-demand/5311292">theregister.com (20.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Python 3.15: Stand nach einem Monat</h2>
+        <p>Python 3.15.0 ist seit dem 09.10. final. Seitdem kamen 3.15.1 (21.10.) und 3.15.2 (25.10.), dazu 3.14.10.<sup>[1]</sup> 3.15.2 war laut python.org „an expedited security release to address the compromised eMudhra intermediate CA keys". Das <code>ssl</code>-Modul blockiert diese Schlüssel jetzt „as a last resort".<sup>[2]</sup> Wer ein Base-Image mit 3.15.0 gebaut hat, sollte es neu bauen.</p>
+        <span class="src">[1] <a href="https://www.python.org/downloads/">python.org/downloads (abgerufen 23.11.)</a> · [2] <a href="https://www.python.org/downloads/release/python-3152/">python.org 3.15.2 (25.10.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert</h2>
+        <ul>
+          <li><span class="chip">OSS</span> <strong>FFmpeg 9.1</strong> „Gauss" bringt einen überarbeiteten AAC-Encoder, einen Vulkan-APV-Encoder und Zwischenbilder per Nvidia-GPU (<code>VK_NV_optical_flow</code>).<sup>[1]</sup></li>
+          <li><span class="chip">Sec</span> <strong>NGINX</strong>: Nach dem Update auf 1.30.7 / 1.31.9 neu starten, nicht nur neu laden. GitLabs mitgeliefertes NGINX ist weiter verwundbar (siehe Sonntag).<sup>[2]</sup></li>
+          <li><span class="chip">Sec</span> <strong>Ruby</strong> 4.0.10 / 3.4.13 / 3.3.14 und <strong>PHP</strong> 8.5.13 / 8.4.28 stehen weiter auf der Liste (siehe Sonntag).<sup>[2]</sup></li>
+          <li><span class="chip">Web</span> <strong>PHP 8.6</strong> wird strenger, schreibt The Register. Die Session-Voreinstellungen sind laut heise gehärtet. Nur Schlagzeilen gelesen.<sup>[3]</sup></li>
+          <li><span class="chip">OSS</span> <strong>XXRI OS</strong> bringt laut heise einen Linux-Desktop mit Dock und App Store in 75 MByte auf alte 32-Bit-PCs. Nur Schlagzeile gelesen.<sup>[2]</sup></li>
+          <li><span class="chip">BR</span> Eine BR-Dev-Meldung für das Wochenende haben wir nicht gefunden (tecnoblog: 403).</li>
+          <li><span class="chip">Sec</span> KI-Themen stehen in den anderen Briefs: LiteLLM, der KI-Agent, der laut The Register einen Universitäts-Server übernahm, und Signals Sperre gegen KI-Agenten.</li>
+        </ul>
+        <span class="src">[1] <a href="https://www.heise.de/news/FFmpeg-9-1-erfindet-Bilder-dazu-wenn-eine-Nvidia-GPU-hilft-11532359.html">heise.de (20.11.)</a> · [2] <a href="https://www.heise.de/developer/">heise.de/developer (20./21.11.)</a> · [3] <a href="https://www.theregister.com/devops/2026/11/20/php-86-things-are-gonna-get-a-lot-more-strict-around-here/5311486">theregister.com (20.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Nicht geprüft</h2>
+        <ul>
+          <li>CVE-2026-122194: Produkt unklar (PCWelt nennt Exchange und Defender). MSRC und NVD waren nicht lesbar.</li>
+          <li>Alle CVSS-Werte stammen aus zweiter Hand (PCWelt, The Hacker News, BleepingComputer). Die KEV-Fristen sind direkt bei CISA geprüft.</li>
+          <li>vCenter-Angriffe: Die Details stammen von Google über The Register. Den Google-Bericht selbst haben wir nicht gelesen.</li>
+          <li>GL.iNet: Den Hersteller-Hinweis und die Firmware-Versionen konnten wir nicht lesen.</li>
+          <li>Heute nicht neu geprüft: Angular, Spring, JDK, Docker/containerd, Caddy, Tailscale, Firefox/WebKit, BSI und BR-Tech-Medien.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>Die Liste für heute</h2>
+        <ol>
+          <li>vCenter patchen und die Logs ab Juli auf fremde SSO- und SAML-Einträge prüfen.</li>
+          <li>PostgreSQL auf die neue Minor-Version heben, <code>pg_trgm</code>-GiST-Indizes neu bauen und ein Voll-Backup machen.</li>
+          <li>Alle Instanzen mit PostgreSQL 14 finden und die Migration planen.</li>
+          <li>Chromium in Electron-Apps, CI-Images und Headless-Browsern prüfen.</li>
+          <li>Gen6-Firewalls und GL.iNet-Geräte mit Cloud-Verwaltung finden.</li>
+        </ol>
+        <p>PostgreSQL 19 kann warten. Erst die Inventur, dann die neuen Features.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Montag, der dreiundzwanzigste November. Heute wird die Liste vom Wochenende fällig, und eine Datenbank-Version geht in Rente.</p>
+  <p>Ganz oben steht wieder VMware vCenter. Heute endet die Frist der US-Behörde CISA. Neu ist ein Bericht von The Register: Danach kannte eine chinesische Gruppe die Lücke schon im Juli. Google selbst nennt für Juli nur einen Build-Zeitstempel und sieht Angriffe ab Anfang September. Ihre Werkzeuge können Anmelde-Token fälschen und die Mehrfaktor-Anmeldung umgehen. Ein Patch allein reicht deshalb nicht. Wer angreifbar war, schaut in die Logs ab Juli.</p>
+  <p>Morgen endet die Frist für die Chrome-Lücke, die schon ausgenutzt wurde, für die Outlook-Lücke vom Patchday und für Cisco BroadWorks. Auf dem Desktop ist Chrome längst aktuell. Aber Chromium steckt auch in Electron-Apps und in Test-Pipelines, und dort aktualisiert sich nichts von allein.</p>
+  <p>Die wichtigste Datenbank-Nachricht ist nicht PostgreSQL neunzehn, sondern das Ende von PostgreSQL vierzehn. Das letzte Update vom zwölften November behebt mehr als hundertvierzig Fehler. Einige davon konnten Indizes beschädigen. Bei bestimmten Such-Indizes muss man nach dem Update neu indizieren. Wer noch auf Version vierzehn läuft, sollte jetzt die Migration planen.</p>
+  <p>Für PostgreSQL neunzehn gibt es laut heise eine Falle: Der Server startet nicht, wenn die Konfiguration noch die Einstellung io workers enthält. Das prüft man besser vor dem Test-Upgrade.</p>
+  <p>Am Wochenende meldete GL.iNet einen Einbruch über die eigene Cloud-Verwaltung. Angreifer installierten Schadsoftware auf einigen Routern und KVM-Geräten. Die Lücke ist zu, aber infizierte Geräte brauchen neue Firmware oder einen Werksreset. Außerdem stören Microsofts Hotpatches vom November manche Apps unter Windows elf. Microsoft nennt einen Workaround in der Registry.</p>
+  <p>SonicWall rät, alte Firewalls der sechsten Generation zu ersetzen, denn es gibt keine Patches mehr. In Deutschland empfiehlt der Verband TeleTrusT, Software so zu bauen, dass man Verschlüsselungs-Verfahren tauschen kann. Das ist die Vorbereitung auf die Post-Quanten-Zeit.</p>
+  <p>Zum Schluss zwei Geschichten über das Netz. Bei AWS fiel am fünfzehnten November die Anmeldung in der Region us-east-1 aus, und kaum jemand merkte es. Und GTA sechs hat das Internet nicht überlastet, weil GeoDNS die Spieler zu nahen Servern schickte.</p>
+  <p>Morgen schauen wir, ob CISA neue Lücken in den Katalog aufnimmt, ob GL.iNet Firmware-Versionen nennt und ob GitLab ein neues NGINX liefert.</p>
+</div>
+
+</body>
+</html>

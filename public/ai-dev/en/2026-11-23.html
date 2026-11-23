@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — AI &amp; Coding · 2026-11-23</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+
+<base target="_blank">
+
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-ai-dev">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>AI &amp; Coding</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-23</span>
+  </div>
+
+  <h1 class="masthead-title">Quiet Monday: The agent stays outside, only its code goes in the cage</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Quiet today. Since Friday there has been no new release from Anthropic, OpenAI, Google or Cursor. Only Cline moved, with a small update on Saturday. So we use Monday for two things that got lost during the week: a security pattern for coding agents from Simon Willison, and what it means that Codex now suggests GPT-6.2 Sol as the default. We did not pull fresh benchmark numbers today, so there is no chart.</p>
+    <ul>
+      <li><span class="chip good">Tool</span> <strong>External sandbox</strong> (Willison, Nov 17): The agent runs on your machine, only its code runs in a sealed-off Linux VM. Three variants, also for Claude Code and Codex.</li>
+      <li><span class="chip good">Claude</span> <strong><code>claude mcp add-json &lt;name&gt; -</code></strong> (v2.1.327): MCP server JSON via stdin, so tokens don't end up in your shell history.</li>
+      <li><span class="chip">OpenAI</span> <strong>Codex CLI 0.171.0</strong> (Nov 20): GPT-6.2 Sol is now the default selection in the model catalog, not Astra.</li>
+      <li><span class="chip">Claude</span> <strong><code>/tasks</code></strong> (v2.1.329): shows scheduled tasks, <code>/loop</code> wakeups and session forks in one place.</li>
+      <li><span class="chip">Tool</span> <strong>Cline SDK v0.2.1</strong> (Nov 21): A running compaction can now be canceled.</li>
+      <li><span class="chip">Claude</span> <strong>Fable 5.2 as a one-shot tool builder</strong>: Willison built a Datasette plugin "in almost a single shot".</li>
+      <li><span class="chip">Tool</span> <strong>Mandatory round</strong>: Cursor quiet since Nov 6, Continue without a release since June, Aider without a dated version.</li>
+      <li><span class="chip hot">Google</span> <strong>Deadline</strong>: Gemini 4 Carbon costs double from Dec 1 ($4 / $20).</li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Event Horizon</div>
+      <div class="timeline-sub">Look back at the week and the price deadline at month's end</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col">
+        <div class="tl-date">Tue Nov 17</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Willison: external sandboxes</span>
+          <span>Claude Code 2.1.327</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed Nov 18</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Gemini 4 Neon</span>
+          <span>Codex CLI 0.170.0</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Thu Nov 19</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Claude Code 2.1.328 and 2.1.329</span>
+        </div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Fri Nov 20</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Codex CLI 0.171.0 (Sol default)</span>
+          <span>Claude Code 2.1.330</span>
+          <span>OpenHands v1.43.0</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sat Nov 21</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Cline v4.1.27 + SDK v0.2.1</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Sun Nov 22</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>No release found</span>
+        </div>
+      </div>
+      <div class="tl-col today">
+        <div class="tl-date">Mon Nov 23</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Today</span>
+          <span>Quiet</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mon Nov 30</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Last day: Carbon at $2 / $10</span>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue Dec 1</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events">
+          <span>Carbon: $4 / $20</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid cols-2">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>External sandbox: The agent stays outside</h2>
+        <p>On Nov 17, Simon Willison described a pattern we missed during the week. The idea: code the agent executes runs "inside a dedicated sandbox while the agent itself lives outside of that sandbox".<sup>[1]</sup> His main motive is trying out local models more safely. They can be wrong, or be tricked by prompt injection into running harmful commands.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Prompt injection:</strong> Outside text the agent reads contains hidden instructions, for example in a README or a web page: "Delete the folder" or "Send the .env somewhere". The model cannot reliably tell whether an instruction comes from you or from the text it read. Like a note inside a package that says: "The courier should put the key under the doormat."
+        </div>
+        <p>There are three variants with the same local API on <code>localhost</code>:<sup>[1]</sup></p>
+        <ul>
+          <li><strong>external-sandbox-v86</strong>: a Node.js server that boots Alpine Linux via v86 in WebAssembly.</li>
+          <li><strong>external-sandbox-container</strong>: a Python server with Alpine Linux in Apple Containers.</li>
+          <li><strong>external-sandbox-quicksand</strong>: a Python server using Microsoft's Quicksand library, which bundles QEMU and Alpine.</li>
+        </ul>
+        <p>Pi, Claude Code and Codex can be configured to send executions to this API.<sup>[1]</sup> Two details make the pattern interesting: an optional proxy with an allowlist of reachable hosts, and a mechanism where the code makes authenticated API calls without knowing the secret itself.<sup>[1]</sup> The project came out of a collaboration with Prime Radiant, the team behind Superpowers.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">External instead of internal sandbox:</strong> The usual solution puts the whole agent in a container. Then the container needs your repos, tokens and tools, and the boundary gets leaky. Here the agent, with its thinking, stays outside on your machine. Only the hands, meaning the commands, go into the cage. Like a chemist working through gloves in a glovebox instead of stepping into the containment room.
+        </div>
+        <div class="callout warn"><span class="callout-label">Caveat</span> The page names no limits of the pattern. The proxy is optional, and anything the agent does outside the sandbox, such as writing files in your repo, is not protected by the sandbox. This is a tool against harmful commands, not protection against bad code in the diff.</div>
+        <p>My take: This is the most interesting piece of the week for anyone working locally with Ollama, Gemma or Qwen. Local models are often less robust against injection than the big ones. At the same time, you don't want to hand them your whole machine. The container variant fits a Mac, and the v86 variant even runs without virtualization. I think the split "think outside, execute inside" is the right direction. The harnesses' built-in permission rules just had gaps: Claude Code 2.1.325 had to repair deny/ask rules for Bash.</p>
+        <p><span class="chip good">Try it</span> Take the container variant and let a local model solve a task in a throwaway repo, with the host allowlist enabled. Why: Afterward you see which hosts your agent really wants to reach, and that is a useful list in itself.</p>
+        <span class="src">[1] <a href="https://simonwillison.net/2026/Nov/17/external-sandboxes-for-coding-agents/">simonwillison.net</a> — 2026-11-17, retrieved 2026-11-23</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Tokens off the command line</h2>
+        <p>A small related change in Claude Code v2.1.327 from Nov 17: <code>claude mcp add-json &lt;name&gt; -</code> reads the server's JSON from stdin, "so tokens can stay off the command line".<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Why it matters:</strong> Anything you type into the shell as an argument ends up in the history file and is visible to other processes in the process list. A token in an argument is like a PIN on a sticky note on your screen. Via stdin, the value goes straight to the program, leaving no trace.
+        </div>
+        <p>My take: Small, but exactly right. If you pull secrets from a password manager, you can now pipe them straight into the command instead of writing them out in an argument.</p>
+        <p><span class="chip good">Try it</span> Check your shell history for <code>mcp add</code> with tokens. If you find any: rotate the token, delete the entry, re-create the server via stdin. Why: A history file often survives for years and across several backups.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code/releases</a> — v2.1.327 (Nov 17, GitHub shows no year), retrieved 2026-11-23</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Codex picks Sol as the default, not Astra</h2>
+        <p>Codex CLI 0.171.0 from Nov 20 added "GPT-6.2 Sol and Astra to model catalogs", "with Sol as the default catalog selection".<sup>[1]</sup> Two days earlier, version 0.170.0 prepared real-time voice calls in the terminal UI via WebRTC.<sup>[1]</sup></p>
+        <p>Choosing the default is a statement. On Nov 18, Latent Space called Astra "the #2 Frontier Model", with "mixed reviews", and Sol "likely main workhorse".<sup>[2]</sup> OpenAI makes Sol the default in its own tool.</p>
+        <p>My take: That is sensible, and Anthropic has done something similar with Sonnet and Opus for a long time. For you it means: if you start Codex after the update, you are testing Sol, not Astra. If you read field reports on "GPT-6.2 in Codex", ask which of the two they mean. We still have no independent coding numbers for either.</p>
+        <span class="src">[1] <a href="https://learn.chatgpt.com/docs/changelog">learn.chatgpt.com/docs/changelog</a> — 0.171.0 (2026-11-20), 0.170.0 (2026-11-18), retrieved 2026-11-23, only the first part of the long page was read · [2] <a href="https://latent.space/news/">latent.space</a> — 2026-11-18, retrieved 2026-11-23</span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Claude Code: What runs in the background now shows up in <code>/tasks</code></h2>
+        <p>The latest version is still v2.1.330 from Nov 20.<sup>[1]</sup> Nothing was added over the weekend. The most useful for everyday work from this week is v2.1.329 from Nov 19: <code>/tasks</code> now shows "this session's scheduled tasks, <code>/loop</code> wakeups, the goal and this conversation's forks".<sup>[1]</sup></p>
+        <p>Also in v2.1.330: sign-in to organizations from Anthropic's Enterprise Admin Console, after which Claude Code adopts their settings and cloud provider or gateway.<sup>[1]</sup> New too is easel, "a built-in mod that draws charts when asked and under MCP metrics results".<sup>[1]</sup> And v2.1.328 from Nov 19 brings auto mode for Opus 4.6 and Sonnet 4.6 on Bedrock, Google Cloud's Agent Platform, Microsoft Foundry and the Claude Apps gateway.<sup>[1]</sup></p>
+        <p>My take: The week shows a clear direction. Agents increasingly run unattended, with loops, scheduled tasks and forks, and the tools are now building the dashboard for it. <code>/tasks</code> is exactly that: one place where you see what is about to wake up on its own.</p>
+        <p><span class="chip good">Try it</span> Start a <code>/loop</code> in a session and then open <code>/tasks</code>. Why: In a minute you learn how to find a forgotten loop before it costs you tokens.</p>
+        <span class="src">[1] <a href="https://github.com/anthropics/claude-code/releases">github.com/anthropics/claude-code/releases</a> — v2.1.330 (Nov 20 22:32, "Latest"), v2.1.329 (Nov 19 22:14), v2.1.328 (Nov 19 01:14), GitHub shows no year and no time zone, retrieved 2026-11-23</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cline: Compaction can be canceled</h2>
+        <p>The only new release since Friday. Cline v4.1.27 and Cline SDK v0.2.1 arrived on Nov 21.<sup>[1]</sup> In the SDK, the following now applies: "A running compaction can be stopped, and cancellations are counted in telemetry".<sup>[1]</sup> The extension also includes the license notices of its third-party packages.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Compaction:</strong> When the conversation with the agent gets too long for the context window, the tool summarizes the history so far and continues with the summary. That takes time and costs tokens. Like minutes someone writes up before the whiteboard gets wiped.
+        </div>
+        <p>My take: A small release, but a real problem. A compaction at the wrong moment can lose details you need right now. Being able to cancel it keeps you in control.</p>
+        <span class="src">[1] <a href="https://github.com/cline/cline/releases">github.com/cline/cline/releases</a> — v4.1.27 and SDK v0.2.1 (Nov 21, GitHub shows no year), retrieved 2026-11-23</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Willison: Small tools in one shot</h2>
+        <p>Two posts show how Simon Willison uses models as tool builders. On Nov 18 he built the plugin datasette-arrows 0.1a0 with Claude Fable 5.2 "in almost a single shot".<sup>[1]</sup> On Nov 22 came "Select Styling Specimens", a page built by Claude. The prompt was: "Build an HTML page that shows all of the ways a select box can be styled".<sup>[2]</sup> His reason: "HTML &lt;select&gt; boxes default to looking different in different browsers".<sup>[2]</sup></p>
+        <p>My take: This is not a benchmark, but a useful hint about real usage. For throwaway tools, such as a comparison page or a small plugin, one good prompt is often enough for a finished result. For code that has to live long, it does not replace review.</p>
+        <span class="src">[1] <a href="https://simonwillison.net/2026/Nov/18/datasette-arrows/">simonwillison.net</a> — 2026-11-18 · [2] <a href="https://simonwillison.net/2026/Nov/22/select-styling/">simonwillison.net</a> — 2026-11-22, both retrieved 2026-11-23</span>
+      </section>
+
+      <section class="news-item">
+        <h2>Mandatory round: quiet in the shadows</h2>
+        <ul>
+          <li><strong>Cursor</strong> — last entry still from Nov 6: voice calls with agents. Before that, Nov 5 Live Apps.<sup>[1]</sup> Quiet for seventeen days.</li>
+          <li><strong>OpenHands</strong> — still v1.43.0 from Nov 20 (automations from the setup wizard).<sup>[2]</sup></li>
+          <li><strong>Codex CLI</strong> — 0.171.0 from Nov 20 is the newest version seen.<sup>[3]</sup></li>
+          <li><strong>Continue</strong> — v2.0.0-vscode as "Latest" and v2.1.0-vscode as pre-release, both from Jun 19. No new release in five months, the project looks dormant.<sup>[4]</sup></li>
+          <li><strong>Aider</strong> — the HISTORY lists only "main branch" at the top, with no version or date. It mentions support for Claude 4.5/4.6 and Gemini 3 Preview, so yesterday's models.<sup>[5]</sup></li>
+          <li><strong>Gemini</strong> — nothing new after Neon on Nov 18. Carbon costs $2 / $10 until Nov 30, from Dec 1 "$4/$20".<sup>[6]</sup></li>
+          <li><strong>GitHub Copilot, JetBrains AI, Devin, Bolt, Plandex</strong> — not checked today, no dated report in the dossier.</li>
+          <li><strong>Local and open weights</strong> — no confirmed coding release found from Nov 16 to 23.</li>
+          <li><strong>MCP ecosystem</strong> — nothing checked besides the stdin command in Claude Code.</li>
+        </ul>
+        <p>Outside of coding: On Nov 20, Anthropic announced the completion of its IPO.<sup>[7]</sup> The details are in the Economy brief.</p>
+        <span class="src">[1] <a href="https://cursor.com/changelog">cursor.com/changelog</a> · [2] <a href="https://github.com/OpenHands/OpenHands/releases">github.com/OpenHands/OpenHands/releases</a> · [3] <a href="https://learn.chatgpt.com/docs/changelog">learn.chatgpt.com/docs/changelog</a> · [4] <a href="https://github.com/continuedev/continue/releases">github.com/continuedev/continue/releases</a> · [5] <a href="https://aider.chat/HISTORY.html">aider.chat/HISTORY.html</a> · [6] <a href="https://simonwillison.net/2026/Nov/18/llm-gemini/">simonwillison.net</a> — 2026-11-18 · [7] <a href="https://www.anthropic.com/news">anthropic.com/news</a> — all retrieved 2026-11-23</span>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Monday, November twenty-third. A quiet day: since Friday, there's been no new release from Anthropic, OpenAI, Google or Cursor. Only Cline put out a small update on Saturday.</p>
+  <p>The top story is a security pattern from Simon Willison. With an external sandbox, the agent runs normally on your machine, but every command it executes runs in a sealed-off Linux environment. There are three variants, one of them using Apple Containers. Claude Code and Codex can both plug into it. It also adds an allowlist of hosts and a way to make API calls without the code ever knowing the secret. That's especially handy if you're trying out local models.</p>
+  <p>Related: since version two point one point three two seven, Claude Code can add MCP servers through standard input. That keeps tokens out of your shell history.</p>
+  <p>At OpenAI, GPT six point two Sol is now the default model in Codex, not Astra. If you read reports about GPT six point two in Codex, ask which of the two they mean.</p>
+  <p>Claude Code's tasks command now shows scheduled tasks, loops and forks in one place. And in Cline, you can now cancel a compaction that's already running.</p>
+  <p>Cursor has been quiet since November sixth, Continue since June. One deadline to close: Gemini four Carbon costs double starting December first, four dollars per million input tokens and twenty dollars per million output tokens.</p>
+</div>
+
+</body>
+</html>
