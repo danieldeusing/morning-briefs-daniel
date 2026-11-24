@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-24</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Edición 2026-11-24</span>
+  </div>
+  <h1 class="masthead-title">Cisco Expressway: ataques a la falla de root poco después de la PoC</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Martes, y el catálogo KEV vuelve a moverse. El lunes por la noche se sumaron dos entradas nuevas: N-able MailAssure y MONAI Label, ambas con solo tres días de plazo. La historia más grande, sin embargo, es Cisco Expressway. Desde que se hizo pública una prueba de concepto, la falla está siendo atacada, según heise y The Register. El 23/11 Cisco actualizó su aviso para registrar la inclusión en KEV, pero dice no tener evidencia directa de explotación. Para la gente de Java pesa más la ronda de Spring: Spring Security, Spring LDAP y Spring Boot reciben correcciones, algunas solo con soporte enterprise. A esto se suman un ataque a Azure API Management en Noruega y una fuga de datos de tarjetas en la tienda de software alemana Cleverbridge. Y el informe final de Microsoft sobre la caída de Exchange muestra cómo una prueba de carga en hardware viejo pasó por alto un error durante tres meses. Nuestra postura: esta semana enseña que "parchar rápido" y "mantenerse estable" son dos caras del mismo inventario.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Cisco Expressway</strong> CVE-2026-76466: root sin autenticación, corrección X15.5.20, ataques tras la PoC. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Nuevos en KEV (23/11)</strong>: N-able MailAssure y MONAI Label, plazo jue 26/11. <span class="chip">EE. UU.</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Spring</strong>: Security, LDAP y Boot parchados; correcciones gratuitas solo para las líneas más nuevas. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>SAP NetWeaver</strong> CVE-2025-42884: solo CVSS 6,5, pero atacada; parche disponible desde nov. de 2025. <span class="chip">DE</span></li>
+      <li><span class="chip">Sec</span> <strong>Azure API Management Classic</strong>: secretos robados en dos empresas de energía noruegas. <span class="chip">UE</span></li>
+      <li><span class="chip">Sec</span> <strong>Cleverbridge</strong>: números de tarjeta con CVV robados. <span class="chip">DE</span></li>
+      <li><span class="chip">Infra</span> <strong>Microsoft</strong>, informe: caída de Exchange por código de julio, pruebas de carga en hardware viejo. <span class="chip">Global</span></li>
+      <li><span class="chip">Lanzamiento</span> <strong>PostgreSQL</strong>: la 14 llegó al fin de su vida útil, la 15 llega hasta el 11/11/2027 según postgresql.org. <span class="chip">Global</span></li>
+      <li><span class="chip">Regulación</span> <strong>CRA</strong>: obligación de notificar desde el 11/09/2026, aplicación plena el 11/12/2027 (Comisión Europea). <span class="chip">UE</span></li>
+      <li><span class="chip">Web</span> <strong>Android</strong>: verificación de desarrolladores en todo el mundo desde enero de 2027; Brasil desde el 30/09. <span class="chip">BR</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Panorama de la semana</div>
+      <div class="timeline-sub">Plazos KEV hasta mié 02/12 — Fuente: feed KEV de CISA, versión del catálogo 2026.11.23, consultado el 24/11</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Mar 24/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Hoy</span><span>Plazo KEV: Chromium CVE-2026-125350, Microsoft Outlook CVE-2026-124194, Cisco BroadWorks CVE-2026-20320, Openwave Webtop Media Transcoder CVE-2026-111793</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Jue 26/11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Plazo KEV: N-able MailAssure CVE-2026-134624, MONAI Label CVE-2026-133968</span><span>Feriado en EE. UU.: Thanksgiving</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mar 01/12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Plazo KEV: Puppet Enterprise CVE-2026-115731</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mié 02/12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Plazo KEV: LiteLLM CVE-2026-40217 (detalles en el brief ai-dev)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Cisco Expressway: ataques tras la PoC</h2>
+        <p><span class="update-since">Actualización desde el lun</span> La falla <strong>CVE-2026-76466</strong> está, según Action1, en la función de clúster de Cisco Expressway.<sup>[4]</sup> Atacantes sin autenticación que estén en la red pueden usarla para ejecutar comandos de sistema como root. Cisco cita CVSS 9,8; heise habla de "crítico".<sup>[1][5]</sup> CISA incluye la falla en el catálogo KEV desde el 20/11 como "Use of Hard-coded Credentials"; el plazo venció ayer.<sup>[2]</sup> Lo nuevo es la confirmación de ataques: según heise, la empresa de seguridad F6 los confirmó, y The Register escribe que los ataques comenzaron después de que se hizo pública una PoC.<sup>[1][3]</sup></p>
+        <p>Según Cisco, la versión X15.5.20 cierra la falla. Quien use X14 o anterior debe migrar a una versión corregida; no hay soluciones alternativas.<sup>[5]</sup> El 23/11 Cisco actualizó su aviso (versión 1.1) para registrar la inclusión en KEV. Según la propia Cisco, no tiene evidencia directa de explotación activa.<sup>[5]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Credenciales fijas en el código:</strong> datos de acceso que el fabricante incrustó en el software. Nadie puede cambiarlos. Como una llave maestra que abre todas las cerraduras de una línea de producción: quien la conoce una vez entra a cualquier lado.
+        </div>
+        <div class="callout info"><span class="callout-label">Nuestra postura</span> Expressway es la puerta que deja pasar las conexiones de video y voz a través del firewall. Por definición, está en el borde de la red. Una llave fija más una PoC pública significa que los escaneos masivos son cuestión de días. Quien todavía use X14 no tiene un problema de parches, sino de reemplazo.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Warnung-vor-Angriffen-auf-Cisco-Expressway-und-SAP-NetWeaver-11534049.html">heise.de (23/11)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV (consultado el 24/11)</a> · [3] <a href="https://www.theregister.com/security/2026/11/23/critical-cisco-remote-code-execution-bug-under-attack/5311722">theregister.com (23/11)</a> · [4] <a href="https://www.action1.com/vulnerabilities/cve-2026-76466/">action1.com</a> · [5] <a href="https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-vcs-static-cred-hr7EWZ8t">cisco.com (v1.1, 23/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: dos entradas nuevas, tres días de plazo <span class="h2-refs">[1]</span></h2>
+        <p><span class="update-since">Actualización desde el lun</span> Ayer informamos "ninguna entrada nueva desde el viernes". El lunes por la noche (versión del catálogo 2026.11.23) se sumaron dos. <strong>CVE-2026-134624</strong> afecta a N-able MailAssure (antes SpamExperts), un servicio de filtrado de correo. Es una Server-Side Request Forgery. <strong>CVE-2026-133968</strong> es un path traversal en MONAI Label, una herramienta de código abierto para etiquetar imágenes médicas. Para ambas rige el plazo del jue 26/11.</p>
+        <div class="eli5">
+          <strong class="eli5-term">SSRF:</strong> el atacante logra que un servidor consulte por él una dirección que no es accesible desde fuera. Como si un extraño llamara a la recepción y dijera: "Tráigame por favor el expediente de la oficina del jefe." La recepción puede entrar; el extraño no.
+        </div>
+        <div class="callout info"><span class="callout-label">Nuestra postura</span> Llaman la atención los plazos. Las cuatro entradas del 10/11 que vencen hoy tuvieron dos semanas de plazo; todas las entradas del 20/11 y 23/11, solo tres días. Para los equipos que planean con KEV, esto significa: el catálogo hay que leerlo a diario, no cada semana.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">Feed KEV de CISA (versión 2026.11.23, consultado el 24/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>SAP NetWeaver: puntaje medio, ataques reales</h2>
+        <p><strong>CVE-2025-42884</strong> es una inyección JNDI en SAP NetWeaver Enterprise Portal. heise cita CVSS 6,5, "medio".<sup>[1]</sup> Aun así, está en el catálogo KEV desde el 20/11, es decir, con ataques comprobados.<sup>[2]</sup> SAP publicó el parche en el día de parches de noviembre de 2025.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Inyección JNDI:</strong> JNDI es el servicio de Java con el que una aplicación busca recursos por un nombre. Si un atacante puede definir ese nombre, manda la aplicación a su propio servidor. Ese fue el mecanismo detrás de Log4Shell. Como una nota de entrega en la que el cliente mismo escribe la dirección del almacén.
+        </div>
+        <div class="callout info"><span class="callout-label">Nuestra postura</span> Esta es la lección del día. Un parche de hace un año, puntaje medio y, aun así, atacada. CVSS dice qué tan grave puede ser una falla. KEV dice que alguien la está usando ahora mismo. Para el orden del trabajo cuenta lo segundo.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Warnung-vor-Angriffen-auf-Cisco-Expressway-und-SAP-NetWeaver-11534049.html">heise.de (23/11)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV (consultado el 24/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Apache Roller: deserialización sin autenticación</h2>
+        <p>El software de blogs en Java Apache Roller tiene, según heise, una falla que da acceso a atacantes en la red sin autenticación, CVSS 9,8. heise menciona dos IDs: <strong>CVE-2026-129448</strong> para Roller 4.0.0 a 6.1.4 y <strong>CVE-2026-82384</strong> para 6.1.5.<sup>[1]</sup> Solo la primera está en el catálogo KEV (desde el 20/11, "Deserialization of Untrusted Data").<sup>[2]</sup> No verificamos la versión corregida con el proyecto Apache.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Warnung-vor-Angriffen-auf-Cisco-Expressway-und-SAP-NetWeaver-11534049.html">heise.de (23/11)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV (consultado el 24/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Vence hoy: Chromium, Outlook, BroadWorks <span class="h2-refs">[1][2]</span></h2>
+        <p>Para cuatro entradas del 10/11 termina hoy el plazo KEV: Chromium <strong>CVE-2026-125350</strong> (use-after-free), Outlook <strong>CVE-2026-124194</strong>, Cisco BroadWorks <strong>CVE-2026-20320</strong> (XXE) y Openwave Webtop Media Transcoder <strong>CVE-2026-111793</strong>. La corrección de Chrome llega, según Malwarebytes (10/11), en la versión 157.0.8103.50/.51 (Windows/Mac) y .50 (Linux). Google escribió que tenía conocimiento de un exploit "in the wild".</p>
+        <p>En las computadoras de escritorio, Chrome se actualizó solo hace tiempo. El punto a revisar es Chromium en apps Electron, navegadores headless en CI e imágenes de quiosco (ver lunes).</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">Feed KEV de CISA (consultado el 24/11)</a> · [2] <a href="https://www.malwarebytes.com/blog/bugs/2026/11/update-chrome-now-to-fix-a-flaw-attackers-are-exploiting">malwarebytes.com (10/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>vCenter: el plazo terminó, el trabajo no</h2>
+        <p>El plazo KEV para <strong>CVE-2026-123890</strong> venció ayer.<sup>[1]</sup> Rapid7 cita CVSS 9,8 y explotación confirmada "in the wild". Según Rapid7, están corregidas las versiones 9.1.1.0200, 9.0.2.0200, 8.0 U3m y VCF 5.2.5; para la 7.0, Broadcom remite a su propio soporte. No hay solución alternativa.<sup>[2]</sup> Según Google, citado por The Register, el grupo ARMORY CASTLE explota la falla desde septiembre.<sup>[3]</sup> Quien ya parchó no ha terminado: hay que revisar los logs desde septiembre (ver lunes).</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV</a> · [2] <a href="https://www.rapid7.com/blog/post/etr-cve-2026-123890-critical-authentication-bypass-vmware-vcenter">rapid7.com (actualizado el 23/11)</a> · [3] <a href="https://www.theregister.com/virtualization/2026/11/23/google-claims-last-weeks-critical-vmware-bug-was-under-attack-in-september/5311547">theregister.com (23/11)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Spring: una gran ronda de parches</h2>
+        <p>spring.io lista en la primera página 25 avisos, todos del 19/11; otros quedan detrás de "Load more".<sup>[1]</sup> Entre los afectados están Spring Security, Spring Web Services, Spring Integration, Spring Data MongoDB, Spring Vault, Spring for GraphQL y Spring AI. heise resumió la ronda el 23/11 y califica algunas fallas de "críticas".<sup>[2]</sup> Tres puntos destacan:</p>
+        <ul>
+          <li><strong>Spring Security CVE-2026-59273:</strong> ejecución de código, pero según heise solo con una configuración específica. spring.io la clasifica como MEDIUM. Correcciones: 5.7.27, 5.8.29, 6.4.20, 6.5.13, 7.0.8.1, 7.0.9, 7.1.2.1 y 7.1.3. Según heise, solo 7.0.9 y 7.1.3 están disponibles gratis.<sup>[1][2]</sup> Otros tres avisos de Spring Security (59330, 59331, 59333) son HIGH.<sup>[1]</sup></li>
+          <li><strong>Spring LDAP CVE-2026-59367:</strong> el servidor LDAP embebido para pruebas tiene credenciales de administrador fijas y escucha en todas las interfaces de red. Quien esté en la misma red lo toma. spring.io la clasifica como CRITICAL. Correcciones gratuitas (OSS): 4.1.3 y 4.0.7.<sup>[2][3]</sup></li>
+          <li><strong>Spring Boot CVE-2026-59411:</strong> las apps servlet con Actuator en Cloud Foundry sin configuración de seguridad propia pierden la protección predeterminada. Las apps reactivas no están afectadas. spring.io la clasifica como CRITICAL. Correcciones gratuitas (OSS): 4.1.3 y 4.0.10.<sup>[2][4]</sup></li>
+        </ul>
+        <p>Spring AI tiene nueve de los 25 avisos, cinco de ellos HIGH.<sup>[1]</sup> El lado de IA corresponde al brief ai-dev; aquí importa que Spring AI es un artefacto Maven normal y debe entrar en el escaneo de dependencias.</p>
+        <div class="callout warn"><span class="callout-label">Atención</span> El servidor LDAP de pruebas es el ganador secreto. Está pensado para pruebas, pero las pruebas también corren en runners de CI y en equipos de desarrollo conectados al Wi-Fi de la empresa. Quien use <code>spring-ldap-test</code> debe revisar si el servidor es accesible también fuera de <code>localhost</code>.</div>
+        <div class="callout info"><span class="callout-label">Nuestra postura</span> La verdadera noticia es la lista de versiones. Ocho versiones de corrección, dos de ellas gratuitas. Quien esté en Spring Security 5.x o 6.x paga soporte enterprise o migra. Es la misma cuenta que con vCenter 7.0, solo que más discreta. La migración a Spring Boot 4 / Security 7 pasa así de deseo a obligación.</div>
+        <span class="src">[1] <a href="https://spring.io/security">spring.io/security (consultado el 24/11)</a> · [2] <a href="https://www.heise.de/news/Zahlreiche-Sicherheitsluecken-betreffen-Komponenten-des-Java-Oekosystems-Spring-11534890.html">heise.de (23/11)</a> · [3] <a href="https://spring.io/security/cve-2026-59367">spring.io CVE-2026-59367 (19/11)</a> · [4] <a href="https://spring.io/security/cve-2026-59411">spring.io CVE-2026-59411 (19/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Azure API Management: secretos robados en Noruega</h2>
+        <p>Atacantes rastrearon instancias de Azure API Management (APIM) en busca de secretos y ejecutaron acciones de administrador. Según The Register, solo están afectados los tiers Classic, no APIM v2. La autoridad noruega de seguridad NSM menciona a dos empresas de energía como víctimas: Equinor y Skagerak Energi.<sup>[1]</sup> Microsoft dice que detectó el problema el 18/11 y aplicó una mitigación automática al día siguiente. No hay un CVE ni un valor CVSS públicos.</p>
+        <p>La NSM recomienda suponer que los secretos y los Named Values están expuestos. Es decir: rotar todos los tokens, revisar a qué puede acceder cada instancia y buscar rastros anteriores al 19/11.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nuestra postura</span> Los más afectados fueron sobre todo las configuraciones que guardaban secretos directamente en APIM en lugar de apuntar a Key Vault. Es el viejo patrón: los secretos van en una bóveda, no en la configuración del gateway. The Register recuerda las instancias olvidadas de desarrollo y pruebas. Ahí suele haber llaves reales.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/11/23/norway-links-energy-firm-cyberattacks-to-critical-azure-api-management-flaw/5311598">theregister.com (23/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Cleverbridge: datos de tarjetas con CVV robados</h2>
+        <p>Cleverbridge es un proveedor de servicios de tienda de software con sede en Alemania. Muchos fabricantes venden licencias y suscripciones a través de él. La empresa detectó accesos no autorizados el 04/11 e informó a los afectados desde el 20/11. Se robaron números de tarjeta, fechas de vencimiento y códigos CVV/CVC, además de correo electrónico, dirección de facturación y número de teléfono. Las contraseñas no están afectadas, según Cleverbridge. La empresa no da cifras.<sup>[1]</sup></p>
+        <p>The Register cuenta entre los clientes a Red Hat, SUSE, Tenable, Veeam, Jamf, Parallels y Plesk. Eso no significa que sus compradores estén afectados.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nuestra postura</span> La frase sobre el CVV es el escándalo. PCI DSS prohíbe guardar el código de verificación después de la autorización, incluso cifrado. O estaba guardado en algún lado, o los atacantes estaban en vivo en el formulario de pago. Las dos opciones son malas. Quien haya comprado una licencia este año en un checkout de Cleverbridge debe revisar el estado de cuenta de su tarjeta de crédito.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/cyber-crime/2026/11/23/cleverbridge-admits-attackers-stole-customers-credit-card-and-cvv-numbers-yep-you-read-that-right/5311573">theregister.com (23/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL: quién realmente llegó al final</h2>
+        <p>La tabla oficial de versiones es clara: PostgreSQL 14 recibió el 12/11/2026, con la 14.25, su último release y ya no tiene soporte. PostgreSQL 15 (actualmente 15.20) llega hasta el 11/11/2027.<sup>[1]</sup></p>
+        <p>PostgreSQL 19 está disponible desde el 19/11.<sup>[2]</sup> Para las actualizaciones, hay que recordar: JIT ahora viene desactivado de forma predeterminada, el inicio de sesión RADIUS fue eliminado, y los dumps antiguos de <code>pg_dump</code> con <code>standard_conforming_strings=off</code> cargan "not properly" en la 19, según las notas de la versión.<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://www.postgresql.org/support/versioning/">postgresql.org/support/versioning (consultado el 24/11)</a> · [2] <a href="https://www.postgresql.org/about/news/postgresql-19-released-3449/">postgresql.org (19/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Android: la exigencia a desarrolladores se vuelve global</h2>
+        <p>Google extiende gradualmente la verificación de desarrolladores de Android a todo el mundo a partir de enero de 2027. Rige para todas las fuentes de instalación en dispositivos certificados. Brasil, Indonesia, Singapur y Tailandia participan desde el 30/09/2026.<sup>[1]</sup> Registrar apps toma menos de diez minutos, según Google. Los repositorios de código abierto pueden registrar desarrolladores mediante la API de Android Developer Console.</p>
+        <p>Excepciones: la instalación por ADB desde la computadora no se ve afectada. Quien quiera instalar apps no verificadas sin ADB usa el "Advanced Flow", con una espera única de 24 horas. Las cuentas de pasatiempo y estudio ahora pueden habilitar 50 dispositivos en lugar de 20.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nuestra postura</span> En Brasil ya es el día a día, y el mundo no se acabó. El camino por ADB sigue abierto, así que afecta sobre todo a los usuarios, no a los desarrolladores. Quien distribuya apps Android internas por APK debe planear el registro ahora y no en enero.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Ab-Januar-2027-Google-weitet-Android-Entwickler-Verifizierung-weltweit-aus-11534121.html">heise.de (23/11)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Microsoft: tres meses sin detectarse</h2>
+        <p>Microsoft publicó el informe final sobre la caída del 12 al 14/11. Exchange Online dejó de funcionar y otros servicios de Microsoft 365 tuvieron fallas. En el peor momento, más de 80 % de los servidores gateway de Norteamérica no respondían.<sup>[1]</sup> La causa: un cambio de código de julio, junto con un failover y capacidad reducida. El error estuvo activo en todo el mundo por más de tres meses antes de manifestarse.</p>
+        <p>El núcleo del informe: las pruebas de carga corrieron en hardware más viejo con menos núcleos. Pero el error solo se volvió grave en máquinas más nuevas. Microsoft promete pruebas de carga en hardware nuevo, más capacidad de reserva y pruebas de failover más amplias. Los correos empresariales no se perdieron, según Microsoft.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nuestra postura</span> Es el informe más instructivo de la semana justamente porque es tan común. Casi todos los equipos prueban la carga en un entorno más pequeño o más viejo que producción. Quien corre el staging en hardware más barato debería saber qué clase de errores deja de ver.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/saas/2026/11/23/microsoft-mega-outage-report-reveals-testing-gaps-and-emails-that-never-arrived/5311656">theregister.com (23/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>EE. UU.: más caídas por parches apresurados</h2>
+        <p>Funcionarios del gobierno de EE. UU. preparan a la población para más caídas de TI, según heise. El director de Inteligencia Nacional, Jay Clayton, habló en CNN de "baches en el camino". El secretario del Tesoro, Scott Bessent, comparó los parches con una vacuna.<sup>[1]</sup> El trasfondo, según heise, es una ola de parches rápidos porque la IA encuentra muchas fallas. En algunos casos, parches apresurados habrían causado las caídas. heise subraya: no hay pruebas de una relación entre los incidentes.<sup>[1]</sup></p>
+        <p>The Register lo ve con más sobriedad: no una conspiración, sino la deuda técnica marcó la semana.<sup>[2]</sup> Un comentario de heise agrega: dos proveedores no son un plan de emergencia si comparten las mismas dependencias.<sup>[3]</sup></p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Bevoelkerung-soll-sich-darauf-einstellen-US-Regierung-erwartet-mehr-IT-Ausfaelle-11533940.html">heise.de (23/11)</a> · [2] <a href="https://www.theregister.com/off-prem/2026/11/23/everything-going-down-at-once-wasnt-evidence-of-a-conspiracy-but-the-truth-may-be-scarier/5311458">theregister.com (23/11)</a> · [3] <a href="https://www.heise.de/meinung/Kommentar-Weniger-Klumpenrisiko-bitte-ohne-Over-Engineering-11534656.html">heise.de, comentario (23/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Shirudo: escudo en lugar de parche inmediato</h2>
+        <p>Cisco y OpenAI presentan Shirudo, una herramienta de código abierto para "compensating controls" en Linux. Se basa en Tetragon, un proyecto de Isovalent, que pertenece a Cisco. La idea: para una falla que no se puede parchar de inmediato, se escribe un pequeño programa eBPF, un "shield", que bloquea la vía de ataque. Una persona revisa cada shield antes de producción.<sup>[1]</sup> El código está en <a href="https://github.com/shirudo-dev/shirudo">GitHub</a>.</p>
+        <div class="eli5">
+          <strong class="eli5-term">eBPF:</strong> pequeños programas que corren dentro del kernel de Linux, pero solo en un marco verificado y estrecho. Como un guardia que se coloca en una puerta específica: ahí puede rechazar gente, pero no puede remodelar la casa.
+        </div>
+        <div class="callout info"><span class="callout-label">Nuestra postura</span> Encaja justo con el debate sobre las caídas. Un shield es más pequeño que un parche y se puede retirar. Pero sigue siendo un cambio en el kernel, y según el plan los shields los escribirá una IA (Codex). El lado de los agentes corresponde al brief ai-dev. Para quien opera, vale esto: un shield no reemplaza el parche, gana tiempo.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/11/24/cisco-and-openai-pitch-ebpf-kernel-plugins-as-the-way-to-tame-the-patchpocalypse/5311795">theregister.com (24/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>CRA: las fechas de primera mano</h2>
+        <p>La página de datos de la Comisión Europea (al 27/07/2026) da las fechas del Cyber Resilience Act: las obligaciones de notificación rigen desde el 11/09/2026, las reglas para los organismos de evaluación de la conformidad desde el 11/06/2026, y la aplicación plena llega el 11/12/2027.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Nuestra postura</span> Nos atenemos a la Comisión. Quien venda software con elementos digitales en la UE ya tiene, por lo tanto, obligación de notificar cuando se explota una falla en su propio producto. Diciembre de 2027 es el plazo para todo lo demás, no para la notificación.</div>
+        <span class="src">[1] <a href="https://digital-strategy.ec.europa.eu/en/factpages/cyber-resilience-act-implementation">digital-strategy.ec.europa.eu (al 27/07/2026)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>En breve</h2>
+        <ul>
+          <li><span class="chip">Sec</span> <strong>Synology DSM</strong> CVE-2024-10441 está en el catálogo KEV desde el 18/11, con la marca "Known" para campañas de ransomware.<sup>[1]</sup></li>
+          <li><span class="chip">Sec</span> <strong>Puppet Enterprise</strong> CVE-2026-115731 (deserialización), plazo KEV mar 01/12.<sup>[1]</sup></li>
+          <li><span class="chip">Sec</span> <strong>LiteLLM</strong> CVE-2026-40217, plazo KEV 02/12. Detalles en el brief ai-dev.<sup>[1]</sup></li>
+          <li><span class="chip">UE</span> <strong>Bulgaria</strong> expulsó a atacantes de redes del gobierno que llevaban cinco años ahí y, según el ministro, descargaron más de 130 GB de datos.<sup>[2]</sup></li>
+          <li><span class="chip">Sec</span> <strong>Inception</strong>, posiblemente un reinicio de ShinyHunters, reporta siete víctimas en una semana. Cuidado con las llamadas de phishing por voz y las solicitudes inesperadas de MFA.<sup>[3]</sup></li>
+          <li><span class="chip">Sec</span> <strong>Eclipse Enclave</strong> aísla agentes de programación con IA en contenedores. Detalles en el brief ai-dev.<sup>[4]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">Feed KEV de CISA (consultado el 24/11)</a> · [2] <a href="https://www.theregister.com/security/2026/11/23/bulgaria-evicts-cyber-snoops-who-lurked-inside-government-networks-for-5-years/5311629">theregister.com, Bulgaria (23/11)</a> · [3] <a href="https://www.theregister.com/security/2026/11/23/inception-possibly-a-shinyhunters-reboot-claims-seven-victims-in-a-week/5311768">theregister.com, Inception (23/11)</a> · [4] <a href="https://www.heise.de/news/Keine-Secrets-fuer-Agenten-Eclipse-Enclave-schickt-Agenten-in-die-Sandbox-11534005.html">heise.de (23/11)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>No verificado</h2>
+        <ul>
+          <li>vCenter: CVSS 9,8 y las versiones de corrección provienen de Rapid7. No leímos el aviso de Broadcom.</li>
+          <li>Apache Roller: la versión corregida.</li>
+          <li>Hoy sin nueva verificación: Angular, JDK, Python, Docker/containerd, Caddy, Tailscale, kernel de Linux, BSI y medios de tecnología de Brasil (bleepingcomputer: 403).</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>La lista de hoy</h2>
+        <ol>
+          <li>Escanear las dependencias de Spring: Security, LDAP, Boot, Web Services y Spring AI.</li>
+          <li>Revisar si un servidor LDAP de pruebas es accesible desde fuera de <code>localhost</code>.</li>
+          <li>Llevar Chromium en apps Electron e imágenes de CI a 157.0.8103.50 o más reciente.</li>
+          <li>Encontrar instancias de Azure APIM Classic, también las viejas de pruebas, y rotar los secretos.</li>
+          <li>Revisar el estado de cuenta de la tarjeta de crédito si se compró una licencia a través de Cleverbridge.</li>
+        </ol>
+        <p>Cisco Expressway y SAP no afectan a la mayoría de los desarrolladores individuales. Spring sí.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Hoy es martes veinticuatro de noviembre. El catálogo de fallas explotadas vuelve a moverse, y para los desarrolladores de Java hay una gran ronda de parches.</p>
+  <p>Hasta arriba está Cisco Expressway. Es la puerta que deja pasar las conexiones de video y voz a través del firewall. Según heise, los atacantes pueden ejecutar comandos como root sin autenticarse, con un puntaje de nueve punto ocho. Desde que se hizo público un exploit de ejemplo, la falla está siendo atacada. La versión X quince punto cinco punto veinte la cierra. Quien use una versión anterior debe migrar, según Cisco. La propia Cisco dice no tener evidencia directa de ataques.</p>
+  <p>El lunes por la noche, la agencia estadounidense CISA agregó a su catálogo dos fallas nuevas: una en el filtro de correo N-able MailAssure y otra en MONAI Label, una herramienta para imágenes médicas. El plazo es ya el jueves. Llama la atención que varias entradas del veinte y del veintitrés de noviembre recibieron solo tres días de plazo.</p>
+  <p>SAP NetWeaver deja una lección. La falla tiene solo un puntaje medio, seis punto cinco, y el parche tiene un año. Aun así, está siendo atacada. El puntaje dice qué tan grave puede ser una falla. El catálogo dice que alguien la está usando ahora mismo.</p>
+  <p>Para los desarrolladores de Java, Spring es la noticia más importante. El diecinueve de noviembre, Spring publicó al menos veinticinco avisos. En Spring Security, de ocho versiones de corrección, según heise solo dos están disponibles gratis. Y el servidor LDAP embebido para pruebas tiene credenciales de administrador fijas y escucha en toda la red. Quien lo use debería revisarlo hoy.</p>
+  <p>En Noruega, según The Register, atacantes robaron secretos de Azure API Management en dos empresas de energía. Las instancias afectadas son las Classic. La autoridad noruega recomienda cambiar todas las llaves. Y en la tienda de software alemana Cleverbridge se robaron datos de tarjetas, incluido el código de seguridad. Quien haya comprado ahí una licencia debe revisar su estado de cuenta.</p>
+  <p>Microsoft publicó el informe sobre la gran caída de Exchange. Un error de julio pasó desapercibido durante tres meses porque las pruebas de carga corrieron en hardware más viejo. En Estados Unidos, el gobierno advierte, según heise, de más caídas por parches apresurados. Y con Shirudo, Cisco y OpenAI proponen pequeños programas de protección en el kernel de Linux que ganan tiempo hasta el parche.</p>
+  <p>Dos aclaraciones. PostgreSQL catorce llegó al final, y la versión quince llega hasta noviembre de dos mil veintisiete, según la tabla oficial. Y en el Cyber Resilience Act europeo, la Comisión Europea indica que la obligación de notificar rige desde septiembre de este año.</p>
+  <p>Mañana veremos si CISA agrega más entradas y qué versiones de Spring recibe realmente la comunidad.</p>
+</div>
+
+</body>
+</html>
