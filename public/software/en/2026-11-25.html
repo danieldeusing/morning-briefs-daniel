@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-25</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-25</span>
+  </div>
+  <h1 class="masthead-title">Drupal installer under attack, CISA sets a three-day deadline</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Wednesday, and the biggest story landed yesterday afternoon at 2:47 p.m. Brasília time: CISA added a Drupal core flaw to the KEV catalog. Through the installer <code>install.php</code>, an attacker can reinstall a site and take it over. According to the Drupal team, real attacks have been under way since Nov. 19. Elsewhere, Zstandard 1.6.0 ships earlier than planned with a fix for a memory leak during decompression. Google's report of 19 Nov gives details on the vCenter campaign: the flaw was in use two and a half months before the patch. Microsoft reports a data leak in Entra Connect Health. And CrowdStrike wants to buy Zscaler for about $43.9B. Our take: the Drupal flaw is not a code problem but an operations problem. An installer has no business on a live site.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Drupal Core</strong> CVE-2026-132165: takeover via the installer, attacked since Nov. 19, fix 11.4.13 / 11.3.22 / 10.6.22. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>New in KEV (Nov. 24)</strong>: Drupal, Optimizely Web Experimentation, Idunno AntiCsrf, deadline Fri Nov. 27. <span class="chip">USA</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Zstandard 1.6.0</strong>: CVE-2026-124851, buffer contents can end up in the output, affects 1.5.1 through 1.5.7. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>vCenter</strong>: exploited since early September per Google, including on servers with the July patch. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Entra Connect Health</strong>: admin email addresses leaked, no update needed. <span class="chip">Global</span></li>
+      <li><span class="chip">Release</span> <strong>PostgreSQL</strong>: the REINDEX list from the November update, which many have not worked through yet. <span class="chip">Global</span></li>
+      <li><span class="chip">M&amp;A</span> <strong>CrowdStrike buys Zscaler</strong>: all-stock, about $43.9B enterprise value. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>Spring</strong> (follow-up): Data Elasticsearch and Web Services also HIGH. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Week Ahead</div>
+      <div class="timeline-sub">KEV deadlines through Wed 12/02 — Source: CISA KEV feed, catalog version 2026.11.24, retrieved 11/25.</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Wed 11/25</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Today</span><span>Check Drupal sites for 11.4.13 / 11.3.22 / 10.6.22</span><span>Check zstd version in images and dependencies</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Thu 11/26</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: N-able MailAssure CVE-2026-134624, MONAI Label CVE-2026-133968</span><span>US holiday Thanksgiving</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Fri 11/27</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Drupal Core CVE-2026-132165</span><span>KEV deadline: Optimizely CVE-2026-132224, Idunno AntiCsrf CVE-2026-131914</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 12/01</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Puppet Enterprise CVE-2026-115731</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 12/02</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: LiteLLM CVE-2026-40217</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Drupal Core: the installer as a back door</h2>
+        <p>The Drupal security team published <strong>SA-CORE-2026-017</strong> (CVE-2026-132165) on Nov. 18, rated "Highly critical," now 20 of 25 points after the attack reports (18/25 at launch).<sup>[1]</sup> Drupal ships a file <code>install.php</code>. Under certain conditions, an attacker can use it to try to reinstall Drupal. According to the advisory, the result is a site takeover or code execution on the server.<sup>[1]</sup></p>
+        <p>Affected: everything below 10.6.22, 11.0 up to below 11.3.22, and 11.4 up to below 11.4.13. The fixes are 11.4.13, 11.3.22 and 10.6.22. The 11.2.x and 10.5.x lines and older are end of life and get no fix.<sup>[1]</sup> The team has a report of attacks on real sites "as early as 2026-11-19 19:00 UTC," which is 4:00 p.m. Brasília time.<sup>[1]</sup> CISA added the flaw to the KEV catalog on Nov. 24. The deadline for US federal agencies is Friday, Nov. 27.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">KEV catalog:</strong> The list from the US agency CISA of flaws that are proven to be under attack. The deadline applies only to US federal agencies, but it is a good signal for everyone. Like a notice in the stairwell saying "There has been a break-in here": it does not say how bad the lock is, only that someone is picking it right now.
+        </div>
+        <p>What helps without an immediate update: the advisory points to the guide for hardening the installer. Some, but not all, attack paths are blocked if the web server can neither write <code>settings.php</code> nor change its permissions.<sup>[1]</sup> The same day brought <strong>SA-CORE-2026-018</strong> ("Moderately critical," 14/25): a gadget chain that is only usable together with a second deserialization flaw.<sup>[3]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> An installer on a production site is like a workshop key hanging on the outside of the car. The update is mandatory, but the real lesson applies to every PHP, Java or Node project: setup endpoints should be locked after installation, and the configuration should belong to the deploy user, not the web server. Anyone running 10.5 or 11.2 has had no patch problem since Nov. 18, but an upgrade problem.</div>
+        <span class="src">[1] <a href="https://www.drupal.org/sa-core-2026-017">drupal.org SA-CORE-2026-017 (Nov. 18, retrieved Nov. 25)</a> · [2] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">CISA KEV feed (version 2026.11.24)</a> · [3] <a href="https://www.drupal.org/security">drupal.org/security (retrieved Nov. 25)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: three new entries, four deadlines this week</h2>
+        <p>Catalog version 2026.11.24 came out yesterday at 5:47 p.m. UTC. Three entries are new, all with a deadline of Friday, Nov. 27:<sup>[1]</sup></p>
+        <ul>
+          <li><strong>Drupal Core</strong> CVE-2026-132165, remote code execution (see above).</li>
+          <li><strong>Optimizely Web Experimentation</strong> CVE-2026-132224, "External Control of Critical State Data."</li>
+          <li><strong>Idunno AntiCsrf</strong> CVE-2026-131914, deserialization of untrusted data.</li>
+        </ul>
+        <p>We did not check further details on Optimizely and AntiCsrf. Tomorrow the deadlines for N-able MailAssure (SSRF) and MONAI Label (path traversal) end. heise reported on the attacks on both on Nov. 24.<sup>[1][2]</sup> Puppet Enterprise follows on Dec. 1, LiteLLM on Dec. 2.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> A three-day deadline is now more the rule than the exception at CISA. Since Nov. 17, twelve of fourteen new entries got only three days. That is a signal: there is hardly any time left between listing and mass exploitation.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">CISA KEV feed (version 2026.11.24, retrieved Nov. 25)</a> · [2] <a href="https://www.heise.de/news/Cyberattacken-auf-N-able-Mail-Assure-und-Monai-Label-11535820.html">heise.de (Nov. 24)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Zstandard 1.6.0: buffer leftovers in the output</h2>
+        <p>The Zstd team moved up version 1.6.0 to close a security hole.<sup>[2]</sup> The flaw is <strong>CVE-2026-124851</strong>.<sup>[1]</sup> According to heise, streaming decompression can let the contents of an internal buffer leak into the output. The buffer is 64 KiB in the default configuration. Versions 1.5.1 through 1.5.7 are affected. An attacker has to supply compressed data themselves and be able to see the output.<sup>[2]</sup> Neither source gives a CVSS score. The project writes: "updating to v1.6.0 is highly recommended."<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Streaming decompression with a memory leak:</strong> The program unpacks data piece by piece into an intermediate buffer. With broken input, it sometimes writes leftovers from that buffer into the output. Like a copier that prints a remnant of the previous job next to your page.
+        </div>
+        <p>Two other changes affect operations. A default build no longer reads files compressed with Zstd before 0.8.0; <code>ZSTD_LEGACY_SUPPORT</code> turns that back on at compile time.<sup>[1][2]</sup> The CLI gets <code>--patch-apply</code>, and benchmark mode uses one thread by default.<sup>[1]</sup> On AArch64, 1.6.0 decompresses faster according to heise, and on RISC-V it uses the vector extension RVV. heise gives no figures.<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> The risky case is a service that accepts foreign compressed data and returns the result, such as an upload or proxy endpoint. There, a leftover from the memory of the previous request can end up with the attacker. The distribution package is the easy part. Harder are statically linked or bundled copies in images and language bindings. Only an SBOM scan finds those, not <code>apt list</code>.</div>
+        <span class="src">[1] <a href="https://github.com/facebook/zstd/releases">github.com/facebook/zstd Releases (v1.6.0, Nov. 23)</a> · [2] <a href="https://www.heise.de/news/Zstandard-1-6-0-schliesst-Sicherheitsluecke-11535732.html">heise.de / iX (Nov. 24)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>vCenter: a two-and-a-half-month head start for the attackers</h2>
+        <p><span class="update-since">Update since Tue</span> Yesterday this spot carried the expired KEV deadline. Google's report of 19 Nov gives the details first-hand: Google Threat Intelligence describes how the group <strong>ARMORY CASTLE</strong> exploited the flaw CVE-2026-123890 in early September 2026 with the tool BONESAW.<sup>[1]</sup> VMware only disclosed the flaw on Nov. 19. That is roughly two and a half months in which nobody could patch.</p>
+        <p>According to Google, the flaw is an "unauthenticated Secure Remote Password (SRP-6a) session key disclosure" over DCE/RPC. BONESAW uses it to fully take over vCenter appliances of versions 7.x and 8.x.<sup>[1]</sup> The bitter part: the attack also worked against a vCenter that was already patched against CVE-2026-59309 from July.<sup>[1]</sup> In this context Google also names a BeyondTrust zero-day, CVE-2026-102764, patched with BT26-05.<sup>[1]</sup> Google gives no CVSS score; the fix builds are in the Broadcom notice, which we did not read.</p>
+        <div class="eli5">
+          <strong class="eli5-term">SRP-6a and DCE/RPC:</strong> SRP is a method by which client and server agree via a password without sending the password itself. At the end there is a shared session key. DCE/RPC is an old protocol for function calls over the network. The flaw reveals this key without a login, like a hotel that copies a guest's room key for anyone at the front desk.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> "Patched" is not an end state with vCenter. Anyone who has had a reachable vCenter since September should search the logs from September, not from Nov. 19. And vCenter belongs in a management network that is not reachable from the office network.</div>
+        <span class="src">[1] <a href="https://cloud.google.com/blog/topics/threat-intelligence/armory-castle-exploits-vsphere">cloud.google.com Threat Intelligence (retrieved Nov. 25)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Entra Connect Health: admin addresses leaked</h2>
+        <p>Microsoft reports unauthorized access through a flaw in the Entra Connect Health API. According to heise, attackers read the email addresses of technical contacts and admin accounts of a tenant, plus configuration metadata.<sup>[1]</sup> Passwords, password hashes, tokens and Azure subscription data were not affected, per heise. The flaw had been in the code since July 23, 2026, per heise, and Microsoft found it on Nov. 9.<sup>[1]</sup></p>
+        <p>Microsoft fixed the flaw on the server side. "IT administrators do not need to install a software update."<sup>[1]</sup> heise gives no CVE number.</p>
+        <div class="callout warn"><span class="callout-label">Heads up</span> A list of admin addresses is a phishing starter kit. Expect targeted emails "from Microsoft" to exactly these addresses. Microsoft recommends, per heise, checking the stored technical contacts and notification recipients.<sup>[1]</sup></div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Microsoft-Entra-Datenabfluss-bei-Connect-Health-11535576.html">heise.de (Nov. 24)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PostgreSQL: the REINDEX list from Nov. 12</h2>
+        <p>The November update (18.7, 17.12, 16.16, 15.20, 14.25) fixes over 140 bugs. 14.25 is the last release for PostgreSQL 14.<sup>[1]</sup> The version number alone is not enough this time. Some fixes only prevent new damage; old damage you have to repair yourself. The release note lists these steps after the update:<sup>[1]</sup></p>
+        <ul>
+          <li><strong>GIN indexes:</strong> rebuild if an index might be affected. The bugs can make rows disappear or foreign rows appear.</li>
+          <li><strong>pg_trgm:</strong> rebuild all GiST indexes with <code>gist_trgm_ops</code>. This is mandatory, not optional.</li>
+          <li><strong>bpchar without length:</strong> rebuild B-tree indexes. <code>char(n)</code> is not affected.</li>
+          <li><strong>"missing chunk number":</strong> anyone who sees the error rebuilds the table with <code>REINDEX TABLE</code>.</li>
+          <li><strong>Incremental backups:</strong> take a new full backup as the base after the update.</li>
+        </ul>
+        <div class="eli5">
+          <strong class="eli5-term">REINDEX:</strong> An index is a table's keyword register. If the register is wrong, the database does not find rows or finds the wrong ones. REINDEX throws the register away and rewrites it from the data. Like a book whose page numbers in the index have slipped: the text is right, only the lookup is not.
+        </div>
+        <p>Anyone moving to PostgreSQL 19 (generally available since 19 Nov): with <code>pg_upgrade</code>, indexes for full-text search, <code>pg_trgm</code> and <code>fuzzystrmatch</code> may also need a REINDEX afterward.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> <code>pg_trgm</code> sits in almost every "search with typos" feature. Anyone who updated by Docker tag has a new binary but old indexes. Nobody sees that until a customer asks why the search does not find them.</div>
+        <span class="src">[1] <a href="https://www.postgresql.org/message-id/attachment/208544/20261112updaterelease.md">postgresql.org release note (Nov. 12, retrieved Nov. 25)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>CrowdStrike wants to buy Zscaler</h2>
+        <p>CrowdStrike announced on Nov. 23 that it will acquire Zscaler, all-stock. Zscaler shareholders get 1.135 CrowdStrike shares per share. The enterprise value is "approximately $43.9 billion," a premium of about 34% over the Nov. 20 closing price.<sup>[1]</sup> After closing, existing CrowdStrike shareholders hold about 84.1%. Zscaler shareholders and regulators must approve. Closing is planned for the second half of CrowdStrike's fiscal 2028.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Enterprise value:</strong> The price for the whole company, including debt and minus cash. Like buying a house: the price counts plus the mortgage you take on, minus the money still in the safe.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> CrowdStrike sits on the endpoint, Zscaler in the network path between user and internet. Together that is one vendor for both. For customers that means fewer agents on the laptop, but also more dependence on one vendor. That is a concentration risk that buyers will examine closely. Until closing, nothing changes for developers.</div>
+        <span class="src">[1] <a href="https://www.sec.gov/Archives/edgar/data/0001713683/000119312526471211/d115803dex991.htm">sec.gov 8-K, press release (Nov. 23)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Spring: follow-up on the patch round</h2>
+        <p><span class="update-since">Update since Tue</span> spring.io shows 25 advisories from Nov. 19 on the first page: 10 HIGH, 10 MEDIUM, 5 LOW.<sup>[1]</sup> Yesterday two HIGH entries were missing here: <strong>Spring Data Elasticsearch</strong> CVE-2026-123886 and <strong>Spring Web Services</strong> CVE-2026-59349.<sup>[1]</sup> The fix versions are in the individual advisories; we did not check them today. Spring AI has nine of the entries, Spring Security and Spring WS five each.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://spring.io/security">spring.io/security (retrieved Nov. 25)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>In brief</h2>
+        <ul>
+          <li><span class="chip">Sec</span> <strong>Cisco Expressway</strong> CVE-2026-76466: nothing new since yesterday, details in yesterday's brief. The KEV deadline was Nov. 23.<sup>[1]</sup></li>
+          <li><span class="chip">Sec</span> <strong>Fortinet routers on ships</strong>: According to a newspaper report cited by heise, attackers are using flaws in Fortinet routers on cargo ships and tankers. The US suspects Iran.<sup>[2]</sup></li>
+          <li><span class="chip">Sec</span> <strong>Cleverbridge</strong>: The payment provider confirms that attackers took credit card data in early November (see yesterday).<sup>[3]</sup> <span class="chip">DE</span></li>
+          <li><span class="chip">Web</span> <strong>Android</strong>: Developer verification applies worldwide in phases from January 2027.<sup>[4]</sup> <span class="chip">Global</span></li>
+          <li><span class="chip">Sec</span> <strong>Signal</strong> gets a lock meant to stop AI assistants from reading messages.<sup>[5]</sup></li>
+          <li><span class="chip">OSS</span> <strong>AI agents as a tool</strong>: Shirudo (OpenAI and Cisco) and Eclipse Enclave are agent topics. Details are in the ai-dev brief.<sup>[6]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">CISA KEV feed</a> · [2] <a href="https://www.heise.de/news/Bis-zu-50-Schiffe-USA-vermuten-Iran-hinter-Cyberangriffen-auf-Frachtschiffe-11535470.html">heise.de (Nov. 24)</a> · [3] <a href="https://www.heise.de/news/Datenleck-bei-Cleverbridge-Kreditkartendaten-abgegriffen-11535956.html">heise.de (Nov. 24)</a> · [4] <a href="https://www.heise.de/news/Ab-Januar-2027-Google-weitet-Android-Entwickler-Verifizierung-weltweit-aus-11534121.html">heise.de (Nov. 23)</a> · [5] <a href="https://www.heise.de/news/Messenger-Signal-Sperre-fuer-neugierige-KI-Assistenten-11534436.html">heise.de (Nov. 23)</a> · [6] <a href="https://www.heise.de/news/Shirudo-OpenAI-und-Cisco-stellen-KI-Schutzschild-fuer-Linux-Server-vor-11535772.html">heise.de (Nov. 24)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Not checked</h2>
+        <ul>
+          <li>Drupal: whether the installer has to be reachable on the site. The advisory only says "under specific conditions."</li>
+          <li>vCenter: CVSS and fix builds from the Broadcom notice; the classification of ARMORY CASTLE as China-linked comes from research, not from a verified quote.</li>
+          <li>Zstd: CVSS score and whether distributions already have packages.</li>
+          <li>Microsoft HorizonDB (serverless PostgreSQL in Fabric): only saw a headline at The Register.</li>
+          <li>Not checked today: Chrome, Firefox, Python, Angular, React, Caddy, Docker, Tailscale, NVD, BSI, EU regulation and BR tech media. bleepingcomputer, securityweek and phoronix answered with 403.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>Today's list</h2>
+        <ol>
+          <li>Bring Drupal sites to 11.4.13, 11.3.22 or 10.6.22.</li>
+          <li>Check whether the web server may write <code>settings.php</code>, and turn that off.</li>
+          <li>Search images and dependencies for zstd 1.5.1 through 1.5.7.</li>
+          <li>PostgreSQL: rebuild GiST indexes with <code>gist_trgm_ops</code> and B-tree indexes on <code>bpchar</code>.</li>
+          <li>With incremental backups, take a new full backup.</li>
+          <li>Warn Entra admins about targeted phishing.</li>
+        </ol>
+        <p>Anyone who does not run Drupal mostly has PostgreSQL homework today.</p>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Wednesday, November twenty-fifth. The top story comes from the PHP world: a flaw in the Drupal installer is under attack, and the US agency CISA is giving just three days to fix it.</p>
+  <p>Drupal ships a file that starts a fresh installation. Under certain conditions, an attacker can use it to reinstall a running site and take it over. The Drupal team rates it highly critical, twenty out of twenty-five points. Real attacks have been going on since November nineteenth. The fixed versions are eleven point four point thirteen, eleven point three point twenty-two, and ten point six point twenty-two. Older lines get no fix.</p>
+  <p>Two more entries joined Drupal in the catalog: Optimizely Web Experimentation and the AntiCsrf library. The deadline for all three is Friday. Tomorrow, the deadlines for N-able MailAssure and MONAI Label run out.</p>
+  <p>The compression tool Zstandard has moved up version one point six. When data is decompressed in chunks, leftovers from an internal buffer can end up in the output. Versions one point five point one through one point five point seven are affected. It's most dangerous for services that accept compressed data from outsiders and return the result.</p>
+  <p>Google has published details on the vCenter campaign. The group ARMORY CASTLE used the flaw as early as September, two and a half months before the patch. The attack even hit servers that had the July patch. If you had a reachable vCenter, search your logs starting in September.</p>
+  <p>At Microsoft Entra Connect Health, according to heise, the email addresses of admins and technical contacts leaked. No update is needed; Microsoft fixed it on the server. But that list is a gift to phishers.</p>
+  <p>PostgreSQL users should look back at the November update. If you use the pg_trgm extension for typo-tolerant search, you need to rebuild the matching indexes. The same goes for indexes on bpchar columns without a length. And if you run incremental backups, take a new full backup.</p>
+  <p>In business news: CrowdStrike wants to buy Zscaler, all-stock, at an enterprise value of about forty-three point nine billion dollars. The deal still needs approvals and is planned for CrowdStrike's fiscal year twenty twenty-eight.</p>
+  <p>Tomorrow we'll look at whether the Drupal attacks are widening and whether distributions have new Zstandard packages yet.</p>
+</div>
+
+</body>
+</html>
