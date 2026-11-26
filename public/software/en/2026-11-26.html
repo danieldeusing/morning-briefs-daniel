@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-26</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-26</span>
+  </div>
+  <h1 class="masthead-title">1Password: One GitHub Account Was Enough to Rewrite the Backend</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Thursday, Thanksgiving in the US. 1Password reports a breach through an employee's GitHub account: the attacker planted their own code in backend services. The vaults stayed safe; the account metadata did not. Meanwhile, Palo Alto confirms the chain of PHP2Shell and Fragnesia, and CISA adds ten new KEV entries to its list. Our take: the common thread is code you did not write yourself but still shipped yourself.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>1Password</strong>: GitHub account taken over, malicious code in the backend, metadata and tokens gone, vaults safe. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>PAN-OS</strong>: Fragnesia CVE-2026-46300 plus PHP2Shell, exploited via exposed management interfaces. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Appliances</strong>: 33 of 38 advisories on KEV flaws involved bundled third-party components (PHP, Node.js, OpenSSH). <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>New KEV (Nov 25)</strong>: ten entries, most due Sat Nov 28. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>VMware</strong>: 23 flaws closed, three with CVSS 9.8 in vCenter and ESX. <span class="chip">Global</span></li>
+      <li><span class="chip">Infra</span> <strong>Rackspace Spot</strong>: shutting down on Dec 8 after a breach; kubeconfigs and secrets are considered compromised. <span class="chip">USA</span></li>
+      <li><span class="chip">Infra</span> <strong>Microsoft</strong>: NTLM problems after updates, "Code Red" after the 365 outage. <span class="chip">Global</span></li>
+      <li><span class="chip good">OSS</span> <strong>ITZBund</strong> replaces Jira with OpenProject, four years, eight-figure sum. <span class="chip">DE</span></li>
+      <li><span class="chip">Regulation</span> <strong>Quantum Act</strong>: the EU Commission wants to enforce post-quantum crypto through IT procurement. <span class="chip">EU</span></li>
+      <li><span class="chip good">Browser</span> <strong>Ladybird</strong>: first public alpha with ready-made packages for Linux and macOS. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Deadline Horizon</div>
+      <div class="timeline-sub">KEV deadlines and shutdowns through Wed Dec 9 — Source: CISA KEV feed, catalog version 2026.11.25, retrieved Nov 26; Rackspace</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today">
+        <div class="tl-date">Thu 11/26</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Today</span><span>KEV deadline: N-able MailAssure CVE-2026-134624, MONAI Label CVE-2026-133968</span><span>US holiday Thanksgiving</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Fri 11/27</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Drupal Core CVE-2026-132165</span><span>KEV deadline: Optimizely CVE-2026-132224, Idunno AntiCsrf CVE-2026-131914</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Sat 11/28</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Mitel MiCollab (four CVEs)</span><span>KEV deadline: Danfoss AK-SM 800A CVE-2023-25914, CVE-2023-25915</span><span>KEV deadline: Xen Orchestra CVE-2026-133469, Juniper Session Smart CVE-2026-103406</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Tue 12/01</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Puppet Enterprise CVE-2026-115731</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 12/02</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: LiteLLM CVE-2026-40217</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue 12/08</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Rackspace Spot shuts down, 5:00 p.m. CT (8:00 p.m. Brasília)</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 12/09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Mitel MiCollab CVE-2026-133311, Danfoss CVE-2025-41450</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>1Password: Attack Through the Backend, Not the Vaults</h2>
+        <p>1Password reported a breach on Nov 25. An attacker took over an employee's company account on GitHub. With it, they read private repositories, stole source code and got into the CI/CD environment.<sup>[1]</sup> The key sentence: they put malicious code into backend services, and those services "downloaded customer account records".<sup>[1]</sup> The investigation began on Nov 19. The report does not say when the attacker first got in.<sup>[1]</sup></p>
+        <p>What leaked: names, email addresses, account and user IDs, timestamps, public keys, SRP parameters, and invitation, provisioning and recovery tokens.<sup>[1]</sup> Not affected: "customer password vaults and the encryption keys protecting them".<sup>[1]</sup> 1Password names only "a small number of users", who were notified individually. According to the company, there is no sign of taken-over accounts.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Recovery token:</strong> A one-time key inside a link that lets you restore an account or join a team. On its own it is not enough: you also need SSO or a code by email. Like a pickup slip at the post office that only works together with your ID.
+        </div>
+        <p>That is why 1Password lengthened the email code from six digits to ten alphanumeric characters, to defeat guessing.<sup>[1]</sup> Six digits are one million possibilities, too few next to a stolen token. Customers do not need to change their password or Secret Key. heise sums up the situation: "Why hack the database when you can rewrite the backend?"<sup>[2]</sup></p>
+        <div class="callout warn"><span class="callout-label">Heads up</span> Tokens plus names and addresses are ideal phishing material. 1Password advises not opening links in such emails, but going to the app or website directly.<sup>[1]</sup></div>
+        <div class="callout info"><span class="callout-label">Our take</span> Zero-knowledge protected what it is built for: the vaults. Account data and tokens sit on the server, and the server runs whatever is in the repository. The report does not say how the code got past review and deploy gates. Every team should ask: can a single taken-over GitHub account get code all the way into production? If so, it is effectively a production credential.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/1password-customer-data-stolen-after-employee-github-account-breach/">bleepingcomputer.com (Nov 25)</a> · [2] <a href="https://www.heise.de/news/1Password-Kundendaten-entfleucht-11538455.html">heise.de/security, "1Password: Kundendaten entfleucht" (retrieved Nov 26)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PAN-OS: Fragnesia Turns PHP2Shell Into Root</h2>
+        <p>Palo Alto confirms attacks that chain two flaws. <strong>PHP2Shell</strong> (CVE-2026-109618 and CVE-2026-109619) are, per BleepingComputer, two critical PHP flaws: code runs without authentication with the privileges of the PHP process.<sup>[1]</sup> <strong>Fragnesia</strong> (CVE-2026-46300) is a Linux kernel flaw in the "XFRM ESP-in-TCP" component. It escalates a local user to root.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Exploit chain:</strong> The first flaw gets the attacker into the house, but only into the hallway. The second hands them the master key. Each alone would be bad; together they give full control of the device.
+        </div>
+        <p>All observed attacks hit devices whose management interface was reachable from the internet.<sup>[1]</sup> CISA had already warned on Oct 28 about web shells and root commands through this chain. Fixes exist for PAN-OS 10.2, 11.1, 11.2, 12.1 and 12.2; the exact builds are in advisory PAN-SA-2026-0015.<sup>[1][2]</sup> Anyone who already has the PHP2Shell updates is protected, according to the report, because the flaws are only exploited together.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> Patching is mandatory. But the real measure is this: firewall management only from the internal network or over VPN.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/palo-alto-networks-warns-of-fragnesia-flaw-exploited-in-pan-os-attacks/">bleepingcomputer.com (Nov 25)</a> · [2] <a href="https://security.paloaltonetworks.com/PAN-SA-2026-0015">security.paloaltonetworks.com PAN-SA-2026-0015</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Appliances: The Flaw Is Usually in Bundled Third-Party Code</h2>
+        <p>Eclypsium's monthly "InfraTrust Pulse" report counts, for the period Oct 15 to Nov 19: 373 new advisories from 23 vendors with 3,880 flaws, 98 of the advisories critical.<sup>[1]</sup> 38 advisories concerned flaws from the KEV catalog. 33 of them, about 87%, fixed exploited flaws in bundled components, mainly PHP, Node.js and OpenSSH.<sup>[1]</sup></p>
+        <p>That fits PAN-OS: PHP2Shell also hit Check Point firewalls, according to the report. On Nov 20, Fortinet, Juniper, Lenovo, HPE, Netgear, HP and Siemens had only partial PHP2Shell fixes or none at all.<sup>[1]</sup> The key line: "Your exposure to exploited flaws depends on how quickly each vendor rebuilds its products after an upstream fix ships."<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> This is a Docker image with an old base layer that you cannot rebuild yourself. So when buying, what counts is: how fast does the vendor ship after an upstream fix, and is there an SBOM?</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/infratrust-warns-of-exploited-supply-chain-flaws-in-network-appliances/">bleepingcomputer.com (Nov 25)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Check Point: 24 Management Servers in 22 Organizations</h2>
+        <p>GreyNoise describes a campaign against Check Point Security Management servers: 24 servers at 22 organizations in 17 countries.<sup>[1]</sup> The attackers used CVE-2026-16232, an authentication bypass in SmartConsole, to send commands to the servers; GreyNoise could not determine how they first got in. Check Point had called it an "actively exploited zero-day" in July.<sup>[1]</sup> GreyNoise saw the activity from Oct 17 to Nov 2. The attackers stole firewall databases, credentials and CA files, and switched off policies.<sup>[1]</sup> GreyNoise expects the campaign to be ongoing.<sup>[1]</sup></p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-compromise-check-point-servers-in-22-organizations/">bleepingcomputer.com (Nov 24)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>KEV: Ten New Entries, Most Due Saturday</h2>
+        <p>Catalog version 2026.11.25 (yesterday, 19:48 UTC) brings ten entries:<sup>[1]</sup></p>
+        <ul>
+          <li><strong>Mitel MiCollab</strong>: five CVEs, including OS command injection (CVE-2026-133323) and unrestricted file upload (CVE-2026-133275). Due Nov 28, for CVE-2026-133311 (weak authentication) Dec 9.</li>
+          <li><strong>Danfoss AK-SM 800A</strong>: three CVEs, two of them from 2023. Due Nov 28, for CVE-2025-41450 Dec 9.</li>
+          <li><strong>Vates Xen Orchestra</strong> CVE-2026-133469, due Nov 28.</li>
+          <li><strong>HPE Juniper Session Smart Conductor and Router</strong> CVE-2026-103406, OS command injection, due Nov 28.</li>
+        </ul>
+        <p>On Mitel, reports contradict each other on whether and since when attacks are happening. We cite only the KEV entry. A three-day deadline over a US holiday weekend shows how seriously CISA takes the situation.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">CISA KEV feed (version 2026.11.25, retrieved Nov 26)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Danfoss: Refrigeration Cases as an Attack Target</h2>
+        <p>Alongside the KEV entries, CISA warns of a second, unpatched flaw in Danfoss AK-SM 8xxA controllers: <strong>CVE-2026-129713</strong>, a stack buffer overflow, CVSS 9.8.<sup>[1]</sup> Without logging in, an attacker can restart the server and possibly execute code. "There is no patch available"; on Nov 20 Danfoss announced a fix in version 5.5.x.<sup>[1]</sup> In supermarkets, these devices control refrigeration, ventilation and lighting. According to the report, attackers in European supermarkets switched off refrigeration or raised temperatures.<sup>[1]</sup></p>
+        <div class="callout warn"><span class="callout-label">Heads up</span> Without a patch, only network isolation remains: take the controller off the internet, separate it from the office network, allow remote access only over VPN.<sup>[1]</sup></div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/cisa-warns-of-critical-unpatched-flaw-in-danfoss-refrigeration-controllers/">bleepingcomputer.com (Nov 25)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Drupal: Deadline Is Tomorrow</h2>
+        <p><span class="update-since">Update since Wed</span> BleepingComputer confirms the attacks on CVE-2026-132165, with exploitation "as early as 2026-11-19 19:00 UTC" (16:00 Brasília).<sup>[1]</sup> The KEV deadline ends Friday, Nov 27.<sup>[2]</sup> The fixes remain 11.4.13, 11.3.22 and 10.6.22, risk score 20/25.<sup>[3]</sup> If you cannot update right away: harden the installer as described. Some attack paths are blocked if the web server cannot write <code>settings.php</code>.<sup>[3]</sup> Details are in yesterday's brief.</p>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/hackers-now-exploit-critical-drupal-rce-flaw-to-hijack-sites/">bleepingcomputer.com (Nov 25)</a> · [2] <a href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">CISA KEV feed</a> · [3] <a href="https://www.drupal.org/sa-core-2026-017">drupal.org SA-CORE-2026-017 (retrieved Nov 26)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>VMware: 23 Flaws, Three at 9.8</h2>
+        <p>According to heise, Broadcom closes 23 flaws in several VMware products, including ESX, vCenter, Workstation, Fusion, Tools and Cloud Foundation (VMSA-2026-0011).<sup>[1]</sup> The most severe are three flaws with CVSS 9.8:</p>
+        <ul>
+          <li><strong>CVE-2026-123903</strong>: authentication bypass in the VMware Directory Service of vCenter.</li>
+          <li><strong>CVE-2026-123910</strong>: out-of-bounds write in the I/O filter service of ESX.</li>
+          <li><strong>CVE-2026-123911</strong>: use-after-free in ESX.</li>
+        </ul>
+        <p>Plus CVE-2026-123912 (9.3) in Workstation/Fusion, an attack from within a VM.<sup>[1]</sup> heise names no confirmed attacks. For CVE-2026-123903 there is an alleged PoC repository on GitHub, unverified according to heise; such repositories often contain malware.<sup>[1]</sup> According to Broadcom, it is not related to last week's vCenter flaw.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> Second vCenter round in one week. Anyone still combing logs for ARMORY CASTLE should not put the update behind the forensics.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Broadcom-stopft-viele-Sicherheitsluecken-in-mehreren-VMware-Produkten-11537743.html">heise.de (Nov 25)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Radware: Open Internal API, Cloud Keys Gone</h2>
+        <p>Radware reports a breach of the management API of its Cloud WAF. According to the company, the API was "internal-only", but reachable from the internet without authentication.<sup>[1]</sup> The access happened on Nov 19; Radware noticed it about ten hours later. For some customers, credentials for log export were stored there: S3, Azure Blob and SFTP access.<sup>[1]</sup> Radware "strongly" advises rotating these credentials and checking the storage access logs from Nov 19 onward.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> "Internal-only" is not a network rule, it is a wish. Long-lived storage keys held by service providers should be replaced with short-lived tokens.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/radware-discloses-breach-exposing-customer-cloud-access-keys/">bleepingcomputer.com (Nov 24)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Rackspace Spot: Breach, Then the End</h2>
+        <p>Rackspace is shutting down its Kubernetes platform Spot. The breach was on Nov 17, discovered on Nov 18, and the service was back up from Nov 21.<sup>[1]</sup> Spot will be "permanently discontinued on December 8, 2026, at 5 PM Central Time", that is 20:00 Brasília time.<sup>[1]</sup> Customers should treat tokens, kubeconfigs and Kubernetes secrets as compromised. Rackspace lists the IP 23.224.79.106 and the network 23.224.0.0/15 as indicators.<sup>[1]</sup></p>
+        <div class="callout warn"><span class="callout-label">Heads up</span> Rotate secrets everywhere the same values are still valid, such as database passwords and cloud keys. Twelve days remain for migration.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/rackspace-shuts-down-spot-cloud-platform-after-security-breach/">bleepingcomputer.com (Nov 24)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Microsoft: NTLM Trouble and "Code Red"</h2>
+        <h3>NTLM after the November updates</h3>
+        <p>Microsoft confirms sign-in problems after the November updates (KB5135557). They are the "first phase of NTLM message-signing improvements".<sup>[1]</sup> Affected are third-party products such as authentication proxies and SSO solutions that send an empty TargetInfo field.<sup>[1]</sup> Workaround: the registry value <code>ClientAllowUnsignedNtlm</code> = 1. But Microsoft says it "may be removed in the future". There is no fix yet.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">NTLM signing:</strong> NTLM is an old Windows sign-in method. Signing attaches a seal to every message so nobody can alter it on the way. Like a letter with a wax seal: if you do not set the seal correctly, your letter is now rejected.
+        </div>
+        <h3>365 outage: cause and consequences</h3>
+        <p>The Microsoft 365 outage ran from Nov 12, 11:20 a.m. ET, to Nov 13, 11:10 a.m. ET, almost 24 hours. The cause was a bug from a gateway update in July. "At its lowest, more than 80% of servers were unresponsive."<sup>[2]</sup> According to heise, citing internal memos reported by Reuters, Microsoft is now on "Code Red". The goal: fix outages within one hour at most, and push urgent patches to all systems within one hour. Until now that took five to six days.<sup>[3]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> Load shedding and region isolation are right. But the goal of "one patch everywhere in one hour" contradicts exactly the staged rollout that is meant to prevent such outages.</div>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-confirms-authentication-issues-after-november-updates/">bleepingcomputer.com (Nov 25)</a> · [2] <a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-says-months-old-bug-caused-global-microsoft-365-outage/">bleepingcomputer.com (retrieved Nov 26)</a> · [3] <a href="https://www.heise.de/news/Nach-365-Ausfall-Hoechste-Alarmstufe-bei-Microsoft-11536918.html">heise.de / iX (Nov 24)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>ITZBund: OpenProject Instead of Jira</h2>
+        <p>The German federal IT service provider is replacing Jira in its environments with OpenProject. The framework contract runs four years and covers "up to 1,450 instances and 150,776 person-hours".<sup>[1]</sup> OpenProject speaks of an eight-figure sum. According to heise, the explicit goal of the tender was "to strengthen digital sovereignty".<sup>[1]</sup> Atlassian's end of Jira Data Center is probably a factor: only existing customers can buy new licenses, and only until Mar 30, 2028; the product ends in March 2029.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> The most important OSS news of the week for Germany. Not because OpenProject is better than Jira, but because Atlassian's cloud push forces a decision. Every team on Data Center faces the same question before 2029.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Statt-Jira-OpenProject-erhaelt-Millionenauftrag-vom-ITZBund-11536286.html">heise.de / iX (Nov 24)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>EU Quantum Act: Crypto Switch Through Procurement</h2>
+        <p>The EU Commission has presented a draft "Quantum Act".<sup>[1]</sup> For certain public IT procurements under NIS2, new requirements are to apply six months after entry into force, "without existing systems having to be replaced across the board immediately".<sup>[1]</sup> heise names no fixed years for the transition. There is also a tech sovereignty fund, with an initial target volume of €50 billion. Parliament and Council must approve.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Post-quantum cryptography:</strong> Encryption that even a future quantum computer should not be able to crack. Today's methods such as RSA would be a lock with a standard key to it. Anyone who records data today can decrypt it later. That is why time is already short.
+        </div>
+        <p>For context: the reporting obligations under the Cyber Resilience Act have applied since Sep 11, 2026, according to the Commission.<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> Procurement is Brussels' most effective lever: anyone selling to public authorities needs a PQC plan. Crypto agility, meaning swappable algorithms, becomes a selling point.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/EU-Kommission-will-Quantenindustrie-pushen-und-Krypto-Umstieg-erzwingen-11537554.html">heise.de (Nov 25)</a> · [2] <a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">digital-strategy.ec.europa.eu (CRA reporting obligations)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Browser: Ladybird Alpha and Firefox 161</h2>
+        <h3>Ladybird</h3>
+        <p>The Ladybird browser, with its own engine, has released its "first public alpha", version 2026.47.7, according to heise.<sup>[1]</sup> There are packages for macOS (Apple Silicon), Ubuntu, Fedora and a Flatpak; Windows is missing.<sup>[1]</sup> The engine (LibWeb, LibJS) is built in-house. The project does not recommend the alpha for everyday use: "Some websites do not work, and the browser can crash."<sup>[1]</sup></p>
+        <h3>Firefox 161</h3>
+        <p>Firefox's built-in VPN gets per-website rules. There is also a quick-access button that deletes browser data.<sup>[2]</sup> We did not check the release notes.</p>
+        <div class="callout info"><span class="callout-label">Our take</span> A fourth engine next to Blink, Gecko and WebKit is good for web standards, even if hardly anyone uses it. For frontend testing, Ladybird can now be installed without compiling, with WebDriver support.<sup>[1]</sup></div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Von-Grund-auf-neu-Ladybird-fordert-das-Browser-Trio-heraus-11535808.html">heise.de / iX (Nov 24)</a> · [2] <a href="https://www.heise.de/news/Firefox-161-Das-Gratis-VPN-schaltet-sich-jetzt-pro-Website-ein-11536744.html">heise.de / iX (Nov 24)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Releases: Spring and Valkey</h2>
+        <h3>Spring Boot 4.1.3 and 4.0.10</h3>
+        <p>On Nov 20, Spring Boot 4.1.3 and 4.0.10 arrived, along with Spring Cloud 2026.0.0 ("Paddington") and 2025.1.5. Spring Batch 6.1 has been GA since Nov 19.<sup>[1]</sup></p>
+        <h3>Valkey 9.2</h3>
+        <p>The in-memory database Valkey 9.2 can write snapshots and replica syncs in a background thread instead of via <code>fork()</code>. This avoids memory spikes, but is off by default.<sup>[2]</sup> Also new is compressed replication: with LZ4, bandwidth dropped by 52% in the benchmark with three million keys, and throughput by less than 1%.<sup>[2]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Fork and copy-on-write:</strong> For a snapshot, the process clones itself and both share the memory. Every write operation copies a page, and under heavy load memory grows sharply. Like a shared notebook where every change forces a photocopy of the page.
+        </div>
+        <p>Heads up for monitoring: large sorted sets now report <code>btree</code> instead of <code>skiplist</code> for <code>OBJECT ENCODING</code>.<sup>[2]</sup></p>
+        <span class="src">[1] <a href="https://spring.io/blog">spring.io/blog (retrieved Nov 26)</a> · [2] <a href="https://www.heise.de/news/In-Memory-Datenbank-Valkey-9-2-Weniger-RAM-Spitzen-beim-Sichern-11534812.html">heise.de / iX (Nov 23)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>In Brief</h2>
+        <ul>
+          <li><span class="chip">Sec</span> <strong>EU Academy</strong>: The EU Commission confirms data theft from its learning platform; it does not give the number of people affected.<sup>[1]</sup> <span class="chip">EU</span></li>
+          <li><span class="chip">Sec</span> <strong>AI-assisted attacks</strong>: The cyber authorities of Switzerland and Italy warn of automated attacks by AI agents.<sup>[2]</sup> <span class="chip">EU</span></li>
+          <li><span class="chip">OSS</span> <strong>Agent topics</strong>: Claude Ship for pull requests and Anthropic's experiment on AI agents and exploits are in the ai-dev brief.<sup>[3]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://www.bleepingcomputer.com/news/security/european-commission-confirms-data-theft-in-eu-academy-breach/">bleepingcomputer.com (Nov 24)</a> · [2] <a href="https://www.bleepingcomputer.com/news/security/italy-and-switzerland-warn-of-autonomous-ai-driven-cyberattacks/">bleepingcomputer.com (Nov 25)</a> · [3] <a href="https://www.heise.de/news/Claude-Ship-soll-Review-Engpaesse-bei-Pull-Requests-loesen-11536568.html">heise.de (Nov 25)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Not Verified</h2>
+        <ul>
+          <li>1Password: how the GitHub account was taken over and how long the malicious code ran.</li>
+          <li>PAN-OS: exact fix builds and CVSS; VMware: fix versions and the remaining 19 CVEs.</li>
+          <li>Mitel MiCollab: Mitel's advisory MISA-2026-0012 and the start of the attacks.</li>
+          <li>Not checked today: NVD, BSI, Chrome, PostgreSQL, Python, JDK, Angular, Caddy, Tailscale, BR tech media. thehackernews.com: 403. There were no reports yet from Nov 26.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>Today's List</h2>
+        <ol>
+          <li>Warn 1Password users on the team about phishing with "secure your account" emails.</li>
+          <li>Check whether a single GitHub account can push code to production without a second review.</li>
+          <li>Take PAN-OS and Check Point management off the internet and patch.</li>
+          <li>Get Drupal to 11.4.13, 11.3.22 or 10.6.22 by Friday.</li>
+          <li>Radware or Rackspace customers: rotate storage keys and Kubernetes secrets.</li>
+          <li>Update vCenter and ESX per VMSA-2026-0011.</li>
+        </ol>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Thursday, November twenty-sixth, Thanksgiving in the US. The day itself is quiet, but yesterday brought a lot. The biggest story: 1Password was breached through an employee's GitHub account.</p>
+  <p>The attacker read private repositories, got into the CI/CD environment and planted their own code in backend services. Those services pulled down customer account records. What leaked: names, email addresses, public keys, and tokens for invitations and account recovery. According to 1Password, the vaults and their keys are safe. The company has lengthened the email code from six digits to ten characters. Expect phishing emails that look real.</p>
+  <p>Palo Alto confirms attacks on firewalls using a chain of two flaws. The first, PHP2Shell, gets code onto the device. The second, Fragnesia, is a Linux kernel flaw that turns that into root. Only devices whose management interface was reachable from the internet were hit. Fixes are available for all current PAN-OS lines.</p>
+  <p>A related report from Eclypsium: of thirty-eight advisories on actively exploited flaws in network devices, thirty-three involved bundled third-party software, mainly PHP, Node.js and OpenSSH. And according to GreyNoise, twenty-four Check Point management servers at twenty-two organizations were taken over, through a flaw known since July.</p>
+  <p>The US agency CISA has added ten new entries to its catalog of exploited vulnerabilities, including Mitel MiCollab, Danfoss controllers for supermarket refrigeration, Xen Orchestra and Juniper Session Smart. Most deadlines fall on Saturday. Danfoss also has a critical flaw with no patch. And tomorrow is the deadline for the Drupal flaw.</p>
+  <p>Broadcom is closing twenty-three flaws in VMware products, three of them rated nine point eight out of ten in vCenter and ESX. Radware lost customers' cloud keys through an open internal API. And after a breach, Rackspace is shutting down its Kubernetes platform Spot on December eighth.</p>
+  <p>At Microsoft, there are NTLM sign-in problems after the November updates. And after the nearly twenty-four-hour Microsoft 365 outage, the company is reportedly on its highest internal alert, according to Reuters.</p>
+  <p>From Germany, some good news for open source: the federal IT provider ITZBund is replacing Jira with OpenProject, under a four-year contract. The EU Commission wants to use a Quantum Act to push the switch to post-quantum encryption through public procurement. And the Ladybird browser, with its own engine, is now available as an alpha for Linux and macOS.</p>
+  <p>Tomorrow we'll see whether 1Password shares more details, and how many vendors ship their PHP2Shell fixes.</p>
+</div>
+
+</body>
+</html>
