@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-27</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Issue 2026-11-27</span>
+  </div>
+  <h1 class="masthead-title">DIGIT: SQL Injection in the Government Toolkit for Two Billion People</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">The Friday after Thanksgiving, a quiet news day. The new story comes from India: the DIGIT e-government toolkit has a SQL injection with CVSS 9.3, exploitable without logging in. KEV deadlines expire today and tomorrow, Drupal among them. Rackspace names the cause of the Spot breach, and Microsoft fixes a hotpatch with a hotpatch. Our take: whoever builds one shared platform for many also builds one shared bug for many.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>DIGIT</strong>: SQL injection CVE-2026-136706, CVSS 9.3, fix in v2.9.3; no attacks reported so far. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Drupal</strong>: KEV deadline for CVE-2026-132165 ends today; fixes 11.4.13, 11.3.22, 10.6.22. <span class="chip">USA</span></li>
+      <li><span class="chip">Sec</span> <strong>PAN-OS</strong>: heise lists 20 builds with the kernel fix against Fragnesia; take management off the internet. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>KEV</strong>: no new entries since Nov 25; eight deadlines end Saturday. <span class="chip">USA</span></li>
+      <li><span class="chip">Infra</span> <strong>Rackspace Spot</strong>: entry through an observability system with a stolen credential, almost 22 hours. <span class="chip">USA</span></li>
+      <li><span class="chip">Infra</span> <strong>Windows Server 2025</strong>: KB5138318 fixes the 0x139 crash caused by the November hotpatch. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Zstandard 1.6.0</strong>: closes a memory leak on decompression (1.5.1 to 1.5.7). <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Deichmann and FIFA</strong>: customer data from the online shop, data at FIFA. <span class="chip">DE</span></li>
+      <li><span class="chip good">Browser</span> <strong>Ladybird alpha</strong>: engine now in Rust, explicitly with no security guarantee. <span class="chip">Global</span></li>
+      <li><span class="chip good">Release</span> <strong>Linux</strong>: seven stable kernels on Nov 23, Pop!_OS 26.04 LTS on Nov 25. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Deadline Horizon</div>
+      <div class="timeline-sub">KEV deadlines and shutdowns through Wed 12/09 — Source: CISA KEV catalog (retrieved Nov 27), The Register</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Fri 11/27</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Today: KEV deadline Drupal Core CVE-2026-132165</span><span>KEV deadline: Optimizely Web Experimentation CVE-2026-132224, Idunno AntiCsrf CVE-2026-131914</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Sat 11/28</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Mitel MiCollab (four CVEs)</span><span>KEV deadline: Danfoss AK-SM 800A CVE-2023-25914, CVE-2023-25915</span><span>KEV deadline: Xen Orchestra CVE-2026-133469, Juniper Session Smart CVE-2026-103406</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Tue 12/08</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Rackspace Spot shuts down, 5:00 PM CT (23:00 UTC, 8:00 PM Brasília)</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Wed 12/09</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV deadline: Mitel MiCollab CVE-2026-133311, Danfoss CVE-2025-41450</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>DIGIT: One Flaw, Ten Countries</h2>
+        <p>According to The Register, DIGIT is "a modular suite that offers common services", such as sign-in and payment collection for government agencies.<sup>[1]</sup> The platform is maintained by eGov India. Nine countries use parts of it; with India that makes ten, where more than 20,000 local governments use it.<sup>[1]</sup> The Register's line on this: "DIGIT is therefore used by governments that serve over two billion people."<sup>[1]</sup></p>
+        <p>The flaw is <strong>CVE-2026-136706</strong>, a "9.3-rated SQL injection flaw" in the "User and Access Control Service" components.<sup>[1]</sup> India's CERT-In warns in CIVN-2026-0570: "An unauthenticated remote attacker could exploit this vulnerability by sending specially crafted input through the affected API endpoint."<sup>[1]</sup> eGov India published the fix as source code, in release v2.9.3.<sup>[1][2]</sup> CERT-In rates the flaw "HIGH" on Nov 25; according to the advisory, "DIGIT Core - version v2.9" is affected, and the solution is an upgrade to v2.9.3.<sup>[3]</sup> Neither the report nor CERT-In says whether anyone is attacking yet.<sup>[1][3]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">SQL injection:</strong> The program builds a database query from text a user sends. If the attacker sends a piece of SQL instead of a name, the database runs it. Like an order slip where someone writes at the bottom "and give me the cash register key", and the waiter simply reads everything out loud.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> Two things are embarrassing here. First: SQL injection has been solved for two decades with parameterized queries; that it sits in the sign-in service in 2026 is a review failure. Second: a shared platform for many states saves money, but every flaw hits all of them at once. Whoever runs DIGIT needs v2.9.3. Whoever builds a toolkit for many customers should check the auth path first.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/security/2026/11/27/free-e-government-platform-that-serves-two-billion-people-in-ten-countries-has-critical-sql-injection-bug/5312449">theregister.com (Nov 27, 01:19 UTC)</a> · [2] <a href="https://github.com/egovernments/Digit-Core/releases/tag/v2.9.3">github.com/egovernments/Digit-Core, release v2.9.3</a> · [3] <a href="https://www.cert-in.org.in/s2cMainServlet?pageid=PUBVLNOTES01&amp;VLCODE=CIVN-2026-0570">cert-in.org.in CIVN-2026-0570 (Nov 25)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Drupal: The Deadline Is Today</h2>
+        <p><span class="update-since">Update since Thu</span> The CISA deadline for <strong>CVE-2026-132165</strong> in Drupal Core ends today, Nov 27.<sup>[1]</sup> Drupal advisory SA-CORE-2026-017 from Nov 18 rates the flaw "Highly critical", risk score 20 out of 25.<sup>[2]</sup> According to the security team it was "exploited on live sites as early as 2026-11-19 19:00 UTC", that is 4:00 PM Brasília.<sup>[2]</sup> The fixes:</p>
+        <ul>
+          <li>Drupal 11.4.x: update to 11.4.13</li>
+          <li>Drupal 11.3.x: update to 11.3.22</li>
+          <li>Drupal 10.6.x: update to 10.6.22</li>
+        </ul>
+        <p>On the same day the deadline ends for two more KEV entries from Nov 24: Optimizely Web Experimentation (CVE-2026-132224) and Idunno AntiCsrf (CVE-2026-131914).<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> A week of active attacks on a Highly critical advisory: whoever has not updated yet should not only patch, but also check the logs from Nov 19 onward for unknown admin accounts and new PHP files.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV catalog (retrieved Nov 27)</a> · [2] <a href="https://www.drupal.org/sa-core-2026-017">drupal.org SA-CORE-2026-017 (retrieved Nov 27)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>PAN-OS: The Kernel Fixes Are Here</h2>
+        <p><span class="update-since">Update since Thu</span> On Nov 26, heise describes the chain we explained yesterday: "Currently, attackers are combining two security flaws to attack Palo Alto firewalls."<sup>[1]</sup> First PHP2Shell (CVE-2026-109618, "critical") through a management interface reachable from the internet. Then <strong>Fragnesia</strong> (CVE-2026-46300, "high").<sup>[1]</sup> Palo Alto itself rates CVE-2026-109618 at CVSS 4.0 9.2 (critical); the vendor lists Fragnesia in bulletin PAN-SA-2026-0015 as "Informational", with no CVSS score.<sup>[2][3]</sup> Important context: Fragnesia is not a PAN-OS flaw of its own, but a bug in the Linux kernel that PAN-OS runs on. On its own it cannot be exploited remotely; it only raises the privileges of an attacker who is already inside.<sup>[1]</sup></p>
+        <p>According to heise, researchers at Dream reported 25 compromised firewalls in October, presumably by Chinese attackers. CISA added CVE-2026-46300 to the KEV catalog on Oct 28.<sup>[1]</sup> New is the list of builds with the kernel fix: heise names 20 releases across all lines, from 10.2.7-h41 to 12.2.4-h3.<sup>[1]</sup> Whoever already has the PHP2Shell patch is protected against this attack path. heise still recommends the kernel fix.<sup>[1]</sup></p>
+        <div class="callout warn"><span class="callout-label">Heads up</span> Dataplane interfaces with a management profile also count as open management. heise advises: turn off public access; if there is no other way, allow only HTTPS and SSH, and only from trusted internal IPs.<sup>[1]</sup></div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Palo-Alto-Angriffe-auf-PAN-OS-Firewalls-mit-offenem-Managementzugang-beobachtet-11538805.html">heise.de (Nov 26, 10:48 AM)</a> · [2] <a href="https://security.paloaltonetworks.com/CVE-2026-109618">security.paloaltonetworks.com CVE-2026-109618 (Oct 21)</a> · [3] <a href="https://security.paloaltonetworks.com/CVE-2026-46300">security.paloaltonetworks.com PAN-SA-2026-0015 (Nov 25)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: Quiet Since Wednesday</h2>
+        <p>The CISA catalog had 1,805 entries when retrieved this morning. There were no entries from Nov 26 or 27; Thanksgiving shows.<sup>[1]</sup> The Nov 25 round stays open: four Mitel MiCollab CVEs, two Danfoss CVEs from 2023, Xen Orchestra (CVE-2026-133469) and HPE Juniper Session Smart (CVE-2026-103406), all with a deadline of Saturday, Nov 28.<sup>[1]</sup> For Mitel CVE-2026-133311 and Danfoss CVE-2025-41450, Dec 9 applies.<sup>[1]</sup> heise picked up the round on Nov 26.<sup>[2]</sup> Details are in yesterday's brief.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV catalog (retrieved Nov 27)</a> · [2] <a href="https://www.heise.de/news/Angriffswarnung-auf-Danfoss-Geraete-HPE-Juniper-Router-Mitel-MiCollab-und-XO-11538657.html">heise.de (Nov 26, 10:12 AM)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Rackspace Spot: The Way In Was the Monitoring</h2>
+        <p><span class="update-since">Update since Thu</span> The Register reports new details on the breach at Rackspace's Kubernetes service Spot. On Nov 17 the attacker had access for almost 22 hours, using stolen credentials.<sup>[1]</sup> He "could have read any Secret in an affected user's clusters, and any Spot API token or refresh token that user held".<sup>[1]</sup> The cause according to a Platform9 co-founder: "An observability system was breached using a compromised credential."<sup>[1]</sup> Rackspace does not say how many customers are affected. Spot ends on Dec 8 at 5:00 PM Central Time, that is 8:00 PM Brasília.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Observability system:</strong> The software that collects logs, metrics and traces from all clusters so the operations team can see what is running. To see everything, it gets broad read permissions. Like the janitor with the master key: he has to get in everywhere, and so does anyone who steals his key.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> The second case in two days, after 1Password, where the entry point was not the product but the tooling around it. Monitoring agents need metrics, not secrets. Whoever has Prometheus, Grafana Agent or Datadog in the cluster: check whether their ServiceAccount may read <code>secrets</code>. For metrics it rarely needs that.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/cyber-crime/2026/11/26/rackspace-pulls-plug-on-spot-cloud-service-after-security-breach/5312352">theregister.com (Nov 26)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Windows Server 2025: A Hotpatch for the Hotpatch</h2>
+        <p>On Nov 25 Microsoft released <strong>KB5138318</strong> out of band.<sup>[1]</sup> It fixes a bug from the November hotpatch KB5131077 (OS Build 26100.33730) of Nov 10.<sup>[1][2]</sup> Servers with Router Advertisements enabled that receive time-limited IPv6 routes crash when a route's timer expires. The stop code: "0x139 (KERNEL_SECURITY_CHECK_FAILURE)".<sup>[1]</sup> The fix "takes effect without requiring a restart".<sup>[1]</sup> Microsoft does not explain the actual programming error.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Hotpatch:</strong> An update that swaps the running code in memory without a restart. Like changing a tire while driving: handy, as long as the new tire fits. Here it did not, and the server stopped as soon as an IPv6 route expired.
+        </div>
+        <div class="callout info"><span class="callout-label">Our take</span> Hotpatching saves maintenance windows, but not testing. A bug that only appears when a route timer expires does not show up in a smoke test right after the update. For IPv6 networks with RA that means: run a canary server for a day first.</div>
+        <span class="src">[1] <a href="https://www.theregister.com/os-platforms/2026/11/26/microsoft-hotpatches-hotpatch-that-could-crash-windows-server-2025/5312301">theregister.com (Nov 26)</a> · [2] <a href="https://support.microsoft.com/help/5131077">support.microsoft.com KB5131077</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Zstandard 1.6.0: Memory Leftovers in the Output</h2>
+        <p>The Zstandard team moved up version 1.6.0 to close <strong>CVE-2026-124851</strong>.<sup>[1]</sup> Versions 1.5.1 to 1.5.7 are affected: "When decompressing manipulated data, affected versions can expose memory contents."<sup>[1]</sup> With streaming decompression, the content of an internal buffer (64 KiB by default) can end up in the output, including leftovers from an earlier decompression in the same context. The attacker must supply compressed data and be able to see the output.<sup>[1]</sup> heise gives no CVSS score.<sup>[1]</sup></p>
+        <p>In addition, 1.6.0 brings faster decompression on AArch64 and RVV support on RISC-V. Careful when upgrading: a default build no longer reads files compressed with Zstd before 0.8.0; <code>ZSTD_LEGACY_SUPPORT</code> brings that back.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> This matters for services that decompress third-party compressed data and return the result, such as upload previews or proxies. Zstd usually sits as a system library or in language bindings; the fix therefore arrives through the distribution, not through your <code>package.json</code>.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Zstandard-1-6-0-schliesst-Sicherheitsluecke-11535732.html">heise.de (Nov 24, 10:09 AM)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Data Leaks: Deichmann and FIFA</h2>
+        <h3>Deichmann</h3>
+        <p>The shoe retailer reports access to "selected customer data on purchases in our online shop".<sup>[1]</sup> Affected are name, billing and delivery address, invoices, email, phone and the chosen payment method. Passwords, login data and payment data such as credit card numbers are not affected, according to Deichmann.<sup>[1]</sup> The company does not say which flaw was exploited, only that it is closed. It gives no number of people affected.<sup>[1]</sup></p>
+        <div class="callout warn"><span class="callout-label">Heads up</span> Real order data makes fraud emails believable. Deichmann says its own bank details have not changed and that it never asks for passwords.<sup>[1]</sup></div>
+        <h3>FIFA</h3>
+        <p>An attack led to "unauthorized access to a limited amount of personal and business data" at FIFA.<sup>[2]</sup> According to heise, Reuters speaks of "less than 0.1 percent of total data holdings". A group called Handsome Boy Hacking Club has claimed responsibility, according to The Record; this is not independently confirmed.<sup>[2]</sup> Which systems are affected is open.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Deichmann-Online-Shop-geknackt-unbefugter-Datenzugriff-11537484.html">heise.de (Nov 25, 11:56 AM)</a> · [2] <a href="https://www.heise.de/news/Warnung-vor-erheblichen-Folgen-Erfolgreicher-Cyberangriff-auf-die-FIFA-11539255.html">heise.de (Nov 26, 2:33 PM)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Browsers: Ladybird in Rust, Chrome Updates</h2>
+        <h3>Ladybird</h3>
+        <p><span class="update-since">Update since Thu</span> The Register adds to yesterday's alpha report. Project lead Andreas Kling switched the engine from Swift to Rust in 2026.<sup>[1]</sup> The packages: macOS for Apple Silicon at 68.4 MB, Linux x86-64 as a Flatpak at about 111 MB, plus packages for Ubuntu and Fedora.<sup>[1]</sup> The project says openly that it "make[s] no security guarantees at this stage". It has not accepted public code contributions since June.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> For frontend testing, Ladybird is now a real tool. For browsing with your bank login it explicitly is not. Stopping outside contributions fits poorly with the open-source image; worth keeping an eye on.</div>
+        <h3>Chrome</h3>
+        <p>The Chrome Releases blog shows a "Stable Channel Update for Desktop" on Nov 23 and an "Early Stable Update for Desktop" on Nov 24.<sup>[2]</sup> We did not check the version numbers today. For context: since Nov 10, CISA lists an actively exploited use-after-free flaw in Chromium in the KEV catalog (CVE-2026-125350).<sup>[3]</sup></p>
+        <span class="src">[1] <a href="https://www.theregister.com/software/2026/11/26/indie-web-browser-ladybird-enters-alpha-testing/5311914">theregister.com (Nov 26)</a> · [2] <a href="https://chromereleases.googleblog.com/">chromereleases.googleblog.com (retrieved Nov 27)</a> · [3] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV catalog (retrieved Nov 27)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Linux: Seven Stable Kernels and Pop!_OS 26.04</h2>
+        <p>On Monday, Nov 23, seven stable kernels arrived: 7.3.6, 6.18.65, 6.12.119, 6.6.163, 6.1.193, 5.15.226 and 5.10.275. The development line stands at 7.4-rc4.<sup>[1]</sup> On Nov 25, Pop!_OS 26.04 LTS from System76 was released, based on Ubuntu 26.04.<sup>[1]</sup></p>
+        <p>With Fragnesia in mind: we did not check whether the kernel fixes are in these stable releases. For your own Linux servers, a look at the distribution's changelog is worthwhile.</p>
+        <span class="src">[1] <a href="https://lwn.net/">lwn.net (retrieved Nov 27)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Stack Check: PostgreSQL 14 Has Reached the End</h2>
+        <p>PostgreSQL 19 has been generally available since Nov 19.<sup>[2]</sup> For your own stack, though, this counts: with the Nov 12 update (18.7, 17.12, 16.16, 15.20, 14.25 and 19 RC2), <strong>14.25 was the last release for PostgreSQL 14</strong>.<sup>[1]</sup> The next scheduled minor release comes on Feb 11, 2027.<sup>[2]</sup> Whoever still runs 14 gets no more fixes then. The November round fixed 52 security vulnerabilities, including CVE-2026-6460, a type confusion after <code>ALTER ... SET DATA TYPE</code> with CVSS 8.8.<sup>[1]</sup></p>
+        <p>For Caddy users: current is 2.11.9 from Nov 5, according to the release notes "a quick follow-up on top of 2.11.8, to fix a regression it introduced and a few more security issues".<sup>[3]</sup></p>
+        <div class="callout info"><span class="callout-label">Our take</span> The upgrade from 14 to 18 or 19 with <code>pg_upgrade</code> is usually one evening of work. February is a good deadline for it, before the first unpatched flaw arrives.</div>
+        <span class="src">[1] <a href="https://www.postgresql.org/about/news/p-3442/">postgresql.org (Nov 12)</a> · [2] <a href="https://www.postgresql.org/developer/roadmap/">postgresql.org/developer/roadmap (retrieved Nov 27)</a> · [3] <a href="https://github.com/caddyserver/caddy/releases">github.com/caddyserver/caddy/releases</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>In Brief</h2>
+        <ul>
+          <li><span class="chip">Sec</span> <strong>US financial agency</strong>: heise reports a cyberattack on a US agency against financial crime; we did not check the details.<sup>[1]</sup> <span class="chip">USA</span></li>
+          <li><span class="chip">Sec</span> <strong>Europol</strong>, according to heise, is following the crypto trail of illegal IPTV services.<sup>[2]</sup> <span class="chip">EU</span></li>
+          <li><span class="chip">Sec</span> <strong>1Password</strong>: no new details since yesterday; the situation is in the Nov 26 brief.<sup>[3]</sup></li>
+          <li><span class="chip">Sec</span> <strong>ARTEX</strong>: Microsoft's report on an AI tool used by state attackers belongs in the AI briefs' territory.<sup>[4]</sup></li>
+        </ul>
+        <span class="src">[1] <a href="https://www.heise.de/news/Cyberangriff-auf-US-Behoerde-gegen-Finanzkriminalitaet-11539155.html">heise.de (Nov 26, 1:59 PM)</a> · [2] <a href="https://www.heise.de/news/Europol-Ermittler-folgen-der-Krypto-Spur-illegaler-IPTV-Dienste-11538501.html">heise.de (Nov 26, 7:41 AM)</a> · [3] <a href="https://www.heise.de/news/1Password-Kundendaten-entfleucht-11538455.html">heise.de, "1Password: Kundendaten entfleucht" (Nov 26, 3:11 AM)</a> · [4] <a href="https://www.theregister.com/">theregister.com (retrieved Nov 27)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Not Checked</h2>
+        <ul>
+          <li>DIGIT: whether the flaw is already being attacked.</li>
+          <li>Nginx CVE-2026-42533: seen only as a search snippet, without a date; therefore not in the brief.</li>
+          <li>heise: "Google lässt Entwickler für den Traffic der Anwender bezahlen" — article not loaded.</li>
+          <li>No report today: BR tech media (tecnoblog: 403), EU regulation, Spring, Angular, Java, Python. thehackernews.com: 403.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>Today's List</h2>
+        <ol>
+          <li>Bring Drupal sites to 11.4.13, 11.3.22 or 10.6.22 today and check logs from Nov 19.</li>
+          <li>Check whether monitoring agents in the Kubernetes cluster may read Secrets.</li>
+          <li>Take PAN-OS management off the internet; install the kernel-fix build.</li>
+          <li>Windows Server 2025 with IPv6 RA: install KB5138318.</li>
+          <li>Check the Zstd version on your own servers (1.5.1 to 1.5.7 affected).</li>
+          <li>Move PostgreSQL 14 instances to a supported version by February.</li>
+        </ol>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>It's Friday, November twenty-seventh, the day after Thanksgiving. The news is quiet, but one story stands out. It comes from India.</p>
+  <p>DIGIT is a toolkit for digital government, with services like sign-in and payments. According to The Register, ten countries use it, and their governments serve more than two billion people combined. The user and access control services contain a SQL injection rated nine point three out of ten. An attacker doesn't need to log in, just send a crafted request to the API. The fix is in version two point nine point three. Whether anyone is attacking yet is not known.</p>
+  <p>Today is the deadline set by the U.S. agency CISA for the Drupal flaw. The fixes are Drupal eleven point four point thirteen, eleven point three point twenty-two and ten point six point twenty-two. Attacks have been running since November nineteenth. More deadlines end tomorrow, including Mitel MiCollab, Danfoss, Xen Orchestra and Juniper. There have been no new entries since Wednesday.</p>
+  <p>On the Palo Alto firewalls, heise now lists the versions with the kernel fix against Fragnesia. Fragnesia is a flaw in the Linux kernel that PAN-OS runs on. Combined with PHP2Shell, it gives attackers full control, but only if the management interface is reachable from the internet.</p>
+  <p>Rackspace has named the cause of the Spot breach. The attacker got in through a monitoring system with a stolen credential and was inside for almost twenty-two hours. He could read every secret in the affected clusters. Spot shuts down on December eighth.</p>
+  <p>Microsoft is fixing a hotpatch with a hotpatch. The November patch for Windows Server twenty twenty-five crashed servers as soon as a time-limited IPv6 route expired. The fix needs no restart. Also, Zstandard version one point six closes a flaw that let leftover memory leak into the output when decompressing.</p>
+  <p>In Germany, Deichmann reports access to customer data from its online shop, including names, addresses and invoices, but no passwords or card data. FIFA also confirms an attack. And the Ladybird browser now runs on Rust, but explicitly offers no security guarantee.</p>
+  <p>One last reminder: PostgreSQL fourteen no longer gets updates. The next security update in February will come without that version. Tomorrow we'll see whether DIGIT sees its first attacks and whether CISA adds new entries after the holiday.</p>
+</div>
+
+</body>
+</html>
