@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — Software · 2026-11-28</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../favicon.svg">
+<base target="_blank">
+<link rel="stylesheet" href="../../lib/styles.css">
+<script defer src="../../lib/newsletter.js"></script>
+</head>
+
+<body class="cat-software">
+
+<header class="masthead">
+  <div class="masthead-issue">
+    <span>Software</span>
+    <span class="dot">·</span>
+    <span>Ausgabe 2026-11-28</span>
+  </div>
+  <h1 class="masthead-title">Linux-NFS-Server: kritische Lücke seit Kernel 3.16</h1>
+</header>
+
+<main class="shell">
+
+  <section class="tldr">
+    <p class="lead">Samstag, und die Meldungen von Freitag tragen den Brief. Ganz oben steht eine Lücke im NFS-Server des Linux-Kernels: CVSS 9,8, im Code seit Linux 3.16. Die Upstream-Kernel sind seit 23.11. gepatcht, viele Distributionen noch nicht. Dazu RealVNC mit 9,8, ein Tomcat-Release mit einer kritischen Lücke ohne Fix, und eine Korrektur: Die CISA hat am Freitag doch neue KEV-Einträge geliefert, darunter eine zweite Drupal-Installer-Lücke. Unsere Sicht: Die gefährlichsten Dienste sind die, die seit Jahren still im Keller laufen. NFS gehört dazu.</p>
+    <ul>
+      <li><span class="chip hot">Sec</span> <strong>Linux NFS-Server</strong>: CVE-2026-99362, CVSS 9,8; Fix ab 6.12.117, 6.6.163 und Co.; Red Hat, Ubuntu, SUSE noch nicht flächendeckend. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>KEV</strong>: drei neue Einträge am 27.11., Drupal Core und zweimal GeoServer; Frist Montag, 30.11. <span class="chip">USA</span></li>
+      <li><span class="chip hot">Sec</span> <strong>Drupal SA-CORE-2026-019</strong>: „Highly critical", 21 von 25, wird angegriffen; Fix 11.4.14, 11.3.23, 10.6.23. <span class="chip">Global</span></li>
+      <li><span class="chip hot">Sec</span> <strong>RealVNC</strong>: CVE-2026-137738, CVSS 9,8, ohne Anmeldung, nur über UDP; Server 7.19.1, Viewer 8.6.2. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>Apache Tomcat</strong>: 11.0.29, 10.1.62, 9.0.124 schließen neun Lücken; eine kritische bleibt bis 11.0.30 offen. <span class="chip">Global</span></li>
+      <li><span class="chip">Sec</span> <strong>SAP</strong>: IT-Vorfall in Entwicklungs-Systemen auf GitHub, Signatur-Schlüssel ausgetauscht. <span class="chip">DE</span></li>
+      <li><span class="chip">Sec</span> <strong>US Air Force Cloud One</strong>: laut Reuters Einbruch bis in die Control Plane; nicht bestätigt. <span class="chip">USA</span></li>
+      <li><span class="chip">Regulierung</span> <strong>Datenschutzkonferenz</strong>: deutlich mehr Datenpannen durch Cyberangriffe, Bayern plus 83 %. <span class="chip">DE</span></li>
+      <li><span class="chip">Web</span> <strong>Google</strong>: Workspace-APIs ab April 2027 kostenpflichtig; Play Store zeigt ab 01.03.2027 Entwickler-Adressen. <span class="chip">Global</span></li>
+    </ul>
+  </section>
+
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-title">Fristen-Horizont</div>
+      <div class="timeline-sub">KEV-Fristen und Patch-Termine bis Mi 09.12 — Quelle: CISA-KEV-Katalog (abgerufen 28.11.)</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-col today hot">
+        <div class="tl-date">Sa 28.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Heute: KEV-Frist Mitel MiCollab (vier CVEs)</span><span>CVE-2026-133275, CVE-2026-133303, CVE-2026-133323, CVE-2026-133324</span></div>
+      </div>
+      <div class="tl-col hot">
+        <div class="tl-date">Mo 30.11</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: Drupal Core CVE-2026-136716</span><span>KEV-Frist: OSGeo GeoServer CVE-2026-120705, CVE-2026-129243</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Di 08.12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>Microsoft Patch Tuesday (planmäßig, zweiter Dienstag im Monat)</span></div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-date">Mi 09.12</div>
+        <div class="tl-dot"></div>
+        <div class="tl-events"><span>KEV-Frist: Mitel MiCollab CVE-2026-133311</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Linux: der NFS-Server im Kernel</h2>
+        <p>Im NFS-Server des Linux-Kernels steckt eine kritische Lücke, <strong>CVE-2026-99362</strong>. heise nennt sie „mit dem CVSS-3-Wert 9,8 versehen".<sup>[1]</sup> Laut Teaser können Angreifer „über den NFS-Server im Kernel das System kompromittieren".<sup>[1]</sup> Der Fehler ist alt: „Der Fehler schlummert seit Linux 3.16 im Code."<sup>[1]</sup> Betroffen ist also praktisch jeder Kernel, der heute als NFS-Server läuft.</p>
+        <p>Gefunden hat ihn Jérémy Jean von der französischen Behörde ANSSI im August; im September entdeckte das Security-Unternehmen OpenSec die Lücke unabhängig davon, mit Hilfe eines KI-Systems.<sup>[1]</sup> OpenSec hat laut heise gezeigt, dass ein Angreifer bis zu Root-Rechten kommt. Ob es schon Angriffe gibt, sagt der Bericht nicht.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">NFS-Server:</strong> NFS (Network File System) gibt Verzeichnisse eines Linux-Rechners im Netz frei, damit andere Rechner sie wie eine lokale Platte einbinden. Unter Linux läuft der Server-Teil direkt im Kernel. Wie ein Lagerist, der im Tresorraum selbst sitzt: Wer ihn austrickst, steht nicht vor der Tür, sondern schon drin.
+        </div>
+        <p>Die Fixes stehen upstream bereit. heise: „NFS-Nutzer sollten sicherstellen, dass sie mindestens eine der folgenden Kernelversionen einsetzen":<sup>[1]</sup></p>
+        <ul>
+          <li>5.10.275, 5.15.226, 6.1.193, 6.6.163</li>
+          <li>6.12.117, 6.18.61, 7.3.2, 7.4-rc1</li>
+        </ul>
+        <p>Und: „seit dem 23. November sind auch alle Longterm-Kernel gepatcht."<sup>[1]</sup> Die sieben Stable-Kernel vom 23.11., die wir gestern gemeldet haben, liegen alle auf oder über diesen Ständen. Das Problem sind die Distributionen: „Aktuell ist die Lücke etwa bei Red Hat, Ubuntu oder SUSE noch nicht flächendeckend gefixt."<sup>[1]</sup> heise rät, in den Release Notes des Distributions-Kernels nachzusehen, ob CVE-2026-99362 als behoben gelistet ist.</p>
+        <div class="callout warn"><span class="callout-label">Achtung</span> Bis der Distributions-Kernel kommt, nennt heise zwei Notlösungen, zumindest für nicht vertrauenswürdige Clients: NFS in den Versionen 4.1 und 4.2 abschalten oder den Zugriff auf Port 2049 des Servers blockieren.<sup>[1]</sup> Welche Versionen Ihr Server anbietet, zeigt <code>cat /proc/fs/nfsd/versions</code>.</div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> NFS ist einer dieser Dienste, die einmal eingerichtet und dann vergessen werden: das NAS im Büro, der Storage-Knoten für Kubernetes, die Freigabe für Backups. Genau dort gibt es selten ein Update-Fenster. Port 2049 hat im offenen Internet nichts verloren, und im internen Netz gehört er hinter eine Allowlist. Das ist heute die billigste Maßnahme, unabhängig vom Patch-Stand.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Kritische-Luecke-in-Linux-NFS-Server-11540361.html">heise.de (27.11., 11:39 Uhr)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: doch neue Einträge, Frist Montag</h2>
+        <p><span class="update-since">Update seit Fr</span> Gestern schrieben wir „Ruhe seit Mittwoch". Das stimmt nicht mehr: Die CISA hat am 27.11. drei Einträge in den KEV-Katalog aufgenommen.<sup>[1]</sup> Der Katalog hat jetzt 1.808 Einträge.<sup>[2]</sup> Alle drei haben dieselbe Frist, den <strong>30.11.</strong>, also Montag.<sup>[2]</sup></p>
+        <h3>Drupal: die zweite Installer-Lücke</h3>
+        <p><strong>CVE-2026-136716</strong> ist nicht die Drupal-Lücke, deren Frist gestern ablief, sondern eine neue. Das Advisory SA-CORE-2026-019 vom 25.11. stuft sie als „Highly critical" ein, Risiko-Wert 21 von 25, Typ „Access bypass".<sup>[3]</sup> Der Satz, der zählt: „This is being exploited in the wild."<sup>[3]</sup> Laut KEV-Katalog erlaubt sie einem Angreifer ohne Anmeldung, „to take over a site via the exposed Drupal installer".<sup>[2]</sup> Die Fixes:<sup>[3]</sup></p>
+        <ul>
+          <li>Drupal 11.4.x: Update auf 11.4.14</li>
+          <li>Drupal 11.3.x: Update auf 11.3.23</li>
+          <li>Drupal 10.6.x: Update auf 10.6.23</li>
+        </ul>
+        <p>Danach <code>update.php</code> ausführen. Drupal empfiehlt außerdem: „Ensure the user 1 email address is set to something you control, and consider resetting user 1's password."<sup>[3]</sup> Seiten, die den Installer schon abgesichert haben, sind laut Advisory nicht betroffen.<sup>[3]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">KEV-Katalog:</strong> Die Liste der US-Behörde CISA mit Lücken, die nachweislich angegriffen werden. US-Bundesbehörden müssen bis zur Frist patchen. Für alle anderen ist die Liste ein guter Filter: nicht „könnte gefährlich sein", sondern „wird gerade benutzt".
+        </div>
+        <h3>GeoServer: zwei Einträge</h3>
+        <p>Die anderen beiden betreffen den Karten-Server GeoServer von OSGeo. <strong>CVE-2026-120705</strong> (XML Injection) erlaubt laut Katalog, den Server lokale Textdateien lesen zu lassen, auf die der GeoServer-Prozess Zugriff hat. <strong>CVE-2026-129243</strong> (Incorrect Authorization) erlaubt, Rollen-Prüfungen auf Service-Ebene zu umgehen. Beide gehen ohne Anmeldung.<sup>[2]</sup> Eine Versions-Angabe für den Fix haben wir heute nicht geprüft; der Katalog verweist auf die Hersteller-Anweisungen.<sup>[2]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Zwei Installer-Lücken in zwei Wochen, beide angegriffen. Der Drupal-Installer hat auf einer laufenden Produktiv-Seite keinen Grund, aus dem Netz erreichbar zu sein. Wer <code>install.php</code> per Webserver-Regel sperrt, ist gegen die ganze Klasse geschützt, nicht nur gegen diese CVE.</div>
+        <span class="src">[1] <a href="https://www.cisa.gov/news-events/alerts/2026/11/27/cisa-adds-three-known-exploited-vulnerabilities-catalog">cisa.gov Alert (27.11.)</a> · [2] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?search_api_fulltext=CVE-2026-136716">CISA-KEV-Katalog (abgerufen 28.11.)</a> · [3] <a href="https://www.drupal.org/sa-core-2026-019">drupal.org SA-CORE-2026-019 (25.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>KEV: heute endet die Mitel-Frist</h2>
+        <p>Für vier der fünf Mitel-MiCollab-Einträge vom 25.11. endet die Frist heute, am 28.11.: CVE-2026-133275, CVE-2026-133303, CVE-2026-133323 und CVE-2026-133324.<sup>[1]</sup> Für CVE-2026-133311 gilt der 09.12.<sup>[1]</sup> Die ganze Runde vom 25.11. umfasste zehn Einträge, außer Mitel auch Danfoss, HPE Juniper Session Smart und Xen Orchestra.<sup>[2]</sup> Details stehen im Brief vom 26.11.</p>
+        <span class="src">[1] <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?search_api_fulltext=Mitel">CISA-KEV-Katalog (abgerufen 28.11.)</a> · [2] <a href="https://www.cisa.gov/news-events/alerts/2026/11/25/cisa-adds-10-known-exploited-vulnerabilities-catalog">cisa.gov Alert (25.11.)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>RealVNC: 9,8 über UDP</h2>
+        <p>In der Fernwartungs-Software RealVNC steckt <strong>CVE-2026-137738</strong>, CVSS 9,8 („kritisch").<sup>[1]</sup> heise: „Angreifer können dabei ohne Anmeldung beliebigen Code einschleusen."<sup>[1]</sup> Betroffen sind nur Verbindungen über UDP: „Reine TCP-Verbindungen hingegen sind nicht anfällig."<sup>[1]</sup> Die wichtigsten Fix-Stände:<sup>[1]</sup></p>
+        <ul>
+          <li>RealVNC Server 6.4.0 bis 7.19.0: Update auf 7.19.1</li>
+          <li>RealVNC Viewer 8.4.0 bis 8.6.1: Update auf 8.6.2; Classic Viewer auf 7.18.3</li>
+          <li>Connect App bis 8.6.1: Update auf 8.6.2; On-Demand Assist auf 3.5.0</li>
+          <li>Mobile: Viewer iOS/Android auf 4.9.6, Server iOS auf 2.8.2, Server Android auf 2.8.4</li>
+        </ul>
+        <p>Ob die Lücke schon angegriffen wird, haben wir nicht geprüft.</p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Fernwartung ist per Definition aus dem Netz erreichbar, das macht jede Pre-Auth-Lücke dort teuer. Dass nur UDP betroffen ist, hilft beim Eingrenzen: Wer UDP für VNC an der Firewall nicht durchlässt, hat Zeit bis zum Update. Wer RealVNC auf Kunden-Rechnern verteilt hat, sollte heute die Versionen inventarisieren; gerade die Viewer-Installationen vergisst man gern.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/RealVNC-Sicherheitsleck-ermoeglicht-Schadcode-Schmuggel-ohne-Anmeldung-11540429.html">heise.de (27.11., 11:43 Uhr)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Apache Tomcat: neun Fixes, eine Lücke offen</h2>
+        <p>Die Tomcat-Releases <strong>11.0.29, 10.1.62 und 9.0.124</strong> vom 13. bis 16.11. beheben laut heise neun Schwachstellen.<sup>[1][2]</sup> Zwei Punkte bleiben aber offen. Die kritische <strong>CVE-2026-133325</strong> heißt auf der Tomcat-Seite „Cluster TLS-PSK configured to use TLS 1.3 does not validate peer".<sup>[2]</sup> heise: „Diese Lücke wird erst mit den Versionen 11.0.30, 10.1.63 und 9.0.125 behoben werden".<sup>[1]</sup> Bis dahin hilft, das Cluster auf TLS 1.2 zu stellen.<sup>[1]</sup></p>
+        <p>Der zweite Punkt: Für CVE-2026-95517 im <code>EncryptInterceptor</code> gibt es keinen Fix. „Stattdessen wurde EncryptInterceptor als veraltet markiert".<sup>[1]</sup> Die Empfehlung ist der Umstieg auf TLS-PSK.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">TLS-PSK:</strong> TLS mit einem vorab verteilten, gemeinsamen Schlüssel („Pre-Shared Key") statt mit Zertifikaten. Die Cluster-Knoten erkennen sich daran, dass sie dasselbe Geheimnis kennen. Wie ein Vereinsheim, in das nur kommt, wer das Passwort an der Tür weiß; die Lücke heißt hier, dass der Türsteher bei TLS 1.3 nicht richtig nachfragt.
+        </div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Die Lage ist schief: Tomcat schickt Sie weg vom EncryptInterceptor hin zu TLS-PSK, und genau TLS-PSK mit TLS 1.3 hat die offene kritische Lücke. Also heute: TLS-PSK mit TLS 1.2. Betroffen ist nur, wer Session-Replikation im Tomcat-Cluster nutzt. In typischen Spring-Boot-Diensten mit eingebettetem Tomcat ist das selten. Dort reicht es, den nächsten Boot-Patch mit dem neuen Tomcat einzuplanen.</div>
+        <p>Unter Tomcat läuft eine JVM: Der Oracle-Fix für Java4Shell (CVE-2026-114938) kam am 17.11.; laut BleepingComputer gibt es einen PoC, aber keine gemeldeten Angriffe.<sup>[3]</sup> Die Details standen im Brief vom 18.11.</p>
+        <span class="src">[1] <a href="https://www.heise.de/news/Diverse-Schwachstellen-in-Apache-Tomcat-11540730.html">heise.de (27.11., 13:47 Uhr)</a> · [2] <a href="https://tomcat.apache.org/security-11.html">tomcat.apache.org/security-11 (abgerufen 28.11.)</a> · [3] <a href="https://bleepingcomputer.com/news/security/critical-java4shell-flaw-allows-rce-attacks-on-major-java-applications">bleepingcomputer.com (17.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>SAP: Vorfall in den Entwicklungs-Systemen</h2>
+        <p>SAP hat einen IT-Vorfall eingeräumt. Betroffen sind laut Berichten Entwicklungs-Systeme auf GitHub, der „Plattform für Entwicklerproduktivität und Softwarebereitstellung".<sup>[1]</sup> Laut Handelsblatt, das heise zitiert, hat SAP den GitHub-Zugang eingeschränkt, automatisierte Entwicklungs-Prozesse gestoppt und Signatur-Schlüssel ausgetauscht.<sup>[1]</sup> SAP sagt, man habe „unverzüglich die notwendigen Maßnahmen ergriffen".<sup>[1]</sup> Hinweise auf einen Zugriff auf Geschäftsdaten von Kunden gibt es laut Bericht nicht. Ob Angreifer KI-Agenten eingesetzt haben, ist unbestätigt.<sup>[1]</sup></p>
+        <div class="eli5">
+          <strong class="eli5-term">Signatur-Schlüssel:</strong> Damit unterschreibt ein Hersteller seine Software digital, und Ihr System prüft vor der Installation die Unterschrift. Wie ein Wachssiegel auf einem Brief. Wenn der Siegelring gestohlen sein könnte, lässt man einen neuen machen, und alte Siegel gelten nichts mehr.
+        </div>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Nach 1Password (26.11.) wieder ein Fall, in dem die Entwicklungs-Umgebung der Schauplatz ist, nicht das Produkt. Der Schlüssel-Tausch ist die richtige Reaktion. Für SAP-Kunden heißt er: In den nächsten Wochen kommen Pakete mit neuer Signatur. Wer Signaturen in der eigenen Pipeline prüft, sollte die neuen Schlüssel aus offiziellen SAP-Kanälen holen, nicht aus einer Mail.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/IT-Vorfall-bei-SAP-Entwicklungssysteme-betroffen-11539973.html">heise.de (27.11., 08:02 Uhr)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>US Air Force: Einbruch in Cloud One gemeldet</h2>
+        <p>Laut Reuters, das heise zitiert, sollen Angreifer in die Cloud-Plattform <strong>Cloud One</strong> der US Air Force eingedrungen sein.<sup>[1]</sup> Cloud One startete 2017 als zentrale IT-Plattform und bündelt Ressourcen von Microsoft, Amazon, Oracle und Alphabet; darauf laufen Anwendungen für Personal, Sold, Logistik und Wartung.<sup>[1]</sup> Die Angreifer sollen über eine Software-Lücke bis in die Control Plane gekommen sein. „Updates für Anwendungen, die bereits auf Cloud One laufen, seien blockiert."<sup>[1]</sup> Bestätigt ist nichts: „Die Air Force bestätigte den Vorfall nicht."<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Das Detail mit den blockierten Updates ist das Lehrreiche: Wer die Control Plane verliert, verliert auch den Weg, die Lücke zu schließen. Deployment-Pfade und Verwaltung gehören deshalb auf getrennte Zugänge.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Hacker-brechen-angeblich-in-Cloud-Plattform-der-US-Air-Force-ein-11541212.html">heise.de (27.11., 16:26 Uhr)</a></span>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <section class="news-item">
+        <h2>Datenschutzkonferenz: deutlich mehr Datenpannen</h2>
+        <p>Die Datenschutzkonferenz (DSK) warnt nach ihrer 112. Tagung (24. bis 26.11., Bad Herrenalb) vor mehr Cyberangriffen und mehr gemeldeten Datenpannen.<sup>[1]</sup> Einige Zahlen aus dem Bericht:<sup>[1]</sup></p>
+        <ul>
+          <li>Bayern: rund 2.300 Meldungen zu Cyberangriffen von Januar bis Ende Oktober, etwa 83 % mehr als im Vorjahreszeitraum (rund 1.250).</li>
+          <li>Nordrhein-Westfalen: über 3.726 Meldungen, nach 2.844 im ganzen Jahr 2025.</li>
+          <li>Sachsen: 1.400 Meldungen bis Ende Oktober, nach 1.058 im ganzen Jahr 2025.</li>
+        </ul>
+        <p>Bis Oktober lagen sieben Länder schon über ihrer Jahressumme 2025.<sup>[1]</sup> Die DSK plant eine Orientierungshilfe „Endpoint Protection" zur Absicherung von PCs und Mobilgeräten. Sie soll auch klären, was beim Einsatz externer Dienste für den Endgeräte-Schutz zu prüfen ist, und Telemetrie berücksichtigen. Veröffentlicht ist sie noch nicht.<sup>[1]</sup></p>
+        <div class="callout info"><span class="callout-label">Unsere Sicht</span> Für Softwarehäuser im DE-Mittelstand ist die geplante Orientierungshilfe der Teil zum Merken: EDR-Agenten, die Telemetrie an einen Cloud-Dienst schicken, bekommen damit eine Datenschutz-Prüfliste. Wer solche Tools für Kunden betreibt, sollte die Auftragsverarbeitung jetzt schon sauber haben.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Datenschutzbehoerden-warnen-vor-Cyberangriffen-und-planen-Orientierungshilfe-11539641.html">heise.de (27.11., 08:03 Uhr)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Google: zwei Rechnungen für Entwickler</h2>
+        <h3>Workspace-APIs kosten ab April 2027</h3>
+        <p>„Google macht die Nutzung der Workspace-APIs und des zugehörigen MCP-Servers ab April 2027 kostenpflichtig".<sup>[1]</sup> Betroffen sind Calendar, Drive und Gmail. Die Gebühr hängt an der OAuth-Client-ID, also zahlt das Projekt des Entwicklers, auch wenn die Nutzer den Traffic erzeugen.<sup>[1]</sup> Bei den APIs reichen die Tages-Kontingente von 1 bis 70 Millionen Anfragen; darüber kostet etwa das Lesen von Metadaten 10 US-Cent pro tausend Anfragen, Bulk-Sync 50 Cent.<sup>[1]</sup> Google erwartet, dass „weniger als ein Prozent der Entwickler" über das Standard-Kontingent kommen. Der Entwickler von Syncovery rechnet dagegen mit „über 100.000 US-Dollar" im Monat; rclone zieht seine gemeinsamen Client-IDs zurück.<sup>[1]</sup> Der MCP-Teil gehört ins Revier des ai-dev-Briefs.</p>
+        <h3>Play Store zeigt Entwickler-Adressen</h3>
+        <p>Ab dem 1. März 2027 zeigt Google Play Adresse und Telefonnummer von Entwicklern, die sich als Händler einstufen, weltweit an.<sup>[2]</sup> Bis 1. Februar 2027 muss jedes aktive Konto erklären, ob es Händler ist; Indizien sind Werbe-Einnahmen, Bezahl-Apps oder In-App-Käufe.<sup>[2]</sup> Die Adresse kommt aus dem Zahlungsprofil, und dort sind Postfächer nicht erlaubt. Wer keine Apps im EWR oder in Großbritannien anbietet, kann sich laut heise wohl als Nicht-Händler einstufen.<sup>[2]</sup> Apple begrenzt die Anzeige auf die 27 EU-Staaten und erlaubt Postfächer.<sup>[2]</sup></p>
+        <div class="callout warn"><span class="callout-label">Achtung</span> Für Solo-Entwickler mit Apps im EU-Store heißt das: Ohne Firmen-Adresse steht ab März die Privat-Adresse im Store. Die Entscheidung (Geschäfts-Adresse, Vertreter-Dienst oder Nicht-Händler) muss bis 1. Februar fallen.</div>
+        <span class="src">[1] <a href="https://www.heise.de/news/Google-laesst-Entwickler-fuer-den-Traffic-der-Anwender-bezahlen-11538829.html">heise.de (26.11., 12:12 Uhr)</a> · [2] <a href="https://www.heise.de/news/Play-Store-Google-zwingt-App-Entwickler-weltweit-zur-Angabe-ihrer-Adresse-11540239.html">heise.de (27.11., 09:50 Uhr)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Kurz notiert</h2>
+        <ul>
+          <li><span class="chip">Sec</span> <strong>Signal</strong> blockiert Screenshots als Reaktion auf KI-Assistenten im Betriebssystem, die laut heise „App-Schutzmechanismen umgehen" können. Die KI-Seite gehört in die KI-Briefs.<sup>[1]</sup> <span class="chip">Global</span></li>
+          <li><span class="chip">Sec</span> <strong>KI-Router-Dienste</strong> haben laut heise über billige Inferenz-Angebote Prompt-Inhalte und Secrets abgegriffen. Details im ai-dev-Brief.<sup>[2]</sup> <span class="chip">Global</span></li>
+          <li><span class="chip">OSS</span> <strong>GrapheneOS</strong> zeigt einen Proof of Concept für einen RCS-Messenger ohne Google-Dienste.<sup>[3]</sup> <span class="chip">Global</span></li>
+          <li><span class="chip">Sec</span> <strong>FBI</strong>: Eine US-Firma soll Ransomware-Opfern Geld für die Entschlüsselung abgenommen, selbst das Lösegeld gezahlt und die Differenz behalten haben, so die Anklage.<sup>[4]</sup> <span class="chip">USA</span></li>
+          <li><span class="chip">Sec</span> <strong>Binance</strong> hebt einen Monat nach dem Diebstahl von 6,3 Milliarden US-Dollar die letzten Beschränkungen auf.<sup>[5]</sup> <span class="chip">Global</span></li>
+          <li><span class="chip">Sec</span> <strong>Patch Tuesday</strong>: Der nächste kommt planmäßig am 08.12. Im November waren es je nach Zählung über 1.000 CVEs, darunter eine aktiv ausgenutzte Outlook-Lücke (CVE-2026-124194).<sup>[6]</sup> <span class="chip">Global</span></li>
+        </ul>
+        <span class="src">[1] <a href="https://www.heise.de/news/KI-Agenten-im-Betriebssystem-Datenschuetzer-schlagen-Alarm-wegen-Ueberwachung-11541373.html">heise.de (27.11., 18:04 Uhr)</a> · [2] <a href="https://www.heise.de/news/AI-Supply-Chain-Guenstige-Inferenzangebote-greifen-Secrets-ab-11540914.html">heise.de (27.11., 15:19 Uhr)</a> · [3] <a href="https://www.heise.de/news/Proof-of-Concept-GrapheneOS-zeigt-RCS-Messenger-ohne-Google-Messages-11540974.html">heise.de (27.11., 14:39 Uhr)</a> · [4] <a href="https://www.heise.de/news/Betrug-an-Ransomware-Opfern-FBI-stellt-Doppelfalle-11539919.html">heise.de (27.11., 05:01 Uhr)</a> · [5] <a href="https://www.heise.de/news/Einen-Monat-nach-Milliardendiebstahl-Binance-hebt-letzte-Restriktionen-auf-11539955.html">heise.de (27.11., 06:50 Uhr)</a> · [6] <a href="https://blog.qualys.com/vulnerabilities-threat-research/2026/11/10/microsoft-patch-tuesday-november-2026-security-update-review">blog.qualys.com (10.11.)</a></span>
+      </section>
+
+      <section class="news-item">
+        <h2>Nicht geprüft</h2>
+        <ul>
+          <li>NVD lieferte nur eine leere JavaScript-Seite: kein NVD-Abgleich für CVE-2026-99362 und CVE-2026-137738. Die Scores stammen aus den heise-Berichten.</li>
+          <li>NFS und RealVNC: ob schon angegriffen wird. Die Patch-Stände von Red Hat, Ubuntu und SUSE: Tracker nicht geladen.</li>
+          <li>GeoServer: Fix-Versionen für CVE-2026-120705 und CVE-2026-129243.</li>
+          <li>Chrome: Eine angeblich neue, aktiv ausgenutzte Lücke fanden wir nur in einer einzigen Quelle; daher nicht im Brief.</li>
+          <li>Patch Tuesday November: Die Gesamtzahl der CVEs weicht je nach Quelle ab; wir nennen deshalb keine genaue Zahl.</li>
+          <li>Heute ohne Meldung: BR-Tech, EU-Regulierung, Spring, Angular, React, Python, Caddy, Tailscale, Docker. thehackernews.com: 403.</li>
+        </ul>
+      </section>
+
+      <section class="news-item">
+        <h2>Die Liste für heute</h2>
+        <ol>
+          <li>Linux-Server mit NFS finden: <code>cat /proc/fs/nfsd/versions</code>.</li>
+          <li>Port 2049 auf vertrauenswürdige Clients beschränken, bis der Distributions-Kernel CVE-2026-99362 behebt.</li>
+          <li>Drupal-Seiten auf 11.4.14, 11.3.23 oder 10.6.23 bringen, <code>update.php</code> ausführen, E-Mail von User 1 prüfen.</li>
+          <li>RealVNC-Installationen inventarisieren; Server auf 7.19.1, Viewer auf 8.6.2.</li>
+          <li>Tomcat-Cluster mit TLS-PSK auf TLS 1.2 stellen, bis 11.0.30 erscheint.</li>
+          <li>Play-Store-Konto: Händler-Status und Adresse bis 01.02.2027 klären.</li>
+        </ol>
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="voice-summary" hidden aria-hidden="true">
+  <p>Es ist Samstag, der achtundzwanzigste November. Neue Meldungen gibt es heute kaum, also tragen die Nachrichten vom Freitag den Brief. Die wichtigste betrifft den Linux-Kernel.</p>
+  <p>Im NFS-Server des Kernels steckt eine kritische Lücke mit neun Komma acht von zehn Punkten. Der Fehler steckt seit Linux drei Punkt sechzehn im Code. Laut heise sind alle Longterm-Kernel seit dem dreiundzwanzigsten November gepatcht. Red Hat, Ubuntu und SUSE haben den Fix aber noch nicht überall ausgeliefert. Bis dahin hilft es, den NFS-Port zweitausendneunundvierzig für fremde Rechner zu sperren oder NFS vier Punkt eins und vier Punkt zwei abzuschalten.</p>
+  <p>Eine Korrektur zu gestern: Die US-Behörde CISA hat am Freitag doch drei neue Einträge in ihren Katalog der angegriffenen Lücken aufgenommen. Einer betrifft wieder den Drupal-Installer, eine zweite, neue Lücke, die bereits angegriffen wird. Die Fixes sind Drupal elf Punkt vier Punkt vierzehn, elf Punkt drei Punkt dreiundzwanzig und zehn Punkt sechs Punkt dreiundzwanzig. Die anderen beiden Einträge betreffen den Karten-Server GeoServer. Die Frist für alle drei ist Montag. Heute endet außerdem die Frist für vier Lücken in Mitel MiCollab.</p>
+  <p>Auch die Fernwartungs-Software RealVNC hat eine Lücke mit neun Komma acht Punkten. Angreifer können ohne Anmeldung Code einschleusen, aber nur über UDP-Verbindungen. Die Fixes sind RealVNC Server sieben Punkt neunzehn Punkt eins und der Viewer acht Punkt sechs Punkt zwei.</p>
+  <p>Apache Tomcat hat neue Versionen, die neun Lücken schließen. Eine kritische Lücke im Cluster-Betrieb mit TLS eins Punkt drei bleibt aber bis zur nächsten Version offen. Bis dahin hilft TLS eins Punkt zwei. Betroffen sind nur Tomcat-Cluster mit Session-Replikation.</p>
+  <p>In Deutschland meldet SAP einen Vorfall in seinen Entwicklungs-Systemen auf GitHub. Laut Handelsblatt hat SAP die Signatur-Schlüssel ausgetauscht. Hinweise auf Zugriff auf Kundendaten gibt es nicht. Außerdem melden die Datenschutzbehörden deutlich mehr Datenpannen durch Cyberangriffe. In Bayern sind es dreiundachtzig Prozent mehr als im Vorjahr.</p>
+  <p>Zwei Nachrichten von Google betreffen Entwickler direkt. Ab April zweitausendsiebenundzwanzig kosten die Workspace-Schnittstellen für Kalender, Drive und Gmail Geld, sobald ein Projekt das Kontingent überschreitet. Und ab März zeigt der Play Store die Adresse von Entwicklern, die sich als Händler einstufen. Die Entscheidung dafür muss bis zum ersten Februar fallen. Laut Reuters soll außerdem jemand in die Cloud-Plattform der US Air Force eingebrochen sein, bestätigt ist das nicht.</p>
+  <p>Morgen schauen wir, ob die großen Distributionen den NFS-Fix ausgeliefert haben und ob die CISA vor der Frist am Montag weitere Einträge nachliefert.</p>
+</div>
+
+</body>
+</html>
